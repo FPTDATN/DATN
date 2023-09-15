@@ -8,13 +8,7 @@ const productSchema = new mongoose.Schema({
     price:{
         type:Number,
     },
-    price:{
-        type:Number,
-    },
     sale_off:{
-        type:Number,
-    },
-    date_time:{
         type:Number,
     },
     description:{
