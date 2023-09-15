@@ -1,4 +1,5 @@
 import Products from "../models/products";
+import { productSchema } from "../Schemas/products";
 
 
 export const getAll = async (req, res) => {
@@ -18,6 +19,12 @@ export const getAll = async (req, res) => {
 
 export const create = async (req, res) => {
     try {
+        const {error} = productSchema.validate(req.body)
+        if(error) {
+            return res.status(400).json({
+                message: error.details.map((err)=> err.message)
+            });
+        }
         const products = await Products.create(req.body)
         return res.status(200).json({
             message: "thêm sản phẩm thành công",
