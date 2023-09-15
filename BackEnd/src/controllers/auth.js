@@ -1,6 +1,6 @@
 import Auth from "../models/auth";
 import bcrypt  from "bcryptjs"
-import { signupSchema } from "../Schemas/auth";
+import { signupSchema, signinSchema } from "../Schemas/auth";
 import jwt from "jsonwebtoken"
 
 export const signup = async (req, res) => {
@@ -12,7 +12,6 @@ export const signup = async (req, res) => {
                 message: errors,
             });
         }
-        // Kiểm tra xem user đã đk chưa?
         const authExist = await Auth.findOne({ email: req.body.email });
         if (authExist) {
             return res.status(400).json({
@@ -20,7 +19,6 @@ export const signup = async (req, res) => {
             });
         }
 
-        // Mã hóa mật khẩu
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         const auth = await Auth.create({
@@ -29,15 +27,55 @@ export const signup = async (req, res) => {
             password: hashedPassword,
         });
 
-        // Tạo token
         const token = jwt.sign({ id: auth._id }, "123456", { expiresIn: "7d" });
-        // không trả về password
         auth.password = undefined;
 
         return res.status(201).json({
             message: "Tạo tài khoản thành công",
             accessToken: token,
-            user,
+            auth,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message,
+        });
+    }
+};
+
+
+export const signin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const { error } = signinSchema.validate(req.body, { abortEarly: false });
+        if (error) {
+            return res.status(400).json({
+                message: error.details.map((err) => err.message),
+            });
+        }
+
+        const auth = await Auth.findOne({ email });
+        if (!auth) {
+            return res.status(400).json({
+                message: "Email không tồn tại",
+            });
+        }
+
+
+        const isMatch = await bcrypt.compare(password, auth.password);
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Mật khẩu không đúng",
+            });
+        }
+
+        const token = jwt.sign({ id: auth._id }, "123456", { expiresIn: "1d" });
+
+        auth.password = undefined;
+
+        return res.status(200).json({
+            message: "Đăng nhập thành công",
+            accessToken: token,
+            auth,
         });
     } catch (error) {
         return res.status(400).json({
