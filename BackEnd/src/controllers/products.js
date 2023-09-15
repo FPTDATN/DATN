@@ -55,4 +55,19 @@ export const getById = async (req, res) => {
         })
     }
 }
+export const update = async(req ,res)=>{
+    try {
+         const products = await Products.findOneAndUpdate({_id : req.params.id} , req.body,{new: true} );
+         if (products.length === 0) {
+            return res.status(200).json({
+                message: "Cập nhật sản phẩm không thành công",
+            });
+        }
+        return res.json(products);
+    } catch (error) {
+         return  res.status(400).json({
+               message : error.message
+         })
+    }
+   }
 
