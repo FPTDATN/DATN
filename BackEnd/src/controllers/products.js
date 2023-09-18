@@ -3,14 +3,31 @@ import { productSchema } from "../Schemas/products";
 import Category from "../models/category";
 
 export const getAll = async (req, res) => {
+  const {
+    _limit = 8,
+    _sort = "createAt",
+    _order = "asc",
+    _page = 1,
+  } = req.query;
+
+  const options = {
+    limit: _limit,
+    page: _page,
+    sort: {
+      [_sort]: _order === "desc" ? -1 : 1,
+    },
+  };
   try {
-    const products = await Products.find();
-    return res.status(200).json({
-      products,
-    });
+    const data = await Products.paginate({}, options);
+    if (data.length === 0) {
+      return res.status(200).json({
+        message: "Không có dữ liệu",
+      });
+    }
+    return res.json(data);
   } catch (error) {
-    return res.status(500).json({
-      message: error,
+    return res.status(404).json({
+      message: error.message,
     });
   }
 };
