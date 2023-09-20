@@ -1,4 +1,5 @@
 import Product from "../models/products";
+import Auth from "../models/auth"
 export const searchByNameAndDescription = async (req, res) => {
       try {
           const { keyword } = req.query; // Lấy từ khóa từ query parameter trong URL
@@ -24,3 +25,27 @@ export const searchByNameAndDescription = async (req, res) => {
           });
       }
   };
+  export const searchUserByNameAndEmail= async (req, res) => {
+    try {
+        const { keyword } = req.query; 
+        const products = await Auth.find({
+            $or: [
+                { name: { $regex: keyword, $options: 'i' } }, 
+            ]
+        });
+
+        if (!products || products.length === 0) {
+            return res.status(404).json({
+                message: "Không tìm thấy sản phẩm với từ khóa này"
+            });
+        }
+
+        return res.status(200).json({
+            products
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+};
