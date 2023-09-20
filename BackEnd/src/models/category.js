@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-const { Schema } = mongoose;
-const categorySchema = new Schema(
+import mongoosePaginate from "mongoose-paginate-v2";
+const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -19,4 +19,5 @@ const categorySchema = new Schema(
   }
 );
 
+categorySchema.plugin(mongoosePaginate);
 export default mongoose.model("Category", categorySchema);
