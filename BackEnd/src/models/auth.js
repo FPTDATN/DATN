@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const authSchame = new mongoose.Schema({
     name: {
         type: String,
@@ -21,5 +21,5 @@ const authSchame = new mongoose.Schema({
         default:"member",
     }
 })
-
+authSchame.plugin(mongoosePaginate);
 export default mongoose.model("Auth",authSchame)

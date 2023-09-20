@@ -65,20 +65,31 @@ export const getOne = async (req, res) => {
 
 
 export const getAll = async (req, res) => {
-    try {
-        const data = await Auth.find();
+    const {
+        _limit = 7,
+        _sort = "createAt",
+        _order = "asc",
+        _page = 1,
+      } = req.query;
+    
+      const options = {
+        limit: _limit,
+        page: _page,
+        sort: {
+          [_sort]: _order === "desc" ? -1 : 1,
+        },
+      };
+      try {
+        const data = await Auth.paginate({}, options);
         if (data.length === 0) {
-            return res.status(200).json({
-                message: "Không có dữ liệu",
-            });
+          return res.status(200).json({
+            message: "Không có dữ liệu",
+          });
         }
-        return res.status(200).json({
-            message: "Danh sách All",
-            data,
-        });
-    } catch (error) {
+        return res.json(data);
+      } catch (error) {
         return res.status(404).json({
-            message: error,
+          message: error.message,
         });
-    }
+      }
 };
