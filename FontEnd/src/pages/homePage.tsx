@@ -1,3 +1,6 @@
+import { Outlet } from "react-router-dom"
+import { HotProduct } from "./hot-product"
+
 export const HomePage = () => {
     return (
         <>
@@ -47,7 +50,7 @@ export const HomePage = () => {
                                     type="text"
                                     id="Search"
                                     placeholder="Search for..."
-                                    className="w-full rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm"
+                                    className="w-full rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm p-2"
                                 />
 
                                 <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
@@ -72,11 +75,11 @@ export const HomePage = () => {
                                 </span>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 ">
+                                <label className="block text-xs font-medium text-gray-700 p-2">
                                     Sort By
                                 </label>
 
-                                <select id="SortBy" className="mt-1 rounded border-gray-300 text-sm ">
+                                <select id="SortBy" className="w-40% rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm p-2 ">
                                     <option>Sort By</option>
                                     <option value="Title, DESC">Title, DESC</option>
                                     <option value="Title, ASC">Title, ASC</option>
@@ -296,6 +299,71 @@ export const HomePage = () => {
                                             </ul>
                                         </div>
                                     </details>
+                                    <details
+                                        className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden"
+                                    >
+                                        <summary
+                                            className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition"
+                                        >
+                                            <span className="text-sm font-medium"> Category </span>
+
+                                            <span className="transition group-open:-rotate-180">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="1.5"
+                                                    stroke="currentColor"
+                                                    className="h-4 w-4"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                                                    />
+                                                </svg>
+                                            </span>
+                                        </summary>
+
+                                        <div className="border-t border-gray-200 bg-white">
+
+
+                                            <ul className="space-y-1 border-t border-gray-200 p-4">
+                                                <li>
+                                                    <a
+                                                        href="#"
+                                                        className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                                        role="menuitem"
+                                                    >
+                                                        Áo nam
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a
+                                                        href="#"
+                                                        className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                                        role="menuitem"
+                                                    >
+                                                        Áo nữ
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a
+                                                        href="#"
+                                                        className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                                        role="menuitem"
+                                                    >
+                                                        Áo con nít
+                                                    </a>
+                                                </li>
+
+
+
+                                            </ul>
+                                        </div>
+                                    </details>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +375,7 @@ export const HomePage = () => {
                                         <img
                                             src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                                             alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
                                         />
 
                                         <div className="relative bg-white pt-3">
@@ -330,7 +398,7 @@ export const HomePage = () => {
                                         <img
                                             src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                                             alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
                                         />
 
                                         <div className="relative bg-white pt-3">
@@ -353,7 +421,7 @@ export const HomePage = () => {
                                         <img
                                             src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                                             alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
                                         />
 
                                         <div className="relative bg-white pt-3">
@@ -376,7 +444,7 @@ export const HomePage = () => {
                                         <img
                                             src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                                             alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
                                         />
 
                                         <div className="relative bg-white pt-3">
@@ -399,7 +467,7 @@ export const HomePage = () => {
                                         <img
                                             src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                                             alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
                                         />
 
                                         <div className="relative bg-white pt-3">
@@ -423,7 +491,7 @@ export const HomePage = () => {
                                         <img
                                             src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                                             alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
                                         />
 
                                         <div className="relative bg-white pt-3">
@@ -442,6 +510,10 @@ export const HomePage = () => {
                                     </a>
                                 </li>
                             </ul>
+
+
+
+
                         </div>
                     </div>
                     <ol className="mt-8 flex justify-center gap-1 text-xs font-medium">
@@ -522,162 +594,8 @@ export const HomePage = () => {
                     </ol>
                 </div>
 
-
-                <section>
-                    <div className="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 sm:py-12 lg:px-8">
-                        <header>
-                            <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-                                Product Hot
-                            </h2>
-
-
-                        </header>
-
-                        <ul className="grid gap-4 mt-8 sm:grid-cols- lg:grid-cols-6">
-
-                            <li>
-                                <a href="#" className="block overflow-hidden group">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                        alt=""
-                                        className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[350px]"
-                                    />
-
-                                    <div className="relative pt-3 bg-white">
-                                        <h3
-                                            className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                        >
-                                            Basic Tee
-                                        </h3>
-
-                                        <p className="mt-2">
-                                            <span className="sr-only"> Regular Price </span>
-
-                                            <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#" className="block overflow-hidden group">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                        alt=""
-                                        className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[350px]"
-                                    />
-
-                                    <div className="relative pt-3 bg-white">
-                                        <h3
-                                            className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                        >
-                                            Basic Tee
-                                        </h3>
-
-                                        <p className="mt-2">
-                                            <span className="sr-only"> Regular Price </span>
-
-                                            <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="block overflow-hidden group">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                        alt=""
-                                        className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[350px]"
-                                    />
-
-                                    <div className="relative pt-3 bg-white">
-                                        <h3
-                                            className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                        >
-                                            Basic Tee
-                                        </h3>
-
-                                        <p className="mt-2">
-                                            <span className="sr-only"> Regular Price </span>
-
-                                            <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="block overflow-hidden group">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                        alt=""
-                                        className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[350px]"
-                                    />
-
-                                    <div className="relative pt-3 bg-white">
-                                        <h3
-                                            className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                        >
-                                            Basic Tee
-                                        </h3>
-
-                                        <p className="mt-2">
-                                            <span className="sr-only"> Regular Price </span>
-
-                                            <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="block overflow-hidden group">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                        alt=""
-                                        className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[350px]"
-                                    />
-
-                                    <div className="relative pt-3 bg-white">
-                                        <h3
-                                            className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                        >
-                                            Basic Tee
-                                        </h3>
-
-                                        <p className="mt-2">
-                                            <span className="sr-only"> Regular Price </span>
-
-                                            <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="block overflow-hidden group">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                        alt=""
-                                        className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[350px]"
-                                    />
-
-                                    <div className="relative pt-3 bg-white">
-                                        <h3
-                                            className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                        >
-                                            Basic Tee
-                                        </h3>
-
-                                        <p className="mt-2">
-                                            <span className="sr-only"> Regular Price </span>
-
-                                            <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                        </p>
-                                    </div>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </section>
+                <hr />
+                <HotProduct />
             </section>
         </>
     )
