@@ -25,6 +25,12 @@ const productSchema = new mongoose.Schema({
   images: {
     type: String,
   },
+  comments: [
+    {
+        type: mongoose.Types.ObjectId,
+        ref: 'Comment',
+    },
+],
   categoryId: {
     type: mongoose.Types.ObjectId,
     ref: "Category",
