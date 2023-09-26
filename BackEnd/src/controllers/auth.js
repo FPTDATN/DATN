@@ -69,6 +69,8 @@ export const signin = async (req, res) => {
         }
 
         const token = jwt.sign({ id: auth._id }, "123456", { expiresIn: "1d" });
+        
+        res.cookie("accessToken", token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
 
         auth.password = undefined;
 
