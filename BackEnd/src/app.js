@@ -5,9 +5,11 @@ import authRouter from "../src/routers/auth";
 import categoryRouter from "../src/routers/category";
 import searchRouter from "../src/routers/search";
 import user from "../src/routers/user";
+import cookieParser from "cookie-parser"
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser())
 app.use("/api", productsRouter);
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
