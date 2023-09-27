@@ -106,3 +106,52 @@ export const update = async (req, res) => {
     });
   }
 };
+export const getQuanlityProduct = async (req, res) => {
+  const {
+    _limit = 8,
+    _sort = "createAt",
+    _order = "asc",
+    _page = 1,
+    category = "", // Thêm tham số category để lọc theo danh mục sản phẩm
+  } = req.query;
+
+  const options = {
+    limit: _limit,
+    page: _page,
+    sort: {
+      [_sort]: _order === "desc" ? -1 : 1,
+    },
+  };
+
+  // Tạo một mảng pipeline để định nghĩa các giai đoạn aggregation
+  const pipeline = [];
+
+  // Giai đoạn $match để lọc sản phẩm theo danh mục (nếu được cung cấp)
+  if (category) {
+    pipeline.push({
+      $match: { category: category },
+    });
+  }
+
+  // Giai đoạn $group để thống kê số sản phẩm
+  pipeline.push({
+    $group: {
+      _id: null,
+      total: { $sum: 1 },
+    },
+  });
+
+  try {
+    const data = await Products.aggregate(pipeline, options);
+    if (data.length === 0) {
+      return res.status(200).json({
+        message: "Không có dữ liệu",
+      });
+    }
+    return res.json(data[0]); // Trả về kết quả thống kê (total)
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message,
+    });
+  }
+};
