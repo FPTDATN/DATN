@@ -5,6 +5,11 @@ import Layout from './pages/layout/Layout'
 import Pay from './pages/Pay/pay'
 import Card from './pages/Card/card'
 import { HomePage } from './pages/homePage'
+import { Admin } from './pages/Admin/admin'
+import { Dashboard } from './pages/Admin/dashboard'
+import { Product_admin } from './pages/Admin/products'
+import { Category_admin } from './pages/Admin/category'
+import { Users } from './pages/Admin/users'
 
 function App() {
 
@@ -19,6 +24,13 @@ function App() {
         <Route>
           <Route path='pay' element={<Pay />} />
           <Route path='card' element={<Card />} />
+        </Route>
+        <Route path='admin' element={<Admin/>}>
+        <Route index element={<Dashboard />}></Route>
+          <Route path='dashboard' element={<Dashboard />} />
+          <Route path='products' element={<Product_admin />} />
+          <Route path='category' element={<Category_admin />} />
+          <Route path='users' element={<Users />} />
         </Route>
       </Routes>
     </>
