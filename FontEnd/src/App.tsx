@@ -21,7 +21,15 @@ function App() {
         </Route>
         <Route path="/pay" element={<Pay />} />
         <Route path="/card" element={<Card />} />
+        <Route path='admin' element={<Admin/>}>
+        <Route index element={<Dashboard />}></Route>
+          <Route path='dashboard' element={<Dashboard />} />
+          <Route path='products' element={<Product_admin />} />
+          <Route path='category' element={<Category_admin />} />
+          <Route path='users' element={<Users/>} />
+        </Route>
       </Routes>
+      
     </>
   );
 }
