@@ -3,6 +3,7 @@ import {
   create,
   getAll,
   getById,
+  getQuanlityProduct,
   remove,
   update,
 } from "../controllers/products";
@@ -10,6 +11,8 @@ import { checkPermission } from "../middlewares/checkPermission";
 
 const router = express.Router();
 router.get("/products", getAll);
+router.get("/products/quanlity", getQuanlityProduct);
+
 router.get("/products/:id", getById);
 router.delete("/products/:id", checkPermission, remove);
 router.post("/products", checkPermission, create);
