@@ -4,6 +4,7 @@ import Login from './pages/Login/Login'
 import Layout from './pages/layout/Layout'
 import Pay from './pages/Pay/pay'
 import Card from './pages/Card/card'
+import PayCard from './pages/Pay/pay1'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         </Route>
         <Route>
         <Route path='pay' element={<Pay />} />
+        <Route path='paycard' element={<PayCard />} />
           <Route path='card' element={<Card />} />
         </Route>
       </Routes>
