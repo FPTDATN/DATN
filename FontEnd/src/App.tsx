@@ -11,6 +11,8 @@ import { Dashboard } from './pages/Admin/dashboard';
 import { Product_admin } from './pages/Admin/products';
 import { Category_admin } from './pages/Admin/category';
 import { Users } from './pages/Admin/users';
+import ProductDetail from './pages/ProductDetail';
+import SizeSelector from './pages/ProductDetail/size';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="detail" element={<ProductDetail />} />
+          <Route path="size" element={<SizeSelector />} />
           <Route path="signup" element={<Register />} />
           <Route path="login" element={<Login />} />
         </Route>
