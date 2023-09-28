@@ -32,7 +32,6 @@ function App() {
           <Route index element={<HotProduct />} />
         </Route>
 
-        <Route>
         <Route path='pay' element={<Pay />} />
         <Route path='paycard' element={<PayCard />} />
           <Route path='card' element={<Card />} />
