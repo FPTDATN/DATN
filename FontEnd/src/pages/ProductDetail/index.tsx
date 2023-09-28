@@ -1,5 +1,5 @@
 import './detail.css'
-import  { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -19,10 +19,10 @@ const ProductDetail = () => {
     const [nav2, setNav2] = useState(null);
     const slider1Ref = useRef(null);
     const slider2Ref = useRef(null);
-  
+
     useEffect(() => {
-      setNav1(slider1Ref.current);
-      setNav2(slider2Ref.current);
+        setNav1(slider1Ref.current);
+        setNav2(slider2Ref.current);
     }, []);
     // bảng size
     const [showModal, setShowModal] = useState(false);
@@ -59,17 +59,17 @@ const ProductDetail = () => {
                     <div className="cols">
                         <div className="left-col">
                             <div className="abc">
-                                <Slider  asNavFor={nav1}
+                                <Slider asNavFor={nav1}
                                     ref={slider2Ref}
                                     slidesToShow={3}
                                     swipeToSlide={true}
                                     focusOnSelect={true}
-                                    vertical= {true}
-                                    verticalSwiping={true} 
-                                    className="thumb-image "
-                                  
-                                 
-                                    >
+                                    vertical={true}
+                                    verticalSwiping={true}
+
+
+
+                                >
                                     <a className="thumb-image " >
                                         <span> <img
                                             src="https://i.ibb.co/NWXd8Bh/8ts23c006-sk010-1.webp"
@@ -105,36 +105,36 @@ const ProductDetail = () => {
                             </div>
                             <div className="big">
                                 <Slider
-                                   asNavFor={nav2} ref={slider1Ref} 
+                                    asNavFor={nav2} ref={slider1Ref}
                                 >
                                     <span> <img
-                                            src="https://i.ibb.co/NWXd8Bh/8ts23c006-sk010-1.webp"
-                                            alt=""
-                                            className=""
-                                        /></span>
-                                          <span><img
-                                            src="https://i.ibb.co/mvVZ4D8/8ts23c006-se131-1.webp"
-                                            alt=""
-                                            className=""
+                                        src="https://i.ibb.co/NWXd8Bh/8ts23c006-sk010-1.webp"
+                                        alt=""
+                                        className=""
+                                    /></span>
+                                    <span><img
+                                        src="https://i.ibb.co/mvVZ4D8/8ts23c006-se131-1.webp"
+                                        alt=""
+                                        className=""
 
-                                        /></span>
-                                          <span><img
-                                            src="https://i.ibb.co/kGMS1sz/8ts23c006-sm517-1.webp"
-                                            alt=""
-                                            className=""
+                                    /></span>
+                                    <span><img
+                                        src="https://i.ibb.co/kGMS1sz/8ts23c006-sm517-1.webp"
+                                        alt=""
+                                        className=""
 
-                                        /></span>
-                                        <span><img
-                                            src="https://i.ibb.co/mzFf596/8ts22a004-sb397-1.webp"
-                                            alt=""
-                                            className=""
+                                    /></span>
+                                    <span><img
+                                        src="https://i.ibb.co/mzFf596/8ts22a004-sb397-1.webp"
+                                        alt=""
+                                        className=""
 
-                                        /></span>
+                                    /></span>
                                 </Slider>
 
 
 
-                              
+
 
                                 <div className="detail-socials">
                                     <div className="social-sharing" data-permalink="http://html-koder-test.myshopify.com/products/tommy-hilfiger-t-shirt-new-york">
@@ -154,9 +154,9 @@ const ProductDetail = () => {
                                     <div className="text-3xl font-bold price md:py-2 py-2">
                                         239.000 đ
                                     </div>
-                                    
-                                       
-                                    
+
+
+
 
                                 </div>
                                 <div className="swatches">
@@ -173,7 +173,7 @@ const ProductDetail = () => {
                                                 name="option-1"
                                                 value="M"
                                                 checked={selectedSize === "M"}
-                                               
+
                                             />
                                             <label htmlFor="swatch-0-m">M</label>
                                         </div>
@@ -188,7 +188,7 @@ const ProductDetail = () => {
                                                 name="option-1"
                                                 value="L"
                                                 checked={selectedSize === "L"}
-                                               
+
                                             />
                                             <label htmlFor="swatch-0-l">L</label>
                                         </div>
@@ -203,7 +203,7 @@ const ProductDetail = () => {
                                                 name="option-1"
                                                 value="XL"
                                                 checked={selectedSize === "XL"}
-                                             
+
                                             />
                                             <label htmlFor="swatch-0-xl">XL</label>
                                         </div>
@@ -218,7 +218,7 @@ const ProductDetail = () => {
                                                 name="option-1"
                                                 value="XXL"
                                                 checked={selectedSize === "XXL"}
-                                               
+
                                             />
                                             <label htmlFor="swatch-0-xxl">XXL</label>
                                         </div>
@@ -388,120 +388,9 @@ const ProductDetail = () => {
 
 
 
-            <div className="shadow-inner">
-  <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 ">
-    <header>
-      <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-       Gợi ý cho bạn
-      </h2>
+            
+        </section>
 
-   
-    </header>
-
- 
-
-    <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <li>
-        <a href="#" className="group block overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            alt=""
-            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-          />
-
-          <div className="relative bg-white pt-3">
-            <h3
-              className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-            >
-              Basic Tee
-            </h3>
-
-            <p className="mt-2">
-              <span className="sr-only"> Regular Price </span>
-
-              <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-            </p>
-          </div>
-        </a>
-      </li>
-
-      <li>
-        <a href="#" className="group block overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            alt=""
-            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-          />
-
-          <div className="relative bg-white pt-3">
-            <h3
-              className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-            >
-              Basic Tee
-            </h3>
-
-            <p className="mt-2">
-              <span className="sr-only"> Regular Price </span>
-
-              <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-            </p>
-          </div>
-        </a>
-      </li>
-
-      <li>
-        <a href="#" className="group block overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            alt=""
-            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-          />
-
-          <div className="relative bg-white pt-3">
-            <h3
-              className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-            >
-              Basic Tee
-            </h3>
-
-            <p className="mt-2">
-              <span className="sr-only"> Regular Price </span>
-
-              <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-            </p>
-          </div>
-        </a>
-      </li>
-
-      <li>
-        <a href="#" className="group block overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            alt=""
-            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-          />
-
-          <div className="relative bg-white pt-3">
-            <h3
-              className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-            >
-              Basic Tee
-            </h3>
-
-            <p className="mt-2">
-              <span className="sr-only"> Regular Price </span>
-
-              <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-            </p>
-          </div>
-        </a>
-      </li>
-    </ul>
-    </div>
-    
-  </div>
-</section>
-                      
 
 
 
