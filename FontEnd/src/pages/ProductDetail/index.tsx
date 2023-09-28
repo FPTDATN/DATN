@@ -4,10 +4,9 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Modal } from "antd";
+import CommentSection from '@/components/CommentSection';
 
 const ProductDetail = () => {
-
-
     // size
     const [selectedSize, setSelectedSize] = useState("");
 
@@ -50,12 +49,7 @@ const ProductDetail = () => {
 
         <section aria-label="Main content" role="main" className="product-detail ">
             <div className="shadow ">
-
-
                 <div className="_cont detail-top">
-
-
-
                     <div className="cols">
                         <div className="left-col">
                             <div className="abc">
@@ -384,11 +378,12 @@ const ProductDetail = () => {
 
             </div>
 
+            {/* Comment section */}
 
+            <div className='mt-6'>
+                <CommentSection />
+            </div>
 
-
-
-            
         </section>
 
 
