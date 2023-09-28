@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom"
 import { HotProduct } from "./hot-product"
+import RelatedProducts from "@/components/RelatedProducts"
 
 export const HomePage = () => {
     return (
@@ -14,9 +15,6 @@ export const HomePage = () => {
 
 
                     </header>
-
-
-
 
                     <div className="mt-8 block lg:hidden">
                         <button
@@ -596,6 +594,7 @@ export const HomePage = () => {
 
                 <hr />
                 <HotProduct />
+                <RelatedProducts/>
             </section>
         </>
     )

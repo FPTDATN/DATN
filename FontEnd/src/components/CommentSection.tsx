@@ -1,13 +1,19 @@
 import { Avatar, Dropdown } from 'flowbite-react';
+<<<<<<< HEAD
 import { useState } from 'react';
+=======
+>>>>>>> f4d8b225bb6b4f580ff3447ef378420c475e0625
 import { RiMoreLine, RiEditLine, RiDeleteBackLine, RiReplyLine } from 'react-icons/ri'
 
 type Props = {};
 
 const CommentSection = ({ }: Props) => {
+<<<<<<< HEAD
 
     const [reply, setReply] = useState<boolean>(false)
 
+=======
+>>>>>>> f4d8b225bb6b4f580ff3447ef378420c475e0625
     return (
         <section className="bg-white dark:bg-gray-900 py-8 lg:py-8 antialiased">
             <div className="max-w-2xl mx-auto px-4">
@@ -75,13 +81,17 @@ const CommentSection = ({ }: Props) => {
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                         <button
+<<<<<<< HEAD
                             onClick={() => setReply(!reply)}
+=======
+>>>>>>> f4d8b225bb6b4f580ff3447ef378420c475e0625
                             type="button"
                             className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium"
                         >
 
                             <RiReplyLine /> Reply
                         </button>
+<<<<<<< HEAD
 
 
                     </div>
@@ -121,6 +131,9 @@ const CommentSection = ({ }: Props) => {
                             </div>
                         </form>
                     </div>}
+=======
+                    </div>
+>>>>>>> f4d8b225bb6b4f580ff3447ef378420c475e0625
                 </article>
                 <article className="border-l pl-6 mb-3 lg:ml-8 text-base bg-white dark:bg-gray-900">
                     <div className="flex justify-between items-center mb-2">
@@ -160,7 +173,10 @@ const CommentSection = ({ }: Props) => {
                     </p>
                     <div className="flex items-center mt-4 space-x-4">
                         <button
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4d8b225bb6b4f580ff3447ef378420c475e0625
                             type="button"
                             className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium"
                         >
@@ -168,9 +184,12 @@ const CommentSection = ({ }: Props) => {
                             <RiReplyLine /> Reply
                         </button>
                     </div>
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> f4d8b225bb6b4f580ff3447ef378420c475e0625
                 </article>
             </div>
         </section>
