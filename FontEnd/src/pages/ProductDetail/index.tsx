@@ -5,6 +5,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Modal } from "antd";
 import CommentSection from '@/components/CommentSection';
+import RelatedProducts from '@/components/RelatedProducts';
 
 const ProductDetail = () => {
     // size
@@ -382,6 +383,11 @@ const ProductDetail = () => {
 
             <div className='mt-6'>
                 <CommentSection />
+            </div>
+
+            {/* Related Product */}
+            <div className='mt-6'>
+                <RelatedProducts/>
             </div>
 
         </section>
