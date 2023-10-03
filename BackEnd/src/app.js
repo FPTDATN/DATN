@@ -7,8 +7,12 @@ import searchRouter from "../src/routers/search";
 import commentRouter from '../src/routers/comments'
 import user from "../src/routers/user";
 import cookieParser from "cookie-parser"
+import cors from 'cors';
 
 const app = express();
+
+app.use(cors());
+
 app.use(express.json());
 app.use(cookieParser())
 app.use("/api", productsRouter);
