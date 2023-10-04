@@ -12,6 +12,8 @@ import {
 } from 'redux-persist';
 
 import storage from 'redux-persist/lib/storage';
+import apiProduct from '@/api/product'
+import { cartReducer } from '@/slices/cart';
 
 const persistConfig = {
     key: 'root',
@@ -19,9 +21,12 @@ const persistConfig = {
     whitelist: ['cart']
 }
 const rootReducer = combineReducers({
+    [apiProduct.reducerPath]: apiProduct.reducer,
+    cart: cartReducer
 })
-const middleware:any[] = [
+const middleware: any[] = [
     // Aply middleware of API key
+    apiProduct.middleware
 ]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

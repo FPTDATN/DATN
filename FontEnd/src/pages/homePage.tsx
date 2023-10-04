@@ -1,8 +1,12 @@
-import { Outlet } from "react-router-dom"
+import { useGetProductsQuery } from "@/api/product"
 import { HotProduct } from "./hot-product"
-import RelatedProducts from "@/components/RelatedProducts"
+import ProductItem from "@/components/children/ProductItem";
+import Skeleton from 'react-loading-skeleton'
 
 export const HomePage = () => {
+
+    const { data, isLoading, isError } = useGetProductsQuery();
+
     return (
         <>
 
@@ -26,20 +30,20 @@ export const HomePage = () => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
+                                strokeWidth="1.5"
                                 stroke="currentColor"
                                 className="h-4 w-4 rtl:rotate-180"
                             >
                                 <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                     d="M8.25 4.5l7.5 7.5-7.5 7.5"
                                 />
                             </svg>
                         </button>
                     </div>
 
-                    <div className="mt-4 lg:mt-8 lg:grid lg:grid-cols-4 lg:items-start lg:gap-8">
+                    <div className="mt-4 lg:mt-8 lg:grid lg:grid-cols-4 lg:items-start lg:gap-8 col-span-1">
                         <div className="hidden space-y-4 lg:block">
                             <div className="relative ">
                                 <label className="sr-only"> Search </label>
@@ -59,13 +63,13 @@ export const HomePage = () => {
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 24 24"
-                                            stroke-width="1.5"
+                                            strokeWidth="1.5"
                                             stroke="currentColor"
                                             className="h-4 w-4"
                                         >
                                             <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                                             />
                                         </svg>
@@ -105,13 +109,13 @@ export const HomePage = () => {
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
-                                                    stroke-width="1.5"
+                                                    strokeWidth="1.5"
                                                     stroke="currentColor"
                                                     className="h-4 w-4"
                                                 >
                                                     <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
                                                         d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                                     />
                                                 </svg>
@@ -176,13 +180,13 @@ export const HomePage = () => {
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
-                                                    stroke-width="1.5"
+                                                    strokeWidth="1.5"
                                                     stroke="currentColor"
                                                     className="h-4 w-4"
                                                 >
                                                     <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
                                                         d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                                     />
                                                 </svg>
@@ -310,13 +314,13 @@ export const HomePage = () => {
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
-                                                    stroke-width="1.5"
+                                                    strokeWidth="1.5"
                                                     stroke="currentColor"
                                                     className="h-4 w-4"
                                                 >
                                                     <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
                                                         d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                                     />
                                                 </svg>
@@ -366,153 +370,26 @@ export const HomePage = () => {
                             </div>
                         </div>
 
-                        <div className="lg:col-span-3">
-                            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                                <li>
-                                    <a href="#" className="group block overflow-hidden">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                            alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
-                                        />
+                        {isLoading ? <div className="col-span-3">
+                            <div className="grid grid-cols-4 gap-x-2">
+                                {[...new Array(4)].map((_item, index: number) => (
+                                    <Skeleton key={index} className="w-full  min-h-[360px] h-full" />
+                                ))}
+                            </div>
+                        </div> :
 
-                                        <div className="relative bg-white pt-3">
-                                            <h3
-                                                className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                            >
-                                                Basic Tee
-                                            </h3>
+                            <section className="col-span-3 flex items-center bg-gray-100 font-poppins dark:bg-gray-800 ">
+                                <div className="justify-center flex-1 max-w-6xl px-2 py-2 mx-auto lg:py-2 md:px-2">
 
-                                            <p className="mt-2">
-                                                <span className="sr-only"> Regular Price </span>
+                                    <div className="grid gap-2 mb-11 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+                                        {data?.docs?.map((product) => {
+                                            return <ProductItem key={product._id} product={product} />
+                                        })}
+                                    </div>
+                                </div>
+                            </section>
+                        }
 
-                                                <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="group block overflow-hidden">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                            alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
-                                        />
-
-                                        <div className="relative bg-white pt-3">
-                                            <h3
-                                                className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                            >
-                                                Basic Tee
-                                            </h3>
-
-                                            <p className="mt-2">
-                                                <span className="sr-only"> Regular Price </span>
-
-                                                <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="group block overflow-hidden">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                            alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
-                                        />
-
-                                        <div className="relative bg-white pt-3">
-                                            <h3
-                                                className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                            >
-                                                Basic Tee
-                                            </h3>
-
-                                            <p className="mt-2">
-                                                <span className="sr-only"> Regular Price </span>
-
-                                                <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="group block overflow-hidden">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                            alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
-                                        />
-
-                                        <div className="relative bg-white pt-3">
-                                            <h3
-                                                className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                            >
-                                                Basic Tee
-                                            </h3>
-
-                                            <p className="mt-2">
-                                                <span className="sr-only"> Regular Price </span>
-
-                                                <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="group block overflow-hidden">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                            alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
-                                        />
-
-                                        <div className="relative bg-white pt-3">
-                                            <h3
-                                                className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                            >
-                                                Basic Tee
-                                            </h3>
-
-                                            <p className="mt-2">
-                                                <span className="sr-only"> Regular Price </span>
-
-                                                <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" className="group block overflow-hidden">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                            alt=""
-                                            className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px]"
-                                        />
-
-                                        <div className="relative bg-white pt-3">
-                                            <h3
-                                                className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4"
-                                            >
-                                                Basic Tee
-                                            </h3>
-
-                                            <p className="mt-2">
-                                                <span className="sr-only"> Regular Price </span>
-
-                                                <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-
-
-
-
-                        </div>
                     </div>
                     <ol className="mt-8 flex justify-center gap-1 text-xs font-medium">
                         <li>
@@ -528,7 +405,7 @@ export const HomePage = () => {
                                     fill="currentColor"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                                         clip-rule="evenodd"
                                     />
@@ -582,9 +459,9 @@ export const HomePage = () => {
                                     fill="currentColor"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd"
+                                        clipRule="evenodd"
                                     />
                                 </svg>
                             </a>
@@ -594,7 +471,6 @@ export const HomePage = () => {
 
                 <hr />
                 <HotProduct />
-                <RelatedProducts/>
             </section>
         </>
     )
