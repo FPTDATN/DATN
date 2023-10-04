@@ -2,10 +2,25 @@ import { useGetProductsQuery } from "@/api/product"
 import { HotProduct } from "./hot-product"
 import ProductItem from "@/components/children/ProductItem";
 import Skeleton from 'react-loading-skeleton'
+import { useGetCategoriesQuery } from "@/api/category";
+import { useEffect, useState } from "react";
 
 export const HomePage = () => {
 
-    const { data, isLoading, isError } = useGetProductsQuery();
+    const { data, isLoading } = useGetProductsQuery();
+    const { data: categories } = useGetCategoriesQuery();
+
+    const [products, setProducts] = useState(data?.docs);
+
+    const filterByCategory = (_id: string) => {
+        const filter = data?.docs.filter((product) => product.categoryId === _id)
+        setProducts(filter);
+    };
+
+    useEffect(() => {
+        setProducts(data?.docs)
+    }, [isLoading])
+
 
     return (
         <>
@@ -331,37 +346,25 @@ export const HomePage = () => {
 
 
                                             <ul className="space-y-1 border-t border-gray-200 p-4">
-                                                <li>
+                                                <li onClick={() => setProducts(data?.docs)}>
                                                     <a
-                                                        href="#"
                                                         className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                                                         role="menuitem"
                                                     >
-                                                        Áo nam
+                                                        Tất cả
                                                     </a>
                                                 </li>
+                                                {categories?.docs.map((category) => (
+                                                    <li key={category._id} onClick={() => filterByCategory(category._id)}>
+                                                        <a
+                                                            className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                                            role="menuitem"
+                                                        >
+                                                            {category.name}
+                                                        </a>
+                                                    </li>
 
-                                                <li>
-                                                    <a
-                                                        href="#"
-                                                        className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                                                        role="menuitem"
-                                                    >
-                                                        Áo nữ
-                                                    </a>
-                                                </li>
-
-                                                <li>
-                                                    <a
-                                                        href="#"
-                                                        className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                                                        role="menuitem"
-                                                    >
-                                                        Áo con nít
-                                                    </a>
-                                                </li>
-
-
+                                                ))}
 
                                             </ul>
                                         </div>
@@ -380,12 +383,13 @@ export const HomePage = () => {
 
                             <section className="col-span-3 flex items-center bg-gray-100 font-poppins dark:bg-gray-800 ">
                                 <div className="justify-center flex-1 max-w-6xl px-2 py-2 mx-auto lg:py-2 md:px-2">
-
-                                    <div className="grid gap-2 mb-11 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-                                        {data?.docs?.map((product) => {
-                                            return <ProductItem key={product._id} product={product} />
-                                        })}
-                                    </div>
+                                    {products?.length === 0 ? <h1 className="text-xl">Chưa có sản phẩm nào 😥</h1> :
+                                        <div className="grid gap-2 mb-11 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+                                            {products?.map((product) => {
+                                                return <ProductItem key={product._id} product={product} />
+                                            })}
+                                        </div>
+                                    }
                                 </div>
                             </section>
                         }

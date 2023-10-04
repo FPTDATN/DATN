@@ -2,6 +2,7 @@ import { addToCart } from "@/slices/cart";
 import { useAppDispatch } from "@/store/hook";
 import { ProductType } from "@/types/Product";
 import { AiOutlineStar, AiOutlineHeart, AiOutlineShoppingCart } from 'react-icons/ai'
+import { Link } from "react-router-dom";
 
 
 type Props = {
@@ -15,9 +16,9 @@ const ProductItem = ({ product }: Props) => {
     return (
         <div className="rounded-md ">
             <div className="relative ">
-                <a href="#" className="">
-                    <img src="https://i.postimg.cc/gkxqMsfV/pexels-karolina-grabowska-4464821.jpg" alt="" className="object-cover w-full mx-auto h-96 lg:h-72 " />
-                </a>
+                <Link to={`/detail/${product._id}`} className="">
+                    <img src={product.images} alt="" className="object-cover w-full mx-auto h-96 lg:h-72 " />
+                </Link>
                 <span className="absolute top-0 right-0 px-4 py-2 m-2 lg:px-2 lg:py-1 text-sm font-semibold text-gray-100 bg-red-600 rounded-md">
                     -{product.sale_off}% OFF</span>
                 <div className="absolute z-10 flex items-center justify-center p-2 text-center text-gray-700 rounded-full shadow-xl cursor-pointer right-3 bottom-3 bg-gray-50 hover:text-gray-50 hover:bg-blue-600 w-11 h-11 ">
@@ -28,7 +29,7 @@ const ProductItem = ({ product }: Props) => {
             </div>
             <div className="p-4 border-b border-gray-200 bg-white  dark:border-gray-900 rounded-b-md dark:bg-gray-900">
                 <h3 className="mb-3 text-xl font-medium text-left dark:text-gray-400">
-                    <a href="#" className="line-clamp-2"> {product.name}</a>
+                    <Link to={`/detail/${product._id}`} className="line-clamp-2"> {product.name}</Link>
                 </h3>
                 <div className="relative flex items-center justify-between mb-3 text-left">
                     <p className="text-lg font-medium text-gray-600 dark:text-gray-400">

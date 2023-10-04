@@ -1,18 +1,33 @@
 import './detail.css'
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, SyntheticEvent } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Modal } from "antd";
 import CommentSection from '@/components/CommentSection';
 import RelatedProducts from '@/components/RelatedProducts';
+import { useParams } from 'react-router-dom'
+import { useGetProductByIdQuery } from '@/api/product';
+import { Spinner } from 'flowbite-react';
+import { useAppDispatch } from '@/store/hook';
+import { addToCart } from '@/slices/cart';
+
 
 const ProductDetail = () => {
+
+    const { id } = useParams();
+
+    const { data, isLoading, error } = useGetProductByIdQuery(id!);
+
+    // Dispatch
+
+    const dispatch = useAppDispatch();
+
     // size
     const [selectedSize, setSelectedSize] = useState("");
 
-    const handleSizeChange = (event) => {
-        setSelectedSize(event.target.value);
+    const handleSizeChange = (event: SyntheticEvent) => {
+        setSelectedSize((event.target as HTMLInputElement).value);
     };
     // img
     const [nav1, setNav1] = useState(null);
@@ -44,8 +59,21 @@ const ProductDetail = () => {
 
     const handleInstructionsClick = () => {
         setInstructionsOpen(!isInstructionsOpen);
-    };
-    //   
+    };    
+
+
+    if (error) {
+        return <div className='fixed z-[99999] top-0 left-0 bottom-0 right-0 bg-white flex justify-center items-center'>
+            <h1 className='text-3xl font-bold'>404 PAGE</h1>
+        </div>
+    }
+
+    if (isLoading) {
+        return <div className='h-screen flex justify-center items-center'>
+            <Spinner size={'xl'} color={'info'} aria-label="Default status example" />
+        </div>
+    }
+
     return (
 
         <section aria-label="Main content" role="main" className="product-detail ">
@@ -54,7 +82,7 @@ const ProductDetail = () => {
                     <div className="cols">
                         <div className="left-col">
                             <div className="abc">
-                                <Slider asNavFor={nav1}
+                                <Slider asNavFor={nav1!}
                                     ref={slider2Ref}
                                     slidesToShow={3}
                                     swipeToSlide={true}
@@ -67,7 +95,7 @@ const ProductDetail = () => {
                                 >
                                     <a className="thumb-image " >
                                         <span> <img
-                                            src="https://i.ibb.co/NWXd8Bh/8ts23c006-sk010-1.webp"
+                                            src={data?.products.images}
                                             alt=""
                                             className=""
                                         /></span>
@@ -100,12 +128,12 @@ const ProductDetail = () => {
                             </div>
                             <div className="big">
                                 <Slider
-                                    asNavFor={nav2} ref={slider1Ref}
+                                    asNavFor={nav2!} ref={slider1Ref}
                                 >
                                     <span> <img
-                                        src="https://i.ibb.co/NWXd8Bh/8ts23c006-sk010-1.webp"
+                                        src={data?.products.images}
                                         alt=""
-                                        className=""
+                                        className="w-full h-full object-cover"
                                     /></span>
                                     <span><img
                                         src="https://i.ibb.co/mvVZ4D8/8ts23c006-se131-1.webp"
@@ -127,10 +155,6 @@ const ProductDetail = () => {
                                     /></span>
                                 </Slider>
 
-
-
-
-
                                 <div className="detail-socials">
                                     <div className="social-sharing" data-permalink="http://html-koder-test.myshopify.com/products/tommy-hilfiger-t-shirt-new-york">
                                         <a target="_blank" className="share-facebook" title="Share"></a>
@@ -141,18 +165,14 @@ const ProductDetail = () => {
                             </div>
                         </div>
                         <div className="right-col md:py-2 py-2">
-                            <h1>Quần soóc nam có túi hai bên</h1>
-                            <div   >
+                            <h1>{data?.products.name}</h1>
+                            <div>
 
 
                                 <div className="price-shipping">
                                     <div className="text-3xl font-bold price md:py-2 py-2">
-                                        239.000 đ
+                                        {data?.products.price} đ
                                     </div>
-
-
-
-
                                 </div>
                                 <div className="swatches">
                                     <div className="swatch clearfix" data-option-index="0">
@@ -278,7 +298,7 @@ const ProductDetail = () => {
                                 <div className="btn-and-quantity-wrap mt-8 md:ml-0 ml-11">
                                     <div className="btn-and-quantity" >
 
-                                        <div id="AddToCart"  >
+                                        <div id="AddToCart" className='cursor-pointer' onClick={() => dispatch(addToCart({ ...data?.products!, quantity: 1 }))}>
                                             <a >Add to Cart</a>
                                         </div>
                                     </div>
@@ -387,7 +407,7 @@ const ProductDetail = () => {
 
             {/* Related Product */}
             <div className='mt-6'>
-                <RelatedProducts/>
+                <RelatedProducts />
             </div>
 
         </section>
