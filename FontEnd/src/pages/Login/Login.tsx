@@ -1,6 +1,24 @@
-import React from 'react'
+import {useForm} from 'react-hook-form'
+import Swal from 'sweetalert2';
+import { useSigninMutation } from '@/api/auth'
 
 const Login = () => {
+    const {register, handleSubmit,formState:{errors}} = useForm()
+    const [signin] = useSigninMutation()
+    const sigin = (data:any) => {
+        signin(data).then((response:any) => {
+            const { accessToken } = response.data;
+            localStorage.setItem('accessToken', accessToken);
+            Swal.fire({
+              position: 'center',
+              title: 'Đăng nhập thành công',
+              text: 'Bạn đã đăng nhập thành công!',
+              icon: 'success',
+              confirmButtonText: 'OK',
+              iconHtml: '<i class="fas fa-check-circle"></i>'
+            });
+          })
+    }
     return (
         <div>
             <section className="sigup">
@@ -10,18 +28,25 @@ const Login = () => {
                             <h2 className=" text-center text-2xl font-bold text-gray-900 dark:text-white">
                                 Đăng Nhập
                             </h2>
-                            <form className="mt-8 space-y-6" action="#">
+                            <form className="mt-8 space-y-6" action="#" onSubmit={handleSubmit(sigin)}>
                                 <div>
                                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                    <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required />
+                                    <input type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+                                     dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" 
+                                     {...register('email',{required:true})} />
                                 </div>
+                                {errors.email && errors.email.type === 'required' && <p className='text-red-500'>email không được bỏ trống</p>}
                                 <div>
                                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu</label>
-                                    <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                                    <input type="password"  id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 
+                                    block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                    {...register('password',{required:true,minLength:8})} />
                                 </div>
+                                 {errors.password && errors.password.type === 'required' && <p className='text-red-500'>password không được bỏ trống</p>}
+                                 {errors.password && errors.password.type === 'minLength' &&<p className='text-red-500'>password ít nhất phải có 4 kí tự</p>}
                                 <div className="flex items-start">
                                     <div className="flex items-center h-5">
-                                        <input id="remember" aria-describedby="remember" name="remember" type="checkbox" className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600" required />
+                                        <input id="remember" aria-describedby="remember" name="remember" type="checkbox" className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"  />
                                     </div>
                                     <div className="ml-3 text-sm">
                                         <label htmlFor="remember" className="font-medium text-gray-500 dark:text-gray-400">Ghi nhớ</label>

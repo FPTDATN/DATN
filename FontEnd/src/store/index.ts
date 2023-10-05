@@ -1,4 +1,5 @@
 
+import authApi from '@/api/auth';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
     FLUSH,
@@ -19,6 +20,7 @@ const persistConfig = {
     whitelist: ['cart']
 }
 const rootReducer = combineReducers({
+    [authApi.reducerPath]:authApi.reducer
 })
 const middleware:any[] = [
     // Aply middleware of API key
