@@ -6,6 +6,8 @@ import categoryRouter from "../src/routers/category";
 import searchRouter from "../src/routers/search";
 import commentRouter from '../src/routers/comments'
 import user from "../src/routers/user";
+import favourite from "../src/routers/favourite";
+
 import orderroute from "./routers/order";
 import cookieParser from "cookie-parser"
 import cors from 'cors';
@@ -23,6 +25,8 @@ app.use("/api", categoryRouter);
 app.use("/api", searchRouter);
 app.use("/api", user);
 app.use('/api', commentRouter);
+app.use('/api', favourite);
+
 app.use('/api', orderroute );
 
 

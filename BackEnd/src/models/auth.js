@@ -18,10 +18,12 @@ const authSchame = new mongoose.Schema({
   },
   comments: [
     {
-        type: mongoose.Types.ObjectId,
-        ref: 'Comment',
+      type: mongoose.Types.ObjectId,
+      ref: 'Comment',
     },
-],
+  ],
+  favourite: [{ type: mongoose.Types.ObjectId, ref: "Favourite" }],
+
   role: {
     type: String,
     default: "member",
