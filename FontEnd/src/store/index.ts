@@ -1,6 +1,4 @@
 
-import authApi from '@/api/auth';
-import orderApi from '@/api/order';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
     FLUSH,
@@ -21,11 +19,12 @@ const persistConfig = {
     whitelist: ['cart']
 }
 const rootReducer = combineReducers({
-    [authApi.reducerPath]:authApi.reducer,
-    [orderApi.reducerPath]:orderApi.reducer
+
 })
+
+// Middleware
 const middleware:any[] = [
-    orderApi.middleware
+    
 ]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
