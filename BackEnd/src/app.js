@@ -6,8 +6,10 @@ import categoryRouter from "../src/routers/category";
 import searchRouter from "../src/routers/search";
 import commentRouter from '../src/routers/comments'
 import user from "../src/routers/user";
+import orderroute from "./routers/order";
 import cookieParser from "cookie-parser"
 import cors from 'cors';
+
 
 const app = express();
 
@@ -21,6 +23,7 @@ app.use("/api", categoryRouter);
 app.use("/api", searchRouter);
 app.use("/api", user);
 app.use('/api', commentRouter);
+app.use('/api', orderroute );
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/DATN");
