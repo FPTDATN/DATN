@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
@@ -151,6 +150,22 @@ import { Outlet } from "react-router-dom";
                 ></path>
               </svg>
               <span className="">Messages</span>
+            </Link>
+            <Link
+              to={`/admin/orders`}
+              className="text-sm font-medium text-gray-700 py-2 px-2 hover:bg-teal-500 hover:text-white hover:scale-105 rounded-md transition duration-150 ease-in-out"
+            >
+              <svg
+                className="w-6 h-6 fill-current inline-block"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 10 2 a 4 4 0 0 0 -4 4 v 1 H 5 a 1 1 0 0 0 -0.994 0.89 l -1 9 A 1 1 0 0 0 4 18 h 12 a 1 1 0 0 0 0.994 -1.11 l -1 -9 A 1 1 0 0 0 15 7 h -1 V 6 a 4 4 0 0 0 -4 -4 Z m 2 5 V 6 a 2 2 0 1 0 -4 0 v 1 h 4 Z m -6 3 a 1 1 0 1 1 2 0 a 1 1 0 0 1 -2 0 Z m 7 -1 a 1 1 0 1 0 0 2 a 1 1 0 0 0 0 -2 Z"
+                ></path>
+              </svg>
+              <span className="">Orders</span>
             </Link>
             <Link
               to={`/admin/users`}

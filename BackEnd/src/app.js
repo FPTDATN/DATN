@@ -8,8 +8,10 @@ import commentRouter from '../src/routers/comments'
 import user from "../src/routers/user";
 import favourite from "../src/routers/favourite";
 
+import orderroute from "./routers/order";
 import cookieParser from "cookie-parser"
 import cors from 'cors';
+
 
 const app = express();
 
@@ -25,6 +27,7 @@ app.use("/api", user);
 app.use('/api', commentRouter);
 app.use('/api', favourite);
 
+app.use('/api', orderroute );
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/DATN");
