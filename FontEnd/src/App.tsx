@@ -14,6 +14,7 @@ import { Product_admin } from './pages/Admin/products';
 import { Category_admin } from './pages/Admin/category';
 import { Users } from './pages/Admin/users';
 import ProductDetail from './pages/ProductDetail';
+import { Orders } from './pages/Admin/orders'
 
 
 
@@ -41,6 +42,7 @@ function App() {
           <Route path='products' element={<Product_admin />} />
           <Route path='category' element={<Category_admin />} />
           <Route path='users' element={<Users/>} />
+          <Route path='orders' element={<Orders/>} />
         </Route>
       </Routes>
       
