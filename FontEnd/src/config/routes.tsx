@@ -23,6 +23,16 @@ const router = createBrowserRouter([
             }
             ,
             {
+                path: 'filter',
+                element: <FilterProducts/>
+            }
+            
+        ]
+    },
+    {
+        path: '/account',
+        children: [
+            {
                 path: 'signup',
                 element: <Signup />
             }
@@ -31,14 +41,6 @@ const router = createBrowserRouter([
                 path: 'signin',
                 element: <Signin />
             },
-<<<<<<< HEAD
-            {
-                path: 'filter',
-                element: <FilterProducts/>
-            }
-            
-=======
->>>>>>> 81d16f2430bf00e46b5712ccf2246de3b9b331e2
         ]
     },
     // Admin

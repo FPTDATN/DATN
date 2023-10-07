@@ -3,11 +3,7 @@ import { Link } from "react-router-dom"
 export const Signup = () => {
     return (
         <>
-            <div className="p-2 bg-gradient-to-t from-gray-300">
-                <h2 className="text-lg font-bold text-slate-600 ml-[5%]">Đăng Ký Tài Khoản</h2>
-
-            </div>
-            <section className="bg-whit mt-2">
+            <section className="bg-whit">
 
                 <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                     <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
@@ -116,7 +112,7 @@ export const Signup = () => {
 
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                                         Already have an account?
-                                        <Link to="/signin" className="text-gray-700 underline">Log in</Link>.
+                                        <Link to="/account/signin" className="text-gray-700 underline">Log in</Link>.
                                     </p>
                                 </div>
                             </form>

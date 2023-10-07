@@ -57,7 +57,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             <CartModal />
                             <Notification />
 
-                            <Link to="/signin"
+                            <Link to="/account/signin"
                                 className="items-center hidden px-4 py-2 font-semibold text-layer border border-primary rounded-md hover:text-gray-100 hover:bg-primary lg:flex dark:text-primary dark:hover:bg-transparent dark:border-gray-300 dark:hover:text-blue-300">
                                 Sign In
                             </Link>
