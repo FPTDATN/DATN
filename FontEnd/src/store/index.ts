@@ -1,4 +1,5 @@
 
+import { cartReducer } from '@/slices/cart';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
     FLUSH,
@@ -19,7 +20,7 @@ const persistConfig = {
     whitelist: ['cart']
 }
 const rootReducer = combineReducers({
-
+    cart: cartReducer
 })
 
 // Middleware
