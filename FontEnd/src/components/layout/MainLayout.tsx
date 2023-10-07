@@ -1,16 +1,17 @@
-import {Outlet} from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import Navbar from '../navbar/Navbar'
+import { Breadcrumbs } from '../breadcrumbs'
 
 const MainLayout = () => {
     return (
-       
+
         <div>
-            <Navbar/>
-            <div>
-                <Outlet/>
-            </div>
+            <Navbar />
+            <Breadcrumbs />
+            <Outlet />
+
         </div>
-        
+
     )
 }
 
