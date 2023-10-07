@@ -1,6 +1,7 @@
 
 import { Drawer } from 'antd';
 import { FunctionComponent } from 'react';
+import { Link } from 'react-router-dom';
 
 interface MobileModalProps {
     open: boolean;
@@ -14,9 +15,9 @@ const MobileMenuModal: FunctionComponent<MobileModalProps> = ({ open, onClose })
 
             <ul className="text-left">
                 <li className="pb-3">
-                    <a href="" className="text-sm text-gray-700 hover:text-blue-400 dark:text-gray-100">
+                    <Link to="/" className="text-sm text-gray-700 hover:text-blue-400 dark:text-gray-100">
                         Home
-                    </a>
+                    </Link>
                 </li>
                 <li className="pb-3">
                     <a href="" className="text-sm text-gray-700 hover:text-blue-400 dark:text-gray-400">
