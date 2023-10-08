@@ -3,6 +3,7 @@ import { FunctionComponent, useState } from 'react';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton'
+import SaleOffCard from '../ui/SaleOffCard';
 
 interface ProductItemProps {
     arrangeList?: boolean;
@@ -13,7 +14,6 @@ const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList }) => {
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
-
 
     return (
         <>
@@ -31,9 +31,10 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList }) => {
                                 className="object-cover w-full mx-auto h-32 md:h-80 lg:h-40"
                             />
                         </Link>
-                        <div className="absolute z-10 flex items-center justify-center w-10 h-10 p-4 text-center text-gray-100 bg-orange-600 rounded-full shadow-xl left-1 top-1 ">
-                            <span className="relative text-base font-semibold text-gray-200 "> SALE</span>
-                        </div>
+
+                        {/* Card sale off if saleoff > 0 */}
+                        <SaleOffCard type='saleoff' off={1}/>
+
                         <div className="flex justify-center ">
                             <div className="absolute z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 ">
                                 <AiOutlineShoppingCart />

@@ -19,9 +19,9 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
     };
 
     return (
-        <div className="relative  h-[95px]" >
-            <section className="absolute left-0 right-0 top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-800 text-layer">
-                <div className="max-w-6xl px-4 mx-auto">
+        <div className="relative h-[95px]" >
+            <section className="absolute w-full flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-800 text-layer">
+                <div className="max-w-6xl px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
                         <Link to="/" className="text-3xl font-semibold leading-none dark:text-gray-400">
                             Logo
