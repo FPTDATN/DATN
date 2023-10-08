@@ -4,6 +4,7 @@ import Notification from "../ui/Notification";
 import CartModal from "../modal/CartModal";
 import MobileMenuModal from "../modal/MobileMenuModal";
 import { Link } from "react-router-dom";
+import AccountIcon from "../ui/AccountIcon";
 interface NavbarProps {
 
 }
@@ -56,11 +57,8 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             </div>
                             <CartModal />
                             <Notification />
+                            <AccountIcon />
 
-                            <Link to="/account/signin"
-                                className="items-center hidden px-4 py-2 font-semibold text-layer border border-primary rounded-md hover:text-gray-100 hover:bg-primary lg:flex dark:text-primary dark:hover:bg-transparent dark:border-gray-300 dark:hover:text-blue-300">
-                                Sign In
-                            </Link>
                         </div>
                     </nav>
 

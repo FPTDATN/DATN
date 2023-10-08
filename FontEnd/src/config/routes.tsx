@@ -1,8 +1,10 @@
 import AdminLayout from '@/components/layout/AdminLayout';
 import MainLayout from '@/components/layout/MainLayout';
+import AccountDetail from '@/pages/user/account-detail/AccountDetail';
 import Cart from '@/pages/user/cart/Cart';
 import FilterProducts from '@/pages/user/filter/FilterProducts';
 import Home from '@/pages/user/home/Home';
+import ProductDetail from '@/pages/user/productdetail/ProductDetail';
 import { Signin } from '@/pages/user/signin';
 import { Signup } from '@/pages/user/signup';
 import { createBrowserRouter } from 'react-router-dom';
@@ -24,9 +26,12 @@ const router = createBrowserRouter([
             ,
             {
                 path: 'filter',
-                element: <FilterProducts/>
+                element: <FilterProducts />
+            },
+            {
+                path: 'detail',
+                element: <ProductDetail />
             }
-            
         ]
     },
     {
@@ -40,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path: 'signin',
                 element: <Signin />
+            },
+            {
+                path: 'details',
+                element: <AccountDetail />
             },
         ]
     },
