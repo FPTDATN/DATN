@@ -25,15 +25,6 @@ const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading })
                 <ProductItem/>
                 <ProductItem/>
                 <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
             </div>
 
             <div className="flex justify-center">
