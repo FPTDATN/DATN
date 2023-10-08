@@ -1,6 +1,6 @@
 import { Breadcrumb } from "antd"
 
-export const Breadcrumbs = () => {
+export const Breadcrumbs1 = () => {
     return (
         <div className="pt-2 pb-2 px-8">
             <Breadcrumb
@@ -10,7 +10,7 @@ export const Breadcrumbs = () => {
                         title: 'Home',
                     },
                     {
-                        title: 'Account Detail',
+                        title: 'Product Details',
                     }
                 ]}
             />

@@ -1,3 +1,4 @@
+import AccountIcon from "../ui/AccountIcon";
 import { FunctionComponent, useState } from 'react';
 import { AiOutlineHeart, AiOutlineMenu } from 'react-icons/ai';
 import Notification from '../ui/Notification';
@@ -6,6 +7,7 @@ import MobileMenuModal from '../modal/MobileMenuModal';
 import { Link } from 'react-router-dom';
 import {MdKeyboardArrowDown} from 'react-icons/md'
 interface NavbarProps { }
+
 
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
@@ -128,13 +130,9 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             </div>
                             <CartModal />
                             <Notification />
+                            <AccountIcon />
 
-                            <Link
-                                to="/account/signin"
-                                className="items-center hidden px-2 py-2 font-semibold text-layer border border-primary rounded-md hover:text-gray-100 hover:bg-primary lg:flex dark:text-primary dark:hover:bg-transparent dark:border-gray-300 dark:hover:text-blue-300"
-                            >
-                                Đăng nhập
-                            </Link>
+
                         </div>
                     </nav>
 
