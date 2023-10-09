@@ -22,7 +22,16 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         const auth = await Auth.create({
-            name: req.body.name,
+            username: req.body.username,
+            firName: req.body.firName,
+            lastName: req.body.lastName,
+            fullName: req.body.fullName,
+            address: req.body.address,
+            phone: req.body.phone,
+            country: req.body.country,
+            images: req.body.images,
+            rule: req.body.rule,
+            cardnumber: req.body.cardnumber,
             email: req.body.email,
             password: hashedPassword,
         });
@@ -45,7 +54,7 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email,username, password } = req.body;
         const { error } = signinSchema.validate(req.body, { abortEarly: false });
         if (error) {
             return res.status(400).json({
@@ -53,12 +62,12 @@ export const signin = async (req, res) => {
             });
         }
 
-        const auth = await Auth.findOne({ email });
+        const auth = await Auth.findOne({ email,username });
         if (!auth) {
             return res.status(400).json({
-                message: "Email không tồn tại",
+                message: "Email hoặc tên người dùng không tồn tại",
             });
-        }
+        }   
 
 
         const isMatch = await bcrypt.compare(password, auth.password);
