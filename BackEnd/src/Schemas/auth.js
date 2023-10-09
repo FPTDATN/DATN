@@ -15,7 +15,7 @@ export const signupSchema = joi.object({
         "any.required": "Trường tên là bắt buộc",
     }),
 
-    images: joi.string(),
+    avatar: joi.string(),
     country:joi.string(),
     rule:joi.string(),
     country:joi.string(),

@@ -32,7 +32,7 @@ const authSchame = new mongoose.Schema({
     type: String,
     required: true,
   },
-  images: {
+  avatar: {
     type: String,
   },
   country: {
