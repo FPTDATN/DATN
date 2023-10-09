@@ -1,7 +1,7 @@
 import Auth from "../models/auth";
-import bcrypt  from "bcryptjs"
+import bcrypt from "bcryptjs";
 import { signupSchema, signinSchema } from "../Schemas/auth";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
     try {
@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
 
         const auth = await Auth.create({
             username: req.body.username,
-            firName: req.body.firName,
+            firstName: req.body.firstName,
             lastName: req.body.lastName,
             fullName: req.body.fullName,
             address: req.body.address,
@@ -51,10 +51,9 @@ export const signup = async (req, res) => {
     }
 };
 
-
 export const signin = async (req, res) => {
     try {
-        const { email,username, password } = req.body;
+        const { usernameOrEmail, password } = req.body;
         const { error } = signinSchema.validate(req.body, { abortEarly: false });
         if (error) {
             return res.status(400).json({
@@ -62,13 +61,19 @@ export const signin = async (req, res) => {
             });
         }
 
-        const auth = await Auth.findOne({ email,username });
+        const auth = await Auth.findOne(
+            usernameOrEmail.includes("@")
+                ? { email: usernameOrEmail }
+                : { name: usernameOrEmail }
+        );
+
         if (!auth) {
             return res.status(400).json({
-                message: "Email hoặc tên người dùng không tồn tại",
+                message: usernameOrEmail.includes("@")
+                    ? "Email không tồn tại"
+                    : "Tên người dùng không đúng",
             });
-        }   
-
+        }
 
         const isMatch = await bcrypt.compare(password, auth.password);
         if (!isMatch) {
@@ -78,8 +83,11 @@ export const signin = async (req, res) => {
         }
 
         const token = jwt.sign({ id: auth._id }, "123456", { expiresIn: "1d" });
-        
-        res.cookie("accessToken", token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+
+        res.cookie("accessToken", token, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+        });
 
         auth.password = undefined;
 
@@ -94,5 +102,3 @@ export const signin = async (req, res) => {
         });
     }
 };
-
-

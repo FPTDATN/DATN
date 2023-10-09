@@ -15,14 +15,14 @@ export const Signin = () => {
     const router = useNavigate();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
-    const [email, setEmail] = useState<string>('');
+    const [usernameOrEmail, setUsernameOrEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         await signin({
-            email,
+            usernameOrEmail,
             password,
         });
     };
@@ -66,7 +66,8 @@ export const Signin = () => {
                             <form action="#" className="mt-8 gap-6" onSubmit={handleSubmit}>
                                 <Space direction="vertical" className="w-full">
                                     <InputField
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => setUsernameOrEmail(e.target.value)}
+                                        typeInput='text'
                                         size="large"
                                         placeholder="Email"
                                         prefix={<AiOutlineUser />}
