@@ -10,6 +10,7 @@ import user from "../src/routers/user.js";
 import favourite from "../src/routers/favourite.js";
 import sizeRouter from './routers/size.js'
 import brandRouter from './routers/brand.js'
+import colorRouter from './routers/color.js'
 
 import orderroute from "./routers/order.js";
 
@@ -33,6 +34,7 @@ app.use('/api', commentRouter);
 app.use('/api', favourite);
 app.use('/api', sizeRouter);
 app.use('/api', brandRouter);
+app.use('/api', colorRouter);
 
 app.use('/api', orderroute );
 
