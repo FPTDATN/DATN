@@ -64,7 +64,7 @@ export const signin = async (req, res) => {
         const auth = await Auth.findOne(
             usernameOrEmail.includes("@")
                 ? { email: usernameOrEmail }
-                : { name: usernameOrEmail }
+                : { username: usernameOrEmail }
         );
 
         if (!auth) {
