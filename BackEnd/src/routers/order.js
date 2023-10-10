@@ -1,5 +1,5 @@
 import express from 'express'
-import { cancelOrder, createOrder, getOrders } from '../controllers/order';
+import { cancelOrder, createOrder, getOrders } from '../controllers/order.js';
 const orderroute = express.Router();
 orderroute.post('/orders',createOrder)
 orderroute.get('/orders',getOrders)

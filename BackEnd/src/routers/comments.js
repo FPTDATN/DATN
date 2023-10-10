@@ -1,5 +1,5 @@
 import express from 'express';
-import { getComments, createComment, removeComment, updateComment } from '../controllers/comments';
+import { getComments, createComment, removeComment, updateComment } from '../controllers/comments.js';
 const router = express.Router();
 
 router.get('/comments', getComments);
