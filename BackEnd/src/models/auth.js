@@ -9,8 +9,8 @@ const authSchame = new mongoose.Schema({
     type: String,
     required: true,
   },
-  firName: {
-    type:String,
+  firstName: {
+    type: String,
     required: true,
   },
   lastName: {
@@ -25,7 +25,7 @@ const authSchame = new mongoose.Schema({
     type: String,
     required: true,
   },
-  address : {
+  address: {
     type: String,
   },
   password: {
@@ -47,11 +47,10 @@ const authSchame = new mongoose.Schema({
     type: Number,
   },
 
-
   comments: [
     {
       type: mongoose.Types.ObjectId,
-      ref: 'Comment',
+      ref: "Comment",
     },
   ],
   favourite: [{ type: mongoose.Types.ObjectId, ref: "Favourite" }],
