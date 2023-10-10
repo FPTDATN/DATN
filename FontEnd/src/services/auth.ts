@@ -5,13 +5,17 @@ function waiting (time:number) {
 }
 
 interface ApiLoginInput {
+
     usernameOrEmail:string;
+
+
     password:string;
 }
 
 interface ApiRegisterInput {
     username:string;
     email:string;
+
     password:string;
     confirmPassword:string;
     firstName:string;
@@ -21,6 +25,7 @@ interface ApiRegisterInput {
     address?:string;
     rule:boolean;
     cardnumber?:number | null; // nếu có
+
 }
 
 interface ApiRenponse {
