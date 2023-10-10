@@ -1,5 +1,5 @@
-import Favourite from '../models/favourite';
-import Auth from '../models/auth';
+import Favourite from '../models/favourite.js';
+import Auth from '../models/auth.js';
 
 export const getAll = async (req, res) => {
     const { _limit = 10, _sort = "createAt", _order = "asc", _page = 1 } = req.query;

@@ -5,8 +5,8 @@ import {
   getByIdCategory,
   removeCategory,
   updateCategory,
-} from "./../controllers/category";
-import { checkPermission } from "../middlewares/checkPermission";
+} from "./../controllers/category.js";
+import { checkPermission } from "../middlewares/checkPermission.js";
 const router = express.Router();
 
 router.get("/category", checkPermission, getAllCategory);

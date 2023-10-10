@@ -1,5 +1,5 @@
-import Auth from "../models/auth";
-import { UserSchema } from "../Schemas/user";
+import Auth from "../models/auth.js";
+import { UserSchema } from "../Schemas/user.js";
 
 export const update = async (req, res) => {
 

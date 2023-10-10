@@ -6,8 +6,8 @@ import {
   getQuanlityProduct,
   remove,
   update,
-} from "../controllers/products";
-import { checkPermission } from "../middlewares/checkPermission";
+} from "../controllers/products.js";
+import { checkPermission } from "../middlewares/checkPermission.js";
 
 const router = express.Router();
 router.get("/products", getAll);

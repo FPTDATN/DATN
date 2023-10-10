@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+
 import productsRouter from "../src/routers/products";
 import authRouter from "../src/routers/auth";
 import categoryRouter from "../src/routers/category";
@@ -10,6 +11,7 @@ import favourite from "../src/routers/favourite";
 import sizeRouter from './routers/size.js'
 
 import orderroute from "./routers/order";
+
 import cookieParser from "cookie-parser"
 import cors from 'cors';
 
@@ -32,6 +34,10 @@ app.use('/api', sizeRouter);
 
 app.use('/api', orderroute );
 
+const PORT = 8080;
 
 mongoose.connect("mongodb://127.0.0.1:27017/DATN");
-export const viteNodeApp = app;
+
+app.listen(PORT, () => {
+    console.log(`server is running: http://localhost:${PORT}`);
+});
