@@ -35,6 +35,7 @@ export const getAll = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const { error } = productSchema.validate(req.body);
+    
     if (error) {
       return res.status(400).json({
         message: error.details.map((err) => err.message),

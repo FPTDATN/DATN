@@ -16,12 +16,6 @@ const productSchema = new mongoose.Schema({
   quantity: {
     type: Number,
   },
-  color: {
-    type: String,
-  },
-  size: {
-    type: String,
-  },
   images: [
     {
       type: String,
@@ -30,17 +24,17 @@ const productSchema = new mongoose.Schema({
   sizeId: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "size"
+      ref: "Size"
     }
   ],
   brandId: {
     type: mongoose.Types.ObjectId,
-    ref: "brand"
+    ref: "Brand"
   },
   colorId: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "color"
+      ref: "Color"
     }
   ],
   comments: [
@@ -53,6 +47,9 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "Category",
   },
+}, {
+  timestamps:true,
+  versionKey:false
 });
 
 productSchema.plugin(mongoosePaginate);
