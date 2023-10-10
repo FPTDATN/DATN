@@ -1,14 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
-import productsRouter from "./routers/products.js";
-import authRouter from "./routers/auth.js";
-import categoryRouter from "./routers/category.js";
-import searchRouter from "./routers/search.js";
-import commentRouter from './routers/comments.js'
-import user from "./routers/user.js";
-import favourite from "./routers/favourite.js";
 
-import orderroute from "./routers/order.js";
+import productsRouter from "../src/routers/products";
+import authRouter from "../src/routers/auth";
+import categoryRouter from "../src/routers/category";
+import searchRouter from "../src/routers/search";
+import commentRouter from '../src/routers/comments'
+import user from "../src/routers/user";
+import favourite from "../src/routers/favourite";
+import sizeRouter from './routers/size.js'
+
+import orderroute from "./routers/order";
+
 import cookieParser from "cookie-parser"
 import cors from 'cors';
 
@@ -27,6 +30,7 @@ app.use("/api", searchRouter);
 app.use("/api", user);
 app.use('/api', commentRouter);
 app.use('/api', favourite);
+app.use('/api', sizeRouter);
 
 app.use('/api', orderroute );
 
