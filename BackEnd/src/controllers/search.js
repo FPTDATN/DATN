@@ -1,6 +1,6 @@
-import Product from "../models/products";
-import Auth from "../models/auth";
-import Category from "../models/category";
+import Product from "../models/products.js";
+import Auth from "../models/auth.js";
+import Category from "../models/category.js";
 export const searchByNameAndDescription = async (req, res) => {
   try {
     const { keyword } = req.query; // Lấy từ khóa từ query parameter trong URL

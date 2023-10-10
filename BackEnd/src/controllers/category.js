@@ -1,5 +1,5 @@
-import { categorySchema } from "../Schemas/category";
-import Category from "../models/category";
+import { categorySchema } from "../Schemas/category.js";
+import Category from "../models/category.js";
 
 export const getAllCategory = async (req, res) => {
   const {

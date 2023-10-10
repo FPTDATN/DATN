@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 const authSchame = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
   },
@@ -9,17 +9,48 @@ const authSchame = new mongoose.Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  fullName: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+  },
   password: {
     type: String,
     required: true,
   },
-  images: {
+  avatar: {
     type: String,
   },
+  country: {
+    type: String,
+  },
+
+  rule: {
+    type: Boolean,
+  },
+
+  cardnumber: {
+    type: Number,
+  },
+
   comments: [
     {
       type: mongoose.Types.ObjectId,
-      ref: 'Comment',
+      ref: "Comment",
     },
   ],
   favourite: [{ type: mongoose.Types.ObjectId, ref: "Favourite" }],

@@ -1,4 +1,5 @@
 
+import authApi from '@/services/auth';
 import { cartReducer } from '@/slices/cart';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
@@ -20,12 +21,13 @@ const persistConfig = {
     whitelist: ['cart']
 }
 const rootReducer = combineReducers({
-    cart: cartReducer
+    cart: cartReducer,
+    [authApi.reducerPath]: authApi.reducer
 })
 
 // Middleware
 const middleware:any[] = [
-    
+    authApi.middleware
 ]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

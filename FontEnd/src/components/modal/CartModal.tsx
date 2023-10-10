@@ -22,8 +22,9 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
     };
 
     return <div className="flex mr-5 cursor-pointer">
-        <div className="text-2xl">
+        <div className="text-2xl relative">
             <BsCart2 type="primary" onClick={showDrawer} />
+            <span className="bg-primary/90 w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">0</span>
         </div>
         <Drawer
             title="Shopping cart"

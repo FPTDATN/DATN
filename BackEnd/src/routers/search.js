@@ -3,7 +3,7 @@ import {
   searchByNameAndDescription,
   searchNameCategory,
   searchUserByNameAndEmail,
-} from "../controllers/search";
+} from "../controllers/search.js";
 const router = express.Router();
 router.get("/products/search/pr", searchByNameAndDescription);
 router.get("/User/search/n", searchUserByNameAndEmail);

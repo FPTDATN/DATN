@@ -47,7 +47,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                         <p className="text-lg font-bold text-blue-500 dark:text-gray-400">$99.00</p>
                                         <span className="text-xs text-gray-500 line-through dark:text-gray-400">$1500</span>
                                     </div>
-                                    <div className="w-auto px-4 md:w-1/6 lg:w-2/12 ">
+                                    <div className="w-auto px-2 md:w-1/6 lg:w-2/12 ">
                                         <div className="inline-flex items-center px-4 font-semibold text-gray-500 border border-gray-200 rounded-md dark:border-gray-700 ">
                                             <button className="py-2 text-xl hover:text-gray-700 dark:text-gray-400">
                                                 <GrFormSubtract />

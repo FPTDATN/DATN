@@ -1,15 +1,14 @@
 import { Outlet } from 'react-router-dom'
 import Navbar from '../navbar/Navbar'
-import { Breadcrumbs } from '../breadcrumbs'
+import Footer from '../footer/Footer'
 
 const MainLayout = () => {
     return (
 
         <div>
             <Navbar />
-            <Breadcrumbs />
             <Outlet />
-
+            <Footer/>
         </div>
 
     )
