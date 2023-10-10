@@ -9,6 +9,7 @@ import { Signin } from '@/pages/user/signin';
 import { Signup } from '@/pages/user/signup';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { ListUser } from '@/pages/admin/user/listUser';
+import AppTest from '@/pages/admin/category/test';
 
 const router = createBrowserRouter([
     // Main layout
@@ -46,6 +47,9 @@ const router = createBrowserRouter([
             { path: "product", element: <ListProduc /> },
             { path: "category", element: <ListCaegory /> },
             { path: "user", element: <ListUser /> },
+            { path: "test", element: <AppTest /> },
+
+
 
 
 
