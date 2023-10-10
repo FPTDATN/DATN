@@ -25,6 +25,24 @@ const productSchema = new mongoose.Schema({
   images: {
     type: String,
   },
+  sizeId:[
+    {
+    type:mongoose.Types.ObjectId,
+    ref: "size"
+  }
+],
+  brandId:[
+     {
+    type:mongoose.Types.ObjectId,
+    ref: "brand"
+  }
+],
+  colorId: [
+    {
+    type:mongoose.Types.ObjectId,
+    ref: "color"    
+  }
+],
   comments: [
     {
         type: mongoose.Types.ObjectId,
