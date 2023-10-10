@@ -88,7 +88,9 @@ export const remove = async (req, res) => {
                 message: "Xóa thành công",
             });
         }
-        return res.json(data)
+        return res.json({
+            message: "Xóa thành công",
+        })
     } catch (error) {
         return res.status(404).json({
             message: error.message
