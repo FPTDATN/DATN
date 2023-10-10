@@ -22,33 +22,33 @@ const productSchema = new mongoose.Schema({
   size: {
     type: String,
   },
-  images: {
-    type: String,
-  },
-  sizeId:[
+  images: [
     {
-    type:mongoose.Types.ObjectId,
-    ref: "size"
-  }
-],
-  brandId:[
-     {
-    type:mongoose.Types.ObjectId,
+      type: String,
+    }
+  ],
+  sizeId: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "size"
+    }
+  ],
+  brandId: {
+    type: mongoose.Types.ObjectId,
     ref: "brand"
-  }
-],
+  },
   colorId: [
     {
-    type:mongoose.Types.ObjectId,
-    ref: "color"    
-  }
-],
+      type: mongoose.Types.ObjectId,
+      ref: "color"
+    }
+  ],
   comments: [
     {
-        type: mongoose.Types.ObjectId,
-        ref: 'Comment',
+      type: mongoose.Types.ObjectId,
+      ref: 'Comment',
     },
-],
+  ],
   categoryId: {
     type: mongoose.Types.ObjectId,
     ref: "Category",
