@@ -3,7 +3,7 @@ import { FunctionComponent, Key, ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import { BsGear } from 'react-icons/bs';
-import { AiFillHome } from 'react-icons/ai';
+import { AiFillHome,AiOutlineUser } from 'react-icons/ai';
 import type { MenuProps } from 'antd';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -30,12 +30,12 @@ function getItem(
 
 const categories = [
     {
-        id:1,
+        _id: 'categoryid1',
         title: 'Loại 1',
         link: '/'
     },
     {
-        id:2,
+        _id: 'categoryid2',
         title: 'Loại 2',
         link: '/'
     }
@@ -48,10 +48,11 @@ const MobileMenuModal: FunctionComponent<MobileModalProps> = ({ open, onClose })
     const [openKeys, setOpenKeys] = useState(['sub1']);
 
     const items: MenuItem[] = [
-        getItem(<Link onClick={onClose} to={'/'}>Trang chủ</Link>, '', <AiFillHome />),
-        getItem('Thể loại', 'sub1', <BiSolidCategoryAlt />, categories.map((category) => (
-            getItem(<Link onClick={onClose} to={category.link}>{category.title}</Link>, category.id)
+        getItem(<Link onClick={onClose} to={'/'}>Trang chủ</Link>, 'sub-home', <AiFillHome />),
+        getItem('Thể loại', 'sub4', <BiSolidCategoryAlt />, categories.map((category) => (
+            getItem(<Link onClick={onClose} to={category.link}>{category.title}</Link>, category._id)
         ))),
+        getItem(<Link to={'/account/signin'}>Đăng nhập</Link>, 'sub-signin', <AiOutlineUser />),
         getItem('Cài đặt', 'sub2', <BsGear />, [
             getItem('Option 5', '5'),
             getItem('Option 6', '6'),
