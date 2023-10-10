@@ -7,6 +7,7 @@ import searchRouter from "../src/routers/search";
 import commentRouter from '../src/routers/comments'
 import user from "../src/routers/user";
 import favourite from "../src/routers/favourite";
+import sizeRouter from './routers/size.js'
 
 import orderroute from "./routers/order";
 import cookieParser from "cookie-parser"
@@ -27,6 +28,7 @@ app.use("/api", searchRouter);
 app.use("/api", user);
 app.use('/api', commentRouter);
 app.use('/api', favourite);
+app.use('/api', sizeRouter);
 
 app.use('/api', orderroute );
 
