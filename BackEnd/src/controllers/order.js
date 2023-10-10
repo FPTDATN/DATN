@@ -1,4 +1,4 @@
-import Order from "../models/order";
+import Order from "../models/order.js";
 
 // Controller để tạo đơn hàng
 export const createOrder = async (req, res) => {

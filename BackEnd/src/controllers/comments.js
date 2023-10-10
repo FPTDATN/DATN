@@ -1,6 +1,6 @@
-import Comments from '../models/comments';
-import Auth from '../models/auth';
-import Product from '../models/products';
+import Comments from '../models/comments.js';
+import Auth from '../models/auth.js';
+import Product from '../models/products.js';
 
 export const getComments = async (_req, res) => {
     try {

@@ -243,255 +243,293 @@ export const countries = [
 
 export const provinces = [
     {
-        value: "An Giang",
-        label: "An Giang"
+        value: 'An Giang',
+        label: 'An Giang',
     },
     {
-        value: "Bà rịa – Vũng tàu",
-        label: "Bà rịa – Vũng tàu"
+        value: 'Bà rịa – Vũng tàu',
+        label: 'Bà rịa – Vũng tàu',
     },
     {
-        value: "Bắc Giang",
-        label: "Bắc Giang"
+        value: 'Bắc Giang',
+        label: 'Bắc Giang',
     },
     {
-        value: "Bắc Kạn",
-        label: "Bắc Kạn"
+        value: 'Bắc Kạn',
+        label: 'Bắc Kạn',
     },
     {
-        value: "Bạc Liêu",
-        label: "Bạc Liêu"
+        value: 'Bạc Liêu',
+        label: 'Bạc Liêu',
     },
     {
-        value: "Bắc Ninh",
-        label: "Bắc Ninh"
+        value: 'Bắc Ninh',
+        label: 'Bắc Ninh',
     },
     {
-        value: "Bến Tre",
-        label: "Bến Tre"
+        value: 'Bến Tre',
+        label: 'Bến Tre',
     },
     {
-        value: "Bình Định",
-        label: "Bình Định"
+        value: 'Bình Định',
+        label: 'Bình Định',
     },
     {
-        value: "Bình Dương",
-        label: "Bình Dương"
+        value: 'Bình Dương',
+        label: 'Bình Dương',
     },
     {
-        value: "Bình Phước",
-        label: "Bình Phước"
+        value: 'Bình Phước',
+        label: 'Bình Phước',
     },
     {
-        value: "Bình Thuận",
-        label: "Bình Thuận"
+        value: 'Bình Thuận',
+        label: 'Bình Thuận',
     },
     {
-        value: "Cà Mau",
-        label: "Cà Mau"
+        value: 'Cà Mau',
+        label: 'Cà Mau',
     },
     {
-        value: "Cần Thơ",
-        label: "Cần Thơ"
+        value: 'Cần Thơ',
+        label: 'Cần Thơ',
     },
     {
-        value: "Cao Bằng ",
-        label: "Cao Bằng "
+        value: 'Cao Bằng ',
+        label: 'Cao Bằng ',
     },
     {
-        value: "Đà Nẵng",
-        label: "Đà Nẵng"
+        value: 'Đà Nẵng',
+        label: 'Đà Nẵng',
     },
     {
-        value: "Đắk Lắk",
-        label: "Đắk Lắk"
+        value: 'Đắk Lắk',
+        label: 'Đắk Lắk',
     },
     {
-        value: "Đắk Nông",
-        label: "Đắk Nông"
+        value: 'Đắk Nông',
+        label: 'Đắk Nông',
     },
     {
-        value: "Điện Biên",
-        label: "Điện Biên"
+        value: 'Điện Biên',
+        label: 'Điện Biên',
     },
     {
-        value: "Đồng Nai",
-        label: "Đồng Nai"
+        value: 'Đồng Nai',
+        label: 'Đồng Nai',
     },
     {
-        value: "Đồng Tháp",
-        label: "Đồng Tháp"
+        value: 'Đồng Tháp',
+        label: 'Đồng Tháp',
     },
     {
-        value: "Gia Lai",
-        label: "Gia Lai"
+        value: 'Gia Lai',
+        label: 'Gia Lai',
     },
     {
-        value: "Hà Giang",
-        label: "Hà Giang"
+        value: 'Hà Giang',
+        label: 'Hà Giang',
     },
     {
-        value: "Hà Nam",
-        label: "Hà Nam"
+        value: 'Hà Nam',
+        label: 'Hà Nam',
     },
     {
-        value: "Hà Nội ",
-        label: "Hà Nội "
+        value: 'Hà Nội ',
+        label: 'Hà Nội ',
     },
     {
-        value: "Hà Tĩnh",
-        label: "Hà Tĩnh"
+        value: 'Hà Tĩnh',
+        label: 'Hà Tĩnh',
     },
     {
-        value: "Hải Dương",
-        label: "Hải Dương"
+        value: 'Hải Dương',
+        label: 'Hải Dương',
     },
     {
-        value: "Hải Phòng",
-        label: "Hải Phòng"
+        value: 'Hải Phòng',
+        label: 'Hải Phòng',
     },
     {
-        value: "Hậu Giang",
-        label: "Hậu Giang"
+        value: 'Hậu Giang',
+        label: 'Hậu Giang',
     },
     {
-        value: "Hòa Bình",
-        label: "Hòa Bình"
+        value: 'Hòa Bình',
+        label: 'Hòa Bình',
     },
     {
-        value: "Hưng Yên",
-        label: "Hưng Yên"
+        value: 'Hưng Yên',
+        label: 'Hưng Yên',
     },
     {
-        value: "Khánh Hòa",
-        label: "Khánh Hòa"
+        value: 'Khánh Hòa',
+        label: 'Khánh Hòa',
     },
     {
-        value: "Kiên Giang",
-        label: "Kiên Giang"
+        value: 'Kiên Giang',
+        label: 'Kiên Giang',
     },
     {
-        value: "Kon Tum",
-        label: "Kon Tum"
+        value: 'Kon Tum',
+        label: 'Kon Tum',
     },
     {
-        value: "Lai Châu",
-        label: "Lai Châu"
+        value: 'Lai Châu',
+        label: 'Lai Châu',
     },
     {
-        value: "Lâm Đồng",
-        label: "Lâm Đồng"
+        value: 'Lâm Đồng',
+        label: 'Lâm Đồng',
     },
     {
-        value: "Lạng Sơn",
-        label: "Lạng Sơn"
+        value: 'Lạng Sơn',
+        label: 'Lạng Sơn',
     },
     {
-        value: "Lào Cai",
-        label: "Lào Cai"
+        value: 'Lào Cai',
+        label: 'Lào Cai',
     },
     {
-        value: "Long An",
-        label: "Long An"
+        value: 'Long An',
+        label: 'Long An',
     },
     {
-        value: "Nam Định",
-        label: "Nam Định"
+        value: 'Nam Định',
+        label: 'Nam Định',
     },
     {
-        value: "Nghệ An",
-        label: "Nghệ An"
+        value: 'Nghệ An',
+        label: 'Nghệ An',
     },
     {
-        value: "Ninh Bình",
-        label: "Ninh Bình"
+        value: 'Ninh Bình',
+        label: 'Ninh Bình',
     },
     {
-        value: "Ninh Thuận",
-        label: "Ninh Thuận"
+        value: 'Ninh Thuận',
+        label: 'Ninh Thuận',
     },
     {
-        value: "Phú Thọ",
-        label: "Phú Thọ"
+        value: 'Phú Thọ',
+        label: 'Phú Thọ',
     },
     {
-        value: "Phú Yên",
-        label: "Phú Yên"
+        value: 'Phú Yên',
+        label: 'Phú Yên',
     },
     {
-        value: "Quảng Bình",
-        label: "Quảng Bình"
+        value: 'Quảng Bình',
+        label: 'Quảng Bình',
     },
     {
-        value: "Quảng Nam",
-        label: "Quảng Nam"
+        value: 'Quảng Nam',
+        label: 'Quảng Nam',
     },
     {
-        value: "Quảng Ngãi",
-        label: "Quảng Ngãi"
+        value: 'Quảng Ngãi',
+        label: 'Quảng Ngãi',
     },
     {
-        value: "Quảng Ninh",
-        label: "Quảng Ninh"
+        value: 'Quảng Ninh',
+        label: 'Quảng Ninh',
     },
     {
-        value: "Quảng Trị",
-        label: "Quảng Trị"
+        value: 'Quảng Trị',
+        label: 'Quảng Trị',
     },
     {
-        value: "Sóc Trăng",
-        label: "Sóc Trăng"
+        value: 'Sóc Trăng',
+        label: 'Sóc Trăng',
     },
     {
-        value: "Sơn La",
-        label: "Sơn La"
+        value: 'Sơn La',
+        label: 'Sơn La',
     },
     {
-        value: "Tây Ninh",
-        label: "Tây Ninh"
+        value: 'Tây Ninh',
+        label: 'Tây Ninh',
     },
     {
-        value: "Thái Bình",
-        label: "Thái Bình"
+        value: 'Thái Bình',
+        label: 'Thái Bình',
     },
     {
-        value: "Thái Nguyên",
-        label: "Thái Nguyên"
+        value: 'Thái Nguyên',
+        label: 'Thái Nguyên',
     },
     {
-        value: "Thanh Hóa",
-        label: "Thanh Hóa"
+        value: 'Thanh Hóa',
+        label: 'Thanh Hóa',
     },
     {
-        value: "Thừa Thiên Huế",
-        label: "Thừa Thiên Huế"
+        value: 'Thừa Thiên Huế',
+        label: 'Thừa Thiên Huế',
     },
     {
-        value: "Tiền Giang",
-        label: "Tiền Giang"
+        value: 'Tiền Giang',
+        label: 'Tiền Giang',
     },
     {
-        value: "Thành phố Hồ Chí Minh",
-        label: "Thành phố Hồ Chí Minh"
+        value: 'Thành phố Hồ Chí Minh',
+        label: 'Thành phố Hồ Chí Minh',
     },
     {
-        value: "Trà Vinh",
-        label: "Trà Vinh"
+        value: 'Trà Vinh',
+        label: 'Trà Vinh',
     },
     {
-        value: "Tuyên Quang",
-        label: "Tuyên Quang"
+        value: 'Tuyên Quang',
+        label: 'Tuyên Quang',
     },
     {
-        value: "Vĩnh Long",
-        label: "Vĩnh Long"
+        value: 'Vĩnh Long',
+        label: 'Vĩnh Long',
     },
     {
-        value: "Vĩnh Phúc",
-        label: "Vĩnh Phúc"
+        value: 'Vĩnh Phúc',
+        label: 'Vĩnh Phúc',
     },
     {
-        value: "Yên Bái",
-        label: "Yên Bái"
+        value: 'Yên Bái',
+        label: 'Yên Bái',
     },
-]
+];
+
+type User = {
+    username:string;
+    email:string;
+    votes: string[];
+}
+
+export interface ProductType {
+    _id: string;
+    name: string;
+    price: number;
+    sale_off?: number;
+    description?: string;
+    quantity?: number;
+
+    // Tìm sản phẩm theo màu
+    colorId?: string;
+
+    // Tìm sản phẩm theo size
+    sizeId?: string;
+
+    images?: string[]; //mảng nhiều ảnh
+
+    //  Tìm sản phẩm theo loại
+    categoryId?: string;
+
+    // brand
+    brandId?: string;
+
+    // vote
+    userVote: User[]; // Có thể để sau
+
+    // ngày tạo
+    createdAt: Date;
+
+    // ngày cập nhật
+    updatedAt: Date;
+}
