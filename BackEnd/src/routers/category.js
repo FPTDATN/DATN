@@ -9,7 +9,7 @@ import {
 import { checkPermission } from "../middlewares/checkPermission.js";
 const router = express.Router();
 
-router.get("/category", checkPermission, getAllCategory);
+router.get("/category", getAllCategory);
 router.get("/category/:id", getByIdCategory);
 router.post("/category", checkPermission, createCategory);
 router.put("/category/:id", checkPermission, updateCategory);

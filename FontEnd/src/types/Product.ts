@@ -18,12 +18,31 @@ export interface ProductType {
     sale_off?: number;
     description?: string;
     quantity?: number;
-    color?: string;
-    colorId?: string;
-    sizeId?: string;
-    brandId?:string;
-    images?: string[];
+    colorId?: Colors[];
+    sizeId?: Sizes[];
+    brandId?:Brand;
+    images: string[];
     createAt:Date;
     updateAt:Date;
-    categoryId?: string;
+    categoryId?: Category;
+}
+
+interface Brand {
+    _id:string;
+    name:string;
+}
+
+interface Colors {
+    _id:string;
+    name:string;
+}
+
+interface Sizes {
+    _id:string;
+    name:string;
+}
+
+interface Category {
+    _id:string;
+    name:string;
 }

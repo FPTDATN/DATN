@@ -1,18 +1,19 @@
-import { Button, Input, Modal, Space } from 'antd';
-import { SearchProps } from "antd/es/input";
+import { Button, Input, Modal, Space, Tag } from 'antd';
+import { SearchProps } from 'antd/es/input';
 import { useState } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
 import AddProduct from '../addProduct';
 import UpdateProduct from '../updateProduct';
+import { useGetProductsQuery } from '@/services/product';
+import Skeleton from 'react-loading-skeleton';
 const { confirm } = Modal;
 
 export const ListProduc: React.FC = () => {
+    const { data, isLoading, } = useGetProductsQuery();
 
     const { Search } = Input;
 
     const [open, setOpen] = useState(false);
     const [openAdd, setOpenAdd] = useState(false);
-
 
     const showDeleteConfirm = () => {
         confirm({
@@ -29,14 +30,11 @@ export const ListProduc: React.FC = () => {
             },
         });
     };
-    const suffix = (
-        <AiOutlineSearch
-            style={{
-                fontSize: 16,
-                color: '#1677ff',
-            }}
-        />
-    );
+
+    const renderArray = (arr: any[]) => {
+        return arr.map((item) => <Tag key={item._id}>{item.name}</Tag>);
+    };
+
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <>
@@ -47,7 +45,7 @@ export const ListProduc: React.FC = () => {
                             <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                         </Space>
                     </div>
-                    <div className='bg-gray-400 ml-[20px] rounded-md'>
+                    <div className="bg-gray-400 ml-[20px] rounded-md">
                         <Button type="primary" onClick={() => setOpenAdd(true)}>
                             Add Product
                         </Button>
@@ -58,7 +56,6 @@ export const ListProduc: React.FC = () => {
                             onOk={() => setOpenAdd(false)}
                             onCancel={() => setOpenAdd(false)}
                             width={1000}
-
                         >
                             <AddProduct />
                         </Modal>
@@ -68,82 +65,87 @@ export const ListProduc: React.FC = () => {
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-
-                            <th scope="col" className="px-6 py-3">
-                                <span className="sr-only">Ảnh</span>
+                            <th scope="col" className="px-6 text-xs font-medium py-3">
+                                Ảnh
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className=" text-center text-xs font-medium py-3">
                                 Tên sản phẩm
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className=" text-center text-xs font-medium py-3">
                                 Màu sắc
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className=" text-center text-xs font-medium py-3">
                                 Số Lượng
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className=" text-center text-xs font-medium py-3">
                                 Danh mục
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className=" text-center text-xs font-medium py-3">
                                 Giá
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className=" text-center text-xs font-medium py-3">
                                 Thao tác
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr
-                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-                            <td className="w-32 p-4">
-                                <img className="w-[80] h-[40]"
-                                    src="https://bizweb.dktcdn.net/thumb/grande/100/212/791/products/den-tron-e0107bd2-7e93-4407-97e6-a431963f8d04.jpg?v=1623418670430"
-                                    alt="Apple Watch" />
-                            </td>
-                            <th scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Apple MacBook Pro 17"
-                            </th>
-                            <td className="px-6 py-4">
-                                Silver
-                            </td>
-                            <td className="px-6 py-4">
-                                100
-                            </td>
-                            <td className="px-6 py-4">
-                                Laptop
-                            </td>
-                            <td className="px-6 py-4">
-                                $2999
-                            </td>
-                            <td className="px-6 py-4">
-                                <Button type="dashed" onClick={() => setOpen(true)}>
-                                    Update
-                                </Button>
-                                <Modal
-                                    title="Update Product"
-                                    centered
-                                    open={open}
-                                    onOk={() => setOpen(false)}
-                                    onCancel={() => setOpen(false)}
-                                    width={1000}
-                                >
-                                    <UpdateProduct />
-                                </Modal>
-                                <Space wrap className='ml-2'>
-                                    <Button onClick={showDeleteConfirm} type="dashed">
-                                        Delete
-                                    </Button>
-                                </Space>
-                            </td>
-                        </tr>
-
-
-                    </tbody>
+                    
+                        {isLoading ? (
+                            <tbody>
+                                <tr>
+                                    <td colSpan={7}><Skeleton count={3} className='h-[98px]'/></td>
+                                </tr>
+                            </tbody>
+                        ) : (
+                            <tbody>
+                                {data?.docs.map((product) => (
+                                    <tr
+                                        key={product._id}
+                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                    >
+                                        <td className="">
+                                            <img
+                                                className="w-[76px] h-[76px] object-cover"
+                                                src={product.images[0]}
+                                                alt={product.name}
+                                            />
+                                        </td>
+                                        <th
+                                            scope="row"
+                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                        >
+                                            {product.name}
+                                        </th>
+                                        <td className="px-6 py-4">{renderArray(product.colorId!)}</td>
+                                        <td className="px-6 py-4">{product.quantity}</td>
+                                        <td className="px-6 py-4">{product.categoryId?.name}</td>
+                                        <td className="px-6 py-4">{product.price}</td>
+                                        <td className="px-6 py-4 flex flex-nowrap">
+                                            <Button type="dashed" onClick={() => setOpen(true)}>
+                                                Update
+                                            </Button>
+                                            <Modal
+                                                title="Update Product"
+                                                centered
+                                                open={open}
+                                                onOk={() => setOpen(false)}
+                                                onCancel={() => setOpen(false)}
+                                                width={1000}
+                                            >
+                                                <UpdateProduct />
+                                            </Modal>
+                                            <Space wrap className="ml-2">
+                                                <Button onClick={showDeleteConfirm} type="dashed">
+                                                    Delete
+                                                </Button>
+                                            </Space>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        )}
+                    
                 </table>
-            </div >
-
+            </div>
         </>
-    )
-}
+    );
+};

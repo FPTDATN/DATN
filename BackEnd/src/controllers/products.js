@@ -16,6 +16,7 @@ export const getAll = async (req, res) => {
     sort: {
       [_sort]: _order === "desc" ? -1 : 1,
     },
+    populate: ['categoryId','colorId', 'sizeId','brandId']
   };
   try {
     const data = await Products.paginate({}, options);
@@ -78,7 +79,7 @@ export const remove = async (req, res) => {
 
 export const getById = async (req, res) => {
   try {
-    const products = await Products.findById(req.params.id);
+    const products = await Products.findById(req.params.id).populate(['comments','colorId','brandId','sizeId','categoryId']);
     return res.status(200).json({
       products,
     });

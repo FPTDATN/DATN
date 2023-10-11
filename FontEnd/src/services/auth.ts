@@ -1,9 +1,5 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-
-function waiting (time:number) {
-    return new Promise((resolve) => setTimeout(resolve, time))
-}
-
+import {waiting} from '@/utils/waiting';
 interface ApiLoginInput {
 
     usernameOrEmail:string;

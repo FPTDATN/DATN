@@ -511,10 +511,10 @@ export interface ProductType {
     quantity?: number;
 
     // Tìm sản phẩm theo màu
-    colorId?: string;
+    colorId?: string[];
 
     // Tìm sản phẩm theo size
-    sizeId?: string;
+    sizeId?: string[];
 
     images?: string[]; //mảng nhiều ảnh
 
