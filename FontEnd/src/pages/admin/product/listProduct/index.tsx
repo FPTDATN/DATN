@@ -7,7 +7,7 @@ import { useGetProductsQuery } from '@/services/product';
 import Skeleton from 'react-loading-skeleton';
 const { confirm } = Modal;
 
-export const ListProduc: React.FC = () => {
+ const ListProduct: React.FC = () => {
     const { data, isLoading, } = useGetProductsQuery();
 
     const { Search } = Input;
@@ -149,3 +149,5 @@ export const ListProduc: React.FC = () => {
         </>
     );
 };
+
+export default ListProduct

@@ -1,19 +1,24 @@
 import { Breadcrumb } from "antd"
+import { FunctionComponent } from "react";
 
-export const Breadcrumbs = () => {
-    return (
-        <div className="pt-2 pb-2 px-8">
-            <Breadcrumb
-                items={[
-                    {
-                        href: '/',
-                        title: 'Home',
-                    },
-                    {
-                        title: 'Account Detail',
-                    }
-                ]}
-            />
-        </div>
-    )
+interface BreadCrumbProps {
+    
 }
+ 
+const BreadCrumb: FunctionComponent<BreadCrumbProps> = () => {
+    return <div className="pt-2 pb-2 px-8">
+    <Breadcrumb
+        items={[
+            {
+                href: '/',
+                title: 'Home',
+            },
+            {
+                title: 'Account Detail',
+            }
+        ]}
+    />
+</div>
+}
+ 
+export default BreadCrumb;

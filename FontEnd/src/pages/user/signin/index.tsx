@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button, Space, Typography } from 'antd';
 import { AiOutlineUser, AiOutlineEyeInvisible, AiOutlineEye, AiOutlineLock } from 'react-icons/ai';
 import { useSigninMutation } from '@/services/auth';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, FunctionComponent, useEffect, useState } from 'react';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import Loading from '@/components/ui/Loading';
 import { useNavigate, } from 'react-router-dom';
@@ -11,7 +11,11 @@ import InputField from '@/components/ui/InputField';
 
 const { Text } = Typography;
 
-export const Signin = () => {
+interface SigninProps {
+    
+}
+ 
+const Signin: FunctionComponent<SigninProps> = () => {
     const router = useNavigate();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
@@ -140,4 +144,6 @@ export const Signin = () => {
             </section>
         </>
     );
-};
+}
+ 
+export default Signin;

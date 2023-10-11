@@ -1,9 +1,9 @@
 import { Button, Input, Modal, Space } from "antd";
 import { SearchProps } from "antd/es/input";
 import { useState } from "react";
-import { UpdateUser } from "./updateUser";
+import  UpdateUser from "./updateUser";
 
-export const ListUser: React.FC = () => {
+ const ListUser: React.FC = () => {
     const { Search } = Input;
     const { confirm } = Modal;
     const [open, setOpen] = useState(false);
@@ -130,3 +130,5 @@ export const ListUser: React.FC = () => {
         </>
     )
 }
+
+export default ListUser

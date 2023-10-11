@@ -1,4 +1,4 @@
-export const Dashbroad = () => {
+ const Dashbroad = () => {
     return (
         <>
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -101,3 +101,5 @@ export const Dashbroad = () => {
         </>
     )
 }
+
+export default Dashbroad

@@ -1,4 +1,4 @@
-import { Breadcrumbs } from "@/components/breadcrumbs"
+import  Breadcrumbs  from "@/components/breadcrumbs"
 
 const AccountDetail = () => {
     return <>

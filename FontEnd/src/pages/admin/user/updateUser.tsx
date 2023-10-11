@@ -1,7 +1,7 @@
-import { Button, Checkbox, Form, Input, Select } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { useState } from 'react';
 
-export const UpdateUser: React.FC = () => {
+ const UpdateUser: React.FC = () => {
 
     const onFinish = (values: any) => {
         console.log('Success:', values);
@@ -97,3 +97,5 @@ export const UpdateUser: React.FC = () => {
         </>
     )
 }
+
+export default UpdateUser

@@ -22,7 +22,7 @@ type FieldType = {
     rule?: boolean;
 };
 
-export const Signup = () => {
+const Signup = () => {
     const router = useNavigate();
 
     const filterOption = (input: string, option?: { label: string; value: string }) =>
@@ -332,3 +332,5 @@ export const Signup = () => {
         </>
     );
 };
+
+export default Signup

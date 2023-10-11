@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import type { RadioChangeEvent } from 'antd';
 import { Radio, Tabs } from 'antd';
 import { TabsPosition } from 'antd/es/tabs';
 import RelatedProducts from '@/components/ui/RelatedProduct';
-import { Breadcrumbs1 } from '@/components/breadcrumbs/index1';
+import  Breadcrumbs1 from '@/components/breadcrumbs/index1';
 import Comment from '../comment/Comment';
 const ProductDetail = () => {
     const [mode, setMode] = useState<TabsPosition>('top');

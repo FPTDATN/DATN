@@ -4,7 +4,7 @@ import { useState } from "react";
 import AddCategory from "../addCategory";
 import UpdateCategory from "../updateCategory";
 
-export const ListCaegory = () => {
+const ListCaegory = () => {
     const { Search } = Input;
     const { confirm } = Modal;
 
@@ -106,3 +106,5 @@ export const ListCaegory = () => {
         </>
     )
 }
+
+export default ListCaegory
