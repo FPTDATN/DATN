@@ -38,21 +38,23 @@ const authApi = createApi({
         fetchFn: async(...arg) => {
             await waiting(2000);
             return fetch(...arg)
-        }
+        },
     }),
     endpoints: (builder) => ({ 
         signin: builder.mutation<ApiRenponse,ApiLoginInput>({
             query: (credential) => ({
                 url: '/signin',
                 method: 'POST',
-                body:credential
+                body:credential,
+                credentials:'include'
             })
         }),
         signup:builder.mutation<ApiRenponse,ApiRegisterInput>({
             query: (credential) => ({
                 url: '/signup',
                 method: 'POST',
-                body: credential
+                body: credential,
+                credentials:'include'
             })
         })
     })
