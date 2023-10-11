@@ -96,13 +96,13 @@ const Signin: FunctionComponent<SigninProps> = () => {
                                     />
                                 </Space>
 
-                                {isError && (
+                                {/* {isError && (
                                     <div className="mt-2">
                                         <Text type="danger">
                                             {((error as FetchBaseQueryError).data as any).message}
                                         </Text>
                                     </div>
-                                )}
+                                )} */}
 
                                 <div className="col-span-6 mt-4">
                                     <label className="flex gap-4">
