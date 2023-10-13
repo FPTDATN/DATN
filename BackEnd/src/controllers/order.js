@@ -1,32 +1,71 @@
+import { orderSchema } from "../Schemas/order.js";
 import Order from "../models/order.js";
-
-// Controller để tạo đơn hàng
+import shortid from 'shortid'
 export const createOrder = async (req, res) => {
   try {
-    const { orderNumber, status, customerName, shippingAddress, product, buyer } = req.body;
-    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, product, buyer });
+    const { error } = orderSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    // Tạo mã đơn hàng mới với độ dài 5 ký tự
+    const orderNumber = shortid.generate();
+    
+    const { status, customerName, shippingAddress, products, buyers } = req.body;
+    // Tính tổng tiền từ danh sách sản phẩm
+    let totalAmount = 0;
+products.forEach(product => {
+  // Đảm bảo rằng cả price và quantity đều là số hợp lệ
+  if (!isNaN(product.price) && !isNaN(product.quantity)) {
+    totalAmount += product.price * product.quantity;
+  }
+});
+    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyers ,totalAmount });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error('Lỗi khi tạo đơn hàng:', error);
-    res.status(400).json({ error: 'Không thể tạo đơn hàng' });
+    res.status(500).json({ error: 'Không thể tạo đơn hàng' });
   }
 };
 
 // Controller để lấy danh sách đơn hàng
 export const getOrders = async (req, res) => {
+  const {
+    _limit = 10, 
+    _sort = "createdAt", 
+    _order = "asc", 
+    _page = 1, 
+  } = req.query;
+
+  const options = {
+    limit: parseInt(_limit), 
+    page: parseInt(_page), 
+    sort: {
+      [_sort]: _order === "desc" ? -1 : 1, 
+    },
+  };
   try {
-    const orders = await Order.find();
-    res.status(200).json(orders);
+    const data = await Order.paginate({}, options);
+
+    if (data.docs.length === 0) {
+      return res.status(200).json({
+        message: "Không có dữ liệu",
+      });
+    }
+
+    res.status(200).json(data);
   } catch (error) {
     console.error('Lỗi khi lấy danh sách đơn hàng:', error);
     res.status(500).json({ error: 'Lỗi khi lấy danh sách đơn hàng' });
   }
 };
 
+
 export const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
+    const { status } = req.body;
 
     // Tìm đơn hàng dựa trên orderId
     const order = await Order.findById(orderId);
@@ -34,15 +73,21 @@ export const cancelOrder = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
     }
-    // Cập nhật trạng thái của đơn hàng thành "Đã hủy"
-    order.status = 'Đã hủy';
+
+    // Kiểm tra xem trạng thái mới cung cấp hợp lệ hay không
+    if (!['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'].includes(status)) {
+      return res.status(400).json({ message: 'Trạng thái mới không hợp lệ' });
+    }
+
+    // Cập nhật trạng thái của đơn hàng thành trạng thái mới
+    order.status = status;
 
     // Lưu thay đổi vào cơ sở dữ liệu
     const updatedOrder = await order.save();
 
-    return res.status(200).json({ message: 'Đơn hàng đã được hủy thành công', order: updatedOrder });
+    return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: updatedOrder });
   } catch (error) {
-    console.error('Lỗi khi hủy đơn hàng:', error);
+    console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
     return res.status(500).json({ error: 'Lỗi server' });
   }
 };
