@@ -62,7 +62,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                         <p className="text-lg font-bold text-blue-500 dark:text-gray-400">$99.00</p>
                                     </div>
                                 </div>
-                               
+
                             </div>
                             <div className="flex flex-wrap items-center gap-4">
                                 <span className="text-gray-700 dark:text-gray-400">Apply Coupon</span>
@@ -98,7 +98,9 @@ const Cart: FunctionComponent<CartProps> = () => {
                                     </a>
                                 </div>
                                 <div className="flex items-center justify-between ">
-                                    <button className="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-primary/90 rounded-md hover:bg-primary/95">Checkout</button>
+                                    <button className="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-primary/90 rounded-md hover:bg-primary/95">
+                                        <a href="checkout" className="text-white text-center w-full block">Thanh Toán</a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
