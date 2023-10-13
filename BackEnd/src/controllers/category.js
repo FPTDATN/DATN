@@ -3,7 +3,7 @@ import Category from "../models/category.js";
 
 export const getAllCategory = async (req, res) => {
   const {
-    _limit = 3,
+    _limit = 8,
     _sort = "createAt",
     _order = "asc",
     _page = 1,

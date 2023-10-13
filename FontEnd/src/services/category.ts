@@ -1,11 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { waiting } from '@/utils/waiting';
-
-interface CategoryApiResponse {
-    _id: string;
-    name: string;
-}
-
+import { CategoryType, PaginatedCategory } from '@/types/Category';
 interface CategoryInput {
     name: string;
 }
@@ -21,11 +16,11 @@ const categoryApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getCategories: builder.query<CategoryApiResponse[], void>({
+        getCategories: builder.query<PaginatedCategory, void>({
             query: () => '/category',
             providesTags: ['Category'],
         }),
-        getCatgoryById: builder.query<CategoryApiResponse, string>({
+        getCatgoryById: builder.query<CategoryType, string>({
             query: (_id) => `/category/${_id}`,
             providesTags: ['Category'],
         }),
