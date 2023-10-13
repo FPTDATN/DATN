@@ -13,12 +13,10 @@ type FieldType = {
     username?: string;
     email?: string;
     lastNameAndFirstName?: string;
-    fullName?: string;
     phone?: number;
     address?: string;
     password?: string;
     confirmPassword: string;
-    cardNumber?: number;
     rule?: boolean;
 };
 
@@ -32,11 +30,9 @@ const Signup = () => {
     const [email, setEmail] = useState<string>('');
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
-    const [fullName, setFullName] = useState<string>('');
     const [phone, setPhone] = useState<number | null>(null);
     const [address, setAddress] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [cardnumber, setCardNumber] = useState<number>(0);
     const [rule, setRule] = useState<boolean>(false);
     const [confirmPassword, setConfirmPassowrd] = useState<string>('');
 
@@ -51,12 +47,12 @@ const Signup = () => {
                 email,
                 firstName,
                 lastName,
-                fullName,
+
                 phone: phone!,
                 address,
                 password,
                 confirmPassword,
-                cardnumber,
+
                 rule,
             });
         } catch (error) {
@@ -215,18 +211,7 @@ const Signup = () => {
                                     </Space.Compact>
                                 </Form.Item>
 
-                                <Form.Item<FieldType> label="Tên đầy đủ" name="fullName" rules={[{ required: true }]}>
-                                    <InputField
-                                        value={fullName}
-                                        onChange={(e) => setFullName(e.target.value)}
-                                        name="fullName"
-                                        size="large"
-                                        id="fullName"
-                                        placeholder="Tên đầy đủ"
-                                        prefix={<AiOutlineUser />}
-                                        typeInput="text"
-                                    />
-                                </Form.Item>
+                               
                                 <Form.Item<FieldType> label="Số điện thoại" name="phone" rules={[{ required: true }]}>
                                     <InputField
                                         onChange={(e) => setPhone(Number(e.target.value))}
@@ -286,20 +271,7 @@ const Signup = () => {
                                         typeInput="password"
                                     />
                                 </Form.Item>
-                                <Form.Item<FieldType> label="Số thẻ">
-                                    <InputField
-                                        onChange={(e) => setCardNumber(Number(e.target.value))}
-                                        defaultValue={0}
-                                        name="cardnumber"
-                                        size="large"
-                                        className="w-full"
-                                        id="cardnumber"
-                                        type="number"
-                                        placeholder="Số thẻ (nếu có)"
-                                        prefix={<AiOutlineIdcard />}
-                                        typeInput="number"
-                                    />
-                                </Form.Item>
+                                
                                 <Checkbox onChange={(e) => setRule(e.target.checked)}>
                                     Bạn có đồng ý với điều khoản của chúng tôi
                                 </Checkbox>

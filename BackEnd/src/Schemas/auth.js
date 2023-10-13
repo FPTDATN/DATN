@@ -25,10 +25,6 @@ export const signupSchema = joi.object({
         "string.empty": "lastName không được để trống",
         "any.required": "Trường họ là bắt buộc",
     }),
-    fullName: joi.string().required().messages({
-        "string.empty": "fullName không được để trống",
-        "any.required": "Trường Tên đầy đủ là bắt buộc",
-    }),
     phone: joi.number().required().min(11).messages({
         "string.empty": "Phone không được để trống",
         "string.min": "Mật khẩu phải có ít nhất {#limit} ký tự",
