@@ -17,10 +17,6 @@ const authSchame = new mongoose.Schema({
     type: String,
     required: true,
   },
-  fullName: {
-    type: String,
-    required: true,
-  },
   phone: {
     type: String,
     required: true,
@@ -41,10 +37,6 @@ const authSchame = new mongoose.Schema({
 
   rule: {
     type: Boolean,
-  },
-
-  cardnumber: {
-    type: Number,
   },
 
   comments: [
