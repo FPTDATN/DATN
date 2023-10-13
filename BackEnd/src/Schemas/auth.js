@@ -1,10 +1,11 @@
 import joi from "joi";
 
 export const signupSchema = joi.object({
-    username: joi.string().required().messages({
-        "string.empty": "username không được để trống",
+    username: joi.string().regex(/^[a-zA-Z0-9]+$/).required().messages({
+        "string.empty": "Tên đăng nhập không được để trống",
         "any.required": "Trường tên đăng nhập là bắt buộc",
-    }),
+        "string.pattern.base": "Tên đăng nhập chỉ chấp nhận các ký tự chữ cái và số",
+      }),
     email: joi.string().email().required().messages({
         "string.empty": "Email không được để trống",
         "any.required": "Trường email là bắt buộc",
