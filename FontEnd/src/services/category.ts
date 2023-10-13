@@ -1,14 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { waiting } from '@/utils/waiting';
+import { CategoryType } from '@/types/category';
 
-interface CategoryApiResponse {
+export type TCategory = {
     _id: string;
     name: string;
-}
+    createdAt: string;
+    updatedAt: string;
+  };
 
-interface CategoryInput {
-    name: string;
-}
 
 const categoryApi = createApi({
     reducerPath: 'category',
@@ -21,24 +21,40 @@ const categoryApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getCategories: builder.query<CategoryApiResponse[], void>({
-            query: () => '/category',
+        getCategories: builder.query<CategoryType, void>({
+            query: () => '/categories',
             providesTags: ['Category'],
         }),
-        getCatgoryById: builder.query<CategoryApiResponse, string>({
-            query: (_id) => `/category/${_id}`,
+        getCatgoryById: builder.query<TCategory, string>({
+            query: (_id) => `/categories/${_id}`,
             providesTags: ['Category'],
         }),
-        createCategory: builder.mutation<CategoryInput, CategoryInput>({
+        createCategory: builder.mutation<TCategory, string>({
             query: (category) => ({
-                url: '/category',
+                url: '/categories',
                 method: 'POST',
                 body: category,
             }),
             invalidatesTags: ['Category'],
         }),
+        deleteCategory: builder.mutation<void, string>({
+            query: (categoryId) => ({
+                url: `/categories/${categoryId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Category'],
+        }),
+        
+        updateCategory: builder.mutation<TCategory, { categoryId: string; category: Partial<TCategory> }>({
+            query: ({ categoryId, category }) => ({
+              url: `/categories/${categoryId}`,
+              method: 'PUT',
+              body: category,
+            }),
+            invalidatesTags: ['Category'],
+          }),
     }),
 });
 
-export const { useGetCategoriesQuery, useGetCatgoryByIdQuery, useCreateCategoryMutation } = categoryApi;
+export const { useGetCategoriesQuery, useGetCatgoryByIdQuery, useCreateCategoryMutation, useDeleteCategoryMutation,useUpdateCategoryMutation} = categoryApi;
 export default categoryApi;

@@ -14,8 +14,8 @@ router.get("/products", getAll);
 router.get("/products/quanlity", getQuanlityProduct);
 
 router.get("/products/:id", getById);
-router.delete("/products/:id", checkPermission, remove);
-router.post("/products", checkPermission, create);
-router.patch("/products/:id", checkPermission, update);
+router.delete("/products/:id", remove);
+router.post("/products", create);
+router.patch("/products/:id", update);
 
 export default router;

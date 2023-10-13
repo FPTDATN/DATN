@@ -1,61 +1,57 @@
-import { Button, Input, Modal, Space } from "antd";
+import { Button, Input, Modal, Popconfirm, Space, notification } from "antd";
 import { SearchProps } from "antd/es/input";
 import { useState } from "react";
 import AddCategory from "../addCategory";
+import { useDeleteCategoryMutation, useGetCategoriesQuery } from "@/services/category";
+import Skeleton from "react-loading-skeleton";
 import UpdateCategory from "../updateCategory";
 
-const ListCaegory = () => {
+const ListCategory = () => {
     const { Search } = Input;
-    const { confirm } = Modal;
-
+    const { data, isLoading } = useGetCategoriesQuery();
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
-
-
     const [open, setOpen] = useState(false);
-    const [openUpdate, setOpenUpdate] = useState(false);
-
-
-
-    const showDeleteConfirm = () => {
-        confirm({
-            title: 'Bạn có chắc muốn xóa không?',
-            content: 'Danh mục sẽ xóa vĩnh viễn nếu bạn tiếp tục .',
-            okText: 'Tiếp tục',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            onOk() {
-                console.log('OK');
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-        });
+    const [mutate] = useDeleteCategoryMutation();
+    const handleDelete = async (id: string) => {
+        await mutate(id);
+        notification.success({ message: "Xóa Thành Công" });
     };
+
+    const handleAddCategory = () => {
+        setOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setOpen(false);
+    };
+    const handleUpdateCategory = () => {
+        setOpen(true);
+    };
+
+  
+
     return (
         <>
-
             <div className="relative overflow-x-auto">
-
                 <div className="pb-4 bg-white dark:bg-gray-900 flex">
                     <div>
                         <Space direction="vertical">
                             <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                         </Space>
                     </div>
-                    <div className='bg-gray-400 ml-[20px] rounded-md'>
-                        <Button type="primary" onClick={() => setOpen(true)}>
+                    <div className="bg-gray-400 ml-[20px] rounded-md">
+                        <Button type="primary" onClick={handleAddCategory}>
                             Thêm danh mục
                         </Button>
                         <Modal
                             title="Thêm danh mục"
                             centered
                             open={open}
-                            onOk={() => setOpen(false)}
-                            onCancel={() => setOpen(false)}
+                            onOk={handleModalClose}
+                            onCancel={handleModalClose}
                             width={1000}
-
                         >
-                            <AddCategory />
+                            <AddCategory handleModalClose={handleModalClose} />
                         </Modal>
                     </div>
                 </div>
@@ -65,46 +61,64 @@ const ListCaegory = () => {
                             <th scope="col" className="px-6 py-3 rounded-l-lg">
                                 Tên danh mục
                             </th>
-
-                            <th scope="col" className="px-6 py-3 rounded-r-lg">
+                            <th scope="col" className="pl-24 py-3 rounded-r-lg">
+                                thời gian
+                            </th>
+                            <th scope="col" className="pl-24 py-3 rounded-r-lg">
                                 Thao tác
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr className="bg-white dark:bg-gray-800">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Apple MacBook Pro 17"
-                            </th>
-
-                            <td className="px-6 py-4">
-                                <Button type="dashed" onClick={() => setOpenUpdate(true)}>
-                                    Update
-                                </Button>
-                                <Modal
-                                    title="Cập nhật danh mục"
-                                    centered
-                                    open={openUpdate}
-                                    onOk={() => setOpenUpdate(false)}
-                                    onCancel={() => setOpenUpdate(false)}
-                                    width={1000}
+                    {isLoading ? (
+                        <tbody>
+                            <tr>
+                                <td colSpan={7}><Skeleton count={3} className='h-[98px]' /></td>
+                            </tr>
+                        </tbody>
+                    ) : (
+                        <tbody  >
+                            {data?.docs.map((category) => (
+                                <tr
+                                    key={category._id}
+                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
-                                    <UpdateCategory />
-                                </Modal>
-                                <Space wrap className='ml-2'>
-                                    <Button onClick={showDeleteConfirm} type="dashed">
-                                        Delete
-                                    </Button>
-                                </Space>
-                            </td>
-                        </tr>
-                    </tbody>
-
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-10"
+                                    >
+                                        {category.name}
+                                    </th>
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-10"
+                                    >
+                                        {category.createdAt}
+                                    </th>
+                                    <td className="pl-16 py-4 flex flex-nowrap">
+                                       
+                                  
+                                        <Space wrap className="ml-2">
+                                            <Popconfirm
+                                                placement="topRight"
+                                                title="Bạn Muốn Xóa ?"
+                                                okText="OK"
+                                                cancelText="Cancel"
+                                                okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
+                                                onConfirm={() => handleDelete(category._id)}
+                                            >
+                                                <Button type="link">Delete</Button>
+                                            </Popconfirm>
+                                        </Space>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    )}
                 </table>
             </div>
-
         </>
-    )
-}
+    );
+};
 
-export default ListCaegory
+export default ListCategory;
+
