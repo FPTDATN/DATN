@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import {
-
-    Button,
-    Form,
-    Input,
-    InputNumber,
-    Radio,
-    Select,
-    Space,
-    Upload,
-    UploadProps,
-
-} from 'antd';
+import {Button,Form,Input,InputNumber,Radio,Select,Space,Upload,UploadProps,} from 'antd';
 import { AiOutlineUpload } from 'react-icons/ai';
 
 type SizeType = Parameters<typeof Form>[0]['size'];
@@ -37,7 +25,7 @@ const AddProduct: React.FC = () => {
 
     const [componentSize, setComponentSize] = useState<SizeType | 'default'>('default');
 
-    const [value, setValue] = useState<string | number | null>('99');
+    const [value, setValue] = useState<string | number | null>('');
     const { TextArea } = Input;
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

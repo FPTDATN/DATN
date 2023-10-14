@@ -17,6 +17,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 import ListUser from '@/pages/admin/user/listUser';
 import AppTest from '@/pages/admin/category/test';
 import ListOrder from '@/pages/admin/order/listorder';
+import UpdateCategory from '@/pages/admin/category/updateCategory';
 
 const router = createBrowserRouter([
     // Main layout
@@ -68,6 +69,7 @@ const router = createBrowserRouter([
             { path: 'dashboard', element: <Dashbroad /> },
             { path: 'product', element: <ListProduc /> },
             { path: 'category', element: <ListCaegory /> },
+          
             { path: 'user', element: <ListUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },

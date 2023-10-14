@@ -20,5 +20,5 @@ export type TCategory = {
   export type TQueryParamscategory = {
     _page?: number;
     _limit?: number;
-    _categoryId?: string;
+  _search?: string;
   };
