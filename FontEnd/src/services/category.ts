@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { CategoryType, PaginatedCategory } from '@/types/category';
 import { waiting } from '@/utils/waiting';
-import { CategoryType } from '@/types/category';
 
 export type TCategory = {
     _id: string;
@@ -8,7 +8,6 @@ export type TCategory = {
     createdAt: string;
     updatedAt: string;
   };
-
 
 const categoryApi = createApi({
     reducerPath: 'category',
@@ -21,12 +20,12 @@ const categoryApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getCategories: builder.query<CategoryType, void>({
-            query: () => '/categories',
+        getCategories: builder.query<PaginatedCategory, void>({
+            query: () => '/category',
             providesTags: ['Category'],
         }),
-        getCatgoryById: builder.query<TCategory, string>({
-            query: (_id) => `/categories/${_id}`,
+        getCatgoryById: builder.query<CategoryType, string>({
+            query: (_id) => `/category/${_id}`,
             providesTags: ['Category'],
         }),
         createCategory: builder.mutation<TCategory, string>({

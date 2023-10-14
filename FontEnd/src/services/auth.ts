@@ -16,11 +16,11 @@ interface ApiRegisterInput {
     confirmPassword:string;
     firstName:string;
     lastName:string;
-    fullName:string;
+  
     phone:number;
     address?:string;
     rule:boolean;
-    cardnumber?:number | null; // nếu có
+
 
 }
 
