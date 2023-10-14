@@ -497,39 +497,63 @@ export const provinces = [
 ];
 
 type User = {
-    username:string;
-    email:string;
+    username: string;
+    email: string;
     votes: string[];
 }
 
 export interface ProductType {
-    _id: string;
-    name: string;
-    price: number;
-    sale_off?: number;
-    description?: string;
-    quantity?: number;
 
-    // Tìm sản phẩm theo màu
-    colorId?: string[];
+    products: {
+        _id: string;
+        name: string;
+        price: number;
+        sale_off?: number;
+        description?: string;
+        quantity?: number;
 
-    // Tìm sản phẩm theo size
-    sizeId?: string[];
+        // Tìm sản phẩm theo màu
+        colorId?: Colors[];
 
-    images?: string[]; //mảng nhiều ảnh
+        // Tìm sản phẩm theo size
+        sizeId?: Sizes[];
 
-    //  Tìm sản phẩm theo loại
-    categoryId?: string;
+        images?: string[]; //mảng nhiều ảnh
 
-    // brand
-    brandId?: string;
+        //  Tìm sản phẩm theo loại
+        categoryId?: Category;
 
-    // vote
-    userVote: User[]; // Có thể để sau
+        // brand
+        brandId?: Brand;
 
-    // ngày tạo
-    createdAt: Date;
+        // vote
+        userVote: User[]; // Có thể để sau
 
-    // ngày cập nhật
-    updatedAt: Date;
+        // ngày tạo
+        createdAt: Date;
+
+        // ngày cập nhật
+        updatedAt: Date;
+    }
+
+}
+
+interface Brand {
+    _id:string;
+    name:string;
+}
+
+interface Colors {
+    _id:string;
+    name:string;
+}
+
+interface Sizes {
+    _id:string;
+    name:string;
+}
+
+interface Category {
+    _id:string;
+    name:string;
 }

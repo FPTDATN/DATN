@@ -6,8 +6,10 @@ import { BsFillGridFill, BsGrid3X3GapFill, BsSearch } from 'react-icons/bs';
 import { BiSolidCategory } from 'react-icons/bi';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { AiFillStar } from 'react-icons/ai';
+import { useGetProductsQuery } from '@/services/product';
+import { useGetCategoriesQuery } from '@/services/category';
 
-interface FilterProductsProps { }
+interface FilterProductsProps {}
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -30,6 +32,9 @@ function getItem(
 const rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
 const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
+    const { data: productsData, isLoading } = useGetProductsQuery();
+    const { data: categoriesData } = useGetCategoriesQuery();
+
     const categories = [
         {
             _id: 'idcategory1',
@@ -57,22 +62,22 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
         {
             _id: 'idbrand1',
             title: 'Thương hiệu 1',
-            checked: false
+            checked: false,
         },
         {
             _id: 'idbrand2',
             title: 'Thương hiệu 2',
-            checked: false
+            checked: false,
         },
         {
             _id: 'idbrand3',
             title: 'Thương hiệu 3',
-            checked: false
+            checked: false,
         },
         {
             _id: 'idbrand4',
             title: 'Thương hiệu 4',
-            checked: false
+            checked: false,
         },
     ];
 
@@ -89,10 +94,10 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
             <div>
                 <BiSolidCategory className="text-base text-gray-600" />
             </div>,
-            categories.map((category) => {
+            categoriesData?.docs.map((category) => {
                 return getItem(
                     <Checkbox onChange={onChange}>
-                        <h3 className="text-base">{category.title}</h3>
+                        <h3 className="text-base">{category.name}</h3>
                     </Checkbox>,
                     category._id,
                 );
@@ -239,27 +244,17 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                             </div>
                         </div>
                         <div
-                            className={`${!arrangeList ? 'grid' : ''
-                                } grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4  items-center`}
+                            className={`${
+                                !arrangeList ? 'grid' : ''
+                            } grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4  items-center px-4`}
                         >
-                            <div className="w-full mb-6">
-                                <ProductItem arrangeList={arrangeList} />
-                            </div>
-                            <div className="w-full mb-6">
-                                <ProductItem arrangeList={arrangeList} />
-                            </div>
-                            <div className="w-full mb-6">
-                                <ProductItem arrangeList={arrangeList} />
-                            </div>
-                            <div className="w-full mb-6">
-                                <ProductItem arrangeList={arrangeList} />
-                            </div>
-                            <div className="w-full mb-6">
-                                <ProductItem arrangeList={arrangeList} />
-                            </div>
-                            <div className="w-full mb-6">
-                                <ProductItem arrangeList={arrangeList} />
-                            </div>
+                            {productsData?.docs.map((product) => (
+                                <>
+                                    <div className="w-full mb-6">
+                                        <ProductItem product={product} arrangeList={arrangeList} />
+                                    </div>
+                                </>
+                            ))}
                         </div>
                         <div className="flex justify-end mt-6">
                             <Pagination defaultCurrent={6} total={500} />
