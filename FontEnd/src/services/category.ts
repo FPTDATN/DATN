@@ -2,10 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { CategoryType, PaginatedCategory } from '@/types/category';
 import { waiting } from '@/utils/waiting';
 
-interface CategoryInput {
-    name: string;
-}
-
 export type TCategory = {
     _id: string;
     name: string;

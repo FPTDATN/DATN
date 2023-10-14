@@ -1,24 +1,17 @@
-export type TCategory = {
-    _id: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  
-  export type CategoryType = {
-    docs: TCategory[];
-    totalDocs: number;
+export interface PaginatedCategory {
+    docs: CategoryType[];
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
     limit: number;
-    totalPages: number;
+    nextPage: null;
     page: number;
     pagingCounter: number;
-    hasPrevPage: boolean;
-    hasNextPage: boolean;
-    prevPage: number | null;
-    nextPage: number | null;
-  };
-  export type TQueryParamscategory = {
-    _page?: number;
-    _limit?: number;
-    _categoryId?: string;
-  };
+    prevPage: null;
+    totalDocs: number;
+    totalPages: number;
+}
+
+export interface CategoryType {
+    _id:string;
+    name:string;
+}
