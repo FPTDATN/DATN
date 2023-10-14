@@ -3,18 +3,16 @@ import { Button, Space, Typography } from 'antd';
 import { AiOutlineUser, AiOutlineEyeInvisible, AiOutlineEye, AiOutlineLock } from 'react-icons/ai';
 import { useSigninMutation } from '@/services/auth';
 import { FormEvent, FunctionComponent, useEffect, useState } from 'react';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import Loading from '@/components/ui/Loading';
-import { useNavigate, } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import InputField from '@/components/ui/InputField';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 const { Text } = Typography;
 
-interface SigninProps {
-    
-}
- 
+interface SigninProps {}
+
 const Signin: FunctionComponent<SigninProps> = () => {
     const router = useNavigate();
 
@@ -28,23 +26,19 @@ const Signin: FunctionComponent<SigninProps> = () => {
         e.preventDefault();
 
         await signin({
-
             usernameOrEmail,
-
             password,
         });
     };
 
     useEffect(() => {
-
-        if(isSuccess) {
-            toast.success('Đăng nhập thành công', {position:'top-right'})
-            setTimeout(() => router('/'),4000)
+        if (isSuccess) {
+            toast.success('Đăng nhập thành công', { position: 'top-right' });
+            setTimeout(() => router('/'), 4000);
         } else {
-            return
+            return;
         }
-
-    },[isSuccess])
+    }, [isSuccess]);
 
     return (
         <>
@@ -74,10 +68,8 @@ const Signin: FunctionComponent<SigninProps> = () => {
                             <form action="#" className="mt-8 gap-6" onSubmit={handleSubmit}>
                                 <Space direction="vertical" className="w-full">
                                     <InputField
-
                                         onChange={(e) => setUsernameOrEmail(e.target.value)}
-                                        typeInput='text'
-
+                                        typeInput="text"
                                         size="large"
                                         placeholder="Email"
                                         prefix={<AiOutlineUser />}
@@ -89,6 +81,7 @@ const Signin: FunctionComponent<SigninProps> = () => {
                                         typeInput="password"
                                         prefix={<AiOutlineLock />}
                                         placeholder="Mật khẩu"
+                                        status={isError ? 'error' : ''}
                                         size="large"
                                         iconRender={(visible) =>
                                             visible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />
@@ -96,13 +89,13 @@ const Signin: FunctionComponent<SigninProps> = () => {
                                     />
                                 </Space>
 
-                                {/* {isError && (
+                                {isError && error !== undefined && (
                                     <div className="mt-2">
                                         <Text type="danger">
                                             {((error as FetchBaseQueryError).data as any).message}
                                         </Text>
                                     </div>
-                                )} */}
+                                )}
 
                                 <div className="col-span-6 mt-4">
                                     <label className="flex gap-4">
@@ -113,9 +106,7 @@ const Signin: FunctionComponent<SigninProps> = () => {
                                             className=" h-5 w-5 rounded-md border-gray-200 bg-gray-100 shadow-sm"
                                         />
 
-                                        <span className="text-sm text-gray-700">
-                                            Bạn có muốn lưu mật khẩu ?
-                                        </span>
+                                        <span className="text-sm text-gray-700">Bạn có muốn lưu mật khẩu ?</span>
                                     </label>
                                 </div>
 
@@ -135,7 +126,6 @@ const Signin: FunctionComponent<SigninProps> = () => {
                                     <Link to="/account/signup" className="ml-2 text-gray-700 underline">
                                         Đăng ký
                                     </Link>
-                                    
                                 </p>
                             </form>
                         </div>
@@ -144,6 +134,6 @@ const Signin: FunctionComponent<SigninProps> = () => {
             </section>
         </>
     );
-}
- 
+};
+
 export default Signin;

@@ -5,7 +5,7 @@ import { useSignupMutation } from '@/services/auth';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { Button, Checkbox, Form, Select, Space } from 'antd';
 import { FormEvent, useEffect, useState } from 'react';
-import { AiOutlineUser, AiOutlineIdcard, AiOutlineLock, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineUser, AiOutlineLock, AiOutlineMail } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -147,13 +147,33 @@ const Signup = () => {
                             <Form
                                 className="mt-8"
                                 onSubmitCapture={onSubmit}
+                                onFinishFailed={(err) => {
+                                    if (err.errorFields.length !== 0) return;
+                                }}
                                 labelCol={{ span: 8 }}
                                 wrapperCol={{ span: 16 }}
                             >
                                 <Form.Item<FieldType>
                                     label="Tên đăng nhập"
                                     name="username"
-                                    rules={[{ required: true }]}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Tên đăng nhập không được bỏ trống',
+                                            whitespace: true,
+                                        },
+                                        { min: 3, message: 'Ít nhất 3 lý tự' },
+                                        {
+                                            pattern: new RegExp('^(?=[a-z-0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'),
+                                            message: 'Tên đăng nhập không hợp lệ',
+                                        },
+                                        {
+                                            validator: (_, value) =>
+                                                value && value.trim()
+                                                    ? Promise.resolve()
+                                                    : Promise.reject('Không được có ký tự đặc biệt'),
+                                        },
+                                    ]}
                                 >
                                     <InputField
                                         value={username}
@@ -166,7 +186,15 @@ const Signup = () => {
                                         typeInput="text"
                                     />
                                 </Form.Item>
-                                <Form.Item<FieldType> label="Email" name="email" rules={[{ required: true }]}>
+                                <Form.Item<FieldType>
+                                    label="Email"
+                                    name="email"
+                                    rules={[
+                                        { required: true, message: 'Email không được bỏ trống' },
+                                        { whitespace: true },
+                                        { type: 'email', message: 'Phải đúng định dạng email' },
+                                    ]}
+                                >
                                     <InputField
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -182,7 +210,10 @@ const Signup = () => {
                                 <Form.Item<FieldType>
                                     label="Họ và tên"
                                     name="lastNameAndFirstName"
-                                    rules={[{ required: true }]}
+                                    rules={[
+                                        { required: true, message: 'Họ và tên không được bỏ trống' },
+                                        { min: 3, message: 'Ít nhất 3 lý tự' },
+                                    ]}
                                 >
                                     <Space.Compact className="w-full">
                                         <InputField
@@ -211,8 +242,15 @@ const Signup = () => {
                                     </Space.Compact>
                                 </Form.Item>
 
-                               
-                                <Form.Item<FieldType> label="Số điện thoại" name="phone" rules={[{ required: true }]}>
+                                <Form.Item<FieldType>
+                                    label="Số điện thoại"
+                                    name="phone"
+                                    rules={[
+                                        { required: true, message: 'Số điện thoại không được bỏ trống' },
+                                        { min: 9, message: 'Số điện thoại chưa hợp lệ' },
+                                        { max: 12, message: 'Số điện thoại không được dài quá 12 ký tự' },
+                                    ]}
+                                >
                                     <InputField
                                         onChange={(e) => setPhone(Number(e.target.value))}
                                         name="phone"
@@ -225,7 +263,11 @@ const Signup = () => {
                                         typeInput="text"
                                     />
                                 </Form.Item>
-                                <Form.Item<FieldType> label="Tỉnh thành" name="address" rules={[{ required: true }]}>
+                                <Form.Item<FieldType>
+                                    label="Tỉnh thành"
+                                    name="address"
+                                    rules={[{ required: true, message: 'Tỉnh thành không được bỏ trống' }]}
+                                >
                                     <Select
                                         value={address}
                                         onChange={(value: string) => setAddress(value)}
@@ -238,7 +280,22 @@ const Signup = () => {
                                         options={provinces}
                                     />
                                 </Form.Item>
-                                <Form.Item<FieldType> label="Mật khẩu" name="password" rules={[{ required: true }]}>
+                                <Form.Item<FieldType>
+                                    label="Mật khẩu"
+                                    name="password"
+                                    rules={[
+                                        { required: true, message: 'Mật khẩu không được để trống' },
+                                        { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự' },
+                                        { max: 20, message: 'Mật khẩu tối đa 20 ký tự' },
+                                        {
+                                            pattern: new RegExp(
+                                                '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                                            ),
+                                            message: 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt và 1 số',
+                                        },
+                                        { whitespace: true },
+                                    ]}
+                                >
                                     <InputField
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
@@ -256,8 +313,17 @@ const Signup = () => {
                                     rules={[
                                         {
                                             required: true,
-                                            message: confirmPassword !== password ? 'Phải trùng với mật khẩu trên' : '',
+                                            message: 'Xác nhận mật khẩu không được bỏ trống',
                                         },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (!value || getFieldValue('password') === value) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                return Promise.reject('Mật khẩu không khớp');
+                                            },
+                                        }),
                                     ]}
                                 >
                                     <InputField
@@ -271,7 +337,7 @@ const Signup = () => {
                                         typeInput="password"
                                     />
                                 </Form.Item>
-                                
+
                                 <Checkbox onChange={(e) => setRule(e.target.checked)}>
                                     Bạn có đồng ý với điều khoản của chúng tôi
                                 </Checkbox>
@@ -305,4 +371,4 @@ const Signup = () => {
     );
 };
 
-export default Signup
+export default Signup;
