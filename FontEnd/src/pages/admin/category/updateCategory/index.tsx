@@ -1,40 +1,65 @@
-import React, { useState } from 'react';
-import {
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Button } from 'antd';
 
-    Form,
-    Input,
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useGetCatgoryByIdQuery, useUpdateCategoryMutation } from '@/services/category';
 
+const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () => void }> = ({
+  categoryId,
+  handleUpdateComplete,
+}) => {
+  const [form] = Form.useForm();
+  const [mutate] = useUpdateCategoryMutation();
+  const [isLoading, setIsLoading] = useState(false);
 
-} from 'antd';
+  const onFinish = async (values: { name: string }) => {
+    try {
+      setIsLoading(true);
+      await mutate({ categoryId, category: { name: values.name } }).unwrap();
+      handleUpdateComplete();
+      toast.success('Cập nhật thành công');
+    } catch (error) {
+      console.error('Update category failed:', error);
+      toast.error('Cập nhật thất bại');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-type SizeType = Parameters<typeof Form>[0]['size'];
+  const { data: category, isLoading: isCategoryLoading } = useGetCatgoryByIdQuery(categoryId);
 
+  useEffect(() => {
+    if (!isCategoryLoading && category) {
+      form.setFieldsValue({ name: category.name });
+    }
+  }, [category, isCategoryLoading, form]);
 
-const UpdateCategory: React.FC = () => {
-
-    const [componentSize, setComponentSize] = useState<SizeType | 'default'>('default');
-
-    const onFormLayoutChange = ({ size }: { size: SizeType }) => {
-        setComponentSize(size);
-    };
-
-    return (
+  return (
+    <>
+      {isCategoryLoading ? (
+        <div>Loading...</div>
+      ) : (
         <Form
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 14 }}
-            layout="horizontal"
-            initialValues={{ size: componentSize }}
-            onValuesChange={onFormLayoutChange}
-            size={componentSize as SizeType}
-            style={{ maxWidth: 600 }}
+          form={form}
+          onFinish={onFinish}
+          layout="vertical"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
         >
-
-            <Form.Item label="Tên ">
-                <Input type='text' value={'Danh mục a'} />
-            </Form.Item>
-
+          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục' }]}>
+            <Input />
+          </Form.Item>
+   
+          <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
+            <Button type="primary" className='bg-primary' htmlType="submit" loading={isLoading}>
+              Cập nhật
+            </Button>
+          </Form.Item>
         </Form>
-    );
+      )}
+    </>
+  );
 };
 
 export default UpdateCategory;
