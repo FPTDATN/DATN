@@ -19,9 +19,14 @@ interface ApiRegisterInput {
 }
 
 interface ApiRenponse {
-    username: string;
+    address: string;
     email: string;
-    avatar?: string;
+    favourite: any[];
+    firstName: string;
+    lastName: string;
+    phone: number;
+    role: string;
+    username: string;
 }
 
 const authApi = createApi({
@@ -35,6 +40,14 @@ const authApi = createApi({
         },
     }),
     endpoints: (builder) => ({
+        me: builder.query<ApiRenponse, void>({
+            query: () => ({
+                url: '/me',
+                method: 'GET',
+                credentials: 'include',
+            }),
+            providesTags: ['Auth'],
+        }),
         signin: builder.mutation<ApiRenponse, ApiLoginInput>({
             query: (credential) => ({
                 url: '/signin',
@@ -42,6 +55,7 @@ const authApi = createApi({
                 body: credential,
                 credentials: 'include',
             }),
+            invalidatesTags: ['Auth']
         }),
         signup: builder.mutation<ApiRenponse, ApiRegisterInput>({
             query: (credential) => ({
@@ -50,9 +64,18 @@ const authApi = createApi({
                 body: credential,
                 credentials: 'include',
             }),
+            invalidatesTags: ['Auth']
         }),
+        logout: builder.mutation<boolean, void>({
+            query: () => ({
+                url: '/logout',
+                method: 'POST',
+                credentials: 'include'
+            }),
+            invalidatesTags: ['Auth']
+        })
     }),
 });
 
-export const { useSigninMutation, useSignupMutation } = authApi;
+export const { useSigninMutation, useSignupMutation, useLogoutMutation, useMeQuery } = authApi;
 export default authApi;

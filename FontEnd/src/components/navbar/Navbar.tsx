@@ -1,49 +1,17 @@
 import AccountIcon from '../ui/AccountIcon';
 import { FunctionComponent, useState } from 'react';
-import { AiOutlineHeart, AiOutlineMenu, AiOutlineDropbox, AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineMenu } from 'react-icons/ai';
 import Notification from '../ui/Notification';
 import CartModal from '../modal/CartModal';
 import MobileMenuModal from '../modal/MobileMenuModal';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import { Avatar, Dropdown, MenuProps } from 'antd';
-
-import { CiLogout } from 'react-icons/ci';
 import { useGetCategoriesQuery } from '@/services/category';
 
 interface NavbarProps {}
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
     const { data } = useGetCategoriesQuery();
-
-    const items: MenuProps['items'] = [
-        {
-            label: (
-                <Link className="text-base" to={''}>
-                    Cá nhân
-                </Link>
-            ),
-            key: '0',
-            icon: <AiOutlineUser style={{ fontSize: '18px' }} />,
-        },
-        {
-            label: (
-                <Link className="text-base" to={''}>
-                    Hàng đã đặt
-                </Link>
-            ),
-            key: '1',
-            icon: <AiOutlineDropbox style={{ fontSize: '18px' }} />,
-        },
-        {
-            type: 'divider',
-        },
-        {
-            label: <button className="text-base">Đăng xuất</button>,
-            key: '3',
-            icon: <CiLogout style={{ fontSize: '18px' }} />,
-        },
-    ];
 
     const [openAbsolute, setOpenAbsolute] = useState(false);
     const [open, setOpen] = useState(false);
@@ -57,7 +25,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
     return (
         <div className="relative h-[95px]">
             <section className="absolute w-full flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-800 text-layer">
-                <div className="max-w-6xl px-4 w-full mx-auto">
+                <div className="max-w-6xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
                         <Link to="/" className="text-3xl hidden lg:block font-semibold leading-none dark:text-gray-400">
                             Logo
@@ -74,9 +42,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             </div>
                             <CartModal />
                             <Notification />
-                            <Dropdown menu={{ items }} trigger={['click']} arrow>
-                                <Avatar size={'default'} src="./vite.svg" />
-                            </Dropdown>
+                            <AccountIcon />
                         </div>
 
                         <ul className="hidden lg:w-auto lg:space-x-12 lg:items-center lg:flex ">
@@ -108,7 +74,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                                     className="line-clamp-1"
                                                 >
                                                     <Link
-                                                        className="hover:text-primary/90 text-left px-2 py-1 block"
+                                                        className="hover:text-primary/90 text-left text-base px-2 py-1 block"
                                                         to={''}
                                                     >
                                                         {category.name}

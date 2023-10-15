@@ -4,7 +4,6 @@ import MainLayout from '@/components/layout/MainLayout';
 import Dashbroad from '@/pages/admin/dashbroad';
 import ListCaegory from '@/pages/admin/category/listCategory';
 
-
 import AccountDetail from '@/pages/user/account-detail/AccountDetail';
 
 import Cart from '@/pages/user/cart/Cart';
@@ -18,10 +17,15 @@ import ListUser from '@/pages/admin/user/listUser';
 import AppTest from '@/pages/admin/category/test';
 import ListOrder from '@/pages/admin/order/listorder';
 import ListProduct from '@/pages/admin/product/listProduct';
-
+import PrivateRoute from '@/components/protectRoute/PrivateRoute';
+import Error from '@/pages/error/Error';
 
 const router = createBrowserRouter([
     // Main layout
+    {
+        path: '/404',
+        element: <Error />,
+    },
     {
         path: '/',
         element: <MainLayout />,
@@ -53,7 +57,8 @@ const router = createBrowserRouter([
             },
             {
                 path: 'signin',
-                element: <Signin />,
+                element: 
+                    <Signin />
             },
             {
                 path: 'details',
@@ -66,7 +71,14 @@ const router = createBrowserRouter([
         path: '/admin',
         element: <AdminLayout />,
         children: [
-            { index: true, element: <Navigate to="dashboard" /> },
+            {
+                index: true,
+                element: (
+                    <PrivateRoute>
+                        <Navigate to="dashboard" />
+                    </PrivateRoute>
+                ),
+            },
             { path: 'dashboard', element: <Dashbroad /> },
             { path: 'product', element: <ListProduct /> },
             { path: 'category', element: <ListCaegory /> },

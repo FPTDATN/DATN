@@ -12,7 +12,7 @@ const Gallery: FunctionComponent<GalleryProps> = () => {
             <div className="p-4 mx-auto max-w-6xl">
                 <h2 className="pb-4  font-bold text-center text-gray-800 text-4xl dark:text-gray-400">Danh mục</h2>
                 <div className="mx-auto mb-10 border-b border-red-700 w-44 dark:border-gray-400"></div>
-                <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6 mt-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-2 gap-6 mt-8">
                     {data?.docs.map((category) => {
                         return (
                             <Link
@@ -24,13 +24,13 @@ const Gallery: FunctionComponent<GalleryProps> = () => {
                                     src={
                                         'https://dwinofficial.com/wp-content/uploads/2022/10/ao-thun-unisex-black-T-Shirt-thoi-trang-DWin-basic-tee-phong-tron-nam-nu-tay-lo-oversize-7.jpg'
                                     }
-                                    className="group-hover:origin-center group-hover:scale-110 group-hover:rotate-3 h-[300px] w-full transition duration-500 object-cover"
+                                    className="group-hover:origin-center group-hover:scale-110 group-hover:rotate-3 h-[160px] md:h-[220px] lg:h-[300px] w-full transition duration-500 object-cover"
                                     alt={category.name}
                                 />
                                 <div className="absolute inset-0 h-[300px] group-hover:bg-black opacity-50 transition duration-500 z-0"></div>
                                 <div>
-                                    <div className="absolute z-10 group-hover:block bottom-4 left-4">
-                                        <div className="h6 text-lg font-medium text-gray-800 hover:text-white transition duration-500">
+                                    <div className="absolute z-10 group-hover:block bottom-2 left-4">
+                                        <div className="h-6 line-clamp-1 text-base lg:text-lg font-medium text-gray-800 hover:text-white transition duration-500">
                                             {category.name}
                                         </div>
                                         <p className="text-gray-300 text-xs mb-0">Robert</p>
