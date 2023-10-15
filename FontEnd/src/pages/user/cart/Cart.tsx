@@ -143,9 +143,9 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                 </a>
                                             </div>
                                             <div className="flex items-center justify-between ">
-                                                <button className="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-primary/90 rounded-md hover:bg-primary/95">
+                                                <a href='/checkout' className="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-primary/90 rounded-md hover:bg-primary/95">
                                                     Checkout
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

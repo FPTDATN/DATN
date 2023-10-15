@@ -19,6 +19,7 @@ import ListOrder from '@/pages/admin/order/listorder';
 import ListProduct from '@/pages/admin/product/listProduct';
 import PrivateRoute from '@/components/protectRoute/PrivateRoute';
 import Error from '@/pages/error/Error';
+import LocationList from '@/pages/user/checkout/Checkout';
 
 const router = createBrowserRouter([
     // Main layout
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
                 path: 'detail/:id',
                 element: <ProductDetail />,
             },
+            {
+                path: 'checkout',
+                element: <LocationList/>
+            }
         ],
     },
     {

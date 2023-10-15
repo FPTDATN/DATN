@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-// import cartApi from "../../../services/cart";
-import { formatCurrency } from "../../../utils";
+import { formatCurrency } from "@/utils";
 import { useForm } from "react-hook-form";
-// import ordersApi from "../../../services/orders";
-import { toastError, toastSuccess } from "../../../components/toast/Toast";
-import paymentApi from "../../../services/payment";
+import ordersApi from "@/services/order";
+import { toastError, toastSuccess } from "@/components/toast/Toast";
+import paymentApi from "@/services/payment";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/store/hook";
+import { useMeQuery } from "@/services/auth";
 
 interface PaymentData {
     id: string;
@@ -13,6 +14,11 @@ interface PaymentData {
 }
 
 const LocationList: React.FC = () => {
+
+    const {data:authData} = useMeQuery()
+
+    const {cartItems} = useAppSelector(state => state.cart)
+
     const [provinces, setProvinces] = useState([]);
     const [selectedProvince, setSelectedProvince] = useState("");
     const [districts, setDistricts] = useState([]);
@@ -194,6 +200,7 @@ const LocationList: React.FC = () => {
                             <input
                                 className="border w-8/12 py-3 px-2 mt-5 mb-5"
                                 type="text"
+                                value={`${authData?.firstName} ${authData?.lastName}`}
                                 placeholder="Họ và Tên"
                                 {...register("fullName", {
                                     required: true,
@@ -213,6 +220,7 @@ const LocationList: React.FC = () => {
                             <input
                                 className="border w-8/12 py-3 px-2 mt-5 mb-5"
                                 type="text"
+                                value={`0${authData?.phone}`}
                                 placeholder="Số Điện Thoại"
                                 {...register("phone", {
                                     required: true,
