@@ -87,32 +87,32 @@ const Cart: FunctionComponent<CartProps> = () => {
                             </tbody>
                         </table>
                     </div>
-                    <section className="flex items-center font-poppins dark:bg-gray-700 ">
-                        <div className="justify-center flex-1 px-4 py-6 mx-auto max-w-7xl lg:py-4 md:px-6">
-                            <div className="bg-gray-50 dark:bg-gray-800">
+                    <section className="flex items-center font-poppins dark:bg-gray-700 my-10">
+                        <div className="justify-center flex-1 py-6 mx-auto lg:py-4 md:px-6">
+                            <div className="dark:bg-gray-800">
                                 <div className="">
-                                    <div className="w-full px-4 xl:w-4/12">
-                                        <div className="p-6 border border-blue-100 dark:bg-gray-900 dark:border-gray-900 bg-blue-50 md:p-8">
-                                            <h2 className="mb-8 text-2xl font-bold text-gray-700 dark:text-gray-400">
+                                    <div className="w-full ">
+                                        <div className="p-3 border border-blue-100 dark:bg-gray-900 dark:border-gray-900 md:p-8">
+                                            <h2 className="mb-8 text-base font-semibold text-gray-700 dark:text-gray-400">
                                                 Order Summary
                                             </h2>
                                             <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300 dark:border-gray-700 ">
-                                                <span className="text-gray-700 dark:text-gray-400">Tổng phụ</span>
-                                                <span className="text-xl font-bold text-gray-700 dark:text-gray-400 ">
+                                                <span className="text-gray-700 text-base dark:text-gray-400">Tổng phụ</span>
+                                                <span className="text-base font-semibold text-gray-700 dark:text-gray-400 ">
                                                     ${reduceTotal(cartItems)}
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between pb-4 mb-4 ">
-                                                <span className="text-gray-700 dark:text-gray-400 ">Shipping</span>
-                                                <span className="text-xl font-bold text-gray-700 dark:text-gray-400 ">
+                                                <span className="text-gray-700 text-base dark:text-gray-400 ">Shipping</span>
+                                                <span className="text-base font-semibold text-gray-700 dark:text-gray-400 ">
                                                     Miễn phí
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between pb-4 mb-4 ">
-                                                <span className="text-gray-700 dark:text-gray-400">
+                                                <span className="text-gray-700 text-base dark:text-gray-400">
                                                     Tổng số đơn hàng
                                                 </span>
-                                                <span className="text-xl font-bold text-gray-700 dark:text-gray-400">
+                                                <span className="text-base font-semibold text-gray-700 dark:text-gray-400">
                                                     ${reduceTotal(cartItems)}
                                                 </span>
                                             </div>
@@ -143,7 +143,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                 </a>
                                             </div>
                                             <div className="flex items-center justify-between ">
-                                                <a href='/checkout' className="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-primary/90 rounded-md hover:bg-primary/95">
+                                                <a href='/checkout' className="block w-full py-2 font-semibold text-center text-gray-100 uppercase bg-primary/90 rounded-md hover:bg-primary/95">
                                                     Checkout
                                                 </a>
                                             </div>
