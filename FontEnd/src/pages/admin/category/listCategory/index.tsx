@@ -105,7 +105,7 @@ const ListCategory = () => {
                     </td>
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">
-                        <Button type="dashed" onClick={() => handleUpdateCategory(category._id)}>
+                        <Button type="dashed" onClick={() => handleUpdateCategory(category._id!)}>
                           Update
                         </Button>
                         <Popconfirm
@@ -114,7 +114,7 @@ const ListCategory = () => {
                           okText="OK"
                           cancelText="Cancel"
                           okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                          onConfirm={() => handleDelete(category._id)}
+                          onConfirm={() => handleDelete(category._id!)}
                         >
                           <Button type="link">Delete</Button>
                         </Popconfirm>

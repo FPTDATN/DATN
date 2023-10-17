@@ -17,6 +17,8 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
     try {
       setIsLoading(true);
       await mutate({ categoryId, category: { name: values.name } }).unwrap();
+      console.log(categoryId);
+      
       handleUpdateComplete();
       toast.success('Cập nhật thành công');
     } catch (error) {

@@ -1,7 +1,8 @@
 import { useAddCommentMutation, useGetAllCommentsQuery, useRemoveCommentMutation } from "@/services/comment";
-import { Button, Input, Popconfirm, Spin } from "antd";
+import { Button, Input, Modal, Popconfirm, Spin } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
 
 interface comment {
     userId?: string;
@@ -31,12 +32,32 @@ const Comment = ({ userId, productId, comments }: comment) => {
     const [mutate] = useRemoveCommentMutation();
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState<string>('');
+    const [selectedCommentId, setSelectedCommentId] = useState('');
+    const [openAddModal, setOpenAddModal] = useState(false);
+    const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
+
     const { TextArea } = Input;
     const [openAbsolute, setOpenAbsolute] = useState(false);
 
-    const handleUpdateComment = () => {
+    const handleUpdateComment = (commentId: string) => {
         console.log('Update comment');
+        setSelectedCommentId(commentId)
+        // console.log(commentId);
+        setOpenUpdateModal(true);
+        
     };
+
+    const handleModalClose = () => {
+        setOpenAddModal(false);
+        setOpenUpdateModal(false);
+      };
+
+
+      const handleUpdateComplete = () => {
+        setSelectedCommentId('');
+        setOpenUpdateModal(false);
+      };
 
 
     const handleCommentSubmit = async (event: any) => {
@@ -131,10 +152,10 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                 aria-labelledby="dropdownComment1Button"
                                             >
                                                 <button
-                                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                                                    onClick={handleUpdateComment}
+                                                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
+                                                    onClick={()=>handleUpdateComment(item._id!)}
                                                 >
-                                                    Update Comment
+                                                    Update
                                                 </button>
                                                 <Popconfirm
                                                     placement="topRight"
@@ -142,7 +163,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                     okText="OK"
                                                     cancelText="Cancel"
                                                     okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                                                    onConfirm={() => handleDeleteComment(item._id)}
+                                                    onConfirm={() => handleDeleteComment(item._id!)}
                                                 >
                                                     <Button type="link">Delete</Button>
                                                 </Popconfirm>
@@ -180,6 +201,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
                 </div>
             </section>
         </Spin>
+        
     </>
 }
 export default Comment
