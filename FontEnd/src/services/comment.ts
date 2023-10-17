@@ -10,6 +10,7 @@ interface Comment {
   userId?: any;
   productId?: any;
   parentCommentId?: any
+  createdAt?: any
 }
 
 const commentApi = createApi({
@@ -36,7 +37,8 @@ const commentApi = createApi({
     }),
 
     getByIdComments: builder.query<Comment, any>({
-      query: (id) => `/comments/${id}`
+      query: (_id) => `/comments/${_id}`,
+      providesTags: ['Comments']
     }),
 
     addComment: builder.mutation({
@@ -47,14 +49,13 @@ const commentApi = createApi({
       }),
       invalidatesTags: ['Comments'],
     }),
-    updateComment: builder.mutation({
-      query: (comment) => ({
-        url: `/comments/${comment.id}`,
+    updateComment: builder.mutation<Comment, { commentId: string; comment: Partial<Comment> }>({
+      query: ({commentId,comment}) => ({
+        url: `/comments/${commentId}`,
         method: 'PUT',
         body: comment,
       }), invalidatesTags: ['Comments']
     }),
-
 
     removeComment: builder.mutation({
       query: (id: string) => ({
