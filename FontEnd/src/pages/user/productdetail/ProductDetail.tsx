@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { useGetProductByIdQuery } from '@/services/product';
 import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
+import { useMeQuery } from '@/services/auth';
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
@@ -20,6 +21,8 @@ const ProductDetail = () => {
     const { id } = useParams();
 
     const { data,isLoading } = useGetProductByIdQuery(id!);
+
+    const {data:authData} = useMeQuery()
 
     const [mode, setMode] = useState<TabsPosition>('top');
     const [value, setValue] = useState(3);
@@ -184,7 +187,7 @@ const ProductDetail = () => {
                 <RelatedProducts />
             </div>
             <div className="p-4 mx-auto">
-                <Comment />
+                <Comment userId={authData?._id} productId={data?.products._id}  />
             </div>
         </section>
     );

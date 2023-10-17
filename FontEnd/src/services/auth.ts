@@ -19,6 +19,7 @@ interface ApiRegisterInput {
 }
 
 interface ApiRenponse {
+    _id: string;
     address: string;
     email: string;
     favourite: any[];
