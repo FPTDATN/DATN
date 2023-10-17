@@ -1,6 +1,7 @@
 
 import authApi from '@/services/auth';
 import categoryApi from '@/services/category';
+import commentApi from '@/services/comment';
 import orderApi from '@/services/order';
 import productApi from '@/services/product';
 import userApi from '@/services/user';
@@ -28,8 +29,9 @@ const rootReducer = combineReducers({
     cart: cartReducer,
     [authApi.reducerPath]: authApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
-    [productApi.reducerPath]: productApi.reducer,
-    [orderApi.reducerPath]: orderApi.reducer,
+    [productApi.reducerPath]:productApi.reducer,
+    [orderApi.reducerPath]:orderApi.reducer,
+    [commentApi.reducerPath]:commentApi.reducer,
     [userApi.reducerPath]: userApi.reducer
 })
 
@@ -39,6 +41,7 @@ const middleware: any[] = [
     productApi.middleware,
     categoryApi.middleware,
     orderApi.middleware,
+    commentApi.middleware,
     userApi.middleware
 ]
 
