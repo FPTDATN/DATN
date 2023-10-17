@@ -1,6 +1,7 @@
 
 import authApi from '@/services/auth';
 import categoryApi from '@/services/category';
+import commentApi from '@/services/comment';
 import orderApi from '@/services/order';
 import productApi from '@/services/product';
 import { cartReducer } from '@/slices/cart';
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
     [authApi.reducerPath]: authApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [productApi.reducerPath]:productApi.reducer,
-    [orderApi.reducerPath]:orderApi.reducer
+    [orderApi.reducerPath]:orderApi.reducer,
+    [commentApi.reducerPath]:commentApi.reducer
 })
 
 // Middleware
@@ -36,7 +38,8 @@ const middleware:any[] = [
     authApi.middleware,
     productApi.middleware,
     categoryApi.middleware,
-    orderApi.middleware
+    orderApi.middleware,
+    commentApi.middleware
 ]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

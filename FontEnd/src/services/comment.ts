@@ -44,7 +44,8 @@ const commentApi = createApi({
         url: '/comments',
         method: 'POST',
         body: comment,
-      }), invalidatesTags: ['Comments']
+      }),
+      invalidatesTags: ['Comments'],
     }),
     updateComment: builder.mutation({
       query: (comment) => ({
