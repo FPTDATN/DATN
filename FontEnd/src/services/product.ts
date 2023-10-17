@@ -16,6 +16,7 @@ interface ProductApiInput {
     categoryId?: string;
     createAt:Date;
     updateAt:Date;
+    
 }
 
 const productApi = createApi({

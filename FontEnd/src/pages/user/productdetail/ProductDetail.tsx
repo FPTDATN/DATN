@@ -187,7 +187,7 @@ const ProductDetail = () => {
                 <RelatedProducts />
             </div>
             <div className="p-4 mx-auto">
-                <Comment userId={authData?._id} productId={data?.products._id}  />
+                <Comment comments={data?.products.comments!} userId={authData?._id} productId={data?.products._id}  />
             </div>
         </section>
     );

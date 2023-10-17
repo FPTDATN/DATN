@@ -534,6 +534,18 @@ export interface ProductType {
 
         // ngày cập nhật
         updatedAt: Date;
+
+        comments: [
+            {
+                text: string;
+                userId: string;
+                productId: string;
+                parentCommentId: null,
+                _id: string;
+                createdAt: Date;
+                updatedAt: Date;
+            }
+        ]
     }
 
 }

@@ -25,6 +25,7 @@ export interface ProductType {
     createAt:Date;
     updateAt:Date;
     categoryId?: Category;
+    
 }
 
 interface Brand {

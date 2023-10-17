@@ -1,17 +1,30 @@
-import { useAddCommentMutation } from "@/services/Comment";
+import { useAddCommentMutation } from "@/services/comment";
 import { Input, message } from "antd";
 import { useState } from "react";
 
 interface comment{
     userId?: string;
     productId?: string;
+    comments: [
+        {
+            text: string;
+            userId: string;
+            productId: string;
+            parentCommentId: null,
+            _id: string;
+            createdAt: Date;
+            updatedAt: Date;
+        }
+    ]
 }
+
+
 
 console.log();
 
 
-const Comment = ({userId, productId}:comment) => {
-    console.log(userId, productId);
+const Comment = ({userId, productId, comments}:comment) => {
+    console.log(comments);
 
     const [createComment, { isError, isLoading: isCreatingComment }] = useAddCommentMutation();
     const [loading, setLoading] = useState(false);
@@ -23,8 +36,6 @@ const Comment = ({userId, productId}:comment) => {
 
     const handleCommentSubmit = async (event: any) => {
         event.preventDefault();
-
-
         try {
             setLoading(true);
             await createComment({
