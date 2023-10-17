@@ -49,12 +49,10 @@ const Signup = () => {
                 email,
                 firstName,
                 lastName,
-
                 phone: phone!,
                 address,
                 password,
                 confirmPassword,
-
                 rule,
             });
         } catch (error) {
