@@ -3,6 +3,7 @@ import authApi from '@/services/auth';
 import categoryApi from '@/services/category';
 import orderApi from '@/services/order';
 import productApi from '@/services/product';
+import userApi from '@/services/user';
 import { cartReducer } from '@/slices/cart';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
@@ -27,16 +28,18 @@ const rootReducer = combineReducers({
     cart: cartReducer,
     [authApi.reducerPath]: authApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
-    [productApi.reducerPath]:productApi.reducer,
-    [orderApi.reducerPath]:orderApi.reducer
+    [productApi.reducerPath]: productApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
+    [userApi.reducerPath]: userApi.reducer
 })
 
 // Middleware
-const middleware:any[] = [
+const middleware: any[] = [
     authApi.middleware,
     productApi.middleware,
     categoryApi.middleware,
-    orderApi.middleware
+    orderApi.middleware,
+    userApi.middleware
 ]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

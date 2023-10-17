@@ -20,6 +20,7 @@ import ListProduct from '@/pages/admin/product/listProduct';
 import PrivateRoute from '@/components/protectRoute/PrivateRoute';
 import Error from '@/pages/error/Error';
 import LocationList from '@/pages/user/checkout/Checkout';
+import UpdateUser from '@/pages/admin/user/updateUser';
 
 const router = createBrowserRouter([
     // Main layout
@@ -49,8 +50,8 @@ const router = createBrowserRouter([
             },
             {
                 path: 'checkout',
-                element: <LocationList/>
-            }
+                element: <LocationList />,
+            },
         ],
     },
     {
@@ -62,8 +63,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'signin',
-                element: 
-                    <Signin />
+                element: <Signin />,
             },
             {
                 path: 'details',
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
                 index: true,
                 element: (
                     // <PrivateRoute>
-                        <Navigate to="dashboard" />
+                    <Navigate to="dashboard" />
                     // {/* </PrivateRoute> */}
                 ),
             },
@@ -88,6 +88,7 @@ const router = createBrowserRouter([
             { path: 'product', element: <ListProduct /> },
             { path: 'category', element: <ListCaegory /> },
             { path: 'user', element: <ListUser /> },
+            { path: 'user/update/:id', element: <UpdateUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
         ],
