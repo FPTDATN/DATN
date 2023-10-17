@@ -6,5 +6,5 @@ const orderroute = express.Router();
 orderroute.post('/order',createOrder)
 orderroute.get('/order' ,getOrders)
 orderroute.put('/order/:orderId/status',cancelOrder)
-orderroute.get('/order',getRevenueByMonth)
+orderroute.get('/orders',getRevenueByMonth)
 export default orderroute
