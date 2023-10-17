@@ -7,7 +7,7 @@ export type TCategory = {
     _id: string;
     name: string;
     createdAt: string;
-  
+    updateAt:string;
   };
 
 const categoryApi = createApi({
@@ -49,7 +49,8 @@ const categoryApi = createApi({
             query: ({ categoryId, category }) => ({
               url: `/categories/${categoryId}`,
               method: 'PUT',
-              body: category,
+              body: { ...category, updateAt: new Date().toISOString() }, 
+          
             }),
             invalidatesTags: ['Category'],
           }),
