@@ -17,7 +17,6 @@ import ListUser from '@/pages/admin/user/listUser';
 import AppTest from '@/pages/admin/category/test';
 import ListOrder from '@/pages/admin/order/listorder';
 import ListProduct from '@/pages/admin/product/listProduct';
-import PrivateRoute from '@/components/protectRoute/PrivateRoute';
 import Error from '@/pages/error/Error';
 import LocationList from '@/pages/user/checkout/Checkout';
 import UpdateUser from '@/pages/admin/user/updateUser';
@@ -78,11 +77,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: (
-                    // <PrivateRoute>
-                    <Navigate to="dashboard" />
-                    // {/* </PrivateRoute> */}
-                ),
+                element: <Navigate to="dashboard" />,
             },
             { path: 'dashboard', element: <Dashbroad /> },
             { path: 'product', element: <ListProduct /> },

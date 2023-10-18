@@ -35,29 +35,6 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
     const { data: productsData, isLoading } = useGetProductsQuery();
     const { data: categoriesData } = useGetCategoriesQuery();
 
-    const categories = [
-        {
-            _id: 'idcategory1',
-            title: 'Loại 1',
-            checked: false,
-        },
-        {
-            _id: 'idcategory2',
-            title: 'Loại 2',
-            checked: false,
-        },
-        {
-            _id: 'idcategory3',
-            title: 'Loại 3',
-            checked: false,
-        },
-        {
-            _id: 'idcategory4',
-            title: 'Loại 4',
-            checked: false,
-        },
-    ];
-
     const brands = [
         {
             _id: 'idbrand1',
@@ -99,7 +76,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                     <Checkbox onChange={onChange}>
                         <h3 className="text-base">{category.name}</h3>
                     </Checkbox>,
-                    category._id,
+                    category._id!,
                 );
             }),
         ),
@@ -249,11 +226,9 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                             } grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4  items-center px-4`}
                         >
                             {productsData?.docs.map((product) => (
-                                <>
-                                    <div className="w-full mb-6">
-                                        <ProductItem product={product} arrangeList={arrangeList} />
-                                    </div>
-                                </>
+                                <div key={product._id} className="w-full mb-6">
+                                    <ProductItem product={product} arrangeList={arrangeList} />
+                                </div>
                             ))}
                         </div>
                         <div className="flex justify-end mt-6">

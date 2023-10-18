@@ -46,6 +46,7 @@ const authApi = createApi({
                 url: '/me',
                 method: 'GET',
                 credentials: 'include',
+                
             }),
             providesTags: ['Auth'],
         }),
