@@ -2,7 +2,8 @@ import { useAddCommentMutation, useGetAllCommentsQuery, useRemoveCommentMutation
 import { Button, Input, Modal, Popconfirm, Spin } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
-
+import UpdateComment from "../updateComment/UpdateComment";
+import { useMeQuery } from "@/services/auth";
 
 interface comment {
     userId?: string;
@@ -21,38 +22,33 @@ interface comment {
 }
 
 
-
-console.log();
-
-
-const Comment = ({ userId, productId, comments }: comment) => {
+const Comment = ({ userId, productId }: comment) => {
     // console.log(comments);
     const { data } = useGetAllCommentsQuery()
-    const [createComment, { isError, isLoading: isCreatingComment, error }] = useAddCommentMutation();
+    const [createComment, { isError, isLoading: isCreatingComment, }] = useAddCommentMutation();
     const [mutate] = useRemoveCommentMutation();
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState<string>('');
     const [selectedCommentId, setSelectedCommentId] = useState('');
-    const [openAddModal, setOpenAddModal] = useState(false);
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
-
-
     const { TextArea } = Input;
     const [openAbsolute, setOpenAbsolute] = useState(false);
+
+    
+
+    const {data:authData} = useMeQuery()
 
     const handleUpdateComment = (commentId: string) => {
         console.log('Update comment');
         setSelectedCommentId(commentId)
-        // console.log(commentId);
+        console.log(commentId);
         setOpenUpdateModal(true);
         
     };
 
     const handleModalClose = () => {
-        setOpenAddModal(false);
         setOpenUpdateModal(false);
       };
-
 
       const handleUpdateComplete = () => {
         setSelectedCommentId('');
@@ -157,16 +153,16 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                 >
                                                     Update
                                                 </button>
-                                                <Popconfirm
-                                                    placement="topRight"
-                                                    title="Bạn Muốn Xóa ?"
-                                                    okText="OK"
-                                                    cancelText="Cancel"
-                                                    okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                                                    onConfirm={() => handleDeleteComment(item._id!)}
-                                                >
-                                                    <Button type="link">Delete</Button>
-                                                </Popconfirm>
+                                                    <Popconfirm
+                                                        placement="topRight"
+                                                        title="Bạn Muốn Xóa ?"
+                                                        okText="OK"
+                                                        cancelText="Cancel"
+                                                        okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
+                                                        onConfirm={() => handleDeleteComment(item._id!)}
+                                                    >
+                                                        <Button type="link">Delete</Button>
+                                                    </Popconfirm>
                                             </div>
                                         </div>
                                     )}
@@ -201,7 +197,17 @@ const Comment = ({ userId, productId, comments }: comment) => {
                 </div>
             </section>
         </Spin>
-        
+        <Modal
+        title="Cập nhật bình luận"
+        centered
+        visible={openUpdateModal && !!selectedCommentId}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        {selectedCommentId && (
+          <UpdateComment commentId={selectedCommentId} userId={authData?._id!} productId={productId!}  handleUpdateComplete={handleUpdateComplete} />
+        )}
+      </Modal>
     </>
 }
 export default Comment
