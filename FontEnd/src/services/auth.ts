@@ -1,33 +1,33 @@
-import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {waiting} from '@/utils/waiting';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { waiting } from '@/utils/waiting';
 interface ApiLoginInput {
+    usernameOrEmail: string;
 
-    usernameOrEmail:string;
-
-
-    password:string;
+    password: string;
 }
 
 interface ApiRegisterInput {
-    username:string;
-    email:string;
-
-    password:string;
-    confirmPassword:string;
-    firstName:string;
-    lastName:string;
-  
-    phone:number;
-    address?:string;
-    rule:boolean;
-
-
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    firstName: string;
+    lastName: string;
+    phone?: number | null;
+    address?: string;
+    rule: boolean;
 }
 
 interface ApiRenponse {
-    name:string;
-    email:string;
-    avatar?:string;
+    _id: string;
+    address: string;
+    email: string;
+    favourite: any[];
+    firstName: string;
+    lastName: string;
+    phone: number;
+    role: string;
+    username: string;
 }
 
 const authApi = createApi({
@@ -35,30 +35,49 @@ const authApi = createApi({
     tagTypes: ['Auth'],
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api',
-        fetchFn: async(...arg) => {
+        fetchFn: async (...arg) => {
             await waiting(2000);
-            return fetch(...arg)
+            return fetch(...arg);
         },
     }),
-    endpoints: (builder) => ({ 
-        signin: builder.mutation<ApiRenponse,ApiLoginInput>({
+    endpoints: (builder) => ({
+        me: builder.query<ApiRenponse, void>({
+            query: () => ({
+                url: '/me',
+                method: 'GET',
+                credentials: 'include',
+                
+            }),
+            providesTags: ['Auth'],
+        }),
+        signin: builder.mutation<ApiRenponse, ApiLoginInput>({
             query: (credential) => ({
                 url: '/signin',
                 method: 'POST',
-                body:credential,
-                credentials:'include'
-            })
+                body: credential,
+                credentials: 'include',
+            }),
+            invalidatesTags: ['Auth']
         }),
-        signup:builder.mutation<ApiRenponse,ApiRegisterInput>({
+        signup: builder.mutation<ApiRenponse, ApiRegisterInput>({
             query: (credential) => ({
                 url: '/signup',
                 method: 'POST',
                 body: credential,
-                credentials:'include'
-            })
+                credentials: 'include',
+            }),
+            invalidatesTags: ['Auth']
+        }),
+        logout: builder.mutation<boolean, void>({
+            query: () => ({
+                url: '/logout',
+                method: 'POST',
+                credentials: 'include'
+            }),
+            invalidatesTags: ['Auth']
         })
-    })
-})
+    }),
+});
 
-export const {useSigninMutation,useSignupMutation} = authApi;
+export const { useSigninMutation, useSignupMutation, useLogoutMutation, useMeQuery } = authApi;
 export default authApi;

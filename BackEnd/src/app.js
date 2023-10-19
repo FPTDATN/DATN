@@ -15,6 +15,8 @@ import orderroute from "./routers/order.js";
 import routerVNPAY from "./routers/vnpay.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
 
 const app = express();
 
@@ -24,6 +26,23 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(
+  session({
+    name: 'accessToken',
+    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/DATN' }),
+    cookie: {
+      maxAge: 1000 * 60 * 60, // 1h
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+    },
+    secret: 'my-secret',
+    saveUninitialized: false,
+    resave: false,
+  }),
+);
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -44,6 +63,8 @@ app.use("/api", routerVNPAY);
 const PORT = 8080;
 
 mongoose.connect("mongodb://127.0.0.1:27017/DATN");
+
+
 
 app.listen(PORT, () => {
   console.log(`server is running: http://localhost:${PORT}`);

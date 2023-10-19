@@ -520,6 +520,18 @@ export interface ProductType {
         userVote: User[]; 
         createdAt: Date;
         updatedAt: Date;
+
+        comments: [
+            {
+                text: string;
+                userId: string;
+                productId: string;
+                parentCommentId: null,
+                _id: string;
+                createdAt: Date;
+                updatedAt: Date;
+            }
+        ]
     }
 
 }

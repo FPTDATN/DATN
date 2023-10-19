@@ -1,13 +1,7 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
-
 import { PaginatedProduct, ProductType } from '@/types/Product';
 import { waiting } from '@/utils/waiting';
-import { CategoryType } from '@/types/category';
-
-
-
-
 const productApi = createApi({
     reducerPath: 'product',
     tagTypes: ['Product'],

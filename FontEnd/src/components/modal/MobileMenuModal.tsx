@@ -3,7 +3,7 @@ import { FunctionComponent, Key, ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import { BsGear } from 'react-icons/bs';
-import { AiFillHome,AiOutlineUser } from 'react-icons/ai';
+import { AiFillHome } from 'react-icons/ai';
 import type { MenuProps } from 'antd';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -52,7 +52,6 @@ const MobileMenuModal: FunctionComponent<MobileModalProps> = ({ open, onClose })
         getItem('Thể loại', 'sub4', <BiSolidCategoryAlt />, categories.map((category) => (
             getItem(<Link onClick={onClose} to={category.link}>{category.title}</Link>, category._id)
         ))),
-        getItem(<Link to={'/account/signin'}>Đăng nhập</Link>, 'sub-signin', <AiOutlineUser />),
         getItem('Cài đặt', 'sub2', <BsGear />, [
             getItem('Option 5', '5'),
             getItem('Option 6', '6'),

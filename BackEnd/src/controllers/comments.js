@@ -120,3 +120,22 @@ export const removeComment = async (req, res) => {
         });
     }
 }
+
+
+export const getByIdComment = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const comment = await Comments.findById(id);
+
+        if (!comment) {
+            return res.status(404).json({ message: 'Không tìm thấy bình luận' });
+        }
+
+        return res.status(200).json(comment);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message,
+        });
+    }
+};

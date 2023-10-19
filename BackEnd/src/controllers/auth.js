@@ -1,7 +1,21 @@
 import Auth from "../models/auth.js";
+import Token from "../models/token.js";
 import bcrypt from "bcryptjs";
 import { signupSchema, signinSchema } from "../Schemas/auth.js";
 import jwt from "jsonwebtoken";
+
+export const me = async (req, res) => {
+    if (!req.session.userId) {
+        return res.status(201).json(null);
+    }
+
+    const user = await Auth.findOne({ _id: req.session.userId });
+
+    user.password = undefined;
+    user.cardnumber = undefined;
+
+    return res.status(200).json(user);
+};
 
 export const signup = async (req, res) => {
     try {
@@ -29,7 +43,7 @@ export const signup = async (req, res) => {
             phone: req.body.phone,
             country: req.body.country,
             images: req.body.images,
-            avatar:req.body.avatar,
+            avatar: req.body.avatar,
             rule: req.body.rule,
             email: req.body.email,
             password: hashedPassword,
@@ -90,6 +104,9 @@ export const signin = async (req, res) => {
 
         auth.password = undefined;
 
+        req.session.userId = auth.id;
+        req.session.accessToken = token;
+
         return res.status(200).json({
             message: "Đăng nhập thành công",
             accessToken: token,
@@ -100,4 +117,19 @@ export const signin = async (req, res) => {
             message: error.message,
         });
     }
+};
+
+export const logout = (req, res) => {
+    return new Promise((resolve, _reject) => {
+        res.clearCookie("accessToken");
+        req.session.destroy((error) => {
+            if (error) {
+                console.log("SESSION_ERROR", error);
+                resolve(false);
+                return res.status(201).json(false)
+            }
+            resolve(true);
+            return res.status(201).json(true)
+        });
+    });
 };
