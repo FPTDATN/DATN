@@ -1,14 +1,12 @@
-import React, {  useState } from 'react';
-import { Button, Form, Input, InputNumber, Radio, Select, Space, Upload, UploadProps } from 'antd';
-import { AiOutlineUpload } from 'react-icons/ai';
+import React, { useState } from 'react';
+import { Button, Form, Input, InputNumber, Radio, Select, Space } from 'antd';
+
 import { useGetCategoriesQuery } from '@/services/category';
 import { toast } from 'react-toastify';
 import { useCreateProductMutation } from '@/services/product';
-
+import { ProductType } from '@/types/Product';
 
 type SizeType = Parameters<typeof Form>[0]['size'];
-
-
 
 const { TextArea } = Input;
 
@@ -19,11 +17,13 @@ interface AddProductProps {
 const AddProduct = ({ handleModalClose }: AddProductProps) => {
   const [componentSize, setComponentSize] = useState<SizeType | 'default'>('default');
   const [value, setValue] = useState<string | number | null>('');
+  const [products, setProducts] = useState<ProductType[]>([]); 
   const [mutateCreateProduct] = useCreateProductMutation();
   const [form] = Form.useForm();
   const { data: categories } = useGetCategoriesQuery();
   const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState<string[]>([]);
+
+
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
   };
@@ -32,14 +32,15 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
     setComponentSize(size);
   };
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: any) => { 
     try {
       setIsLoading(true);
 
       const { size, ...restValues } = values;
 
-      await mutateCreateProduct({ ...restValues, images }).unwrap();
-
+      await mutateCreateProduct({ ...restValues }).unwrap();
+      const newProduct = { ...restValues };
+      setProducts((prevProducts) => [...prevProducts, newProduct]);
       form.resetFields();
       toast.success('Tạo sản phẩm thành công');
       handleModalClose();
@@ -49,30 +50,15 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
       setIsLoading(false);
     }
   };
-  // const props: UploadProps = {
-  //   action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-  //   onChange(info) {
-  //     if (info.file.status !== 'uploading') {
-  //       console.log(info.file, info.fileList);
-  //     }
-  //     if (info.file.status === 'done') {
-  //       toast.success(`${info.file.name} uploaded successfully`);
-    
-  //       const imageUrl = info.file.response.url;
-  //       setImages((prevImages) => [...prevImages, imageUrl]);
-  //     } else if (info.file.status === 'error') {
-  //       toast.error(`${info.file.name} upload failed`);
-  //     }
-  //   },
-  //   multiple: true,
-  // };
+
+
+
   return (
     <Form
       form={form}
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 14 }}
       layout="horizontal"
-   
       initialValues={{ size: componentSize }}
       onValuesChange={onFormLayoutChange}
       size={componentSize as SizeType}
@@ -87,11 +73,17 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         </Radio.Group>
       </Form.Item>
 
-      <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true, message: 'Please enter the product name' }]}>
+      <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm ' }]}>
         <Input placeholder="Tên sản phẩm" type="text" />
       </Form.Item>
 
-      <Form.Item label="Giá gốc" name="price">
+      <Form.Item
+        label="Giá gốc"
+        name="price"
+        rules={[
+          { required: true, message: 'Vui lòng nhập Giá' },
+        ]}
+      >
         <Input placeholder="Giá gốc sản phẩm" type="number" />
       </Form.Item>
 
@@ -99,7 +91,11 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         <Input placeholder="Giá sale sản phẩm" type="number" />
       </Form.Item>
 
-      <Form.Item label="Số lượng" name="quantity">
+      <Form.Item
+        label="Số lượng"
+        name="quantity"
+        rules={[{ required: true, message: 'Vui lòng nhập số lượng sản phẩm ' }]}
+      >
         <Space>
           <InputNumber min={1} max={99} value={value} onChange={setValue} />
           <Button
@@ -113,7 +109,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         </Space>
       </Form.Item>
 
-      <Form.Item label="Mô tả" name="description">
+      <Form.Item label="Mô tả" name="description" rules={[{ required: true, message: 'Vui lòng nhập Mô tả ' }]}>
         <TextArea
           showCount
           maxLength={100}
@@ -123,7 +119,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         />
       </Form.Item>
 
-      <Form.Item label="Danh mục" name="categoryId">
+      <Form.Item label="Danh mục" name="categoryId" rules={[{ required: true, message: 'Vui lòng nhập Danh mục' }]}>
         <Select placeholder="Danh mục">
           {categories?.docs.map((category) => (
             <Select.Option key={category._id}>{category.name}</Select.Option>
@@ -131,13 +127,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         </Select>
       </Form.Item>
 
-      {/* <Form.Item label="Ảnh chính" name="images">
-        <Upload {...props}>
-          <Button icon={<AiOutlineUpload />} type="default">
-            Upload
-          </Button>
-        </Upload>
-      </Form.Item> */}
+
 
       <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
         <Button type="primary" className="bg-primary" htmlType="submit" loading={isLoading}>

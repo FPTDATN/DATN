@@ -1,8 +1,9 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 
-import { PaginatedProduct,ProductType } from '@/types/Product';
+import { PaginatedProduct, ProductType } from '@/types/Product';
 import { waiting } from '@/utils/waiting';
+import { CategoryType } from '@/types/category';
 
 
 
@@ -42,7 +43,7 @@ const productApi = createApi({
                 }),
                 invalidatesTags: ['Product'],
             }),
-            updateProduct: builder.mutation<ProductType, { productId: string; updatedProduct: ProductType }>({
+            updateProduct: builder.mutation<ProductType, { productId: string; updatedProduct: Partial<ProductType> }>({
                 query: ({ productId, updatedProduct }) => ({
                   url: `/products/${productId}`,
                   method: 'PATCH',

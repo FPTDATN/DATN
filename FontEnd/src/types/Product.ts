@@ -2,13 +2,14 @@ export interface PaginatedProduct {
     docs: ProductType[];
     hasNextPage: boolean;
     hasPrevPage: boolean;
-    limit: number;
     nextPage: null;
-    page: number;
     pagingCounter: number;
     prevPage: null;
     totalDocs: number;
     totalPages: number;
+    _page?: number;
+    _limit?: number;
+  _search?: string;
 }
 
 export interface ProductType {

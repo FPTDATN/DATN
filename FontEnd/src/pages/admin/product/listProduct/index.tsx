@@ -1,19 +1,27 @@
-import { Avatar, Button, Image, Input, Modal, Popconfirm, Space, notification } from 'antd';
+import { Avatar, Button, Image, Input, Modal, Popconfirm, Space } from 'antd';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddProduct from '../addProduct';
 import UpdateProduct from '../updateProduct';
 import { useGetProductsQuery, useDeleteProductMutation } from '@/services/product';
 import Skeleton from 'react-loading-skeleton';
+import { SearchProps } from 'antd/es/input';
+import { ProductType } from '@/types/Product';
 
 const ListProduct: React.FC = () => {
   const { data, isLoading } = useGetProductsQuery();
   const { Search } = Input;
-  const [open, setOpen] = useState(false);
+
   const [openAdd, setOpenAdd] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [mutate] = useDeleteProductMutation();
+  const [searchValue, setSearchValue] = useState('');
+  const handleSearch: SearchProps['onSearch'] = (value) => {
+    setSearchValue(value);
+  };
+  const [filteredProducts, setFilteredProducts] = useState<ProductType[]>([]);
+  
 
   const handleAddModalOpen = () => {
     setOpenAdd(true);
@@ -42,14 +50,23 @@ const ListProduct: React.FC = () => {
       toast.error('Xóa không thành công');
     }
   };
-
+  useEffect(() => {
+    if (searchValue) {
+      const filtered = data?.docs.filter((product) =>
+        product.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredProducts(filtered || []);
+    } else {
+      setFilteredProducts(data?.docs || []);
+    }
+  }, [data, searchValue]);
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div className="pb-4 bg-white dark:bg-gray-900 flex">
           <div className="pr-4">
             <Space direction="vertical">
-              <Search placeholder="input search text" style={{ width: 200 }} />
+              <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
             </Space>
           </div>
           <Button type="primary" className="bg-primary" onClick={handleAddModalOpen}>
@@ -92,7 +109,7 @@ const ListProduct: React.FC = () => {
             </tbody>
           ) : (
             <tbody>
-              {data?.docs.map((product) => (
+              {filteredProducts.map((product) => (
                 <tr
                   key={product._id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -160,6 +177,7 @@ const ListProduct: React.FC = () => {
         width={600}
         centered
       >
+        
         {selectedProduct && <UpdateProduct productId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />}
       </Modal>
     </>

@@ -79,10 +79,15 @@ export const remove = async (req, res) => {
 
 export const getById = async (req, res) => {
   try {
-    const products = await Products.findById(req.params.id).populate(['comments','colorId','brandId','sizeId','categoryId']);
-    return res.status(200).json({
-      products,
-    });
+    const products = await Products.findById(req.params.id).populate(['categoryId']);
+    // 'comments','colorId','brandId','sizeId',
+    if (products.length === 0) {
+      return res.status(200).json({
+        message: "Không có dữ liệu",
+      });
+    }
+    return res.json(products);
+   
   } catch (error) {
     return res.status(500).json({
       message: error,

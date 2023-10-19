@@ -33,7 +33,7 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
     if (category) {
       form.setFieldsValue({ name: category.name });
     }
-  }, [category, form]);
+  }, [category]);
 
   return (
     <>
