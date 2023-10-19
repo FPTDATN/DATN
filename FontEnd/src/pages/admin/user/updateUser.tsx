@@ -1,101 +1,139 @@
-import { Form, Input, Select } from 'antd';
-import { useState } from 'react';
+import { provinces } from '@/seeds';
+import { useGetUserByIdQuery, useUpdateUserMutation } from '@/services/user';
+import { Button, Form, Input, Select, Spin } from 'antd';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
- const UpdateUser: React.FC = () => {
+type FieldType = {
+    username?: string;
+    password?: string;
+    role?: string;
+    phone?: number;
+    email?: string;
+    address?: string;
+};
 
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
+const { Option } = Select;
+
+const UpdateUser: React.FC = () => {
+    const router = useNavigate();
+
+    const { id } = useParams();
+
+    const { data: userData, isLoading } = useGetUserByIdQuery(id as string);
+    const [updateUser, { isLoading: userLoading, isSuccess }] = useUpdateUserMutation();
+
+
+    const onFinish = async (values: any) => {
+        await updateUser({ _id: userData?.data._id, ...values });
     };
+
+    useEffect(() => {
+        isSuccess === true && router('/admin/user');
+    }, [isSuccess]);
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-    const OPTIONS = ['Admin', 'member', 'personnel'];
-    const [selectedItems, setSelectedItems] = useState<string[]>([]);
+    const OPTIONS = ['admin', 'member', 'personnel'];
+    const [selectedItems, setSelectedItems] = useState<string>('');
 
-    const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
-    type FieldType = {
-        username?: string;
-        password?: string;
-        role?: string;
-        phone?: number;
-        email?: string;
-        address?: string;
-    };
     return (
         <>
-            <Form
-                name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                style={{ maxWidth: 600 }}
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-            >
-                <Form.Item<FieldType>
-                    label="Username"
-                    name="username"
-
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+            {isLoading && !userData ? (
+                <Spin />
+            ) : (
+                <Form
+                    name="basic"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    style={{ maxWidth: 600 }}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
                 >
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Email"
-                    name="email"
+                    <Form.Item<FieldType>
+                        label="Username"
+                        name="username"
+                        initialValue={userData?.data.username}
+                        rules={[{ required: true, message: 'Please input your username!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Email"
+                        name="email"
+                        initialValue={userData?.data.email}
+                        rules={[{ required: true, message: 'Please input your Email!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Password"
+                        name="password"
+                        initialValue={userData?.data.password}
+                        rules={[{ required: true, message: 'Please input your password!' }]}
+                    >
+                        <Input.Password />
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Số điện thoại"
+                        name="phone"
+                        initialValue={`0${userData?.data.phone}`}
+                        rules={[{ required: true, message: 'Please input your phone!' }]}
+                    >
+                        <Input type="number" />
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Địa chỉ"
+                        name="address"
+                        initialValue={userData?.data.address}
+                        rules={[{ required: true, message: 'Please input your address!' }]}
+                    >
+                        <Select>
+                            {provinces.map((prov) => (
+                                <Option key={prov.value} value={prov.value}>
+                                    {prov.label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Chức vụ"
+                        name="role"
+                        initialValue={userData?.data.role}
+                        rules={[{ required: true, message: 'Hãy chọn roll cho tài khoản' }]}
+                    >
+                        <Select
+                            placeholder="Hãy chọn chưc vụ cho tài khoản"
+                            value={selectedItems}
+                            onChange={setSelectedItems}
+                            style={{ width: '100%' }}
+                        >
+                            {OPTIONS.map((opt, index) => (
+                                <Option key={index} value={opt}>
+                                    {opt}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
 
-                    rules={[{ required: true, message: 'Please input your Email!' }]}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Password"
-                    name="password"
+                    <Form.Item>
+                        <Link to={`/admin/user`}>
+                            <Button htmlType="button" type="default">
+                                Trở lại
+                            </Button>
+                        </Link>
 
-                    rules={[{ required: true, message: 'Please input your password!' }]}
-                >
-                    <Input.Password />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Số điện thoại"
-                    name="phone"
-
-                    rules={[{ required: true, message: 'Please input your phone!' }]}
-                >
-                    <Input type='number' />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="address"
-                    name="address"
-
-                    rules={[{ required: true, message: 'Please input your address!' }]}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Chức vụ"
-                    name="role"
-                    rules={[{ required: true, message: 'Hãy chọn roll cho tài khoản' }]}
-                >
-                    <Select
-                        mode="multiple"
-                        placeholder="Hãy chọn chưc vụ cho tài khoản"
-                        value={selectedItems}
-                        onChange={setSelectedItems}
-                        style={{ width: '100%' }}
-                        options={filteredOptions.map((item) => ({
-                            value: item,
-                            label: item,
-                        }))}
-                    />
-                </Form.Item>
-
-            </Form>
+                        <Button loading={userLoading} htmlType="submit" type="default" className="ml-2">
+                            Lưu
+                        </Button>
+                    </Form.Item>
+                </Form>
+            )}
         </>
-    )
-}
+    );
+};
 
-export default UpdateUser
+export default UpdateUser;

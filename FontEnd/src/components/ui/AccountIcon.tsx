@@ -1,5 +1,6 @@
 import { useLogoutMutation, useMeQuery } from '@/services/auth';
-import { Avatar, Dropdown, MenuProps, Popover } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, Popover } from 'antd';
+import { useEffect } from 'react';
 import { AiOutlineDropbox, AiOutlineUser } from 'react-icons/ai';
 import { CiLogout } from 'react-icons/ci';
 import { IoPersonCircleOutline } from 'react-icons/io5';
@@ -22,13 +23,15 @@ const AccountIcon: React.FC = () => {
     const { data: authData } = useMeQuery();
     const [logout, { data }] = useLogoutMutation();
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
+    };
 
+    useEffect(() => {
         if (data === true) {
             window.location.reload();
         }
-    };
+    }, [data]);
 
     const items: MenuProps['items'] = [
         {
@@ -54,9 +57,9 @@ const AccountIcon: React.FC = () => {
         },
         {
             label: (
-                <button onClick={handleLogout} className="text-base">
+                <Button onClick={handleLogout} className="text-base">
                     Đăng xuất
-                </button>
+                </Button>
             ),
             key: '3',
             icon: <CiLogout style={{ fontSize: '18px' }} />,

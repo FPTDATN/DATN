@@ -1,11 +1,16 @@
 import Auth from "../models/auth.js";
 import { UserSchema } from "../Schemas/user.js";
+import bcryptjs from 'bcryptjs';
 
 export const update = async (req, res) => {
 
     try {
 
-        const data = await Auth.findOneAndUpdate({ _id: req.params.id }, req.body, {
+        const { password } = req.body;
+
+        const hashPassword = await bcryptjs.hash(password,10)
+
+        const data = await Auth.findOneAndUpdate({ _id: req.params.id }, { ...req.body, password: hashPassword }, {
             new: true,
         });
         if (data.length === 0) {
@@ -70,26 +75,26 @@ export const getAll = async (req, res) => {
         _sort = "createAt",
         _order = "asc",
         _page = 1,
-      } = req.query;
-    
-      const options = {
+    } = req.query;
+
+    const options = {
         limit: _limit,
         page: _page,
         sort: {
-          [_sort]: _order === "desc" ? -1 : 1,
+            [_sort]: _order === "desc" ? -1 : 1,
         },
-      };
-      try {
+    };
+    try {
         const data = await Auth.paginate({}, options);
         if (data.length === 0) {
-          return res.status(200).json({
-            message: "Không có dữ liệu",
-          });
+            return res.status(200).json({
+                message: "Không có dữ liệu",
+            });
         }
         return res.json(data);
-      } catch (error) {
+    } catch (error) {
         return res.status(404).json({
-          message: error.message,
+            message: error.message,
         });
-      }
+    }
 };

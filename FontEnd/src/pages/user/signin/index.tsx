@@ -1,20 +1,21 @@
 import { Link } from 'react-router-dom';
 import { Button, Space, Typography } from 'antd';
 import { AiOutlineUser, AiOutlineEyeInvisible, AiOutlineEye, AiOutlineLock } from 'react-icons/ai';
-import { useMeQuery, useSigninMutation } from '@/services/auth';
+import { useSigninMutation } from '@/services/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import Loading from '@/components/ui/Loading';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import InputField from '@/components/ui/InputField';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { checkAuth } from '@/utils/checkAuth';
 
 const { Text } = Typography;
 
 const Signin = () => {
     const router = useNavigate();
 
-    const { data: authData, isLoading: authLoading } = useMeQuery();
+    const { data: authData, isLoading: authLoading } = checkAuth();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
 
