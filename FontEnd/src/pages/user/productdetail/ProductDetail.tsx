@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import type { RadioChangeEvent } from 'antd';
-import { Radio, Rate, Spin, Tabs } from 'antd';
+import { Radio, Rate, Tabs } from 'antd';
 import { TabsPosition } from 'antd/es/tabs';
 import RelatedProducts from '@/components/ui/RelatedProduct';
 import Breadcrumbs1 from '@/components/breadcrumbs/index1';
@@ -12,6 +12,7 @@ import { useGetProductByIdQuery } from '@/services/product';
 import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
 import { useMeQuery } from '@/services/auth';
+import Loading from '@/components/ui/Loading';
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
@@ -26,8 +27,8 @@ const ProductDetail = () => {
 
     const [mode, setMode] = useState<TabsPosition>('top');
     const [value, setValue] = useState(3);
-    const [color, setColor] = useState(data?.products.colorId![0].name);
-    const [size, setSize] = useState(data?.products.sizeId![0].name);
+    const [color, setColor] = useState(data?.colorId![0].name);
+    const [size, setSize] = useState(data?.sizeId![0].name);
     const [quantity, setQuantity] = useState<number>(1);
 
     const onChange3 = ({ target: { value } }: RadioChangeEvent) => {
@@ -45,8 +46,8 @@ const ProductDetail = () => {
             </div>
 
             {isLoading ? (
-                <div className="min-h-screen w-full justify-center items-center">
-                    <Spin size="large" />
+                <div className="h-screen">
+                    <Loading />
                 </div>
             ) : (
                 <div>
@@ -55,7 +56,7 @@ const ProductDetail = () => {
                             <div className="w-full px-4 mb-8 md:w-1/2 md:mb-0">
                                 <div className="sticky top-0 overflow-hidden ">
                                     <Carousel autoPlay>
-                                        {data?.products?.images?.map((item, index) => (
+                                        {data?.images?.map((item, index) => (
                                             <div key={index} className="h-[600px]">
                                                 <img className="rounded-lg object-cover" alt={item} src={item} />
                                             </div>
@@ -68,10 +69,10 @@ const ProductDetail = () => {
                                     <div className="mb-6 ">
                                         <span className="px-2.5 py-0.5 text-xs text-blue-600 bg-blue-100 dark:bg-gray-700 rounded-xl dark:text-gray-200">
                                             New
-                                            {data?.products.categoryId?.name}
+                                            {data?.categoryId?.name}
                                         </span>
                                         <h2 className="max-w-xl mt-6 mb-6 text-xl font-semibold leading-loose tracking-wide text-gray-700 md:text-2xl dark:text-gray-300">
-                                            {data?.products.name}
+                                            {data?.name}
                                         </h2>
                                         <div className="flex flex-wrap items-center mb-6">
                                             <span>
@@ -80,7 +81,7 @@ const ProductDetail = () => {
                                             </span>
                                         </div>
                                         <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
-                                            <span>$.{data?.products.price}</span>
+                                            <span>$.{data?.price}</span>
                                             <span className="ml-3 text-base font-normal text-gray-500 line-through dark:text-gray-400">
                                                 Rs.10,000.00
                                             </span>
@@ -92,7 +93,7 @@ const ProductDetail = () => {
                                         </h2>
                                         <div className="flex flex-wrap -mx-2 -mb-2">
                                             <Radio.Group onChange={onChange3} value={color} optionType="button">
-                                                {data?.products.colorId?.map((color) => (
+                                                {data?.colorId?.map((color) => (
                                                     <Radio key={color._id} value={color.name}>
                                                         {color.name}
                                                     </Radio>
@@ -108,7 +109,7 @@ const ProductDetail = () => {
                                                 value={size}
                                                 optionType="button"
                                             >
-                                                {data?.products.sizeId?.map((size) => (
+                                                {data?.sizeId?.map((size) => (
                                                     <Radio key={size._id} value={size.name}>
                                                         {size.name}
                                                     </Radio>
@@ -146,7 +147,7 @@ const ProductDetail = () => {
                                             onClick={() =>
                                                 dispatch(
                                                     addToCart({
-                                                        ...(data?.products! as any),
+                                                        ...(data! as any),
                                                         quantity: quantity,
                                                         colorId: color,
                                                         sizeId: size,
@@ -184,7 +185,7 @@ const ProductDetail = () => {
                                     label: `Mô tả`,
                                     key: 'a',
                                     children: `
-                        ${data?.products.description}
+                        ${data?.description}
                         `,
                                 },
                                 {
@@ -201,7 +202,7 @@ const ProductDetail = () => {
                 <RelatedProducts />
             </div>
             <div className="p-4 mx-auto">
-                <Comment comments={data?.products.comments!} userId={authData?._id} productId={data?.products._id} />
+                <Comment comments={data?.comments!} userId={authData?._id} productId={data?._id} />
             </div>
         </section>
     );

@@ -4,7 +4,7 @@ import Product from '../models/products.js';
 
 export const getComments = async (_req, res) => {
     try {
-        const comments = await Comments.find().populate('parentCommentId');
+        const comments = await Comments.find().populate(['userId','parentCommentId']);
 
         if (comments.length === 0) {
             return res.status(200).json({
@@ -126,7 +126,7 @@ export const getByIdComment = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const comment = await Comments.findById(id);
+        const comment = await Comments.findById(id).populate('userId','productId');
 
         if (!comment) {
             return res.status(404).json({ message: 'Không tìm thấy bình luận' });

@@ -18,7 +18,7 @@ interface ApiRegisterInput {
     rule: boolean;
 }
 
-interface ApiRenponse {
+export interface ApiRenponse {
     _id: string;
     address: string;
     email: string;
