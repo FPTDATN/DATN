@@ -8,5 +8,6 @@ export const categorySchema = joi.object({
     "string.max": `Tên danh mục không được vượt quá {#limit} ký tự`,
     "any.required": `Tên danh mục là trường bắt buộc`,
   }),
+  thumbnail: joi.string(),
   products: joi.array().items(),
 });

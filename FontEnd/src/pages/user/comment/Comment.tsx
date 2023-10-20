@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import UpdateComment from '../updateComment/UpdateComment';
 import { useMeQuery } from '@/services/auth';
 import { CommentType } from '@/services/product';
+import { formatTimeToNow } from '@/utils/formartDate';
 
 interface comment {
     userId?: string;
@@ -12,7 +13,7 @@ interface comment {
     comments: CommentType[];
 }
 
-const Comment = ({ userId, productId }: comment) => {
+const Comment = ({ userId, productId,comments }: comment) => {
     // console.log(comments);
     const { data } = useGetAllCommentsQuery();
     const [createComment, { isError, isLoading: isCreatingComment }] = useAddCommentMutation();
@@ -77,16 +78,16 @@ const Comment = ({ userId, productId }: comment) => {
     return (
         <>
             <Spin spinning={loading}>
-                <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">
+                <section className="bg-white dark:bg-gray-900 py-8 antialiased">
                     <div className="max-w-4xl mx-auto px-4">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-                                Bình Luận ({data?.length}){' '}
+                            <h2 className="text-lg lg:text-2xl font-semibold text-gray-900 dark:text-white">
+                                Bình Luận ({comments?.length}){' '}
                             </h2>
                         </div>
                         <form className="mb-6" onSubmit={handleCommentSubmit}>
                             <label htmlFor="comment" className="sr-only">
-                                Your comment
+                                Bình luận của bạn
                             </label>
                             <TextArea
                                 className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
@@ -122,7 +123,7 @@ const Comment = ({ userId, productId }: comment) => {
                                                 </p>
                                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                                     <time title="February 8th, 2022">
-                                                        {new Date(item.createdAt).toLocaleString()}
+                                                        {formatTimeToNow(new Date(item.createdAt))}
                                                     </time>
                                                 </p>
                                             </div>

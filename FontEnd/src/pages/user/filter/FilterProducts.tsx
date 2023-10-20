@@ -8,6 +8,7 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { AiFillStar } from 'react-icons/ai';
 import { useGetProductsQuery } from '@/services/product';
 import { useGetCategoriesQuery } from '@/services/category';
+import Loading from '@/components/ui/Loading';
 
 interface FilterProductsProps {}
 
@@ -65,7 +66,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
     const items: MenuItem[] = [
         getItem(
             <div>
-                <h2 className="text-xl text-gray-600 font-semibold dark:text-gray-400">Loại hàng</h2>
+                <h2 className="text-xl text-gray-600 font-normal dark:text-gray-400">Loại hàng</h2>
             </div>,
             'sub1',
             <div>
@@ -82,7 +83,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
         ),
         getItem(
             <div>
-                <h2 className="text-xl text-gray-600 font-semibold dark:text-gray-400">Thương hiệu</h2>
+                <h2 className="text-xl text-gray-600 font-normal dark:text-gray-400">Thương hiệu</h2>
             </div>,
             'sub2',
             <div>
@@ -113,10 +114,10 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
     const [arrangeList, setArrangeList] = useState(false);
 
     return (
-        <section className="py-10 bg-gray-50 font-poppins dark:bg-gray-800 ">
-            <div className="px-4 py-4 mx-auto max-w-7xl lg:py-6 md:px-6">
+        <section className="py-6 min-h-screen bg-gray-50 font-poppins dark:bg-gray-800 ">
+            {isLoading ? <Loading/> :<div className="px-4 mx-auto lg:py-6 md:px-6">
                 <div className="flex flex-wrap mb-24 -mx-3">
-                    <div className="w-full lg:w-1/4 lg:block">
+                    <div className="w-full lg:w-1/6 lg:block">
                         <Menu
                             className="w-full mb-2 border"
                             mode="inline"
@@ -125,8 +126,8 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                             items={items}
                         />
 
-                        <div className="p-4 mb-5 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-900">
-                            <h2 className="text-2xl font-bold dark:text-gray-400 ">Size</h2>
+                        <div className="p-4 mb-5 bg-white border border-gray-200 dark:border-gray-900">
+                            <h2 className="text-2xl font-normal dark:text-gray-400 ">Size</h2>
                             <div className="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
                             <div className="flex flex-wrap -mx-2 -mb-2">
                                 <button className="py-1 mb-2 mr-1 border w-11 hover:border-blue-400 dark:border-gray-400 hover:text-blue-600 dark:hover:border-gray-300 dark:text-gray-400">
@@ -143,8 +144,8 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="p-4 mb-5 bg-white border border-gray-200 dark:border-gray-900 dark:bg-gray-900">
-                            <h2 className="text-2xl font-bold dark:text-gray-400">Colors</h2>
+                        <div className="p-4 mb-5 bg-white border border-gray-200 dark:border-gray-900">
+                            <h2 className="text-2xl font-normal dark:text-gray-400">Colors</h2>
                             <div className="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
                             <div className="flex flex-wrap -mx-2 -mb-2">
                                 <button className="p-1 mb-2 mr-4 ">
@@ -182,7 +183,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                     </div>
                     <div className="w-full lg:w-3/4">
                         <div className="px-3">
-                            <div className="items-center justify-between hidden px-4 py-2 mb-4 bg-gray-100 md:flex dark:bg-gray-900 ">
+                            <div className="items-center justify-between hidden px-4 py-2 mb-4 md:flex ">
                                 <div className="flex items-center max-w-xs py-2 pr-2 pl-4 bg-white rounded-lg dark:text-gray-300 dark:bg-gray-600 lg:flex">
                                     <BsSearch className="text-base" />
                                     <input
@@ -210,7 +211,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                                         <select
                                             name=""
                                             id=""
-                                            className="block w-40 text-base bg-gray-100 dark:text-gray-400 dark:bg-gray-900"
+                                            className="block w-40 text-base bg-gray-100 dark:text-gray-400"
                                         >
                                             <option value="">Sort by latest</option>
                                             <option value="">Sort by Popularity</option>
@@ -236,7 +237,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
         </section>
     );
 };

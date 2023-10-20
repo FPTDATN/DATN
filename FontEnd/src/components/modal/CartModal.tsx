@@ -29,7 +29,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
         <div className="flex mr-5 cursor-pointer">
             <div className="text-2xl relative">
                 <BsCart2 type="primary" onClick={showDrawer} />
-                <span className="bg-primary/90 w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">
+                <span className="bg-primary/90 text-white w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">
                     {cartItems.length}
                 </span>
             </div>
@@ -59,7 +59,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                                         <div className="ml-4 flex flex-1 flex-col">
                                             <div>
                                                 <div className="flex justify-between text-base font-medium text-gray-900">
-                                                    <h3>
+                                                    <h3 className='line-clamp-3'>
                                                         <a href="#">{item?.name}</a>
                                                     </h3>
                                                     <p className="ml-4">${item?.price}</p>

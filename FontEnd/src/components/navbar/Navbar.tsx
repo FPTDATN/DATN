@@ -23,19 +23,22 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
     };
 
     return (
-        <div className="relative h-[95px]">
-            <section className="absolute w-full flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-800 text-layer">
+        <div className="relative h-[75px] shadow">
+            <section className="absolute w-full flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-50">
                 <div className="max-w-6xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
-                        <Link to="/" className="text-3xl hidden lg:block font-semibold leading-none dark:text-gray-400">
-                            Logo
+                        <Link to="/" className="hidden w-[200px] h-[70px] lg:block font-semibold leading-none">
+                            <img src="./logo.svg" className='w-[200px] h-[70px]' alt="" />
                         </Link>
                         <button
                             onClick={showDrawer}
-                            className="flex items-center px-3 py-2 text-primary border border-primary rounded dark:text-gray-400 hover:text-primary hover:border-blue-300 lg:hidden"
+                            className="flex items-center px-3 py-2 text-primary border border-primary rounded hover:text-primary hover:border-blue-300 lg:hidden"
                         >
                             <AiOutlineMenu />
                         </button>
+                        <Link to="/" className="w-[200px] lg:hidden h-[70px] block font-semibold leading-none">
+                            <img src="./logo.svg" className='w-[200px] h-[70px]' alt="" />
+                        </Link>
                         <div className="flex items-center lg:hidden ">
                             <div className="mr-5 text-2xl flex">
                                 <AiOutlineHeart />
@@ -49,7 +52,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             <li>
                                 <Link
                                     to="/"
-                                    className="text-sm text-layer dark:text-gray-400 hover:text-primary dark:hover:text-blue-400"
+                                    className="text-sm hover:text-primary dark:hover:text-blue-400"
                                 >
                                     Trang chủ
                                 </Link>
@@ -57,7 +60,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             <li className="relative">
                                 <a
                                     onClick={() => setOpenAbsolute(!openAbsolute)}
-                                    className="flex items-center cursor-pointer text-sm text-layer dark:text-gray-400 hover:text-primary dark:hover:text-blue-400"
+                                    className="flex items-center cursor-pointer text-sm hover:text-primary dark:hover:text-blue-400"
                                 >
                                     Thể loại
                                     <span className={`ml-2 text-lg ${openAbsolute ? 'rotate-180' : ''} transition-all`}>
@@ -65,7 +68,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                     </span>
                                 </a>
                                 {openAbsolute && (
-                                    <div className="absolute z-50 bg-gray-100 text-gray-900 rounded-sm top-10 left-0 right-0 w-[480px] py-2 px-2 shadow-lg">
+                                    <div className="absolute z-50 bg-gray-100 text-gray-900 rounded-sm top-10 left-0 right-0 w-[480px] py-2 px-2 shadow-md">
                                         <ul className="grid grid-cols-3">
                                             {data?.docs.map((category) => (
                                                 <li
@@ -86,31 +89,24 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                 )}
                             </li>
                             <li>
-                                <a
-                                    href=""
-                                    className="text-sm text-layer dark:text-gray-400 hover:text-primary dark:hover:text-blue-400"
+                                <Link
+                                    to={'/filter'}
+                                    className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400"
                                 >
-                                    Features
-                                </a>
+                                    Cửa hàng
+                                </Link>
                             </li>
                             <li>
                                 <a
                                     href=""
-                                    className="text-sm text-layer dark:text-gray-400 hover:text-primary dark:hover:text-blue-400"
+                                    className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400"
                                 >
-                                    Blog{' '}
+                                    About
                                 </a>
                             </li>
-                            <li>
-                                <a
-                                    href=""
-                                    className="text-sm text-layer dark:text-gray-400 hover:text-primary dark:hover:text-blue-400"
-                                >
-                                    Testimonials
-                                </a>
-                            </li>
+                    
                         </ul>
-                        <div className="items-center justify-end hidden lg:flex dark:text-gray-400">
+                        <div className="items-center justify-end hidden lg:flex">
                             <div className="mr-5 text-2xl flex">
                                 <AiOutlineHeart />
                             </div>
