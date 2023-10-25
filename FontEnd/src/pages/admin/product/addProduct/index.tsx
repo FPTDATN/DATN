@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Button, Checkbox, Col, Form, Input, InputNumber, Radio, Row, Select, Space } from 'antd';
 
 import { useGetCategoriesQuery } from '@/services/category';
@@ -32,15 +32,14 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         try {
             setIsLoading(true);
 
-            const {...restValues } = values;
+            const { size, ...restValues } = values;
 
-            await mutateCreateProduct({ ...restValues,images }).unwrap();
+            await mutateCreateProduct({ ...restValues, images }).unwrap();
             const newProduct = { ...restValues };
             setProducts((prevProducts) => [...prevProducts, newProduct]);
             form.resetFields();
             toast.success('Tạo sản phẩm thành công');
             handleModalClose();
-
         } catch (error) {
             toast.error('Tạo sản phẩm không thành công');
         } finally {
@@ -107,7 +106,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
                     placeholder="Mô tả sản phẩm"
                 />
             </Form.Item>
-            
+
             {/* Option start */}
             <Form.Item label="Chọn màu" name={'colorId'}>
                 <Checkbox.Group style={{ width: '100%' }}>
@@ -159,9 +158,8 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
 
             {/* Option end */}
 
-
             <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
-                <Button type="primary" className="bg-primary" htmlType="submit" loading={isLoading}>
+                <Button disabled={images.length === 0} type="primary" className="bg-primary" htmlType="submit" loading={isLoading}>
                     Thêm mới
                 </Button>
             </Form.Item>

@@ -20,6 +20,8 @@ import ListProduct from '@/pages/admin/product/listProduct';
 import Error from '@/pages/error/Error';
 import LocationList from '@/pages/user/checkout/Checkout';
 import UpdateUser from '@/pages/admin/user/updateUser';
+import ForgotPassword from '@/pages/user/forgot-password/ForgotPassword';
+import ChangePassword from '@/pages/user/change-password/ChangePassword';
 
 const router = createBrowserRouter([
     // Main layout
@@ -68,6 +70,14 @@ const router = createBrowserRouter([
                 path: 'details',
                 element: <AccountDetail />,
             },
+            {
+                path: 'forgot-password',
+                element: <ForgotPassword/>
+            },
+            {
+                path: 'change-password',
+                element: <ChangePassword/>
+            }
         ],
     },
     // Admin

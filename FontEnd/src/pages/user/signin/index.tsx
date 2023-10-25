@@ -113,16 +113,10 @@ const Signin = () => {
 
                                         <div className="col-span-6 mt-4">
                                             <label className="flex gap-4">
-                                                <input
-                                                    type="checkbox"
-                                                    id="MarketingAccept"
-                                                    name="marketing_accept"
-                                                    className=" h-5 w-5 rounded-md border-gray-200 bg-gray-100 shadow-sm"
-                                                />
-
-                                                <span className="text-sm text-gray-700">
-                                                    Bạn có muốn lưu mật khẩu ?
-                                                </span>
+                                                
+                                                <a href='/account/forgot-password' className="hover:text-primary/90 hover:underline text-sm text-gray-700">
+                                                    Quên mật khẩu ?
+                                                </a>
                                             </label>
                                         </div>
 

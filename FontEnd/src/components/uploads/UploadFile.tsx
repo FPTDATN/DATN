@@ -28,6 +28,8 @@ const UploadFileServer: FC<Props> = ({ setImages, images }) => {
                 const url = data.url;
                 setImages((prev) => [...prev, url]);
             }
+
+            message.success('Đăng ảnh thành công');
         } catch (error) {
             message.error('upload failed.');
         } finally {

@@ -257,7 +257,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
 
                     <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
                         <Button type="primary" className="bg-primary" htmlType="submit" loading={isLoading}>
-                            Update Product
+                            Cập nhật
                         </Button>
                     </Form.Item>
                 </Form>

@@ -18,6 +18,19 @@ interface ApiRegisterInput {
     rule: boolean;
 }
 
+interface ForgotPasswordInput {
+    email: string;
+    otp?: number;
+    userId?: string;
+    token?: string;
+}
+
+interface ChangePasswordInput {
+    password:string;
+    userId:string;
+    token:string;
+}
+
 export interface ApiRenponse {
     _id: string;
     address: string;
@@ -46,7 +59,6 @@ const authApi = createApi({
                 url: '/me',
                 method: 'GET',
                 credentials: 'include',
-                
             }),
             providesTags: ['Auth'],
         }),
@@ -57,7 +69,7 @@ const authApi = createApi({
                 body: credential,
                 credentials: 'include',
             }),
-            invalidatesTags: ['Auth']
+            invalidatesTags: ['Auth'],
         }),
         signup: builder.mutation<ApiRenponse, ApiRegisterInput>({
             query: (credential) => ({
@@ -66,18 +78,35 @@ const authApi = createApi({
                 body: credential,
                 credentials: 'include',
             }),
-            invalidatesTags: ['Auth']
+            invalidatesTags: ['Auth'],
         }),
         logout: builder.mutation<boolean, void>({
             query: () => ({
                 url: '/logout',
                 method: 'POST',
-                credentials: 'include'
+                credentials: 'include',
+            }),
+            invalidatesTags: ['Auth'],
+        }),
+        forgotPassword: builder.mutation<{ success: boolean; otp: number,token?:string; userId?:string; }, ForgotPasswordInput>({
+            query: (email) => ({
+                url: '/forgot-password',
+                method: 'POST',
+                body: email,
+            }),
+            invalidatesTags: ['Auth'],
+        }),
+        changePassword: builder.mutation<{success:true},ChangePasswordInput>({
+            query: (newPassword) => ({
+                method:'PATCH',
+                url: '/change-password',
+                body: newPassword
             }),
             invalidatesTags: ['Auth']
         })
     }),
 });
 
-export const { useSigninMutation, useSignupMutation, useLogoutMutation, useMeQuery } = authApi;
+export const { useSigninMutation, useSignupMutation, useLogoutMutation, useMeQuery, useForgotPasswordMutation,useChangePasswordMutation } =
+    authApi;
 export default authApi;
