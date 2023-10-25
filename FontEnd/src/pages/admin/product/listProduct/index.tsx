@@ -86,9 +86,6 @@ const ListProduct: React.FC = () => {
                 Số Lượng
               </th>
               <th scope="col" className="text-center text-xs font-medium py-3">
-                Mô Tả
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
                 Danh mục
               </th>
               <th scope="col" className="pr-4 text-center text-xs font-medium py-3">
@@ -124,10 +121,9 @@ const ListProduct: React.FC = () => {
                     </Avatar.Group>
                   </td>
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {product.name}
+                    {product.name.slice(0,20)}...
                   </td>
                   <td className="text-center py-4">{product.quantity}</td>
-                  <td className="text-center py-4">{product.description}</td>
                   <td className="text-center py-4">{product.categoryId?.name}</td>
                   <td className="pr-4 text-center py-4">{product.price}</td>
                   <td className="pr-4 py-4">

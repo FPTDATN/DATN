@@ -7,9 +7,7 @@ export const getComments = async (_req, res) => {
         const comments = await Comments.find().populate(['userId','parentCommentId']);
 
         if (comments.length === 0) {
-            return res.status(200).json({
-                message: 'Không có bình luận nào',
-            });
+            return res.status(200).json(comments);
         }
 
         return res.status(200).json(comments);

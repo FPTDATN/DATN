@@ -28,7 +28,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                 <div className="max-w-6xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
                         <Link to="/" className="hidden w-[200px] h-[70px] lg:block font-semibold leading-none">
-                            <img src="./logo.svg" className='w-[200px] h-[70px]' alt="" />
+                            <img src="../logo.svg" className='w-[200px] h-[70px]' alt="" />
                         </Link>
                         <button
                             onClick={showDrawer}
@@ -37,7 +37,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             <AiOutlineMenu />
                         </button>
                         <Link to="/" className="w-[200px] lg:hidden h-[70px] block font-semibold leading-none">
-                            <img src="./logo.svg" className='w-[200px] h-[70px]' alt="" />
+                            <img src="../logo.svg" className='w-[200px] h-[70px]' alt="" />
                         </Link>
                         <div className="flex items-center lg:hidden ">
                             <div className="mr-5 text-2xl flex">

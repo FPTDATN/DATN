@@ -6,6 +6,7 @@ import UpdateComment from '../updateComment/UpdateComment';
 import { useMeQuery } from '@/services/auth';
 import { CommentType } from '@/services/product';
 import { formatTimeToNow } from '@/utils/formartDate';
+import {useNavigate} from 'react-router-dom'
 
 interface comment {
     userId?: string;
@@ -13,9 +14,9 @@ interface comment {
     comments: CommentType[];
 }
 
-const Comment = ({ userId, productId,comments }: comment) => {
-    // console.log(comments);
-    const { data } = useGetAllCommentsQuery();
+const Comment = ({ userId, productId, comments }: comment) => {
+    const router = useNavigate()
+    const { data: commentData } = useGetAllCommentsQuery();
     const [createComment, { isError, isLoading: isCreatingComment }] = useAddCommentMutation();
     const [mutate] = useRemoveCommentMutation();
     const [loading, setLoading] = useState(false);
@@ -24,11 +25,6 @@ const Comment = ({ userId, productId,comments }: comment) => {
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
     const { TextArea } = Input;
     const [openAbsolute, setOpenAbsolute] = useState(false);
-
-    const commentsFilter = data?.filter((comment) => {
-        return comment.productId === productId;
-    });
-
     const { data: authData } = useMeQuery();
 
     const handleUpdateComment = (commentId: string) => {
@@ -52,6 +48,11 @@ const Comment = ({ userId, productId,comments }: comment) => {
             console.error('Comment text is required');
             return;
         }
+
+        if(!authData) {
+            return router('/account/signin')
+        }
+
         try {
             setLoading(true);
             await createComment({
@@ -59,6 +60,8 @@ const Comment = ({ userId, productId,comments }: comment) => {
                 userId,
                 productId,
             });
+
+            setText('')
         } catch (error) {
             console.error('Error creating comment:', error);
         } finally {
@@ -92,6 +95,7 @@ const Comment = ({ userId, productId,comments }: comment) => {
                             <TextArea
                                 className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
                                 rows={4}
+                                value={text}
                                 onChange={(e) => setText(e.target.value)}
                                 size="large"
                                 status={isError || text.trim() === 'bạn phải ghi bình luận' ? 'error' : ''}
@@ -103,10 +107,12 @@ const Comment = ({ userId, productId,comments }: comment) => {
                                 {isCreatingComment ? 'Đang đăng...' : 'Đăng Bình Luận'}
                             </button>
                         </form>
-                        {commentsFilter &&
-                            commentsFilter.length > 0 &&
-                            commentsFilter?.map((item) => {
-                                return (
+                        {commentData?.length === 0 ? (
+                            <h1 className='text-xl'>Chưa có bình luận nào</h1>
+                        ) : (
+                            commentData
+                                ?.filter((comment) => comment.productId === productId)
+                                .map((item) => (
                                     <article
                                         key={item._id}
                                         className="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
@@ -231,8 +237,8 @@ const Comment = ({ userId, productId,comments }: comment) => {
                                             </button>
                                         </div>
                                     </article>
-                                );
-                            })}
+                                ))
+                        )}
                     </div>
                 </section>
             </Spin>
