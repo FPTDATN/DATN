@@ -69,6 +69,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                     ...values,
                     colorId,
                     sizeId,
+                    images,
                 },
             });
             toast.success('Cập nhật sản phẩm thành công');
@@ -100,6 +101,10 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
         }
     }, [currentProduct, form]);
 
+    useEffect(() => {
+        setImages(currentProduct?.images!)
+    },[currentProduct?.images])
+
     //
     return (
         <>
@@ -107,11 +112,10 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                 <Form
                     form={form}
                     labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 14 }}
+                    wrapperCol={{ span: 20 }}
                     layout="horizontal"
                     onValuesChange={onFormLayoutChange}
                     size={componentSize as SizeType}
-                    style={{ maxWidth: 600 }}
                     onFinish={onFinish}
                     initialValues={{
                         size: componentSize,

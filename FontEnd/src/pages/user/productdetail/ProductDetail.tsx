@@ -146,7 +146,6 @@ const ProductDetail = () => {
                                                     </button>
                                                     <input
                                                         onChange={(e) => setQuantity(Number(e.target.value))}
-                                                        value={quantity}
                                                         type="number"
                                                         className="flex items-center w-full font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-300 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
                                                     />

@@ -51,9 +51,8 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         <Form
             form={form}
             labelCol={{ span: 4 }}
-            wrapperCol={{ span: 14 }}
+            wrapperCol={{ span: 20 }}
             layout="horizontal"
-            style={{ maxWidth: 600 }}
             onFinish={onFinish}
         >
             <Form.Item label="Form Size" name="size">
@@ -159,7 +158,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             {/* Option end */}
 
             <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
-                <Button disabled={images.length === 0} type="primary" className="bg-primary" htmlType="submit" loading={isLoading}>
+                <Button disabled={images.length === 0} type="default" htmlType="submit" loading={isLoading}>
                     Thêm mới
                 </Button>
             </Form.Item>

@@ -29,6 +29,12 @@ export interface ProductType {
     
 }
 
+export type ExtendProduct = ProductType & {
+    colorId: Colors;
+    sizeId?: Sizes;
+    categoryId?: Category;
+}
+
 interface Brand {
     _id:string;
     name:string;

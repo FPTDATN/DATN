@@ -11,7 +11,7 @@ const tokenSchema = new mongoose.Schema(
         },
         expireAt: {
             type: Date,
-            default: new Date(new Date().getTime() + 3 /* expires after 3 minutes */ * 60000)
+            default: new Date(new Date().getTime() + 5 /* expires after 3 minutes */ * 60000)
         }
     },
 );

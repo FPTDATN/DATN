@@ -158,19 +158,21 @@ const ListProduct: React.FC = () => {
         onCancel={handleAddModalClose}
         footer={null}
         destroyOnClose={true}
-        width={600}
+        width={900}
+        style={{maxWidth: 900}}
         centered
       >
         <AddProduct handleModalClose={handleAddModalClose} />
       </Modal>
 
       <Modal
-        title="Update Product"
+        title="Cập nhật sản phẩm"
         open={openUpdateModal}
         onCancel={handleUpdateComplete}
         footer={null}
         destroyOnClose={true}
-        width={600}
+        width={900}
+        style={{maxWidth: 900}}
         centered
       >
         

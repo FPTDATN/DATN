@@ -30,7 +30,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <Skeleton count={4} />
                 </div>
             ) : !arrangeList ? (
-                <div className="shadow-sm">
+                <div className="shadow-sm px-2 py-2 max-h-[517px]">
                     <div className="relative ">
                         <Link to={`/detail/${product?._id}`} className="">
                             <img
@@ -61,17 +61,17 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                             </div>
                         </div>
                     </div>
-                    <div className="py-6">
-                        <h3 className="mb-3 text-sm lg:text-base line-clamp-2 font-normal px-3">
+                    <div className="py-6 text-left">
+                        <h3 className="mb-3 text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">
                             <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">
-                                ${product?.price}
+                                ${hasSale}
                             </span>
                             {product?.sale_off! > 0 && (
                                 <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    ${hasSale}
+                                    ${product?.price}
                                 </span>
                             )}
                         </p>
@@ -100,11 +100,11 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">
                             <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">
-                                ${product?.price}
+                                ${hasSale}
                             </span>
                             {product?.sale_off! > 0 && (
                                 <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    ${hasSale}
+                                    ${product?.price}
                                 </span>
                             )}
                         </p>
