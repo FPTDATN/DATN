@@ -11,7 +11,7 @@ export const checkAdmin = () => {
     useEffect(() => {
         if (!isLoading) {
             if (data?.role === 'admin' && path.pathname === '/admin/') {
-                router('')
+                router('/admin')
             } else if (data?.role !== 'admin' ) {
                 router('/account/signin');
             }
