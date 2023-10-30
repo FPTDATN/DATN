@@ -22,6 +22,7 @@ import LocationList from '@/pages/user/checkout/Checkout';
 import UpdateUser from '@/pages/admin/user/updateUser';
 import ForgotPassword from '@/pages/user/forgot-password/ForgotPassword';
 import ChangePassword from '@/pages/user/change-password/ChangePassword';
+import ListComment from '@/pages/admin/product/listComment';
 
 const router = createBrowserRouter([
     // Main layout
@@ -96,6 +97,7 @@ const router = createBrowserRouter([
             { path: 'user/update/:id', element: <UpdateUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
+            {path: 'product/:id/comments',element: <ListComment/> },
         ],
     },
 ]);

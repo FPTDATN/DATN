@@ -7,6 +7,7 @@ import { useGetProductsQuery, useDeleteProductMutation } from '@/services/produc
 import Skeleton from 'react-loading-skeleton';
 import { SearchProps } from 'antd/es/input';
 import { ProductType } from '@/types/Product';
+import { Link } from 'react-router-dom';
 
 const ListProduct: React.FC = () => {
   const { data, isLoading } = useGetProductsQuery();
@@ -17,11 +18,12 @@ const ListProduct: React.FC = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [mutate] = useDeleteProductMutation();
   const [searchValue, setSearchValue] = useState('');
+
   const handleSearch: SearchProps['onSearch'] = (value) => {
     setSearchValue(value);
   };
   const [filteredProducts, setFilteredProducts] = useState<ProductType[]>([]);
-  
+
 
   const handleAddModalOpen = () => {
     setOpenAdd(true);
@@ -121,28 +123,33 @@ const ListProduct: React.FC = () => {
                     </Avatar.Group>
                   </td>
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {product.name.slice(0,20)}...
+                    {product.name.slice(0, 20)}...
                   </td>
                   <td className="text-center py-4">{product.quantity}</td>
                   <td className="text-center py-4">{product.categoryId?.name}</td>
                   <td className="pr-4 text-center py-4">{product.price}</td>
                   <td className="pr-4 py-4">
                     <Space size="middle">
-                      <Button type="dashed"onClick={() => handleUpdateProduct(product._id)}>
+                      <Button type="dashed" onClick={() => handleUpdateProduct(product._id)}>
                         Update
                       </Button>
-                   
+
                       <Popconfirm
-                          placement="topRight"
-                          title="Bạn Muốn Xóa ?"
-                          okText="OK"
-                          cancelText="Cancel"
-                          okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                          onConfirm={() => handleDelete(product._id)}
-                        >
-                          <Button type="link">Delete</Button>
-                        </Popconfirm>
-                   
+                        placement="topRight"
+                        title="Bạn Muốn Xóa ?"
+                        okText="OK"
+                        cancelText="Cancel"
+                        okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
+                        onConfirm={() => handleDelete(product._id)}
+                      >
+                        <Button type="link">Delete</Button>
+                      </Popconfirm>
+
+                      <Button type="primary" className="bg-primary">
+                        <Link to={`${product._id}/comments`} className="bg-primary">
+                          Xem Comment
+                        </Link>
+                      </Button>
                     </Space>
                   </td>
                 </tr>
@@ -159,7 +166,7 @@ const ListProduct: React.FC = () => {
         footer={null}
         destroyOnClose={true}
         width={900}
-        style={{maxWidth: 900}}
+        style={{ maxWidth: 900 }}
         centered
       >
         <AddProduct handleModalClose={handleAddModalClose} />
@@ -172,10 +179,10 @@ const ListProduct: React.FC = () => {
         footer={null}
         destroyOnClose={true}
         width={900}
-        style={{maxWidth: 900}}
+        style={{ maxWidth: 900 }}
         centered
       >
-        
+
         {selectedProduct && <UpdateProduct productId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />}
       </Modal>
     </>
