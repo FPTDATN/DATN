@@ -1,14 +1,23 @@
-import { useGetAllCommentsQuery } from "@/services/comment";
+import { useGetAllCommentsQuery, useRemoveCommentMutation } from "@/services/comment";
 import { Button, Popconfirm, Skeleton, Space } from "antd";
 import { useParams } from "react-router-dom";
-
+import { toast } from 'react-toastify';
 
 const ListComment = () => {
   const { id: productId } = useParams();
   const { data: commentData, isLoading } = useGetAllCommentsQuery();
+  const [mutate] = useRemoveCommentMutation();
 
+  const filteredComments = commentData?.filter((comment) => comment.productId === productId);
 
- 
+  const handleDeleteComment = async (id:string) => {
+    try {
+      await mutate(id);
+      toast.success('Xóa thành công');
+    } catch (error) {
+      toast.error('Xóa không thành công');
+    }
+  };
 
   return (
     <div>
@@ -36,13 +45,7 @@ const ListComment = () => {
                 <Skeleton count={3} className="h-[98px]" />
               </td>
             </tr>
-          ) : filteredComments?.length === 0 ? (
-            <tr>
-              <td colSpan={4}>
-                
-              </td>
-            </tr>
-          ) : (
+          )  : (
             filteredComments?.map((item) => (
               <tr
                 key={item._id}
@@ -58,7 +61,18 @@ const ListComment = () => {
                   {new Date(item.createdAt).toLocaleString()}
                 </td>
                 <td className="py-4 flex items-center justify-center">
-                  
+                  <Space size="small">
+                    <Popconfirm
+                      placement="topRight"
+                      title="Bạn Muốn Xóa ?"
+                      okText="OK"
+                      cancelText="Cancel"
+                      okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
+                      onConfirm={() => handleDeleteComment(item._id!)}
+                    >
+                      <Button type="link">Delete</Button>
+                    </Popconfirm>
+                  </Space>
                 </td>
               </tr>
             ))
