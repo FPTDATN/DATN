@@ -45,7 +45,13 @@ const ListComment = () => {
                 <Skeleton count={3} className="h-[98px]" />
               </td>
             </tr>
-          )  : (
+          ) : filteredComments?.length === 0 ? (
+            <tr>
+              <td colSpan={4}>
+                <p className="ml-5">Không có bình luận</p>
+              </td>
+            </tr>
+          ) : (
             filteredComments?.map((item) => (
               <tr
                 key={item._id}
