@@ -15,7 +15,7 @@ const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading })
 
     return (
         <section className="flex items-center font-poppins">
-            <div className="justify-center flex-1 max-w-6xl px-0 py-4 mx-auto lg:py-8 md:px-4">
+            <div className="justify-center flex-1 max-w-5xl px-0 py-4 mx-auto lg:py-8 md:px-4">
                 <h2 className="pb-2 uppercase text-xl font-semibold text-left text-gray-800 md:text-3xl dark:text-gray-400">
                     {heading}
                 </h2>
@@ -30,7 +30,7 @@ const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading })
                         ))}
                     </div>
                 ) : (
-                    <div className="grid gap-4 mb-11 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5">
+                    <div className="grid gap-2 mb-11 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                         {data?.docs.map((product) => (
                             <ProductItem key={product._id} product={product} />
                         ))}

@@ -10,8 +10,8 @@ export const checkAuth = () => {
 
     useEffect(() => {
         if (!isLoading) {
-            if (data && path.pathname === '/checkout') {
-                router('')
+            if (data && (path.pathname === '/checkout' || path.pathname === '/account/signin' || path.pathname === '/account/signup')) {
+                router('/')
             } else if (!data && path.pathname !== '/account/signin' && path.pathname !== '/account/signup') {
                 router('/account/signin');
             }

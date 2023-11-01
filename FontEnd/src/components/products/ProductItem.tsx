@@ -62,7 +62,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                         </div>
                     </div>
                     <div className="py-6 text-left">
-                        <h3 className="mb-3 text-sm lg:text-base line-clamp-2 font-normal">
+                        <h3 className="mb-3 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">

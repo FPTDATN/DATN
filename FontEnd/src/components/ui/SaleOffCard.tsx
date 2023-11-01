@@ -12,9 +12,9 @@ const SaleOffCard: FunctionComponent<SaleOffCardProps> = ({
     return ( 
     <>
         {off !== 0 ? <span className={`${
-            type === "saleoff" ? 'bg-red-600' : type === 'offer' ? 'bg-green-500' : type === 'new' ? 'bg-green-600' : ''
+            type === "saleoff" ? 'bg-red-500 opacity-80' : type === 'offer' ? 'bg-green-500' : type === 'new' ? 'bg-green-600' : ''
             
-            } absolute top-0 right-0 px-4 py-2 m-2 lg:px-2 lg:py-1 text-xs lg:text-sm font-semibold text-gray-100 rounded-md`}>
+            } absolute top-0 right-0 px-2 py-1 m-2 lg:px-2 lg:py-1 text-xs lg:text-sm font-medium text-gray-100 rounded-md`}>
             {off! > 0 &&  `- ${off}% OFF`}
         </span> : <span className="hidden"></span>
         }

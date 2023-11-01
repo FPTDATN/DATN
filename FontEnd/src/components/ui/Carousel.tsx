@@ -47,7 +47,7 @@ const CarouselSlide: FunctionComponent<CarouselProps> = () => {
                 alt=""
             />
 
-            <div className='max-w-6xl w-full'>
+            <div className='max-w-5xl w-full'>
                 <Carousel swipeToSlide={true} autoplay dotPosition="bottom" className="mx-auto">
                     {slides.map((slide) => (
                         <div
