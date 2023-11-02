@@ -49,6 +49,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                     dispatch(
                                         addToCart({
                                             ...product!,
+                                            price:hasSale,
                                             quantity: 1,
                                             colorId: product?.colorId![0].name as any,
                                             sizeId: product?.sizeId![0].name as any,

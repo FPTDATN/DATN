@@ -165,6 +165,7 @@ const ProductDetail = () => {
                                                         dispatch(
                                                             addToCart({
                                                                 ...(data! as any),
+                                                                price:hasSale,
                                                                 quantity: quantity,
                                                                 colorId: color,
                                                                 sizeId: size,

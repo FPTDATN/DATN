@@ -1,9 +1,8 @@
 import InputField from '@/components/ui/InputField';
 import Loading from '@/components/ui/Loading';
-import { provinces } from '@/seeds';
 import { useMeQuery, useSignupMutation } from '@/services/auth';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { Button, Checkbox, Form, Select, Space } from 'antd';
+import { Button, Checkbox, Form} from 'antd';
 import { FormEvent, useEffect, useState } from 'react';
 import { AiOutlineUser, AiOutlineLock, AiOutlineMail } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,12 +11,8 @@ import { toast } from 'react-toastify';
 type FieldType = {
     username?: string;
     email?: string;
-    lastNameAndFirstName?: string;
-    phone?: number;
-    address?: string;
     password?: string;
     confirmPassword: string;
-    rule?: boolean;
 };
 
 const Signup = () => {
@@ -25,18 +20,11 @@ const Signup = () => {
 
     const { data:authData,isLoading:authLoading } = useMeQuery();
 
-    const filterOption = (input: string, option?: { label: string; value: string }) =>
-        (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
-
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
-    const [firstName, setFirstName] = useState<string>('');
-    const [lastName, setLastName] = useState<string>('');
-    const [phone, setPhone] = useState<number | null>(null);
-    const [address, setAddress] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [rule, setRule] = useState<boolean>(false);
     const [confirmPassword, setConfirmPassowrd] = useState<string>('');
+    const [rule,setRule] = useState(false)
 
     const [register, { isLoading, isError, isSuccess, error }] = useSignupMutation();
 
@@ -47,13 +35,8 @@ const Signup = () => {
             await register({
                 username,
                 email,
-                firstName,
-                lastName,
-                phone: phone!,
-                address,
                 password,
                 confirmPassword,
-                rule,
             });
         } catch (error) {
             console.log(error);
@@ -220,79 +203,9 @@ const Signup = () => {
                                             />
                                         </Form.Item>
 
-                                        <Form.Item<FieldType>
-                                            label="Họ và tên"
-                                            name="lastNameAndFirstName"
-                                            rules={[
-                                                { required: true, message: 'Họ và tên không được bỏ trống' },
-                                                { min: 3, message: 'Ít nhất 3 lý tự' },
-                                            ]}
-                                        >
-                                            <Space.Compact className="w-full">
-                                                <InputField
-                                                    value={firstName}
-                                                    onChange={(e) => setFirstName(e.target.value)}
-                                                    className=""
-                                                    name="firstName"
-                                                    size="large"
-                                                    id="firstName"
-                                                    placeholder="Tên"
-                                                    prefix={<AiOutlineUser />}
-                                                    typeInput="text"
-                                                />
+                                        
 
-                                                <InputField
-                                                    value={lastName}
-                                                    onChange={(e) => setLastName(e.target.value)}
-                                                    className=""
-                                                    name="lastName"
-                                                    size="large"
-                                                    id="lastName"
-                                                    placeholder="Họ"
-                                                    prefix={<AiOutlineUser />}
-                                                    typeInput="text"
-                                                />
-                                            </Space.Compact>
-                                        </Form.Item>
-
-                                        <Form.Item<FieldType>
-                                            label="Số điện thoại"
-                                            name="phone"
-                                            rules={[
-                                                { required: true, message: 'Số điện thoại không được bỏ trống' },
-                                                { min: 9, message: 'Số điện thoại chưa hợp lệ' },
-                                                { max: 12, message: 'Số điện thoại không được dài quá 12 ký tự' },
-                                            ]}
-                                        >
-                                            <InputField
-                                                onChange={(e) => setPhone(Number(e.target.value))}
-                                                name="phone"
-                                                type="number"
-                                                size="large"
-                                                id="phone"
-                                                placeholder="Số điện thoại"
-                                                min={10}
-                                                prefix={<AiOutlineUser />}
-                                                typeInput="text"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item<FieldType>
-                                            label="Tỉnh thành"
-                                            name="address"
-                                            rules={[{ required: true, message: 'Tỉnh thành không được bỏ trống' }]}
-                                        >
-                                            <Select
-                                                value={address}
-                                                onChange={(value: string) => setAddress(value)}
-                                                size="large"
-                                                showSearch
-                                                id="address"
-                                                placeholder="-- Chọn tỉnh thành --"
-                                                optionFilterProp="children"
-                                                filterOption={filterOption}
-                                                options={provinces}
-                                            />
-                                        </Form.Item>
+                                        
                                         <Form.Item<FieldType>
                                             label="Mật khẩu"
                                             name="password"
