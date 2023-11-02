@@ -4,12 +4,13 @@ const orderSchema = new mongoose.Schema({
   orderNumber: {
     type: String,
     required: true,
+    unique: true,
   },
   customerName: String,
   status: {
-    type: String,
-    enum: ['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'],
-    default: 'Đang xử lý',
+    type: Number,
+    // enum: ['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'],
+    default: 0,
   },
   shippingAddress: String,
   products: [
@@ -23,14 +24,12 @@ const orderSchema = new mongoose.Schema({
       price: Number
     },
   ],
-  buyers: [
-    {
-      buyer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Auth',
-      },
-      fullName: String,
-    }],
+
+  buyer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Auth',
+  },
+  customerPhone: Number,
   totalAmount: {
     type: Number,
     required: true,

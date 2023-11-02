@@ -157,7 +157,8 @@ const LocationList: React.FC = () => {
 
     const dispatch = useAppDispatch();
 
-    const [orders, { data: _order, isSuccess: orderSuccess, isError: orderError }] = useCreateOrderMutation();
+    const [orders, { data: _order, isSuccess: orderSuccess, isError: orderError, isLoading: orderLoading }] =
+        useCreateOrderMutation();
 
     const handleSubmitCheckout = (values: any) => {
         try {
@@ -165,14 +166,9 @@ const LocationList: React.FC = () => {
             orders({
                 ...customer,
                 totalAmount: reduceTotal(cartItems),
-                status: Status.confirmation,
+                status: Status.processing,
                 products: cartItems,
-                buyers: [
-                    {
-                        buyer: authData?._id,
-                        fullName: values.customerName,
-                    },
-                ],
+                buyer: authData?._id,
             });
         } catch (error) {
             return;
@@ -432,143 +428,161 @@ const LocationList: React.FC = () => {
         // </div>
 
         <div>
-            {cartItems.length === 0 ? (
-                <div className="flex items-center flex-col h-screen justify-center gap-y-2">
-                    <img
-                        src="https://cdn-icons-png.flaticon.com/512/4555/4555971.png"
-                        className="w-[360px] h-[360px] opacity-25"
-                        alt=""
-                    />
-
-                    <h1 className="mt-10 text-xl font-semibold">Giỏ hàng của bạn hiện đang trống.</h1>
-                    <p className="max-w-[960px] text-center">
-                        Trước khi tiến hành thanh toán, bạn phải thêm một số sản phẩm vào giỏ hàng của mình. Bạn sẽ tìm
-                        thấy rất nhiều sản phẩm thú vị trên trang "Cửa hàng" của chúng tôi.
-                    </p>
-
-                    <a href="/" className="uppercase bg-primary/90 text-white text-center px-4 py-2">
-                        Trở lại cửa hàng
-                    </a>
+            {isLoading ? (
+                <div className='h-screen'>
+                    <Loading />
                 </div>
             ) : (
                 <div>
-                    {isLoading ? (
-                        <div className="h-screen">
-                            <Loading />
+                    {cartItems.length === 0 ? (
+                        <div className="flex items-center flex-col h-screen justify-center gap-y-2">
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/4555/4555971.png"
+                                className="w-[360px] h-[360px] opacity-25"
+                                alt=""
+                            />
+
+                            <h1 className="mt-10 text-xl font-semibold">Giỏ hàng của bạn hiện đang trống.</h1>
+                            <p className="max-w-[960px] text-center">
+                                Trước khi tiến hành thanh toán, bạn phải thêm một số sản phẩm vào giỏ hàng của mình. Bạn
+                                sẽ tìm thấy rất nhiều sản phẩm thú vị trên trang "Cửa hàng" của chúng tôi.
+                            </p>
+
+                            <a href="/" className="uppercase bg-primary/90 text-white text-center px-4 py-2">
+                                Trở lại cửa hàng
+                            </a>
                         </div>
                     ) : (
-                        <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10">
-                            <div className="px-4 pt-8">
-                                <p className="text-xl font-medium">Order Summary</p>
-                                <p className="text-gray-400">
-                                    Check your items. And select a suitable shipping method.
-                                </p>
-                                <table className="border mt-6">
-                                    <thead>
-                                        <tr>
-                                            <td className="px-2 py-2">SẢN PHẨM</td>
-                                            <td className="line-clamp-1 px-2 py-2">SỐ</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {cartItems.map((item) => (
-                                            <tr key={item._id}>
-                                                <td className="border px-2 py-2 font-bold text-base">{item.name}</td>
-                                                <td className="border px-2 py-2 font-bold text-base text-primary/90">{`x${item.quantity}`}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                <h3 className="text-xl font-bold text-primary/90 mt-4">
-                                    TỔNG TIỀN: ${reduceTotal(cartItems)}
-                                </h3>
-                                <p className="mt-8 text-lg font-medium">Shipping Methods</p>
-                                <form className="mt-5 grid gap-6">
-                                    <div className="relative">
-                                        <Input type="radio" className="peer hidden" id="radio" name="radio" />
-                                        <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-                                        <label
-                                            className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                                            htmlFor="radio_1"
-                                        >
-                                            <img
-                                                className="w-14 object-contain"
-                                                src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
-                                                alt=""
-                                            />
-                                            <div className="ml-5">
-                                                <span className="mt-2 font-semibold">Fedex Delivery</span>
-                                                <p className="text-slate-500 text-sm leading-6">Delivery: 2-4 Days</p>
+                        <div>
+                            {isLoading ? (
+                                <div className="h-screen">
+                                    <Loading />
+                                </div>
+                            ) : (
+                                <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10">
+                                    <div className="px-4 pt-8">
+                                        <p className="text-xl font-medium">Order Summary</p>
+                                        <p className="text-gray-400">
+                                            Check your items. And select a suitable shipping method.
+                                        </p>
+                                        <table className="border mt-6">
+                                            <thead>
+                                                <tr>
+                                                    <td className="px-2 py-2">SẢN PHẨM</td>
+                                                    <td className="line-clamp-1 px-2 py-2">SỐ</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {cartItems.map((item) => (
+                                                    <tr key={item._id}>
+                                                        <td className="border px-2 py-2 font-bold text-base">
+                                                            {item.name}
+                                                        </td>
+                                                        <td className="border px-2 py-2 font-bold text-base text-primary/90">{`x${item.quantity}`}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        <h3 className="text-xl font-bold text-primary/90 mt-4">
+                                            TỔNG TIỀN: ${reduceTotal(cartItems)}
+                                        </h3>
+                                        <p className="mt-8 text-lg font-medium">Shipping Methods</p>
+                                        <form className="mt-5 grid gap-6">
+                                            <div className="relative">
+                                                <Input type="radio" className="peer hidden" id="radio" name="radio" />
+                                                <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                                                <label
+                                                    className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                                                    htmlFor="radio_1"
+                                                >
+                                                    <img
+                                                        className="w-14 object-contain"
+                                                        src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
+                                                        alt=""
+                                                    />
+                                                    <div className="ml-5">
+                                                        <span className="mt-2 font-semibold">Fedex Delivery</span>
+                                                        <p className="text-slate-500 text-sm leading-6">
+                                                            Delivery: 2-4 Days
+                                                        </p>
+                                                    </div>
+                                                </label>
                                             </div>
-                                        </label>
-                                    </div>
-                                    <div className="relative">
-                                        <Input type="radio" className="peer hidden" id="radio" name="radio" />
-                                        <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-                                        <label
-                                            className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                                            htmlFor="radio_2"
-                                        >
-                                            <img
-                                                className="w-14 object-contain"
-                                                src="https://cdn.haitrieu.com/wp-content/uploads/2022/05/Logo-GHN-Slogan-En.png"
-                                                alt=""
-                                            />
-                                            <div className="ml-5">
-                                                <span className="mt-2 font-semibold">Fedex Delivery</span>
-                                                <p className="text-slate-500 text-sm leading-6">Delivery: 2-4 Days</p>
+                                            <div className="relative">
+                                                <Input type="radio" className="peer hidden" id="radio" name="radio" />
+                                                <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                                                <label
+                                                    className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                                                    htmlFor="radio_2"
+                                                >
+                                                    <img
+                                                        className="w-14 object-contain"
+                                                        src="https://cdn.haitrieu.com/wp-content/uploads/2022/05/Logo-GHN-Slogan-En.png"
+                                                        alt=""
+                                                    />
+                                                    <div className="ml-5">
+                                                        <span className="mt-2 font-semibold">Fedex Delivery</span>
+                                                        <p className="text-slate-500 text-sm leading-6">
+                                                            Delivery: 2-4 Days
+                                                        </p>
+                                                    </div>
+                                                </label>
                                             </div>
-                                        </label>
+                                        </form>
                                     </div>
-                                </form>
-                            </div>
-                            <Form
-                                onFinish={handleSubmitCheckout}
-                                layout="vertical"
-                                form={form}
-                                className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0"
-                            >
-                                <p className="text-xl font-medium">Payment Details</p>
-                                <p className="text-gray-400">Complete your order by providing your payment details.</p>
+                                    <Form
+                                        onFinish={handleSubmitCheckout}
+                                        layout="vertical"
+                                        form={form}
+                                        className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0"
+                                    >
+                                        <p className="text-xl font-medium">Payment Details</p>
+                                        <p className="text-gray-400">
+                                            Complete your order by providing your payment details.
+                                        </p>
 
-                                <Form.Item label={'Tên đăng nhập'} name={'username'}>
-                                    <Input disabled />
-                                </Form.Item>
-                                <Form.Item
-                                    rules={[
-                                        { required: true, message: 'Bắt buộc' },
-                                        { type: 'email', message: 'Phải đúng định dạng Email' },
-                                    ]}
-                                    label={'Email'}
-                                    name={'email'}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    rules={[{ required: true, message: 'Bắt buộc' }]}
-                                    label={'Địa chỉ chi tiết (Ví dụ: "Xã - Huyện/Quận - Tỉnh/Thành phố")'}
-                                    name={'shippingAddress'}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    rules={[{ required: true, message: 'Bắt buộc' }]}
-                                    label={'Tên đẩy đủ'}
-                                    name={'customerName'}
-                                >
-                                    <Input />
-                                </Form.Item>
+                                        <Form.Item label={'Tên đăng nhập'} name={'username'}>
+                                            <Input disabled />
+                                        </Form.Item>
+                                        <Form.Item
+                                            rules={[
+                                                { required: true, message: 'Bắt buộc' },
+                                                { type: 'email', message: 'Phải đúng định dạng Email' },
+                                            ]}
+                                            label={'Email'}
+                                            name={'email'}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                        <Form.Item
+                                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                                            label={'Địa chỉ chi tiết (Ví dụ: "Xã - Huyện/Quận - Tỉnh/Thành phố")'}
+                                            name={'shippingAddress'}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                        <Form.Item
+                                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                                            label={'Tên đẩy đủ'}
+                                            name={'customerName'}
+                                        >
+                                            <Input />
+                                        </Form.Item>
 
-                                <Form.Item
-                                    rules={[{ required: true, message: 'Bắt buộc' }, { min: 10 }, { max: 12 }]}
-                                    label={'Số điện thoại'}
-                                    name={'orderNumber'}
-                                >
-                                    <Input className="w-full" />
-                                </Form.Item>
+                                        <Form.Item
+                                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                                            label={'Số điện thoại'}
+                                            name={'customerPhone'}
+                                        >
+                                            <InputNumber className="w-full" />
+                                        </Form.Item>
 
-                                <Button htmlType="submit">Gửi biểu mẫu</Button>
-                            </Form>
+                                        <Button loading={orderLoading} htmlType="submit">
+                                            Gửi biểu mẫu
+                                        </Button>
+                                    </Form>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

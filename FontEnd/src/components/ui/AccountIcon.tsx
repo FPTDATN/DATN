@@ -45,7 +45,7 @@ const AccountIcon: React.FC = () => {
         },
         {
             label: (
-                <Link className="text-base" to={''}>
+                <Link className="text-base" to={`/orders/${authData?._id}`}>
                     Hàng đã đặt
                 </Link>
             ),

@@ -1,7 +1,7 @@
 
 export enum Status {
-    processing = 'Đang xử lý',
-    confirmation = 'Chờ xác nhận',
-    delivered = 'Đã giao hàng',
-    cancelled = 'Đã hủy',
+    processing = 1,
+    confirmation = 2,
+    delivered = 3,
+    cancelled = 4,
 }

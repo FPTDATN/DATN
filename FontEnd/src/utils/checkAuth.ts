@@ -12,8 +12,6 @@ export const checkAuth = () => {
         if (!isLoading) {
             if (data && (path.pathname === '/account/signin' || path.pathname === '/account/signup')) {
                 router('/')
-            } else if (data && path.pathname === '/checkout') {
-                return
             } else if (!data && path.pathname !== '/account/signin' && path.pathname !== '/account/signup') {
                 router('/account/signin');
             }

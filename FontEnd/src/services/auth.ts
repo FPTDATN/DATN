@@ -31,6 +31,7 @@ export interface ApiRenponse {
     email: string;
     favourite: any[];
     username: string;
+    role:string;
 }
 
 const authApi = createApi({

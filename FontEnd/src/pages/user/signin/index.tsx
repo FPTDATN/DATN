@@ -2,22 +2,19 @@ import { Link } from 'react-router-dom';
 import { Button, Space, Typography } from 'antd';
 import { AiOutlineUser, AiOutlineEyeInvisible, AiOutlineEye, AiOutlineLock } from 'react-icons/ai';
 import { useSigninMutation } from '@/services/auth';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Loading from '@/components/ui/Loading';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import InputField from '@/components/ui/InputField';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { checkAuth } from '@/utils/checkAuth';
-import { checkAdmin } from '@/utils/checkAdmin';
 
 const { Text } = Typography;
 
 const Signin = () => {
-    const router = useNavigate();
+    // const router = useNavigate();
 
     const { data: authData, isLoading: authLoading } = checkAuth();
-    const { data: authAdmin, isLoading: adminLoading } = checkAdmin();
+    // const { data: authAdmin, isLoading: adminLoading } = checkAdmin();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
 
@@ -33,19 +30,6 @@ const Signin = () => {
             password,
         });
     };
-
-    useEffect(() => {
-        if (authData) {
-            if (isSuccess) {
-                toast.success('Đăng nhập thành công', { position: 'top-right' });
-                if (authAdmin?.role === 'admin') {
-                    setTimeout(() => router('/'), 2000);
-                } else {
-                    setTimeout(() => router('/'), 2000);
-                }
-            }
-        }
-    }, [authData, isSuccess, authAdmin]);
 
     // useEffect(() => {
     //     if (isSuccess) {
@@ -64,7 +48,7 @@ const Signin = () => {
 
     return (
         <>
-            {authData || authLoading || authAdmin || adminLoading ? (
+            {authData || authLoading ? (
                 <Loading />
             ) : (
                 <div>
