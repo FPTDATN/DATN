@@ -10,17 +10,17 @@ export const createOrder = async (req, res) => {
 
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
-    
-    const { status, customerName, shippingAddress, products, buyers } = req.body;
+
+    const { status, customerName, shippingAddress, products, buyer, customerPhone } = req.body;
     // Tính tổng tiền từ danh sách sản phẩm
     let totalAmount = 0;
-products.forEach(product => {
-  // Đảm bảo rằng cả price và quantity đều là số hợp lệ
-  if (!isNaN(product.price) && !isNaN(product.quantity)) {
-    totalAmount += product.price * product.quantity;
-  }
-});
-    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyers ,totalAmount });
+    products.forEach(product => {
+      // Đảm bảo rằng cả price và quantity đều là số hợp lệ
+      if (!isNaN(product.price) && !isNaN(product.quantity)) {
+        totalAmount += product.price * product.quantity;
+      }
+    });
+    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyer, totalAmount, customerPhone });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -32,17 +32,17 @@ products.forEach(product => {
 // Controller để lấy danh sách đơn hàng
 export const getOrders = async (req, res) => {
   const {
-    _limit = 10, 
-    _sort = "createdAt", 
-    _order = "asc", 
-    _page = 1, 
+    _limit = 10,
+    _sort = "createdAt",
+    _order = "asc",
+    _page = 1,
   } = req.query;
 
   const options = {
-    limit: parseInt(_limit), 
-    page: parseInt(_page), 
+    limit: parseInt(_limit),
+    page: parseInt(_page),
     sort: {
-      [_sort]: _order === "desc" ? -1 : 1, 
+      [_sort]: _order === "desc" ? -1 : 1,
     },
   };
   try {

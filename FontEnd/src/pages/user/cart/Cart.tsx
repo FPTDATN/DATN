@@ -125,13 +125,8 @@ const Cart: FunctionComponent<CartProps> = () => {
                                             <td className="cart-total">
                                                 <span>Total to pay:</span> ${reduceTotal(cartItems)}
                                             </td>
-                                            <td className="cart-submit">
-                                                <input
-                                                    type="submit"
-                                                    className="cart-submit"
-                                                    name="cart-submit"
-                                                    value="Finalize and pay"
-                                                />
+                                            <td className="">
+                                                <a href="/checkout" className='block text-sm text-white bg-gray-800 px-6 py-2'>Thanh toán</a>
                                             </td>
                                         </tr>
                                     </tbody>
