@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useGetCategoriesQuery } from '@/services/category';
 
-interface NavbarProps {}
+interface NavbarProps { }
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
     const { data } = useGetCategoriesQuery();
@@ -104,11 +104,12 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                     About
                                 </a>
                             </li>
-                    
+
                         </ul>
                         <div className="items-center justify-end hidden lg:flex">
                             <div className="mr-5 text-2xl flex">
-                                <AiOutlineHeart />
+                                <Link to={'your-favorite'}><AiOutlineHeart /></Link>
+
                             </div>
                             <CartModal />
                             <Notification />

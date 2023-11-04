@@ -11,8 +11,8 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { checkAuth } from '@/utils/checkAuth';
 import { checkAdmin } from '@/utils/checkAdmin';
 
-const { Text } = Typography;
 
+const { Text } = Typography;
 const Signin = () => {
     const router = useNavigate();
 
@@ -38,16 +38,16 @@ const Signin = () => {
 
         if (authData) {
             if (isSuccess) {
-            toast.success('Đăng nhập thành công', { position: 'top-right' });
-            if (authAdmin?.role === "admin") {
-                setTimeout(() => router('/admin'), 2000)
-            } else {
-                setTimeout(() => router('/'), 2000)
-            }
+                toast.success('Đăng nhập thành công', { position: 'top-right' });
+                if (authAdmin?.role === "admin") {
+                    setTimeout(() => router('/admin'), 2000)
+                } else {
+                    setTimeout(() => router('/'), 2000)
+                }
             }
         }
-         
-    }, [authData,isSuccess,authAdmin]);
+
+    }, [authData, isSuccess, authAdmin]);
 
 
     // useEffect(() => {
@@ -131,7 +131,7 @@ const Signin = () => {
 
                                         <div className="col-span-6 mt-4">
                                             <label className="flex gap-4">
-                                                
+
                                                 <a href='/account/forgot-password' className="hover:text-primary/90 hover:underline text-sm text-gray-700">
                                                     Quên mật khẩu ?
                                                 </a>

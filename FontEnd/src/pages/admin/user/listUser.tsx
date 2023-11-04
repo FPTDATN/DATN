@@ -2,7 +2,7 @@ import { Button, Input, Modal, Space } from 'antd';
 import { SearchProps } from 'antd/es/input';
 import UpdateUser from './updateUser';
 import { useGetAllUserQuery, useRemoveUserMutation } from '@/services/user';
-import { Link,} from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import Loading from '@/components/ui/Loading';
 import { useState } from 'react';
 
