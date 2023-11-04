@@ -9,13 +9,15 @@ import { toast } from 'react-toastify';
 import InputField from '@/components/ui/InputField';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { checkAuth } from '@/utils/checkAuth';
+import { checkAdmin } from '@/utils/checkAdmin';
+
 
 const { Text } = Typography;
-
 const Signin = () => {
     const router = useNavigate();
 
     const { data: authData, isLoading: authLoading } = checkAuth();
+    const { data: authAdmin, isLoading: adminLoading } = checkAdmin();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
 
@@ -33,23 +35,39 @@ const Signin = () => {
     };
 
     useEffect(() => {
-        if (isSuccess) {
-            toast.success('Đăng nhập thành công', { position: 'top-right' });
-            setTimeout(() => router('/'), 4000);
-        } else {
-            return;
-        }
-    }, [isSuccess]);
 
-    useEffect(() => {
         if (authData) {
-            return router('/');
+            if (isSuccess) {
+                toast.success('Đăng nhập thành công', { position: 'top-right' });
+                if (authAdmin?.role === "admin") {
+                    setTimeout(() => router('/admin'), 2000)
+                } else {
+                    setTimeout(() => router('/'), 2000)
+                }
+            }
         }
-    }, [authData]);
+
+    }, [authData, isSuccess, authAdmin]);
+
+
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         toast.success('Đăng nhập thành công', { position: 'top-right' });
+    //         setTimeout(() => router('/'), 4000);
+    //     } else {
+    //         return;
+    //     }
+    // }, [isSuccess]);
+
+    // useEffect(() => {
+    //     if (authData) {
+    //         return router('/');
+    //     }
+    // }, [authData]);
 
     return (
         <>
-            {authData || authLoading ? (
+            {authData || authLoading || authAdmin || adminLoading ? (
                 <Loading />
             ) : (
                 <div>
@@ -113,16 +131,10 @@ const Signin = () => {
 
                                         <div className="col-span-6 mt-4">
                                             <label className="flex gap-4">
-                                                <input
-                                                    type="checkbox"
-                                                    id="MarketingAccept"
-                                                    name="marketing_accept"
-                                                    className=" h-5 w-5 rounded-md border-gray-200 bg-gray-100 shadow-sm"
-                                                />
 
-                                                <span className="text-sm text-gray-700">
-                                                    Bạn có muốn lưu mật khẩu ?
-                                                </span>
+                                                <a href='/account/forgot-password' className="hover:text-primary/90 hover:underline text-sm text-gray-700">
+                                                    Quên mật khẩu ?
+                                                </a>
                                             </label>
                                         </div>
 

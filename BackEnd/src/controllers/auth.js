@@ -3,6 +3,8 @@ import Token from "../models/token.js";
 import bcrypt from "bcryptjs";
 import { signupSchema, signinSchema } from "../Schemas/auth.js";
 import jwt from "jsonwebtoken";
+import { sendEmail } from "../utils/sendEmail.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const me = async (req, res) => {
     if (!req.session.userId) {
@@ -133,3 +135,54 @@ export const logout = (req, res) => {
         });
     });
 };
+
+export const forgotPassword = async (req,res) => {
+
+    const {email,otp} = req.body;
+
+    const user = await Auth.findOne({email})
+
+    if(!user) return res.status(201).json({success:false});
+
+    await Token.findOneAndDelete({userId:user._id})
+
+    const resetToken = uuidv4();
+
+    const hashResetToken = await bcrypt.hash(resetToken,10);
+
+    await new Token({ userId: `${user.id}`, token: hashResetToken }).save();
+
+    await sendEmail(email, otp)
+
+    return res.status(200).json({success:true,otp,token:hashResetToken,userId:user._id})
+}
+
+export const changePassword = async (req,res) => {
+    const {password,token,userId} =  req.body;
+
+    
+    try {
+        const resetPasswordTokenRecord = await Token.findOne({userId});
+        
+        if(!resetPasswordTokenRecord) return res.status(401).json({message: 'Token không hợp lệ'});
+
+        const resetPasswordTokenValid = bcrypt.compare(resetPasswordTokenRecord.token,token);
+
+        if(!resetPasswordTokenValid) return res.status(401).json({message: 'Token không hợp lệ'});
+
+        const user = await Auth.findOne({_id:userId});
+
+        if(!user) return res.status(400).json({message:'Người dùng không tồn tại'});
+
+        const updatedPassword = await bcrypt.hash(password,10);
+
+        await Auth.updateOne({_id:userId}, {password:updatedPassword});
+
+        await resetPasswordTokenRecord.deleteOne();
+
+        return res.status(201).json({success:true});
+
+    } catch (error) {
+        
+    }
+}

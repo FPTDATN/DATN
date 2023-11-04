@@ -512,27 +512,13 @@ export interface ProductType {
         description?: string;
         quantity?: number;
 
-        // Tìm sản phẩm theo màu
         colorId?: Colors[];
-
-        // Tìm sản phẩm theo size
         sizeId?: Sizes[];
-
-        images?: string[]; //mảng nhiều ảnh
-
-        //  Tìm sản phẩm theo loại
+        images?: string[];
         categoryId?: Category;
-
-        // brand
         brandId?: Brand;
-
-        // vote
-        userVote: User[]; // Có thể để sau
-
-        // ngày tạo
+        userVote: User[]; 
         createdAt: Date;
-
-        // ngày cập nhật
         updatedAt: Date;
 
         comments: [

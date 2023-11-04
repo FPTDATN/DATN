@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { waiting } from '@/utils/waiting';
-import { ICategory, IPaginatedCategory } from '@/types/category';
+import { CategoryType, PaginatedCategory } from '@/types/category';
 
 export type TCategory = {
     _id: string;
     name: string;
     createdAt: string;
-  
+    updateAt:string;
   };
 
 const categoryApi = createApi({
@@ -21,11 +21,11 @@ const categoryApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getCategories: builder.query<IPaginatedCategory, void>({
+        getCategories: builder.query<PaginatedCategory, void>({
             query: () => '/categories',
             providesTags: ['Category'],
         }),
-        getCatgoryById: builder.query<ICategory, string>({
+        getCatgoryById: builder.query<TCategory, string>({
             query: (_id) => `/categories/${_id}`,
             providesTags: ['Category'],
         }),
@@ -49,7 +49,8 @@ const categoryApi = createApi({
             query: ({ categoryId, category }) => ({
               url: `/categories/${categoryId}`,
               method: 'PUT',
-              body: category,
+              body: { ...category, updateAt: new Date().toISOString() }, 
+          
             }),
             invalidatesTags: ['Category'],
           }),

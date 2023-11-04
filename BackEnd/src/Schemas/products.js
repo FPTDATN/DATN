@@ -7,8 +7,8 @@ export const productSchema = joi.object({
   description: joi.string().required("Mô tả bắt buộc 200 chữ trở lên"),
   quantity: joi.number().min(1).required("Số lượng ít nhất là 1"),
   colorId: joi.array().items(joi.string()).min(1).required("Phải có ít nhất 1 màu"),
-  sizeId: joi.array().items(joi.string()).min(1).required("Phải có ít nhất 1 size"),
+  sizeId: joi.array().items(joi.string()).min(1).required("Phải có ít nhất 1size"),
   brandId: joi.string().required('Thương hiệu bắt buộc'),
-  images: joi.array().items(joi.string()).required("images không được bỏ trống"),
+  images: joi.array().items(joi.string()).min(2).required("images không được bỏ trống"),
   categoryId: joi.string().required("Loại sản phẩm là trường dữ liệu bắt buộc"),
 });

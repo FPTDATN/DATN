@@ -1,11 +1,5 @@
-export interface ICategory {
-      _id? : string ;
-      name : string ;
-      createAt:Date;
-      updateAt:Date;
-}
-export interface IPaginatedCategory{
-      docs: ICategory[];
+export interface PaginatedCategory {
+    docs: CategoryType[];
     hasNextPage: boolean;
     hasPrevPage: boolean;
     limit: number;
@@ -15,4 +9,10 @@ export interface IPaginatedCategory{
     prevPage: null;
     totalDocs: number;
     totalPages: number;
- }
+}
+
+export interface CategoryType {
+    _id: string;
+    name: string;
+    thumbnail: string;
+}

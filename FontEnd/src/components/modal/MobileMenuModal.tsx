@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import { BsGear } from 'react-icons/bs';
 import { AiFillHome } from 'react-icons/ai';
+import { LiaProductHunt } from 'react-icons/lia';
 import type { MenuProps } from 'antd';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -49,6 +50,7 @@ const MobileMenuModal: FunctionComponent<MobileModalProps> = ({ open, onClose })
 
     const items: MenuItem[] = [
         getItem(<Link onClick={onClose} to={'/'}>Trang chủ</Link>, 'sub-home', <AiFillHome />),
+        getItem(<Link onClick={onClose} to={'/filter'}>Cửa hàng</Link>, 'filter', <LiaProductHunt />),
         getItem('Thể loại', 'sub4', <BiSolidCategoryAlt />, categories.map((category) => (
             getItem(<Link onClick={onClose} to={category.link}>{category.title}</Link>, category._id)
         ))),

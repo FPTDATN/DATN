@@ -13,7 +13,7 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
   const [mutate] = useUpdateCategoryMutation();
   const [isLoading, setIsLoading] = useState(false);
 
-  const onFinish = async (values: { name: string }) => {
+  const onFinish = async (values: { name: string}) => {
     try {
       setIsLoading(true);
       await mutate({ categoryId, category: { name: values.name } }).unwrap();
@@ -32,10 +32,10 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
   const { data: category, isLoading: isCategoryLoading } = useGetCatgoryByIdQuery(categoryId);
 
   useEffect(() => {
-    if (!isCategoryLoading && category) {
+    if (category) {
       form.setFieldsValue({ name: category.name });
     }
-  }, [category, isCategoryLoading, form]);
+  }, [category]);
 
   return (
     <>
@@ -45,14 +45,14 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
         <Form
           form={form}
           onFinish={onFinish}
-          layout="vertical"
+          layout="horizontal"
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
         >
           <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục' }]}>
             <Input />
           </Form.Item>
-   
+          
           <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
             <Button type="primary" className='bg-primary' htmlType="submit" loading={isLoading}>
               Cập nhật

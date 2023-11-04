@@ -49,11 +49,11 @@ const commentApi = createApi({
       }),
       invalidatesTags: ['Comments'],
     }),
-    updateComment: builder.mutation<Comment, { commentId: string; comment: Partial<Comment> }>({
-      query: ({commentId,comment}) => ({
+    updateComment: builder.mutation<Comment, { userId:string, productId:string, commentId: string; comment: Partial<Comment> }>({
+      query: ({userId,productId,commentId,comment}) => ({
         url: `/comments/${commentId}`,
         method: 'PUT',
-        body: comment,
+        body: {userId,productId,...comment},
       }), invalidatesTags: ['Comments']
     }),
 

@@ -17,6 +17,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
+import { sendEmail } from "./utils/sendEmail.js";
 
 const app = express();
 
@@ -42,7 +43,6 @@ app.use(
     resave: false,
   }),
 );
-
 
 app.use(express.json());
 app.use(cookieParser());

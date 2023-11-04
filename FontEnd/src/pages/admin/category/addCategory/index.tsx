@@ -15,7 +15,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({ handleModalClose }) => {
 
   const onFinish = async (values: any) => {
     try {
-      setIsLoading(true); // Bắt đầu hiệu ứng loading
+      setIsLoading(true); 
       await mutateCreateCategory(values).unwrap();
 
       form.resetFields();

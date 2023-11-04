@@ -1,20 +1,20 @@
-import { ProductType } from "@/types/Product"
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { toast } from 'react-toastify'
+import { ExtendProduct, ProductType } from '@/types/Product';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 type CartProps = {
-    cartItems: any[]
-}
+    cartItems: any[];
+};
 
 const initialState: CartProps = {
-    cartItems: []
-}
+    cartItems: [],
+};
 
 const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        addToCart: (state, action: PayloadAction<ProductType>) => {
+        addToCart: (state, action: PayloadAction<ExtendProduct>) => {
             const newProduct = action.payload;
 
             const existingProduct = state.cartItems.findIndex((item) => item._id === newProduct._id);
@@ -22,14 +22,14 @@ const cartSlice = createSlice({
             if (existingProduct === -1) {
                 state.cartItems.push(newProduct);
             } else {
-                state.cartItems[existingProduct].quantity++;
-                state.cartItems[existingProduct].colorId = newProduct.colorId;
-                state.cartItems[existingProduct].sizeid = newProduct.sizeId
-
-                toast.success(`Đã thêm ${newProduct.name} vào giỏ hàng`, {
-                    position: 'bottom-right'
-                });
+                state.cartItems[existingProduct].quantity = newProduct.quantity++ || newProduct.quantity;
+                state.cartItems[existingProduct].colorId = newProduct.colorId?.name!;
+                state.cartItems[existingProduct].sizeid = newProduct.sizeId?.name!;
             }
+
+            toast.success(`Đã thêm ${newProduct.name} vào giỏ hàng`, {
+                position: 'bottom-right',
+            });
         },
         increase: (state, action: PayloadAction<ProductType>) => {
             const currentProduct = state.cartItems.find((item) => item._id === action.payload);
@@ -42,27 +42,28 @@ const cartSlice = createSlice({
             if (currentProduct.quantity < 1) {
                 state.cartItems = state.cartItems.filter((item) => item._id !== action.payload);
                 currentProduct.quantity = 1;
-
                 toast.info(`Đã xóa khỏi giỏ hàng`, {
-                    position: 'bottom-right'
-                })
+                    position: 'bottom-right',
+                });
             }
         },
-        remove: (state, action: PayloadAction<ProductType>) =>{
+        remove: (state, action: PayloadAction<ProductType>) => {
             state.cartItems = state.cartItems.filter((item) => item._id !== action.payload);
 
             toast.info(`Đã xóa khỏi giỏ hàng`, {
-                position: 'bottom-right'
-            })
+                position: 'bottom-right',
+            });
         },
         clear: (state, _action: PayloadAction<ProductType>) => {
-            state.cartItems = []
-        }
-    }
-})
+            state.cartItems = [];
 
-export const {
-    addToCart, increase, decrease, clear,remove
-} = cartSlice.actions
+            toast.info(`Giỏ hàng đã được làm sạch`, {
+                position: 'bottom-right',
+            });
+        },
+    },
+});
+
+export const { addToCart, increase, decrease, clear, remove } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;

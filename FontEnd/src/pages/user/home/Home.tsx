@@ -12,7 +12,7 @@ const Home: FunctionComponent<HomeProps> = () => {
         <CarouselSlide/>
 
         <div className="mt-6 px-4">
-            <ListProductItems heading="Host Products"/>
+            <ListProductItems heading="Sản phẩm HOT"/>
         </div>
 
         <div>

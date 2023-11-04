@@ -300,12 +300,12 @@ const Signup = () => {
                                                 { required: true, message: 'Mật khẩu không được để trống' },
                                                 { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự' },
                                                 { max: 20, message: 'Mật khẩu tối đa 20 ký tự' },
-                                                {
-                                                    pattern: new RegExp(
-                                                        '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-                                                    ),
-                                                    message: 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt và 1 số',
-                                                },
+                                                // {
+                                                //     pattern: new RegExp(
+                                                //         '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                                                //     ),
+                                                //     message: 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt và 1 số',
+                                                // },
                                                 { whitespace: true },
                                             ]}
                                         >

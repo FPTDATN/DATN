@@ -8,11 +8,11 @@ const Gallery: FunctionComponent<GalleryProps> = () => {
     const { data } = useGetCategoriesQuery();
 
     return (
-        <section className="flex items-center bg-gray-100  py-16  dark:bg-gray-800 font-poppins">
+        <section className="flex items-center bg-gray-100 py-16 dark:bg-gray-800 font-poppins">
             <div className="p-4 mx-auto max-w-6xl">
-                <h2 className="pb-4  font-bold text-center text-gray-800 text-4xl dark:text-gray-400">Danh mục</h2>
+                <h2 className="pb-4 font-semibold text-center text-gray-800 text-4xl dark:text-gray-400">Danh mục</h2>
                 <div className="mx-auto mb-10 border-b border-red-700 w-44 dark:border-gray-400"></div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-2 gap-6 mt-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 mt-8">
                     {data?.docs.map((category) => {
                         return (
                             <Link
@@ -22,7 +22,7 @@ const Gallery: FunctionComponent<GalleryProps> = () => {
                             >
                                 <img
                                     src={
-                                        'https://dwinofficial.com/wp-content/uploads/2022/10/ao-thun-unisex-black-T-Shirt-thoi-trang-DWin-basic-tee-phong-tron-nam-nu-tay-lo-oversize-7.jpg'
+                                        category.thumbnail
                                     }
                                     className="group-hover:origin-center group-hover:scale-110 group-hover:rotate-3 h-[160px] md:h-[220px] lg:h-[300px] w-full transition duration-500 object-cover"
                                     alt={category.name}
