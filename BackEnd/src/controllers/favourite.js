@@ -19,9 +19,31 @@ export const favouriteCreat = async (req, res) => {
 }
 
 export const getFavourites = async (req, res) => {
+    let {
+        _limit = 8,
+        _sort = "createAt",
+        _order = "asc",
+        _page = 1,
+    } = req.query;
+
+    // Chuyển đổi giá trị _limit và _page từ chuỗi sang số nguyên
+    _limit = parseInt(_limit);
+    _page = parseInt(_page);
+
+    const options = {
+        limit: _limit,
+        page: _page,
+        sort: {
+            [_sort]: _order === "desc" ? -1 : 1,
+        },
+    };
+
     try {
         const wishlist = await Favourite.findOne({ user_id: req.params.user_id })
-            .populate('wishlist_items.product_id');
+            .populate('wishlist_items.product_id')
+            .limit(options.limit)
+            .skip((options.page - 1) * options.limit);
+
         res.json(wishlist);
     } catch (error) {
         res.status(500).json({ message: error.message });
