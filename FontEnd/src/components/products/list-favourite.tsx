@@ -11,6 +11,7 @@ import { Rate } from 'antd';
 import { CiCircleRemove } from 'react-icons/ci';
 import { addToCart } from '@/slices/cart';
 import { useAppDispatch } from '@/store/hook';
+import ReactPaginate from 'react-paginate';
 
 interface ListProductItemsProps {
     heading?: string;
@@ -29,6 +30,16 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
     const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
     const [value, setValue] = useState(3);
 
+    const [currentPage, setCurrentPage] = useState(0);
+    const perPage = 10; // Số sản phẩm hiển thị trên mỗi trang
+
+    const handlePageChange = (selectedPage: any) => {
+        setCurrentPage(selectedPage.selected);
+    };
+
+    const pageCount = Math.ceil(wishlistItems.length / perPage);
+    const offset = currentPage * perPage;
+    const currentPageItems = wishlistItems.slice(offset, offset + perPage);
 
     const handleDelete = async (id: string) => {
         try {
@@ -38,6 +49,8 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
             toast.error('Xóa không thành công');
         }
     };
+
+
     return (
         <section className="flex items-center font-poppins">
             <div className="justify-center flex-1 max-w-6xl px-0 py-4 mx-auto lg:py-8 md:px-4">
@@ -56,7 +69,7 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
                     </div>
                 ) : (
                     <div className="grid gap-4 mb-11 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5">
-                        {wishlistItems.map((item: any) => (
+                        {currentPageItems.map((item: any) => (
                             <div className="shadow-sm">
                                 <div className="relative group ">
 
@@ -118,15 +131,43 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
                                         </span>
                                     </div>
                                 </div>
+
                             </div>
+
                         ))}
+
+
+
+
                     </div>
                 )}
 
-
+                <ReactPaginate
+                    previousLabel={'Quay lại'}
+                    nextLabel={'Tiếp theo'}
+                    breakLabel={'...'}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={handlePageChange}
+                    containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
+                    activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
+                    pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+                    previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+                    nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+                    previousLinkClassName={'h-8 p-1 leading-6 '}
+                    nextLinkClassName={'h-8 p-1 leading-6 '}
+                    breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+                />
             </div>
+
         </section>
+
     );
 };
 
 export default ListYourFavourite;
+
+
+
+

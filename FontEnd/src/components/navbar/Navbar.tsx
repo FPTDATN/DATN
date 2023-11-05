@@ -7,12 +7,12 @@ import MobileMenuModal from '../modal/MobileMenuModal';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useGetCategoriesQuery } from '@/services/category';
+import WishlistItemsLength from '../modal/wishlistItemsLength ';
 
 interface NavbarProps { }
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
     const { data } = useGetCategoriesQuery();
-
     const [openAbsolute, setOpenAbsolute] = useState(false);
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
@@ -107,10 +107,14 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
 
                         </ul>
                         <div className="items-center justify-end hidden lg:flex">
-                            <div className="mr-5 text-2xl flex">
-                                <Link to={'your-favorite'}><AiOutlineHeart /></Link>
+                            {/* <div className="mr-5 text-2xl flex relative">
+                                <Link to={'your-favorite'}><AiOutlineHeart />
+                                    <span className="bg-primary/90 text-white w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">
+                                        1
+                                    </span></Link>
 
-                            </div>
+                            </div> */}
+                            <WishlistItemsLength />
                             <CartModal />
                             <Notification />
                             <AccountIcon />
