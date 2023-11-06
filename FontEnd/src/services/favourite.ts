@@ -32,8 +32,8 @@ export const favouriteapi = createApi({
             invalidatesTags: ['Favourite'],
 
         }),
-        checkProductInWishlist: builder.query<any, { productId: any, userId: any }>({
-            query: ({ productId, userId }) => `/wishlist/check/${productId}/user/${userId}`,
+        checkProductInWishlist: builder.query<any, { product_id: any, user_id: any }>({
+            query: ({ user_id, product_id }) => `/favourite/${user_id}/product/${product_id}`,
         }),
     }),
 });

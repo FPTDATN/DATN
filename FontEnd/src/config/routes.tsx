@@ -59,9 +59,9 @@ const router = createBrowserRouter([
             {
                 path: 'your-favorite',
                 element: <YourFavourite />,
-            },
+            }, {
                 path: 'orders/:userId',
-                element: <OrderSumeries/>
+                element: <OrderSumeries />
             }
         ],
     },
@@ -87,9 +87,9 @@ const router = createBrowserRouter([
             {
                 path: 'change-password',
 
-                element: <ChangePassword/>
+                element: <ChangePassword />
             },
-            
+
         ],
     },
     // Admin
