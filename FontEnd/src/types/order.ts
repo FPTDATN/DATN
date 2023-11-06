@@ -15,7 +15,8 @@ interface IProductorder {
       product: string;
       quantity: number;
       name: string;
-
+      phone:string;
+      status:number;
 }
 export interface Iuser {
       _id: string;
@@ -26,6 +27,7 @@ export interface IOrder {
       _id: string;
       orderNumber: string;
       status: number;
+      customerPhone:string;
       customerName: string;
       shippingAddress: string;
       products: IProductorder[];

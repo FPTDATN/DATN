@@ -75,19 +75,18 @@ export const cancelOrder = async (req, res) => {
     }
 
     // Kiểm tra xem trạng thái mới cung cấp hợp lệ hay không
-    if (!['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'].includes(status)) {
-      return res.status(400).json({ message: 'Trạng thái mới không hợp lệ' });
-    }
+    // if (!['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'].includes(status)) {
+    //   return res.status(400).json({ message: 'Trạng thái mới không hợp lệ' });
+    // }
 
     // Cập nhật trạng thái của đơn hàng thành trạng thái mới
-    order.status = status;
+    const newSatus = await Order.updateOne({ _id: orderId }, { status }, { new: true })
 
     // Lưu thay đổi vào cơ sở dữ liệu
-    const updatedOrder = await order.save();
 
-    return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: updatedOrder });
+    return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: newSatus });
   } catch (error) {
     console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
-    return res.status(500).json({ error: 'Lỗi server' });
+    return res.status(500).json({ error: error.message });
   }
 };

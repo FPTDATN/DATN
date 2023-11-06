@@ -29,7 +29,7 @@ import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
                 }),
                 invalidatesTags: ['Order']
             }),
-            updateOrderStatus: builder.mutation<IOrder, { orderId: string, status: string }>({
+            updateOrderStatus: builder.mutation<IOrder, { orderId: string, status: number }>({
                   query: ({ orderId, status }) => ({
                     url: `/order/${orderId}/status`, 
                     method: 'PUT',

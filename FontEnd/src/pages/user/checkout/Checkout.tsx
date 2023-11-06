@@ -166,7 +166,7 @@ const LocationList: React.FC = () => {
             orders({
                 ...customer,
                 totalAmount: reduceTotal(cartItems),
-                status: Status.processing,
+                status: Status.ORDER_CONFIRM,
                 products: cartItems,
                 buyer: authData?._id,
             });

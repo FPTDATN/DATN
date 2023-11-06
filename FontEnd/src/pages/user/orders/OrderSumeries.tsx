@@ -1,5 +1,5 @@
 import { Collapse, Steps, theme } from 'antd';
-import { MdKeyboardArrowRight } from 'react-icons/md';
+import { MdKeyboardArrowRight, MdSmsFailed } from 'react-icons/md';
 import { useGetsOrderQuery } from '@/services/order';
 import { Status } from '@/types/status';
 import Loading from '@/components/ui/Loading';
@@ -81,24 +81,24 @@ const OrderSumeries = ({}: Props) => {
                                             className="mt-3"
                                             items={[
                                                 {
-                                                    title: 'Thông tin',
-                                                    status: order.status > Status.processing ? 'finish' : 'wait',
+                                                    title: 'Thông tin khách hàng',
+                                                    status: order.status >= Status.INFORMATION ? 'finish' : 'wait',
                                                     icon: <BsPersonVcardFill />,
                                                 },
                                                 {
-                                                    title: 'Đã Lấy hàng',
-                                                    status: order.status > Status.confirmation ? 'finish' : 'process',
+                                                    title: 'Xác nhận đơn hàng',
+                                                    status: order.status >= Status.ORDER_CONFIRM ? 'finish' : 'wait',
                                                     icon: <BsDropbox />,
                                                 },
                                                 {
                                                     title: 'Đang giao hàng',
-                                                    status: order.status > Status.delivered ? 'finish' : 'wait',
+                                                    status: order.status >= Status.SHIPPING ? 'finish' : 'wait',
                                                     icon: <FaShippingFast />,
                                                 },
                                                 {
-                                                    title: 'Done',
-                                                    status: order.status === Status.cancelled ? 'finish' : 'wait',
-                                                    icon: <BsCheckCircleFill />,
+                                                    title: order.status === 0 ? 'Đã hủy' : 'Hoàn thành',
+                                                    status: order.status === Status.COMPLETE ? 'finish' : order.status === Status.CANCELLED ? 'error' : 'wait',
+                                                    icon: order.status === Status.COMPLETE ? <BsCheckCircleFill /> : Status.CANCELLED ? <MdSmsFailed/> : <BsCheckCircleFill/>,
                                                 },
                                             ]}
                                         />

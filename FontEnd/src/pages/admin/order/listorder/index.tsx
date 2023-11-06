@@ -1,86 +1,433 @@
 import { useGetsOrderQuery, useUpdateOrderStatusMutation } from '@/services/order';
 import Skeleton from 'react-loading-skeleton';
+import { Status } from '@/types/status';
+import { Button, Form, Input, InputRef, Modal, Popconfirm, Select, Space, Table, Typography, message } from 'antd';
+import { IOrder } from '@/types/order';
+import { useRef, useState } from 'react';
+import { ColumnType, FilterConfirmProps } from 'antd/es/table/interface';
+import { AiOutlineSearch } from 'react-icons/ai';
+import Highlighter from 'react-highlight-words';
+import Loading from '@/components/ui/Loading';
 // import React, { useState } from 'react';
 
-const ListOrder: React.FC = () => {
-  const { data, isLoading } = useGetsOrderQuery();
-  const [changeOrderStatus] = useUpdateOrderStatusMutation();
+type DataIndex = keyof IOrder;
 
-  const handleChangeStatus = async (orderId: string, newStatus: string) => {
-    try {
-      await changeOrderStatus({ orderId, status: newStatus }); // Thay đổi "status" thành "newStatus" để truyền đúng dữ liệu
+interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+    editing: boolean;
+    dataIndex: string;
+    title: any;
+    inputType: 'number' | 'text';
+    record: IOrder;
+    index: number;
+    children: React.ReactNode;
+}
 
-      // Dữ liệu được cập nhật thành công
-      console.log(`Đã cập nhật trạng thái ${newStatus} cho đơn hàng với ID ${orderId}`);
-    } catch (error) {
-      console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
-    }
-  };
+const { Option } = Select;
+const { confirm } = Modal;
 
-  return (
-    <>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div className="pb-4 bg-white dark:bg-gray-900 flex"></div>
+const renderState = (state: number) => {
+    if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
+    if (Status.INFORMATION === state) return <span>Xác thực thông tin</span>;
+    if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
+    if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
+    if (Status.COMPLETE === state) return <span className='text-green-500'>Hoàn thành</span>;
+};
 
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 text-xs font-medium py-3">
-                Stt
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Tên khách hàng
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Số Lượng
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Trạng Thái
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Khách Phải trả
-              </th>
-            </tr>
-          </thead>
+const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
+}) => {
+    const inputNode = (
+        <Select>
+            <Option value={1}>{renderState(1)}</Option>
+            <Option value={2}>{renderState(2)}</Option>
+            <Option value={3}>{renderState(3)}</Option>
+            <Option value={4}>{renderState(4)}</Option>
+        </Select>
+    );
 
-          {isLoading ? (
-            <tbody>
-              <tr>
-                <td colSpan={7}>
-                  <Skeleton count={3} className="h-[98px]" />
-                </td>
-              </tr>
-            </tbody>
-          ) : (
-            <tbody>
-              {data?.docs.map((order) => (
-                <tr
-                  key={order._id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+    return (
+        <td {...restProps}>
+            {editing ? (
+                <Form.Item
+                    name={'status'}
+                    style={{ margin: 0 }}
+                    rules={[
+                        {
+                            required: true,
+                            message: `Please Input ${title}!`,
+                        },
+                    ]}
                 >
-                  <td className="px-6 py-4">{order.orderNumber}</td>
-                  <td>{order.buyers[0]?.fullName}</td>
-                  <td className="px-6 py-4">{order.products[0]?.quantity}</td>
-                  <td className="px-6 py-4">
-                    <select
-                      value={order.status} 
-                      onChange={(e) => handleChangeStatus(order._id, e.target.value)}
+                    {inputNode}
+                </Form.Item>
+            ) : (
+                children
+            )}
+        </td>
+    );
+};
+
+const ListOrder: React.FC = () => {
+    const { data, isLoading } = useGetsOrderQuery();
+    const [changeOrderStatus] = useUpdateOrderStatusMutation();
+    const [form] = Form.useForm();
+
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const [editingKey, setEditingKey] = useState('');
+
+    const isEditing = (record: IOrder) => record._id === editingKey;
+
+    const edit = (record: Partial<IOrder> & { key: string }) => {
+        form.setFieldsValue({ status: 0, ...record });
+        setEditingKey(record._id!);
+    };
+
+    const cancel = () => {
+        setEditingKey('');
+    };
+
+    const save = async (id: string) => {
+        try {
+            const row = (await form.validateFields()) as IOrder;
+
+            const newData = [...data?.docs!];
+
+            await changeOrderStatus({
+                orderId: editingKey,
+                status: Number(row.status) as number,
+            });
+
+            message.success('Cập nhật trạng thái đơn hàng thành công');
+
+            const index = newData.findIndex((item) => id === item._id);
+
+            if (index > -1) {
+                const item = newData[index];
+
+                newData.splice(index, 1, {
+                    ...item,
+                    ...row,
+                });
+
+                setEditingKey('');
+            } else {
+                setEditingKey('');
+            }
+        } catch (errInfo) {
+            console.log('Validate Failed:', errInfo);
+        }
+    };
+
+    const searchInput = useRef<InputRef>(null);
+
+    const handleSearch = (
+        selectedKeys: string[],
+        confirm: (param?: FilterConfirmProps) => void,
+        dataIndex: DataIndex,
+    ) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters: () => void) => {
+        clearFilters();
+        setSearchText('');
+    };
+
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IOrder> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        icon={<AiOutlineSearch />}
+                        size="small"
+                        style={{ width: 90 }}
                     >
-                      <option value="Đang xử lý">Đang xử lý</option>
-                      <option value="Chờ xác nhận">Chờ xác nhận</option>
-                      <option value="Đã giao hàng">Đã giao hàng</option>
-                      <option value="Đã hủy">Đã hủy</option>
-                    </select>
-                  </td>
-                  <td>{order.totalAmount}</td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-        </table>
-      </div>
-    </>
-  );
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText((selectedKeys as string[])[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered: boolean) => <AiOutlineSearch style={{ color: filtered ? '#1677ff' : undefined }} />,
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
+
+    const columns = [
+        {
+            title: 'Mã đơn hàng',
+            dataIndex: 'orderNumber',
+            filterSearch: true,
+            width: '15%',
+            fixed: 'left',
+            ...getColumnSearchProps('orderNumber'),
+        },
+        {
+            title: 'Tên khách hàng',
+            dataIndex: 'customerName',
+            width: '20%',
+            ...getColumnSearchProps('customerName'),
+        },
+        {
+            title: 'ID khách hàng',
+            dataIndex: 'buyer',
+            width: '15%',
+            ...getColumnSearchProps('buyer'),
+        },
+        {
+            title: 'Địa chỉ',
+            dataIndex: 'shippingAddress',
+            width: '20%',
+            ...getColumnSearchProps('shippingAddress'),
+        },
+        {
+            title: 'Số điện thoại',
+            dataIndex: 'customerPhone',
+            width: '10%',
+            ...getColumnSearchProps('customerPhone'),
+        },
+        {
+            title: 'Tổng số tiền',
+            dataIndex: 'totalAmount',
+            render: (value: number) => `$ ${value}`,
+            width: '10%',
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            render: (value: number) => renderState(value),
+            width: '15%',
+            editable: true,
+        },
+        {
+            title: 'Hành động',
+            dataIndex: 'action',
+            render: (_: any, record: IOrder) => {
+                const editable = isEditing(record);
+                return editable ? (
+                    <span>
+                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)}>
+                            Lưu
+                        </Typography.Link>
+                        <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">
+                            <a>Hủy</a>
+                        </Popconfirm>
+                    </span>
+                ) : (
+                    <Space>
+                        <Button disabled={editingKey !== '' || record.status === Status.CANCELLED || record.status === Status.COMPLETE} onClick={() => edit(record as any)}>
+                            Cập nhật
+                        </Button>
+
+                        <Button
+                            disabled={record.status === Status.CANCELLED || record.status === Status.COMPLETE}
+                            type="primary"
+                            danger
+                            onClick={() => showDeleteConfirm(record)}
+                        >
+                            Hủy đơn
+                        </Button>
+                    </Space>
+                );
+            },
+            width: '20%',
+        },
+    ];
+
+    const showDeleteConfirm = (record: IOrder) => {
+        confirm({
+            title: (
+                <p>
+                    Bạn có thực sự muốn hủy đơn hàng của khách hàng{' '}
+                    <span className="text-red-500">{record.customerName}</span>?
+                </p>
+            ),
+            content: (
+                <p>
+                    Vui lòng cân nhắc trước khi hủy đơn - Mã Đơn Hàng{' '}
+                    <span className="text-red-500">{record.orderNumber}</span>
+                </p>
+            ),
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk: async () => {
+                try {
+                    const row = (await form.validateFields()) as IOrder;
+
+                    const newData = [...data?.docs!];
+
+                    await changeOrderStatus({
+                        orderId: record._id,
+                        status: 0,
+                    });
+
+                    message.destroy('Đơn hàng đã được hủy thành công');
+
+                    const index = newData.findIndex((item) => editingKey === item._id);
+
+                    if (index > -1) {
+                        const item = newData[index];
+
+                        newData.splice(index, 1, {
+                            ...item,
+                            ...row,
+                        });
+
+                        setEditingKey('');
+                    } else {
+                        setEditingKey('');
+                    }
+                } catch (errInfo) {
+                    console.log('Validate Failed:', errInfo);
+                }
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
+
+    const mergedColumns = columns.map((col) => {
+        if (!col.editable) {
+            return col;
+        }
+        return {
+            ...col,
+            onCell: (record: IOrder) => ({
+                record,
+                editing: isEditing(record),
+            }),
+        };
+    });
+
+    return (
+        <>
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <Form form={form} component={false}>
+                    <Table
+                        bordered
+                        components={{
+                            body: {
+                                cell: EditableCell,
+                            },
+                        }}
+                        className="overflow-x-scroll"
+                        scroll={{ x: 1300 }}
+                        columns={mergedColumns as any}
+                        dataSource={data?.docs!}
+                        rowKey={'_id'}
+                        expandable={{
+                            expandedRowRender: (record) => (
+                                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                Tên đơn hàng
+                                            </th>
+                                            <th scope="col" className="text-left px-6 text-xs font-medium py-3">
+                                                Số lượng
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    {isLoading ? (
+                                        <tbody>
+                                            <tr>
+                                                <td colSpan={7}>
+                                                    <Skeleton count={3} className="h-[98px]" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    ) : (
+                                        <tbody>
+                                            {record?.products.map((product) => (
+                                                <tr
+                                                    key={product._id}
+                                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                >
+                                                    <td className="px-6 py-4 text-left">{product?.name}</td>
+                                                    <td className="px-6 py-4 text-left">{product?.quantity}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    )}
+                                </table>
+                            ),
+                        }}
+                    />
+                </Form>
+            )}
+            ;
+        </>
+    );
 };
 
 export default ListOrder;
