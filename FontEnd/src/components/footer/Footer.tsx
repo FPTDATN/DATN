@@ -10,7 +10,7 @@ const Footer: FunctionComponent<FooterProps> = () => {
             <div className="relative py-10 bg-center bg-no-repeat bg-cover"
                 >
                 <div className="absolute top-0 left-0 w-full h-full bg-gray-100 bg-opacity-60 "></div>
-                <div className="relative z-10 justify-center flex-1 max-w-6xl px-4 py-4 mx-auto lg:py-0">
+                <div className="relative z-10 justify-center flex-1 max-w-5xl px-4 py-4 mx-auto lg:py-0">
                     <div className="flex flex-wrap pb-10 -mx-3">
                         <div className="w-full px-4 mb-11 md:w-1/2 lg:w-4/12 lg:mb-0">
                             <a href="#" className="inline-block pb-2 text-lg font-bold text-gray-800">About Company</a>

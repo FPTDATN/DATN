@@ -11,11 +11,6 @@ interface ApiRegisterInput {
     email: string;
     password: string;
     confirmPassword: string;
-    firstName: string;
-    lastName: string;
-    phone?: number | null;
-    address?: string;
-    rule: boolean;
 }
 
 interface ForgotPasswordInput {
@@ -33,14 +28,10 @@ interface ChangePasswordInput {
 
 export interface ApiRenponse {
     _id: string;
-    address: string;
     email: string;
     favourite: any[];
-    firstName: string;
-    lastName: string;
-    phone: number;
-    role: string;
     username: string;
+    role:string;
 }
 
 const authApi = createApi({

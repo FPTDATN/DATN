@@ -24,6 +24,7 @@ import ForgotPassword from '@/pages/user/forgot-password/ForgotPassword';
 import ChangePassword from '@/pages/user/change-password/ChangePassword';
 import ListComment from '@/pages/admin/product/listComment';
 import YourFavourite from '@/pages/user/your-favourite';
+import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 
 const router = createBrowserRouter([
     // Main layout
@@ -59,6 +60,9 @@ const router = createBrowserRouter([
                 path: 'your-favorite',
                 element: <YourFavourite />,
             },
+                path: 'orders/:userId',
+                element: <OrderSumeries/>
+            }
         ],
     },
     {
@@ -82,8 +86,10 @@ const router = createBrowserRouter([
             },
             {
                 path: 'change-password',
-                element: <ChangePassword />
-            }
+
+                element: <ChangePassword/>
+            },
+            
         ],
     },
     // Admin

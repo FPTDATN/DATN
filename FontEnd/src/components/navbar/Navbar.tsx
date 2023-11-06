@@ -25,7 +25,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
     return (
         <div className="relative h-[75px] shadow">
             <section className="absolute w-full flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-50">
-                <div className="max-w-6xl px-2 lg:px-4 w-full mx-auto">
+                <div className="max-w-5xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
                         <Link to="/" className="hidden w-[200px] h-[70px] lg:block font-semibold leading-none">
                             <img src="../logo.svg" className='w-[200px] h-[70px]' alt="" />
@@ -36,9 +36,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                         >
                             <AiOutlineMenu />
                         </button>
-                        <Link to="/" className="w-[200px] lg:hidden h-[70px] block font-semibold leading-none">
-                            <img src="../logo.svg" className='w-[200px] h-[70px]' alt="" />
-                        </Link>
+                        
                         <div className="flex items-center lg:hidden ">
                             <div className="mr-5 text-2xl flex">
                                 <AiOutlineHeart />

@@ -114,7 +114,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                 ?.filter((comment) => comment.productId === productId)
                                 .map((item) => (
                                     <article
-                                        key={item._id}
+                                        key={item?._id}
                                         className="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
                                     >
                                         <footer className="flex justify-between items-center mb-2">
@@ -125,15 +125,15 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                         src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
                                                         alt="Michael Gough"
                                                     />
-                                                    {item.userId.username}
+                                                    {item?.userId?.username}
                                                 </p>
                                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                                     <time title="February 8th, 2022">
-                                                        {formatTimeToNow(new Date(item.createdAt))}
+                                                        {formatTimeToNow(new Date(item?.createdAt))}
                                                     </time>
                                                 </p>
                                             </div>
-                                            {!authData || authData?._id !== item.userId._id ? undefined : (
+                                            {!authData || authData?._id !== item.userId?._id ? undefined : (
                                                 <div className="relative inline-block">
                                                     <button
                                                         id="dropdownComment1Button"
@@ -165,7 +165,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                             >
                                                                 <button
                                                                     className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                                                                    onClick={() => handleUpdateComment(item._id!)}
+                                                                    onClick={() => handleUpdateComment(item?._id!)}
                                                                 >
                                                                     Sửa
                                                                 </button>
@@ -181,7 +181,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                                             color: 'white',
                                                                         },
                                                                     }}
-                                                                    onConfirm={() => handleDeleteComment(item._id!)}
+                                                                    onConfirm={() => handleDeleteComment(item?._id!)}
                                                                 >
                                                                     <Button type="link">Xóa</Button>
                                                                 </Popconfirm>

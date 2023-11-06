@@ -39,16 +39,10 @@ export const signup = async (req, res) => {
 
         const auth = await Auth.create({
             username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            address: req.body.address,
-            phone: req.body.phone,
-            country: req.body.country,
-            images: req.body.images,
-            avatar: req.body.avatar,
-            rule: req.body.rule,
             email: req.body.email,
             password: hashedPassword,
+            images: req.body.images,
+            avatar: req.body.avatar,
         });
 
         const token = jwt.sign({ id: auth._id }, "123456", { expiresIn: "7d" });
@@ -136,53 +130,53 @@ export const logout = (req, res) => {
     });
 };
 
-export const forgotPassword = async (req,res) => {
+export const forgotPassword = async (req, res) => {
 
-    const {email,otp} = req.body;
+    const { email, otp } = req.body;
 
-    const user = await Auth.findOne({email})
+    const user = await Auth.findOne({ email })
 
-    if(!user) return res.status(201).json({success:false});
+    if (!user) return res.status(201).json({ success: false });
 
-    await Token.findOneAndDelete({userId:user._id})
+    await Token.findOneAndDelete({ userId: user._id })
 
     const resetToken = uuidv4();
 
-    const hashResetToken = await bcrypt.hash(resetToken,10);
+    const hashResetToken = await bcrypt.hash(resetToken, 10);
 
     await new Token({ userId: `${user.id}`, token: hashResetToken }).save();
 
     await sendEmail(email, otp)
 
-    return res.status(200).json({success:true,otp,token:hashResetToken,userId:user._id})
+    return res.status(200).json({ success: true, otp, token: hashResetToken, userId: user._id })
 }
 
-export const changePassword = async (req,res) => {
-    const {password,token,userId} =  req.body;
+export const changePassword = async (req, res) => {
+    const { password, token, userId } = req.body;
 
-    
+
     try {
-        const resetPasswordTokenRecord = await Token.findOne({userId});
-        
-        if(!resetPasswordTokenRecord) return res.status(401).json({message: 'Token không hợp lệ'});
+        const resetPasswordTokenRecord = await Token.findOne({ userId });
 
-        const resetPasswordTokenValid = bcrypt.compare(resetPasswordTokenRecord.token,token);
+        if (!resetPasswordTokenRecord) return res.status(401).json({ message: 'Token không hợp lệ' });
 
-        if(!resetPasswordTokenValid) return res.status(401).json({message: 'Token không hợp lệ'});
+        const resetPasswordTokenValid = bcrypt.compare(resetPasswordTokenRecord.token, token);
 
-        const user = await Auth.findOne({_id:userId});
+        if (!resetPasswordTokenValid) return res.status(401).json({ message: 'Token không hợp lệ' });
 
-        if(!user) return res.status(400).json({message:'Người dùng không tồn tại'});
+        const user = await Auth.findOne({ _id: userId });
 
-        const updatedPassword = await bcrypt.hash(password,10);
+        if (!user) return res.status(400).json({ message: 'Người dùng không tồn tại' });
 
-        await Auth.updateOne({_id:userId}, {password:updatedPassword});
+        const updatedPassword = await bcrypt.hash(password, 10);
+
+        await Auth.updateOne({ _id: userId }, { password: updatedPassword });
 
         await resetPasswordTokenRecord.deleteOne();
 
-        return res.status(201).json({success:true});
+        return res.status(201).json({ success: true });
 
     } catch (error) {
-        
+
     }
 }

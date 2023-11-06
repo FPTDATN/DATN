@@ -8,8 +8,8 @@ export const checkAuth = () => {
     const { data, isLoading } = useMeQuery();
     useEffect(() => {
         if (!isLoading) {
-            if (data && path.pathname === '/checkout') {
-                router('')
+            if (data && (path.pathname === '/account/signin' || path.pathname === '/account/signup')) {
+                router('/')
             } else if (!data && path.pathname !== '/account/signin' && path.pathname !== '/account/signup') {
                 router('/account/signin');
             }

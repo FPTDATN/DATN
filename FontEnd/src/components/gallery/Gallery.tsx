@@ -9,7 +9,7 @@ const Gallery: FunctionComponent<GalleryProps> = () => {
 
     return (
         <section className="flex items-center bg-gray-100 py-16 dark:bg-gray-800 font-poppins">
-            <div className="p-4 mx-auto max-w-6xl">
+            <div className="p-4 mx-auto max-w-5xl">
                 <h2 className="pb-4 font-semibold text-center text-gray-800 text-4xl dark:text-gray-400">Danh mục</h2>
                 <div className="mx-auto mb-10 border-b border-red-700 w-44 dark:border-gray-400"></div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 mt-8">

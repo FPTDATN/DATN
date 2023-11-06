@@ -31,6 +31,8 @@ const ProductDetail = () => {
     const [size, setSize] = useState(data?.sizeId![0].name);
     const [quantity, setQuantity] = useState<number>(1);
 
+    const hasSale = data?.price! - (data?.price! * data?.sale_off!) / 100;
+
     useEffect(() => {
         setColor(data?.colorId![0].name);
         setSize(data?.sizeId![0].name);
@@ -58,7 +60,7 @@ const ProductDetail = () => {
                 <div>
                     {data && (
                         <div>
-                            <div className=" max-w-6xl px-4 mx-auto">
+                            <div className=" max-w-5xl px-4 mx-auto">
                                 <div className="flex flex-wrap mb-24 -mx-4">
                                     <div className="w-full px-4 mb-8 md:w-1/2 md:mb-0">
                                         <div className="sticky top-0 overflow-hidden ">
@@ -95,9 +97,9 @@ const ProductDetail = () => {
                                                     </span>
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
-                                                    <span>$.{data?.price}</span>
+                                                    ${hasSale}
                                                     <span className="ml-3 text-base font-normal text-gray-500 line-through dark:text-gray-400">
-                                                        Rs.10,000.00
+                                                        <span>$.{data?.price}</span>
                                                     </span>
                                                 </p>
                                             </div>
@@ -163,6 +165,7 @@ const ProductDetail = () => {
                                                         dispatch(
                                                             addToCart({
                                                                 ...(data! as any),
+                                                                price:hasSale,
                                                                 quantity: quantity,
                                                                 colorId: color,
                                                                 sizeId: size,
@@ -186,7 +189,7 @@ const ProductDetail = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="max-w-6xl px-4 mx-auto">
+                            <div className="max-w-5xl px-4 mx-auto">
                                 <Radio.Group onChange={handleModeChange} value={mode} style={{ marginBottom: 8 }}>
                                     <Radio.Button value="top">Ngang</Radio.Button>
                                     <Radio.Button value="left">Dọc</Radio.Button>
