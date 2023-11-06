@@ -12,7 +12,7 @@ export interface PaginatedCategory {
 }
 
 export interface CategoryType {
-    _id:string;
-    name:string;
-    thumbnail:string;
+    _id: string;
+    name: string;
+    thumbnail: string;
 }

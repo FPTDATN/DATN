@@ -23,6 +23,7 @@ import UpdateUser from '@/pages/admin/user/updateUser';
 import ForgotPassword from '@/pages/user/forgot-password/ForgotPassword';
 import ChangePassword from '@/pages/user/change-password/ChangePassword';
 import ListComment from '@/pages/admin/product/listComment';
+import YourFavourite from '@/pages/user/your-favourite';
 import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 
 const router = createBrowserRouter([
@@ -56,6 +57,9 @@ const router = createBrowserRouter([
                 element: <LocationList />,
             },
             {
+                path: 'your-favorite',
+                element: <YourFavourite />,
+            },
                 path: 'orders/:userId',
                 element: <OrderSumeries/>
             }
@@ -78,10 +82,11 @@ const router = createBrowserRouter([
             },
             {
                 path: 'forgot-password',
-                element: <ForgotPassword/>
+                element: <ForgotPassword />
             },
             {
                 path: 'change-password',
+
                 element: <ChangePassword/>
             },
             
@@ -103,7 +108,7 @@ const router = createBrowserRouter([
             { path: 'user/update/:id', element: <UpdateUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
-            {path: 'product/:id/comments',element: <ListComment/> },
+            { path: 'product/:id/comments', element: <ListComment /> },
         ],
     },
 ]);

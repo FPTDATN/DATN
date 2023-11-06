@@ -46,10 +46,13 @@ const productSchema = new mongoose.Schema({
   categoryId: {
     type: mongoose.Types.ObjectId,
     ref: "Category",
+  }, favourite: {
+    type: Boolean,
+    default: false
   },
 }, {
-  timestamps:true,
-  versionKey:false
+  timestamps: true,
+  versionKey: false
 });
 
 productSchema.plugin(mongoosePaginate);
