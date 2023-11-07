@@ -8,7 +8,7 @@ router.post('/comments', createComment);
 router.delete('/comments/:id',removeComment);
 router.put('/comments/:id',updateComment)
 router.get('/comments/:id',getByIdComment)
-router.get('/statisticscomments',getAccountComments)
+router.get('/statistics/comments',getAccountComments)
 
 
 export default router;
