@@ -1,7 +1,10 @@
 import { useGetAllCommentsQuery } from "@/services/comment";
+import { useGetAccountQuery, useGetAllUserQuery } from "@/services/user";
 
 const Dashbroad = () => {
     const { data:DataComment } = useGetAllCommentsQuery();
+    const { data:DataUser} = useGetAccountQuery()
+    const usage = DataUser?.usage ?? 0;
     return (
         <>
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -35,7 +38,7 @@ const Dashbroad = () => {
                         <p>
                             <span className="text-2xl font-medium text-gray-900"> {DataComment?.length} </span>
 
-                            <span className="text-xs text-gray-500">  </span>
+                            <span className="text-xs text-gray-500"> bình luận </span>
                         </p>
                     </div>
                 </article>
@@ -67,9 +70,9 @@ const Dashbroad = () => {
                         <strong className="block text-sm font-medium text-gray-500"> User </strong>
 
                         <p>
-                            <span className="text-2xl font-medium text-gray-900"> 1111 </span>
+                            <span className="text-2xl font-medium text-gray-900"> {usage}</span>
 
-                            <span className="text-xs text-gray-500"> from $240.94 </span>
+                            <span className="text-xs text-gray-500"> user </span>
                         </p>
                     </div>
                 </article>

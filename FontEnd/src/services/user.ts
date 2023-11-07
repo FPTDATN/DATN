@@ -17,6 +17,15 @@ const userApi = createApi({
         },
     }),
     endpoints: (builder) => ({
+
+        getAccount: builder.query<{ usage: number }, void>({
+            query: () => ({
+                url: '/statistics',
+                method: 'GET',
+                credentials: 'include',
+            }),
+            providesTags: ['User'],
+        }),
         getAllUser: builder.query<PaginatedUser, void>({
             query: () => '/User',
             providesTags: ['User'],
@@ -43,5 +52,5 @@ const userApi = createApi({
     }),
 });
 
-export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation } = userApi;
+export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation,useGetAccountQuery } = userApi;
 export default userApi;
