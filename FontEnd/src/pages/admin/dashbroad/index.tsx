@@ -1,10 +1,11 @@
-import { useGetAllCommentsQuery } from "@/services/comment";
-import { useGetAccountQuery, useGetAllUserQuery } from "@/services/user";
+import { useGetAllCommentsQuery ,useGetAccountCommentsQuery} from "@/services/comment";
+import { useGetAccountQuery } from "@/services/user";
 
 const Dashbroad = () => {
-    const { data:DataComment } = useGetAllCommentsQuery();
+    const { data:DataComment } = useGetAccountCommentsQuery();
     const { data:DataUser} = useGetAccountQuery()
     const usage = DataUser?.usage ?? 0;
+    const totalComments = DataComment?.totalComments ?? 0;
     return (
         <>
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -36,7 +37,7 @@ const Dashbroad = () => {
                         <strong className="block text-sm font-medium text-gray-500"> Bình luận </strong>
 
                         <p>
-                            <span className="text-2xl font-medium text-gray-900"> {DataComment?.length} </span>
+                            <span className="text-2xl font-medium text-gray-900"> {totalComments} </span>
 
                             <span className="text-xs text-gray-500"> bình luận </span>
                         </p>
@@ -63,7 +64,7 @@ const Dashbroad = () => {
                             />
                         </svg>
 
-                        <span className="text-xs font-medium"> 67.81% </span>
+                        {/* <span className="text-xs font-medium"> 67.81% </span> */}
                     </div>
 
                     <div>
