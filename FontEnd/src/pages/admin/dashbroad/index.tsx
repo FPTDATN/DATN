@@ -1,7 +1,7 @@
 import { useGetAllCommentsQuery } from "@/services/comment";
 
 const Dashbroad = () => {
-    const { data } = useGetAllCommentsQuery();
+    const { data:DataComment } = useGetAllCommentsQuery();
     return (
         <>
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -26,16 +26,16 @@ const Dashbroad = () => {
                             />
                         </svg>
 
-                        <span className="text-xs font-medium"> 67.81% </span>
+                        {/* <span className="text-xs font-medium"> 67.81% </span> */}
                     </div>
 
                     <div>
                         <strong className="block text-sm font-medium text-gray-500"> Bình luận </strong>
 
                         <p>
-                            <span className="text-2xl font-medium text-gray-900"> 1111 </span>
+                            <span className="text-2xl font-medium text-gray-900"> {DataComment?.length} </span>
 
-                            <span className="text-xs text-gray-500"> from $240.94 </span>
+                            <span className="text-xs text-gray-500">  </span>
                         </p>
                     </div>
                 </article>
