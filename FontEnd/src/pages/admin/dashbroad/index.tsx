@@ -1,4 +1,4 @@
-import { useGetAllCommentsQuery ,useGetAccountCommentsQuery} from "@/services/comment";
+import {useGetAccountCommentsQuery} from "@/services/comment";
 import { useGetAccountQuery } from "@/services/user";
 
 const Dashbroad = () => {
