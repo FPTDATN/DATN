@@ -29,6 +29,7 @@ const productApi = createApi({
         }
     }),
     endpoints: (builder) => ({
+
         getProducts: builder.query<PaginatedProduct, void>({
             query: () => '/products',
             providesTags: ['Product'],
