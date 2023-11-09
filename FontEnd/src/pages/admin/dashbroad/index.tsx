@@ -1,5 +1,5 @@
 import {useGetAccountCommentsQuery} from "@/services/comment";
-import { useGetRevenueStatisticsQuery } from "@/services/product";
+import { useGetRevenueStatisticsQuery } from "@/services/order";
 import { useGetAccountQuery } from "@/services/user";
 
 const Dashbroad = () => {
