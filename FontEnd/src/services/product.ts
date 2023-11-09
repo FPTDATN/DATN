@@ -30,16 +30,6 @@ const productApi = createApi({
     }),
     endpoints: (builder) => ({
 
-        getRevenueStatistics: builder.query<{ totalRevenue: number }, void>({
-            query: () => ({
-              url: '/products/revenue-statistics',
-              method: 'GET',
-              credentials: 'include',
-            }),
-            providesTags: ['Product'],
-          }),
-
-
         getProducts: builder.query<PaginatedProduct, void>({
             query: () => '/products',
             providesTags: ['Product'],
@@ -77,5 +67,5 @@ const productApi = createApi({
 })
 
 
-export const { useGetProductsQuery, useGetProductByIdQuery, useDeleteProductMutation, useUpdateProductMutation, useCreateProductMutation, useGetRevenueStatisticsQuery } = productApi;
+export const { useGetProductsQuery, useGetProductByIdQuery, useDeleteProductMutation, useUpdateProductMutation, useCreateProductMutation } = productApi;
 export default productApi
