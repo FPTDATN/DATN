@@ -24,6 +24,8 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
 
     const user_id = authData?._id || '';
     const { data, isLoading } = useGetWishlistQuery(user_id);
+    console.log();
+
     const [mutate] = useRemoveProductFromWishlistMutation();
     const wishlistItems = data?.wishlist_items || [];
     const hasSale = (wishlistItems.product_id?.price!) - ((wishlistItems.product_id?.price! * wishlistItems.product_id?.sale_off!) / 100)

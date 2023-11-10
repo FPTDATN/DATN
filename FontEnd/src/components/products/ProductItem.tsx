@@ -1,13 +1,13 @@
 import { Rate } from 'antd';
 import { FunctionComponent, useState } from 'react';
-import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
+import { AiOutlineShoppingCart, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import SaleOffCard from '../ui/SaleOffCard';
 import { ProductType } from '@/types/Product';
 import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
-import { useAddToWishlistMutation } from '@/services/favourite';
+import { useAddToWishlistMutation, useCheckProductInWishlistMutation } from '@/services/favourite';
 import { useMeQuery } from '@/services/auth';
 import { toast } from 'react-toastify';
 
@@ -15,31 +15,40 @@ interface ProductItemProps {
     arrangeList?: boolean;
     product?: ProductType;
 }
+
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product }) => {
     const dispatch = useAppDispatch();
     const { data: authData } = useMeQuery();
-
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
-    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100)
+    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100);
 
-    //favourite product
+    // Favourite product
     const [addToWishlist] = useAddToWishlistMutation();
-    const handleAddToWishlist = (productId: any, user_id: any) => {
+    const [checkProductInWishlist] = useCheckProductInWishlistMutation();
+
+    const handleAddToWishlist = async (productId: string, userId: any) => {
         if (authData) {
-            if (addToWishlist) {
-                setTimeout(() => {
+            try {
+                const response = await checkProductInWishlist({ product_id: productId, user_id: authData._id });
+                const { exists } = response?.data;
+                if (exists) {
+                    toast.warning('Sản phẩm đã tồn tại trong danh sách yêu thích', { position: 'top-right' });
+                } else {
                     addToWishlist({ product_id: productId, user_id: authData._id });
                     toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
-                }, 500);
-            } else {
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error('Đã xảy ra lỗi khi kiểm tra sản phẩm yêu thích', { position: 'top-right' });
             }
         } else {
-            toast.warning('Bạn chưa đăng nhập !', { position: 'top-right' });
+            toast.warning('Bạn chưa đăng nhập!', { position: 'top-right' });
         }
     };
+
     return (
         <>
             {loading ? (
@@ -52,6 +61,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <div className="relative group ">
 
                         <div className="favourite hidden group-hover:block ">
+
                             <div
                                 onClick={() => handleAddToWishlist(product?._id, authData?._id)}
                                 className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "

@@ -32,10 +32,13 @@ export const favouriteapi = createApi({
             invalidatesTags: ['Favourite'],
 
         }),
-        checkProductInWishlist: builder.query<any, { product_id: any, user_id: any }>({
-            query: ({ user_id, product_id }) => `/favourite/${user_id}/product/${product_id}`,
+        checkProductInWishlist: builder.mutation<any, { product_id: string, user_id: any }>({
+            query: ({ product_id, user_id }) => ({
+                url: `/favourite/${user_id}/product/${product_id}`,
+                method: 'POST',
+            }),
         }),
     }),
 });
 
-export const { useAddToWishlistMutation, useGetWishlistQuery, useRemoveProductFromWishlistMutation, useCheckProductInWishlistQuery } = favouriteapi;
+export const { useAddToWishlistMutation, useGetWishlistQuery, useRemoveProductFromWishlistMutation, useCheckProductInWishlistMutation } = favouriteapi;

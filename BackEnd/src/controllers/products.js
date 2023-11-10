@@ -79,7 +79,7 @@ export const remove = async (req, res) => {
 
 export const getById = async (req, res) => {
   try {
-    const products = await Products.findById(req.params.id).populate(['categoryId','comments', 'colorId', 'brandId', 'sizeId']);
+    const products = await Products.findById(req.params.id).populate(['categoryId', 'comments', 'colorId', 'brandId', 'sizeId']);
     // 'comments','colorId','brandId','sizeId',
     if (products.length === 0) {
       return res.status(200).json({
