@@ -31,6 +31,17 @@ const commentApi = createApi({
     },
   }),
   endpoints: (builder) => ({
+
+    getAccountComments: builder.query<{ totalComments: number }, void>({
+      query: () => ({
+          url: '/statistics/comments',
+          method: 'GET',
+          credentials: 'include',
+      }),
+      providesTags: ['Comments'],
+  }),
+
+
     getAllComments: builder.query<Comment[], void>({
       query: () => '/comments',
       providesTags: ['Comments']
@@ -76,6 +87,7 @@ export const {
   useGetByIdCommentsQuery,
   useUpdateCommentMutation,
   useRemoveCommentMutation,
+  useGetAccountCommentsQuery
 } = commentApi;
 
 export default commentApi;
