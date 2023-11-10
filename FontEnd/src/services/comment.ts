@@ -34,12 +34,12 @@ const commentApi = createApi({
 
     getAccountComments: builder.query<{ totalComments: number }, void>({
       query: () => ({
-          url: '/statistics/comments',
-          method: 'GET',
-          credentials: 'include',
+        url: '/statistics/comments',
+        method: 'GET',
+        credentials: 'include',
       }),
       providesTags: ['Comments'],
-  }),
+    }),
 
 
     getAllComments: builder.query<Comment[], void>({
@@ -60,11 +60,11 @@ const commentApi = createApi({
       }),
       invalidatesTags: ['Comments'],
     }),
-    updateComment: builder.mutation<Comment, { userId:string, productId:string, commentId: string; comment: Partial<Comment> }>({
-      query: ({userId,productId,commentId,comment}) => ({
+    updateComment: builder.mutation<Comment, { userId: string, productId: string, commentId: string; comment: Partial<Comment> }>({
+      query: ({ userId, productId, commentId, comment }) => ({
         url: `/comments/${commentId}`,
         method: 'PUT',
-        body: {userId,productId,...comment},
+        body: { userId, productId, ...comment },
       }), invalidatesTags: ['Comments']
     }),
 
@@ -87,7 +87,8 @@ export const {
   useGetByIdCommentsQuery,
   useUpdateCommentMutation,
   useRemoveCommentMutation,
-  useGetAccountCommentsQuery
+  useGetAccountCommentsQuery,
+
 } = commentApi;
 
 export default commentApi;

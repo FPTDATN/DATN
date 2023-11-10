@@ -5,13 +5,13 @@ import { waiting } from '@/utils/waiting';
 import { ApiRenponse } from './auth';
 
 export type CommentType = {
-    _id:string;
+    _id: string;
     userId: ApiRenponse;
     text: string;
     productId: ProductType;
     parentCommentId?: string;
-    createdAt:Date;
-    updatedAt:Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 type ExtendProduct = ProductType & {
@@ -62,10 +62,18 @@ const productApi = createApi({
             }),
             invalidatesTags: ['Product'],
         }),
+        getTotalProduct: builder.query<{ total: number }, void>({
+            query: () => ({
+                url: '/products/quanlity',
+                method: 'GET',
+                credentials: 'include',
+            }),
+            providesTags: ['Product'],
+        }),
     }),
 
 })
 
 
-export const { useGetProductsQuery, useGetProductByIdQuery, useDeleteProductMutation, useUpdateProductMutation, useCreateProductMutation } = productApi;
+export const { useGetProductsQuery, useGetProductByIdQuery, useDeleteProductMutation, useUpdateProductMutation, useCreateProductMutation, useGetTotalProductQuery } = productApi;
 export default productApi
