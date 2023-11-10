@@ -23,21 +23,25 @@ export const favouriteCreat = async (req, res) => {
 
         // Kiểm tra xem sản phẩm đã tồn tại trong danh sách yêu thích hay chưa
         const wishlist = await Favourite.findOne({ user_id });
+        const wishlistItem = { product_id };
 
         if (wishlist && wishlist.wishlist_items.some(item => item.product_id === product_id)) {
             // Sản phẩm đã tồn tại trong danh sách yêu thích
             return res.status(400).json({ message: 'Sản phẩm đã tồn tại trong danh sách yêu thích' });
+        } else {
+            const updatedWishlist = await Favourite.findOneAndUpdate(
+                { user_id },
+                { $addToSet: { wishlist_items: wishlistItem } },
+                { upsert: true, new: true }
+            );
+            return res.status(400).json({ message: 'Thêm  Sản phẩm yêu thích thành công' });
+
+
         }
 
-        const wishlistItem = { product_id };
 
-        const updatedWishlist = await Favourite.findOneAndUpdate(
-            { user_id },
-            { $addToSet: { wishlist_items: wishlistItem } },
-            { upsert: true, new: true }
-        );
 
-        res.json(updatedWishlist);
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -93,14 +97,13 @@ export const checkFavourite = async (req, res) => {
 
         // Tìm kiếm wishlist của id_user
         const wishlist = await Favourite.findOne({ user_id });
-
+        console.log(wishlist);
         // Kiểm tra sự tồn tại của id_product trong wishlist_items của id_user
         const productExists = wishlist.wishlist_items.some(item => item.product_id.toString() === product_id);
-
         if (productExists) {
-            res.json({ message: 'Sản phẩm đã tồn tại trong danh sách yêu thích' });
+            res.json({ exists: true, message: 'Sản phẩm đã tồn tại trong danh sách yêu thích2' });
         } else {
-            res.json({ message: 'Sản phẩm không tồn tại trong danh sách yêu thích' });
+            res.json({ exists: false, message: 'Sản phẩm không tồn tại trong danh sách yêu thích3' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
