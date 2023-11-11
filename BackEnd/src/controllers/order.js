@@ -7,37 +7,18 @@ export const createOrder = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
-
     const { status, customerName, shippingAddress, products, buyer, customerPhone } = req.body;
     // Tính tổng tiền từ danh sách sản phẩm
     let totalAmount = 0;
-    products.forEach(async (product) => {
+    products.forEach(product => {
       // Đảm bảo rằng cả price và quantity đều là số hợp lệ
       if (!isNaN(product.price) && !isNaN(product.quantity)) {
         totalAmount += product.price * product.quantity;
-
-        // Giảm số lượng sản phẩm trong cơ sở dữ liệu sau khi mua hàng
-        const updatedProduct = await Product.findById(product.productId);
-        if (updatedProduct) {
-          updatedProduct.quantity -= product.quantity;
-          await updatedProduct.save();
-        }
       }
     });
-
-    const newOrder = new Order({
-      orderNumber,
-      status,
-      customerName,
-      shippingAddress,
-      products,
-      buyer,
-      totalAmount,
-      customerPhone,
-    });
+    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyer, totalAmount, customerPhone });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
