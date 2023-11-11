@@ -4,25 +4,25 @@ import CarouselSlide from "@/components/ui/Carousel";
 import { FunctionComponent } from "react";
 
 interface HomeProps {
-    
+
 }
- 
+
 const Home: FunctionComponent<HomeProps> = () => {
     return <div>
-        <CarouselSlide/>
+        <CarouselSlide />
 
         <div className="mt-6 px-4">
-            <ListProductItems heading="Sản phẩm HOT"/>
+            <ListProductItems heading="Sản phẩm HOT" />
         </div>
 
-        <div>
-            <Gallery/>
+        <div className="p-6">
+            <Gallery />
         </div>
 
         <div className="px-4">
-            <ListProductItems heading="New Products"/>
+            <ListProductItems heading="New Products" />
         </div>
     </div>
 }
- 
+
 export default Home;

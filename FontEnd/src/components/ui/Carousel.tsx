@@ -1,30 +1,26 @@
 import { FunctionComponent } from 'react';
 import { Carousel } from 'antd';
 
-interface CarouselProps {}
+interface CarouselProps { }
 
 const slides = [
     {
         id: 1,
-        bannerUrl: 'https://tmluxury.vn/wp-content/uploads/banner-thoi-trang-nam-tm-luxury.jpg',
+        bannerUrl: 'https://file.hstatic.net/1000369857/collection/1919_730_polo_3da01ded33614497a1884a3b99489661.jpg',
+
         title: '',
         link: '',
     },
     {
         id: 2,
-        bannerUrl: 'https://mayaothuncaocap.com/wp-content/uploads/2017/11/banner-ao-thun-dong-phuc-1.jpg',
+        bannerUrl: 'https://pos.nvncdn.net/b5a043-19330/art/20210401_RRhGMiO45aFfqXXlU1HaKVxT.png',
         title: '',
         link: '',
     },
+
     {
         id: 3,
-        bannerUrl: 'https://dokcrazy.com/storage/uploads/full/banner-21.jpg',
-        title: '',
-        link: '',
-    },
-    {
-        id: 4,
-        bannerUrl: 'https://dosi-in.com/images/facebook_brand/50/dosiin-Banner_qc50165.jpg',
+        bannerUrl: 'https://dongphuchaianh.vn/wp-content/uploads/2021/06/banner-ao-polo-dong-phuc-cong-ty.jpg',
         title: '',
         link: '',
     },
@@ -40,14 +36,9 @@ const contentStyle: React.CSSProperties = {
 
 const CarouselSlide: FunctionComponent<CarouselProps> = () => {
     return (
-        <div className="p-10 max-[800px]:p-4 relative flex justify-center">
-            <img
-                className="w-full h-full absolute top-0 left-0 right-0 bottom-0"
-                src="https://img.lovepik.com/background/20211022/medium/lovepik-black-cool-mens-full-screen-poster-psd-background-image_605818479.jpg"
-                alt=""
-            />
+        <div className=" max-[800px]:p-4 relative flex justify-center">
 
-            <div className='max-w-5xl w-full'>
+            <div className=' w-full h-[80%]'>
                 <Carousel swipeToSlide={true} autoplay dotPosition="bottom" className="mx-auto">
                     {slides.map((slide) => (
                         <div
@@ -55,7 +46,11 @@ const CarouselSlide: FunctionComponent<CarouselProps> = () => {
                             key={slide.id}
                             style={contentStyle}
                         >
-                            <img className="w-full h-full object-cover" src={slide.bannerUrl} alt="" />
+                            <img
+                                className="w-full h-full object-cover "
+                                src={slide.bannerUrl}
+                                alt=""
+                            />
                         </div>
                     ))}
                 </Carousel>

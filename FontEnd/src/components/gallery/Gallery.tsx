@@ -1,47 +1,37 @@
-import { useGetCategoriesQuery } from '@/services/category';
 import { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
 
-interface GalleryProps {}
+interface GalleryProps { }
 
 const Gallery: FunctionComponent<GalleryProps> = () => {
-    const { data } = useGetCategoriesQuery();
 
     return (
-        <section className="flex items-center bg-gray-100 py-16 dark:bg-gray-800 font-poppins">
-            <div className="p-4 mx-auto max-w-5xl">
-                <h2 className="pb-4 font-semibold text-center text-gray-800 text-4xl dark:text-gray-400">Danh mục</h2>
-                <div className="mx-auto mb-10 border-b border-red-700 w-44 dark:border-gray-400"></div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 mt-8">
-                    {data?.docs.map((category) => {
-                        return (
-                            <Link
-                                to={''}
-                                key={category._id}
-                                className="relative rounded-md shadow-sm overflow-hidden group"
-                            >
-                                <img
-                                    src={
-                                        category.thumbnail
-                                    }
-                                    className="group-hover:origin-center group-hover:scale-110 group-hover:rotate-3 h-[160px] md:h-[220px] lg:h-[300px] w-full transition duration-500 object-cover"
-                                    alt={category.name}
-                                />
-                                <div className="absolute inset-0 h-[300px] group-hover:bg-black opacity-50 transition duration-500 z-0"></div>
-                                <div>
-                                    <div className="absolute z-10 group-hover:block bottom-2 left-4">
-                                        <div className="h-6 line-clamp-1 text-base lg:text-lg font-medium text-gray-800 hover:text-white transition duration-500">
-                                            {category.name}
-                                        </div>
-                                        <p className="text-gray-300 text-xs mb-0">Robert</p>
-                                    </div>
-                                </div>
-                            </Link>
-                        );
-                    })}
+
+        < section
+            className="overflow-hidden bg-[url(https://images.unsplash.com/photo-1562157873-818bc0726f68?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=654&q=80)] bg-cover bg-top bg-no-repeat"
+        >
+            <div className="bg-black/25 p-8 md:p-12 lg:px-16 lg:py-24">
+                <div className="text-center ltr:sm:text-left rtl:sm:text-right">
+                    <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">
+                        A SHIRT SHOP
+                    </h2>
+
+                    <p className="max-w-lg mx-auto text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
+                        Truy cập để có thể nhận thêm thông tin về sản phẩm mới
+                    </p>
+
+                    <div className="mt-4 sm:mt-8">
+                        <a
+                            href="#"
+                            className="inline-block rounded-full bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400"
+                        >
+                            FANPAGE
+                        </a>
+                    </div>
                 </div>
+
             </div>
         </section>
+
     );
 };
 
