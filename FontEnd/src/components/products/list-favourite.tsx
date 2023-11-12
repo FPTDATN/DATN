@@ -24,16 +24,20 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
 
     const user_id = authData?._id || '';
     const { data, isLoading } = useGetWishlistQuery(user_id);
-    console.log();
-
     const [mutate] = useRemoveProductFromWishlistMutation();
     const wishlistItems = data?.wishlist_items || [];
-    const hasSale = (wishlistItems.product_id?.price!) - ((wishlistItems.product_id?.price! * wishlistItems.product_id?.sale_off!) / 100)
+
+    // const hasSale = (wishlistItems?.price!) - ((wishlistItems?.price! * wishlistItems?.sale_off!) / 100);
+    const calculateDiscountedPrice = (price: number, saleOff: number) => {
+        return price - (price * saleOff) / 100;
+    };
+
+
     const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
     const [value, setValue] = useState(3);
-
+    //limit
     const [currentPage, setCurrentPage] = useState(0);
-    const perPage = 10; // Số sản phẩm hiển thị trên mỗi trang
+    const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang
 
     const handlePageChange = (selectedPage: any) => {
         setCurrentPage(selectedPage.selected);
@@ -123,7 +127,7 @@ const ListYourFavourite: FunctionComponent<ListProductItemsProps> = ({ heading }
                                         </span>
                                         {item.product_id?.sale_off! > 0 && (
                                             <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                                ${hasSale}
+                                                ${calculateDiscountedPrice(item.product_id?.price, item.product_id?.sale_off)}
                                             </span>
                                         )}
                                     </p>

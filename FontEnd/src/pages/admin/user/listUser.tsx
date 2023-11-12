@@ -5,6 +5,8 @@ import { useGetAllUserQuery, useRemoveUserMutation } from '@/services/user';
 import { Link, } from 'react-router-dom';
 import Loading from '@/components/ui/Loading';
 import { useState } from 'react';
+import { calculatePagination } from '@/components/modal/pagination';
+import ReactPaginate from 'react-paginate';
 
 const ListUser: React.FC = () => {
 
@@ -34,6 +36,23 @@ const ListUser: React.FC = () => {
                 console.log('Cancel');
             },
         });
+    };
+    // limit
+    const [currentPage, setCurrentPage] = useState(0);
+    const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
+    const categoryList = userData?.docs || [];
+
+    const paginationOptions = {
+        currentPage,
+        perPage,
+        totalCount: categoryList.length,
+        data: categoryList,
+    };
+
+    const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
+
+    const handlePageChange = (selectedPage: any) => {
+        setCurrentPage(selectedPage.selected);
     };
     return (
         <>
@@ -152,7 +171,7 @@ const ListUser: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {userData?.docs.map((user) => (
+                            {currentPageItems.map((user) => (
                                 <tr
                                     key={user._id}
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -204,6 +223,25 @@ const ListUser: React.FC = () => {
                         >
                             <UpdateUser />
                         </Modal>
+                        <div className='mt-4 p-3 d-flex justify-content-start align-items-start'>
+                            <ReactPaginate
+                                previousLabel={'Quay lại'}
+                                nextLabel={'Tiếp theo'}
+                                breakLabel={'...'}
+                                pageCount={pageCount}
+                                marginPagesDisplayed={2}
+                                pageRangeDisplayed={5}
+                                onPageChange={handlePageChange}
+                                containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
+                                activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
+                                pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+                                previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+                                nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+                                previousLinkClassName={'h-8 p-1 leading-6 '}
+                                nextLinkClassName={'h-8 p-1 leading-6 '}
+                                breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+                            />
+                        </div>
                     </table>
                 </div>
             )}

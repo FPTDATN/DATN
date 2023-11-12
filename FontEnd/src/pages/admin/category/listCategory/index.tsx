@@ -7,6 +7,8 @@ import UpdateCategory from '../updateCategory';
 import AddCategory from '../addCategory';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { calculatePagination } from '@/components/modal/pagination';
+import ReactPaginate from 'react-paginate';
 
 const ListCategory = () => {
   const { Search } = Input;
@@ -49,10 +51,23 @@ const ListCategory = () => {
     setOpenUpdateModal(false);
   };
 
-  const filteredCategories = data?.docs.filter((category) =>
-    category.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  // limit
+  const [currentPage, setCurrentPage] = useState(0);
+  const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
+  const categoryList = data?.docs || [];
 
+  const paginationOptions = {
+    currentPage,
+    perPage,
+    totalCount: categoryList.length,
+    data: categoryList,
+  };
+
+  const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
+
+  const handlePageChange = (selectedPage: any) => {
+    setCurrentPage(selectedPage.selected);
+  };
   return (
     <>
       <div className="relative overflow-x-auto">
@@ -92,7 +107,7 @@ const ListCategory = () => {
               </tr>
             ) : (
               <>
-                {filteredCategories?.map((category) => (
+                {currentPageItems?.map((category) => (
                   <tr
                     key={category._id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -125,9 +140,29 @@ const ListCategory = () => {
               </>
             )}
           </tbody>
+          <div className='mt-4 d-flex justify-content-start align-items-start'>
+            <ReactPaginate
+              previousLabel={'Quay lại'}
+              nextLabel={'Tiếp theo'}
+              breakLabel={'...'}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageChange}
+              containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
+              activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
+              pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+              previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+              nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+              previousLinkClassName={'h-8 p-1 leading-6 '}
+              nextLinkClassName={'h-8 p-1 leading-6 '}
+              breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+            />
+          </div>
+
         </table>
 
-        
+
         <Modal title="Thêm danh mục" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
           <AddCategory handleModalClose={handleModalClose} />
         </Modal>
@@ -142,7 +177,7 @@ const ListCategory = () => {
           {selectedCategoryId && <UpdateCategory categoryId={selectedCategoryId} handleUpdateComplete={handleUpdateComplete} />}
         </Modal>
       </div>
-      <ToastContainer  />
+      <ToastContainer />
     </>
   );
 };

@@ -17,9 +17,7 @@ const { Option } = Select;
 
 const UpdateUser: React.FC = () => {
     const router = useNavigate();
-
     const { id } = useParams();
-
     const { data: userData, isLoading } = useGetUserByIdQuery(id as string);
     const [updateUser, { isLoading: userLoading, isSuccess }] = useUpdateUserMutation();
 
