@@ -23,6 +23,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     const { data: authData } = useMeQuery();
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
+
     const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100);
 
     // Favourite product

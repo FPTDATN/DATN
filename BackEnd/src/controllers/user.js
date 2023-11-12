@@ -8,7 +8,7 @@ export const update = async (req, res) => {
 
         const { password } = req.body;
 
-        const hashPassword = await bcryptjs.hash(password,10)
+        const hashPassword = await bcryptjs.hash(password, 10)
 
         const data = await Auth.findOneAndUpdate({ _id: req.params.id }, { ...req.body, password: hashPassword }, {
             new: true,

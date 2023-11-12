@@ -21,9 +21,9 @@ interface ForgotPasswordInput {
 }
 
 interface ChangePasswordInput {
-    password:string;
-    userId:string;
-    token:string;
+    password: string;
+    userId: string;
+    token: string;
 }
 
 export interface ApiRenponse {
@@ -31,7 +31,9 @@ export interface ApiRenponse {
     email: string;
     favourite: any[];
     username: string;
-    role:string;
+    role: string;
+    phone: number;
+    address: string;
 }
 
 const authApi = createApi({
@@ -79,7 +81,7 @@ const authApi = createApi({
             }),
             invalidatesTags: ['Auth'],
         }),
-        forgotPassword: builder.mutation<{ success: boolean; otp: number,token?:string; userId?:string; }, ForgotPasswordInput>({
+        forgotPassword: builder.mutation<{ success: boolean; otp: number, token?: string; userId?: string; }, ForgotPasswordInput>({
             query: (email) => ({
                 url: '/forgot-password',
                 method: 'POST',
@@ -87,9 +89,9 @@ const authApi = createApi({
             }),
             invalidatesTags: ['Auth'],
         }),
-        changePassword: builder.mutation<{success:true},ChangePasswordInput>({
+        changePassword: builder.mutation<{ success: true }, ChangePasswordInput>({
             query: (newPassword) => ({
-                method:'PATCH',
+                method: 'PATCH',
                 url: '/change-password',
                 body: newPassword
             }),
@@ -98,6 +100,6 @@ const authApi = createApi({
     }),
 });
 
-export const { useSigninMutation, useSignupMutation, useLogoutMutation, useMeQuery, useForgotPasswordMutation,useChangePasswordMutation } =
+export const { useSigninMutation, useSignupMutation, useLogoutMutation, useMeQuery, useForgotPasswordMutation, useChangePasswordMutation } =
     authApi;
 export default authApi;

@@ -5,6 +5,7 @@ import { Button, Modal } from "antd"
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import UpdateAccount from "./update-account"
+import { useGetWishlistQuery } from "@/services/favourite"
 
 const AccountDetail: React.FC = () => {
     // const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,10 +21,22 @@ const AccountDetail: React.FC = () => {
     const router = useNavigate()
 
     const { data, isLoading } = useMeQuery()
+    const { data: authData } = useMeQuery();
+    console.log(authData);
 
     useEffect(() => {
         if (!data) router('/404')
     }, [data])
+
+    const user_id = authData?._id || '';
+    const { data: wishlist } = useGetWishlistQuery(user_id);
+
+    const wishlistItems = wishlist?.wishlist_items || [];
+    //limit
+    const [currentPage, setCurrentPage] = useState(0);
+    const perPage = 3; // Số sản phẩm hiển thị trên mỗi trang
+    const offset = currentPage * perPage;
+    const currentPageItems = wishlistItems.slice(offset, offset + perPage);
 
     return <>
         {!data || isLoading ? <Loading /> : <div>
@@ -76,83 +89,66 @@ const AccountDetail: React.FC = () => {
                         <div className="col-lg-8">
                             <div className="card mb-4">
                                 <div className="card-body">
-                                    <div className="row">
+                                    <div className="row p-2">
                                         <div className="col-sm-3">
-                                            <p className="mb-0">Full Name</p>
+                                            <p className="mb-0">Họ tên</p>
                                         </div>
                                         <div className="col-sm-9">
-                                            <p className="text-muted mb-0">Johnatan Smith</p>
+                                            <p className="text-muted mb-0">{authData?.username}</p>
                                         </div>
                                     </div>
                                     <hr />
-                                    <div className="row">
+                                    <div className="row p-2">
                                         <div className="col-sm-3">
                                             <p className="mb-0">Email</p>
                                         </div>
                                         <div className="col-sm-9">
-                                            <p className="text-muted mb-0">example@example.com</p>
+                                            <p className="text-muted mb-0">{authData?.email}</p>
                                         </div>
                                     </div>
                                     <hr />
-                                    <div className="row">
+                                    <div className="row p-2">
                                         <div className="col-sm-3">
-                                            <p className="mb-0">Phone</p>
+                                            <p className="mb-0">Số điện thoại</p>
                                         </div>
                                         <div className="col-sm-9">
-                                            <p className="text-muted mb-0">(097) 234-5678</p>
+                                            <p className="text-muted mb-0">{authData?.phone}</p>
                                         </div>
                                     </div>
                                     <hr />
-                                    <div className="row">
+                                    <div className="row p-2">
                                         <div className="col-sm-3">
-                                            <p className="mb-0">Mobile</p>
+                                            <p className="mb-0">Địa chỉ</p>
                                         </div>
                                         <div className="col-sm-9">
-                                            <p className="text-muted mb-0">(098) 765-4321</p>
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <p className="mb-0">Address</p>
-                                        </div>
-                                        <div className="col-sm-9">
-                                            <p className="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                                            <p className="text-muted mb-0">{authData?.address}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="row d-flex">
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                     <div className="card mb-4 mb-md-0">
-                                        <div className="card-body">
+                                        <div className="card-body ">
                                             <p className="mb-4"> Sản phẩm yêu thích
                                             </p>
-                                            <Link to={'#'}>
-                                                <p className="mb-1" >Tên sản phẩm</p>
-                                                <div className="bg-gray-100" >
-                                                    <img src="https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/W77TP20251.jpg " className="w-[70px]" alt="no images" />
-                                                </div>
-                                            </Link>
-                                            <Link to={'#'}>
-                                                <p className="mt-2 mb-1" >Website Markup</p>
-                                                <div className="" >
-                                                    <div className="bg-gray-100" >
-                                                        <img src="https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/W77TP20251.jpg " className="w-[70px]" alt="no images" />
+
+                                            <div className="" >
+                                                {currentPageItems.map((item: any) => (
+                                                    <div className="p-2">
+                                                        <Link to={`/detail/${item.product_id?._id}`}>
+                                                            <p className="mb-1" >{item.product_id?.name}</p>
+                                                            <div className="bg-slate-50	" >
+                                                                <img src={item.product_id?.images[0]} className="w-[80px] p-1" alt="no images" />
+                                                            </div>
+                                                        </Link>
                                                     </div>
-                                                </div>
-                                            </Link>
-                                            <Link to={'#'}>
-                                                <p className="mt-2 mb-1" >One Page</p>
-                                                <div className="" >
-                                                    <div className="bg-gray-100" >
-                                                        <img src="https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/W77TP20251.jpg " className="w-[70px]" alt="no images" />
-                                                    </div>
-                                                </div>
-                                            </Link>
+                                                ))}
 
 
-                                            <Link to={'#'} className="text-primary align-items-center font-italic me-1">Xem thêm</Link>
+
+                                            </div>
+                                            <Link to={'your-favorite'} className="text-primary align-items-center font-italic me-1">Xem thêm</Link>
                                         </div>
                                     </div>
                                 </div>
