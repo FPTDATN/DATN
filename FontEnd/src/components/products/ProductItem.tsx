@@ -1,13 +1,13 @@
 import { Rate } from 'antd';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { AiOutlineShoppingCart, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { FunctionComponent, useState } from 'react';
+import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import SaleOffCard from '../ui/SaleOffCard';
 import { ProductType } from '@/types/Product';
 import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
-import { useAddToWishlistMutation, useCheckProductInWishlistMutation } from '@/services/favourite';
+import { useAddToWishlistMutation } from '@/services/favourite';
 import { useMeQuery } from '@/services/auth';
 import { toast } from 'react-toastify';
 
@@ -15,65 +15,32 @@ interface ProductItemProps {
     arrangeList?: boolean;
     product?: ProductType;
 }
-
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product }) => {
     const dispatch = useAppDispatch();
     const { data: authData } = useMeQuery();
+
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
+    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100)
 
-    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100);
-
-    // Favourite product
+    //favourite product
     const [addToWishlist] = useAddToWishlistMutation();
-    const [checkProductInWishlist] = useCheckProductInWishlistMutation();
-    const [isInWishlist, setIsInWishlist] = useState(false);
-    const handleAddToWishlist = async (productId: string, userId: any) => {
+    const handleAddToWishlist = (productId: any, user_id: any) => {
         if (authData) {
-            try {
-                const response = await checkProductInWishlist({ product_id: productId, user_id: authData._id });
-                const { exists } = response?.data;
-
-                if (exists) {
-                    toast.warning('Sản phẩm đã tồn tại trong danh sách yêu thích', { position: 'top-right' });
-                } else {
+            if (addToWishlist) {
+                setTimeout(() => {
                     addToWishlist({ product_id: productId, user_id: authData._id });
                     toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
-                    setIsInWishlist(true); // Set state to true after successful addition
-                }
-            } catch (error) {
-                console.error(error);
-                toast.error('Đã xảy ra lỗi khi kiểm tra sản phẩm yêu thích', { position: 'top-right' });
+                }, 500);
+            } else {
             }
         } else {
-            toast.warning('Bạn chưa đăng nhập!', { position: 'top-right' });
+            toast.warning('Bạn chưa đăng nhập !', { position: 'top-right' });
         }
     };
 
-    //check
-
-
-    useEffect(() => {
-        const checkProductInWishlistAsync = async () => {
-            try {
-                const response = await checkProductInWishlist({
-                    product_id: product?._id,
-                    user_id: authData?._id,
-                });
-                const { exists } = response?.data;
-                setIsInWishlist(exists);
-            } catch (error) {
-                console.error(error);
-                toast.error('Đã xảy ra lỗi khi kiểm tra sản phẩm yêu thích', { position: 'top-right' });
-            }
-        };
-
-        if (authData) {
-            checkProductInWishlistAsync();
-        }
-    }, [authData, product?._id]);
     return (
         <>
             {loading ? (
@@ -86,14 +53,14 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <div className="relative group ">
 
                         <div className="favourite hidden group-hover:block ">
-                            {!isInWishlist && (
-                                <div
-                                    onClick={() => handleAddToWishlist(product?._id, authData?._id)}
-                                    className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
-                                >
-                                    <AiOutlineHeart />
-                                </div>
-                            )}
+
+                            <div
+                                onClick={() => handleAddToWishlist(product?._id, authData?._id)}
+                                className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
+                            >
+                                <AiOutlineHeart />
+                            </div>
+
                         </div>
                         <Link to={`/detail/${product?._id}`} className="">
                             <img
