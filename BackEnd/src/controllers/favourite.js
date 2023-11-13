@@ -1,22 +1,5 @@
 import Favourite from '../models/favourite.js'
 
-// export const favouriteCreat = async (req, res) => {
-//     try {
-//         const { user_id, product_id } = req.body;
-//         const wishlistItem = {
-//             product_id,
-//         };
-
-//         const wishlist = await Favourite.findOneAndUpdate(
-//             { user_id },
-//             { $addToSet: { wishlist_items: wishlistItem } },
-//             { upsert: true, new: true }
-//         );
-//         res.json(wishlist);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// }
 export const favouriteCreat = async (req, res) => {
     try {
         const { user_id, product_id } = req.body;
@@ -69,7 +52,7 @@ export const getAllFavourites = async (req, res) => {
     }
 }
 export const removeFavourite = async (req, res) => {
-    const { product_id } = req.body;
+    const { product_id } = req.params;
     try {
         // Kiểm tra xem người dùng có danh sách yêu thích hay không
         const wishlist = await Favourite.findOne({ user_id: req.params.user_id });
@@ -77,8 +60,7 @@ export const removeFavourite = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy danh sách yêu thích cho người dùng này' });
         }
         // Tìm kiếm sản phẩm trong danh sách yêu thích
-        const index = wishlist.wishlist_items.findIndex(item => item.product_id === product_id);
-
+        const index = wishlist.wishlist_items.findIndex(item => item.product_id.toString() === product_id.toString());
 
         // Xóa sản phẩm khỏi danh sách yêu thích
         wishlist.wishlist_items.splice(index, 1);
@@ -88,6 +70,7 @@ export const removeFavourite = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Có lỗi xảy ra' });
     }
+
 }
 
 

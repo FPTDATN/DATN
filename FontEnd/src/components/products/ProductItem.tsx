@@ -1,5 +1,5 @@
 import { Rate } from 'antd';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { AiOutlineShoppingCart, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
@@ -29,17 +29,19 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     // Favourite product
     const [addToWishlist] = useAddToWishlistMutation();
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();
-
+    const [isInWishlist, setIsInWishlist] = useState(false);
     const handleAddToWishlist = async (productId: string, userId: any) => {
         if (authData) {
             try {
                 const response = await checkProductInWishlist({ product_id: productId, user_id: authData._id });
                 const { exists } = response?.data;
+
                 if (exists) {
                     toast.warning('Sản phẩm đã tồn tại trong danh sách yêu thích', { position: 'top-right' });
                 } else {
                     addToWishlist({ product_id: productId, user_id: authData._id });
                     toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
+                    setIsInWishlist(true); // Set state to true after successful addition
                 }
             } catch (error) {
                 console.error(error);
@@ -50,6 +52,28 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
         }
     };
 
+    //check
+
+
+    useEffect(() => {
+        const checkProductInWishlistAsync = async () => {
+            try {
+                const response = await checkProductInWishlist({
+                    product_id: product?._id,
+                    user_id: authData?._id,
+                });
+                const { exists } = response?.data;
+                setIsInWishlist(exists);
+            } catch (error) {
+                console.error(error);
+                toast.error('Đã xảy ra lỗi khi kiểm tra sản phẩm yêu thích', { position: 'top-right' });
+            }
+        };
+
+        if (authData) {
+            checkProductInWishlistAsync();
+        }
+    }, [authData, product?._id]);
     return (
         <>
             {loading ? (
@@ -62,13 +86,14 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <div className="relative group ">
 
                         <div className="favourite hidden group-hover:block ">
-
-                            <div
-                                onClick={() => handleAddToWishlist(product?._id, authData?._id)}
-                                className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
-                            >
-                                <AiOutlineHeart />
-                            </div>
+                            {!isInWishlist && (
+                                <div
+                                    onClick={() => handleAddToWishlist(product?._id, authData?._id)}
+                                    className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
+                                >
+                                    <AiOutlineHeart />
+                                </div>
+                            )}
                         </div>
                         <Link to={`/detail/${product?._id}`} className="">
                             <img
@@ -103,7 +128,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     </div>
 
                     <div className="py-6 text-left">
-                        <h3 className="mb-3 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
+                        <h3 className="text-center mt-4 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">
