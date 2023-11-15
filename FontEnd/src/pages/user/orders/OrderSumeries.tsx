@@ -1,10 +1,10 @@
-import { Collapse, Steps, theme } from 'antd';
+import { Collapse, Steps, Tag, theme } from 'antd';
 import { MdKeyboardArrowRight, MdSmsFailed } from 'react-icons/md';
 import { useGetsOrderQuery } from '@/services/order';
 import { Status } from '@/types/status';
 import Loading from '@/components/ui/Loading';
-import {FaShippingFast} from 'react-icons/fa'
-import {BsPersonVcardFill,BsDropbox,BsCheckCircleFill} from 'react-icons/bs'
+import { FaShippingFast } from 'react-icons/fa';
+import { BsPersonVcardFill, BsDropbox, BsCheckCircleFill } from 'react-icons/bs';
 import { checkAuth } from '@/utils/checkAuth';
 import { formatTimeToNow } from '@/utils/formartDate';
 
@@ -17,6 +17,29 @@ const OrderSumeries = ({}: Props) => {
     const { data: authdata } = checkAuth();
 
     const { token } = theme.useToken();
+
+    const renderPayMethod = (method: number, status?: number) => {
+        if (status === Status.CANCELLED) {
+            return (
+                <Tag color="red-inverse" style={{ padding: 4 }}>
+                    Đã hủy
+                </Tag>
+            );
+        } else {
+            if (method === 0)
+                return (
+                    <Tag color="orange-inverse" style={{ padding: 4 }}>
+                        Thanh toán khi nhận hàng
+                    </Tag>
+                );
+            if (method === 1)
+                return (
+                    <Tag color="green-inverse" style={{ padding: 4 }}>
+                        Đã thanh toán
+                    </Tag>
+                );
+        }
+    };
 
     const filterOrders = orders?.docs.filter((order) => order.buyer === authdata?._id);
 
@@ -53,7 +76,16 @@ const OrderSumeries = ({}: Props) => {
                         >
                             {filterOrders?.map((order) => {
                                 return (
-                                    <Panel header={`Đơn hàng của ${order.customerName} - Đặt hàng vào lúc : ${formatTimeToNow(new Date(order.timestamps.createdAt))}`} key={order._id}>
+                                    <Panel
+                                        header={
+                                            <div>
+                                                Đơn hàng của {order.customerName} - Đặt hàng vào lúc :
+                                                {formatTimeToNow(new Date(order.timestamps.createdAt))}
+                                                <span className="ml-4">{renderPayMethod(order.payMethod,order.status)}</span>
+                                            </div>
+                                        }
+                                        key={order._id}
+                                    >
                                         <table className="w-full">
                                             <thead>
                                                 <tr className="border">
@@ -97,8 +129,20 @@ const OrderSumeries = ({}: Props) => {
                                                 },
                                                 {
                                                     title: order.status === 0 ? 'Đã hủy' : 'Hoàn thành',
-                                                    status: order.status === Status.COMPLETE ? 'finish' : order.status === Status.CANCELLED ? 'error' : 'wait',
-                                                    icon: order.status === Status.COMPLETE ? <BsCheckCircleFill /> : Status.CANCELLED ? <MdSmsFailed/> : <BsCheckCircleFill/>,
+                                                    status:
+                                                        order.status === Status.COMPLETE
+                                                            ? 'finish'
+                                                            : order.status === Status.CANCELLED
+                                                            ? 'error'
+                                                            : 'wait',
+                                                    icon:
+                                                        order.status === Status.COMPLETE ? (
+                                                            <BsCheckCircleFill />
+                                                        ) : Status.CANCELLED ? (
+                                                            <MdSmsFailed />
+                                                        ) : (
+                                                            <BsCheckCircleFill />
+                                                        ),
                                                 },
                                             ]}
                                         />

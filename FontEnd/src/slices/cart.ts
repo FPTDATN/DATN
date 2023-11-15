@@ -56,6 +56,9 @@ const cartSlice = createSlice({
         },
         clear: (state) => {
             state.cartItems = [];
+            toast.info(`Giỏ hàng đã được dọn sạch`, {
+                position: 'bottom-right',
+            });
         },
     },
 });

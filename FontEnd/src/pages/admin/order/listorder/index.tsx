@@ -33,6 +33,11 @@ const renderState = (state: number) => {
     if (Status.COMPLETE === state) return <span className='text-green-500'>Hoàn thành</span>;
 };
 
+const renderMethod = (method:number) => {
+    if(method === 0) return <span className='text-green-600'>Thanh toán khi nhận hàng</span>
+    if(method === 1) return <span className='text-green-600'>Đã thanh toán</span>
+}
+
 const EditableCell: React.FC<EditableCellProps> = ({
     editing,
     dataIndex,
@@ -223,8 +228,8 @@ const ListOrder: React.FC = () => {
             title: 'Mã đơn hàng',
             dataIndex: 'orderNumber',
             filterSearch: true,
-            width: '15%',
-            fixed: 'left',
+            width: '10%',
+            
             ...getColumnSearchProps('orderNumber'),
         },
         {
@@ -242,14 +247,15 @@ const ListOrder: React.FC = () => {
         {
             title: 'Địa chỉ',
             dataIndex: 'shippingAddress',
-            width: '20%',
+            width: '25%',
             ...getColumnSearchProps('shippingAddress'),
         },
         {
             title: 'Số điện thoại',
             dataIndex: 'customerPhone',
-            width: '10%',
+            width: '15%',
             ...getColumnSearchProps('customerPhone'),
+            render: (value: number) => `0${value}`,
         },
         {
             title: 'Tổng số tiền',
@@ -261,12 +267,19 @@ const ListOrder: React.FC = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             render: (value: number) => renderState(value),
-            width: '15%',
+            width: '20%',
             editable: true,
+        },
+        {
+            title: 'Thanh toán',
+            dataIndex: 'payMethod',
+            render: (value: number) => renderMethod(value),
+            width: '20%',
         },
         {
             title: 'Hành động',
             dataIndex: 'action',
+            fixed: 'right',
             render: (_: any, record: IOrder) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -279,7 +292,7 @@ const ListOrder: React.FC = () => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <Space>
+                    <Space className='flex flex-col'>
                         <Button disabled={editingKey !== '' || record.status === Status.CANCELLED || record.status === Status.COMPLETE} onClick={() => edit(record as any)}>
                             Cập nhật
                         </Button>
@@ -295,7 +308,7 @@ const ListOrder: React.FC = () => {
                     </Space>
                 );
             },
-            width: '20%',
+            width: '12%',
         },
     ];
 

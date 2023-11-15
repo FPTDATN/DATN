@@ -24,6 +24,7 @@ import ForgotPassword from '@/pages/user/forgot-password/ForgotPassword';
 import ChangePassword from '@/pages/user/change-password/ChangePassword';
 import ListComment from '@/pages/admin/product/listComment';
 import OrderSumeries from '@/pages/user/orders/OrderSumeries';
+import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
 
 const router = createBrowserRouter([
     // Main layout
@@ -57,8 +58,8 @@ const router = createBrowserRouter([
             },
             {
                 path: 'orders/:userId',
-                element: <OrderSumeries/>
-            }
+                element: <OrderSumeries />,
+            },
         ],
     },
     {
@@ -78,14 +79,18 @@ const router = createBrowserRouter([
             },
             {
                 path: 'forgot-password',
-                element: <ForgotPassword/>
+                element: <ForgotPassword />,
             },
             {
                 path: 'change-password',
-                element: <ChangePassword/>
+                element: <ChangePassword />,
             },
-            
         ],
+    },
+
+    {
+        path: 'success/:id',
+        element: <CheckoutSuccess />,
     },
     // Admin
     {
@@ -103,7 +108,7 @@ const router = createBrowserRouter([
             { path: 'user/update/:id', element: <UpdateUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
-            {path: 'product/:id/comments',element: <ListComment/> },
+            { path: 'product/:id/comments', element: <ListComment /> },
         ],
     },
 ]);

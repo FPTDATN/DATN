@@ -10,6 +10,12 @@ dependencies:
   '@reduxjs/toolkit':
     specifier: ^1.9.6
     version: 1.9.6(react-redux@8.1.3)(react@18.2.0)
+  '@stripe/react-stripe-js':
+    specifier: ^2.3.2
+    version: 2.3.2(@stripe/stripe-js@2.1.11)(react-dom@18.2.0)(react@18.2.0)
+  '@stripe/stripe-js':
+    specifier: ^2.1.11
+    version: 2.1.11
   antd:
     specifier: ^5.10.0
     version: 5.10.0(date-fns@2.30.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1128,6 +1134,23 @@ packages:
   /@remix-run/router@1.9.0:
     resolution: {integrity: sha512-bV63itrKBC0zdT27qYm6SDZHlkXwFL1xMBuhkn+X7l0+IIhNaH5wuuvZKp6eKhCD4KFhujhfhCT1YxXW6esUIA==}
     engines: {node: '>=14.0.0'}
+    dev: false
+
+  /@stripe/react-stripe-js@2.3.2(@stripe/stripe-js@2.1.11)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3sKdD4w6X/Hs1wbFNU9lc9uJP86YrNLNcfJpZpiD1lWAg46ROfi9EkT1HiEmWWPYEjjXereJ4C2Eg90uYMq1uQ==}
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1 || ^2.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@stripe/stripe-js': 2.1.11
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@stripe/stripe-js@2.1.11:
+    resolution: {integrity: sha512-GRyInO+VPMjjgUzVPKpDtz+5s8JKssJ99uhWBGo09yxDQBb+bhkm6PxmVa8C+qsSd30JFO1Z+pgIJ0AMmmZJKg==}
     dev: false
 
   /@types/hoist-non-react-statics@3.3.2:

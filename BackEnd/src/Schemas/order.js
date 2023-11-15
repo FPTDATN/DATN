@@ -12,4 +12,5 @@ export const orderSchema = Joi.object({
   buyer: Joi.string().required(),
   createdAt: Joi.date().default(() => new Date()), // Thêm trường createdAt vào schema
   updatedAt: Joi.date().default(() => new Date()),
+  payMethod: Joi.number()
 });

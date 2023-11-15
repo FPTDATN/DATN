@@ -11,7 +11,7 @@ export const createOrder = async (req, res) => {
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
 
-    const { status, customerName, shippingAddress, products, buyer, customerPhone } = req.body;
+    const { status, customerName, shippingAddress, products, buyer, customerPhone,payMethod } = req.body;
     // Tính tổng tiền từ danh sách sản phẩm
     let totalAmount = 0;
     products.forEach(product => {
@@ -20,7 +20,7 @@ export const createOrder = async (req, res) => {
         totalAmount += product.price * product.quantity;
       }
     });
-    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyer, totalAmount, customerPhone });
+    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyer, totalAmount, customerPhone,payMethod });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {

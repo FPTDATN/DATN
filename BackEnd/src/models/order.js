@@ -24,7 +24,11 @@ const orderSchema = new mongoose.Schema({
       price: Number
     },
   ],
-
+  payMethod: {
+    type: Number,
+    default: 0,
+    // Phương thức thanh toán
+  },
   buyer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Auth',
@@ -33,6 +37,11 @@ const orderSchema = new mongoose.Schema({
   totalAmount: {
     type: Number,
     required: true,
+  },
+  intent_id: {
+    type: String,
+    unique: true,
+    default: null,
   },
   timestamps: {
     createdAt: {

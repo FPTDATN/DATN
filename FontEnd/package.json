@@ -13,6 +13,8 @@
     "@ckeditor/ckeditor5-build-classic": "^40.0.0",
     "@ckeditor/ckeditor5-react": "^6.1.0",
     "@reduxjs/toolkit": "^1.9.6",
+    "@stripe/react-stripe-js": "^2.3.2",
+    "@stripe/stripe-js": "^2.1.11",
     "antd": "^5.10.0",
     "antd-img-crop": "^4.13.0",
     "axios": "^1.5.1",

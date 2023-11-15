@@ -32,6 +32,7 @@ export interface IOrder {
       shippingAddress: string;
       products: IProductorder[];
       buyer: string;
+      payMethod:number;
       totalAmount: number;
       timestamps: {
             createdAt: Date;
