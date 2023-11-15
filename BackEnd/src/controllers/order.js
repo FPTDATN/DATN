@@ -32,7 +32,7 @@ export const createOrder = async (req, res) => {
 // Controller để lấy danh sách đơn hàng
 export const getOrders = async (req, res) => {
   const {
-    _limit = 10,
+    _limit = 20,
     _sort = "createdAt",
     _order = "asc",
     _page = 1,

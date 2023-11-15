@@ -21,15 +21,21 @@ const cartSlice = createSlice({
 
             if (existingProduct === -1) {
                 state.cartItems.push(newProduct);
+
+                toast.success(`Đã thêm ${newProduct.name} vào giỏ hàng`, {
+                    position: 'bottom-right',
+                });
             } else {
-                state.cartItems[existingProduct].quantity = newProduct.quantity++ || newProduct.quantity;
-                state.cartItems[existingProduct].colorId = newProduct.colorId?.name!;
-                state.cartItems[existingProduct].sizeid = newProduct.sizeId?.name!;
+
+                toast.info(`${newProduct.name} đã có trong giỏ hàng`, {
+                    position: 'bottom-right',
+                });
+                // state.cartItems[existingProduct].quantity = newProduct.quantity++ || newProduct.quantity;
+                // state.cartItems[existingProduct].colorId = newProduct.colorId?.name!;
+                // state.cartItems[existingProduct].sizeid = newProduct.sizeId?.name!;
             }
 
-            toast.success(`Đã thêm ${newProduct.name} vào giỏ hàng`, {
-                position: 'bottom-right',
-            });
+           
         },
         increase: (state, action: PayloadAction<ProductType>) => {
             const currentProduct = state.cartItems.find((item) => item._id === action.payload);
