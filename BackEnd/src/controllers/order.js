@@ -7,7 +7,6 @@ export const createOrder = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
 
@@ -28,6 +27,7 @@ export const createOrder = async (req, res) => {
     res.status(500).json({ error: 'Không thể tạo đơn hàng' });
   }
 };
+
 
 // Controller để lấy danh sách đơn hàng
 export const getOrders = async (req, res) => {

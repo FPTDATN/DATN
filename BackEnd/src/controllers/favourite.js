@@ -1,56 +1,94 @@
-import Favourite from '../models/favourite.js';
-import Auth from '../models/auth.js';
+import Favourite from '../models/favourite.js'
 
-export const getAll = async (req, res) => {
-    const { _limit = 10, _sort = "createAt", _order = "asc", _page = 1 } = req.query;
-
-    const options = {
-        limit: _limit,
-        page: _page,
-        sort: {
-            [_sort]: _order === "desc" ? -1 : 1,
-        },
-    };
+export const favouriteCreat = async (req, res) => {
     try {
-        const favourite = await Favourite.paginate({}, options);
-        if (favourite.length === 0) {
-            return res.status(200).json({
-                message: "Không có dữ liệu",
-            });
+        const { user_id, product_id } = req.body;
+
+        // Kiểm tra xem sản phẩm đã tồn tại trong danh sách yêu thích hay chưa
+        const wishlist = await Favourite.findOne({ user_id });
+        const wishlistItem = { product_id };
+
+        if (wishlist && wishlist.wishlist_items.some(item => item.product_id === product_id)) {
+            // Sản phẩm đã tồn tại trong danh sách yêu thích
+            return res.status(400).json({ message: 'Sản phẩm đã tồn tại trong danh sách yêu thích' });
+        } else {
+            const updatedWishlist = await Favourite.findOneAndUpdate(
+                { user_id },
+                { $addToSet: { wishlist_items: wishlistItem } },
+                { upsert: true, new: true }
+            );
+            return res.status(400).json({ message: 'Thêm  Sản phẩm yêu thích thành công' });
+
+
         }
-        return res.json(favourite);
+
+
+
+
     } catch (error) {
-        return res.status(404).json({
-            message: error.message,
-        });
+        res.status(500).json({ message: error.message });
     }
 };
-export const create = async (req, res) => {
+export const getFavourites = async (req, res) => {
     try {
-        // const { error } = productSchema.validate(req.body);
+        const wishlist = await Favourite.findOne({ user_id: req.params.user_id })
+            .populate('wishlist_items.product_id')
 
-        // if (error) {
-        //     return res.status(400).json({
-        //         message: error.details.map((err) => err.message),
-        //     });
-        // }
-        const favourite = await Favourite.create(req.body);
+        // Kiểm tra và loại bỏ các sản phẩm không tồn tại trong danh sách yêu thích
+        wishlist.wishlist_items = wishlist.wishlist_items.filter(item => item.product_id !== null);
 
-        // Thêm ObjectId vào thuộc tính products trong model Category
-        await Auth.findByIdAndUpdate(favourite.userId, {
-            $addToSet: {
-                userId: favourite._id,
-            },
-        });
-        if (favourite.length === 0) {
-            return res.status(200).json({
-                message: "Không thêm được sản phẩm yeu thich",
-            });
-        }
-        return res.json(favourite);
+        res.json(wishlist);
     } catch (error) {
-        return res.status(404).json({
-            message: "Them thanh cong",
-        });
+        res.status(500).json({ message: error.message });
+    }
+}
+export const getAllFavourites = async (req, res) => {
+    try {
+        const wishlist = await Favourite.find()
+            .populate('wishlist_items.product_id');
+        res.json(wishlist);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+export const removeFavourite = async (req, res) => {
+    const { product_id } = req.params;
+    try {
+        // Kiểm tra xem người dùng có danh sách yêu thích hay không
+        const wishlist = await Favourite.findOne({ user_id: req.params.user_id });
+        if (!wishlist) {
+            return res.status(404).json({ message: 'Không tìm thấy danh sách yêu thích cho người dùng này' });
+        }
+        // Tìm kiếm sản phẩm trong danh sách yêu thích
+        const index = wishlist.wishlist_items.findIndex(item => item.product_id.toString() === product_id.toString());
+
+        // Xóa sản phẩm khỏi danh sách yêu thích
+        wishlist.wishlist_items.splice(index, 1);
+        await wishlist.save();
+
+        res.status(200).json({ message: 'Xóa sản phẩm khỏi danh sách yêu thích thành công' });
+    } catch (error) {
+        res.status(500).json({ message: 'Có lỗi xảy ra' });
+    }
+
+}
+
+
+export const checkFavourite = async (req, res) => {
+    try {
+        const { user_id, product_id } = req.params;
+
+        // Tìm kiếm wishlist của id_user
+        const wishlist = await Favourite.findOne({ user_id });
+        console.log(wishlist);
+        // Kiểm tra sự tồn tại của id_product trong wishlist_items của id_user
+        const productExists = wishlist.wishlist_items.some(item => item.product_id.toString() === product_id);
+        if (productExists) {
+            res.json({ exists: true, message: 'Sản phẩm đã tồn tại trong danh sách yêu thích2' });
+        } else {
+            res.json({ exists: false, message: 'Sản phẩm không tồn tại trong danh sách yêu thích3' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

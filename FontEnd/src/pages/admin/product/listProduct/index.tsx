@@ -8,6 +8,8 @@ import Skeleton from 'react-loading-skeleton';
 import { SearchProps } from 'antd/es/input';
 import { ProductType } from '@/types/Product';
 import { Link } from 'react-router-dom';
+import { calculatePagination } from '@/components/modal/pagination';
+import ReactPaginate from 'react-paginate';
 
 const ListProduct: React.FC = () => {
   const { data, isLoading } = useGetProductsQuery();
@@ -62,6 +64,23 @@ const ListProduct: React.FC = () => {
       setFilteredProducts(data?.docs || []);
     }
   }, [data, searchValue]);
+  // limit
+  const [currentPage, setCurrentPage] = useState(0);
+  const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
+  const productList = data?.docs || [];
+
+  const paginationOptions = {
+    currentPage,
+    perPage,
+    totalCount: productList.length,
+    data: productList,
+  };
+
+  const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
+
+  const handlePageChange = (selectedPage: any) => {
+    setCurrentPage(selectedPage.selected);
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -108,14 +127,15 @@ const ListProduct: React.FC = () => {
             </tbody>
           ) : (
             <tbody>
-              {filteredProducts.map((product) => (
+              {currentPageItems.map((product) => (
                 <tr
                   key={product._id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   <td className="pl-4">
+
                     <Avatar.Group maxCount={3}>
-                      {product.images?.map((url) => (
+                      {product.images?.map((url: string) => (
                         <div key={url} style={{ borderRadius: '50%', overflow: 'hidden' }}>
                           <Image src={url} alt="image" width={50} height={50} style={{ objectFit: 'cover' }} />
                         </div>
@@ -156,6 +176,25 @@ const ListProduct: React.FC = () => {
               ))}
             </tbody>
           )}
+          <div className='mt-4 p-3 d-flex justify-content-start align-items-start'>
+            <ReactPaginate
+              previousLabel={'Quay lại'}
+              nextLabel={'Tiếp theo'}
+              breakLabel={'...'}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageChange}
+              containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
+              activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
+              pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+              previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+              nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+              previousLinkClassName={'h-8 p-1 leading-6 '}
+              nextLinkClassName={'h-8 p-1 leading-6 '}
+              breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+            />
+          </div>
         </table>
       </div>
 

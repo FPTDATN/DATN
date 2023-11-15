@@ -18,13 +18,9 @@ const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 const ProductDetail = () => {
     const dispatch = useAppDispatch();
-
     const { id } = useParams();
-
     const { data, isLoading } = useGetProductByIdQuery(id!);
-
     const { data: authData } = useMeQuery();
-
     const [mode, setMode] = useState<TabsPosition>('top');
     const [value, setValue] = useState(3);
     const [color, setColor] = useState(data?.colorId![0].name);
@@ -165,7 +161,7 @@ const ProductDetail = () => {
                                                         dispatch(
                                                             addToCart({
                                                                 ...(data! as any),
-                                                                price:hasSale,
+                                                                price: hasSale,
                                                                 quantity: quantity,
                                                                 colorId: color,
                                                                 sizeId: size,

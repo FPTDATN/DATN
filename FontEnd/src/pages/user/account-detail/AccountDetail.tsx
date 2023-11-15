@@ -1,179 +1,191 @@
-import  Breadcrumbs  from "@/components/breadcrumbs"
+import Breadcrumbs from "@/components/breadcrumbs"
 import Loading from "@/components/ui/Loading"
 import { useMeQuery } from "@/services/auth"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { Button, Modal } from "antd"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import UpdateAccount from "./update-account"
+import { useGetWishlistQuery } from "@/services/favourite"
 
-const AccountDetail = () => {
+const AccountDetail: React.FC = () => {
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    const [openAddModal, setOpenAddModal] = useState(false);
+
+    const handleAddCategory = () => {
+        setOpenAddModal(true);
+    };
+    const handleModalClose = () => {
+        setOpenAddModal(false);
+    };
 
     const router = useNavigate()
 
-    const {data,isLoading} = useMeQuery()
+    const { data, isLoading } = useMeQuery()
+    const { data: authData } = useMeQuery();
+    console.log(authData);
 
     useEffect(() => {
-        if(!data) router('/404')
+        if (!data) router('/404')
     }, [data])
 
+    const user_id = authData?._id || '';
+    const { data: wishlist } = useGetWishlistQuery(user_id);
+
+    const wishlistItems = wishlist?.wishlist_items || [];
+    //limit
+    const [currentPage, setCurrentPage] = useState(0);
+    const perPage = 3; // Số sản phẩm hiển thị trên mỗi trang
+    const offset = currentPage * perPage;
+    const currentPageItems = wishlistItems.slice(offset, offset + perPage);
+
     return <>
-        {!data || isLoading ? <Loading/> : <div>
+        {!data || isLoading ? <Loading /> : <div>
             <Breadcrumbs />
-            <section className="py-1 bg-gray-100  bg-opacity-50 h-screen">
-                <div className="mx-auto container max-w-2xl md:w-3/4 shadow-md">
-                    <div className="bg-gray-100 px-10 py-2 border-t-2 bg-opacity-5 border-indigo-400 rounded-t">
-                        <div className="max-w-sm mx-auto md:w-full md:mx-0">
-                            <div className="inline-flex items-center space-x-4">
-                                <img
-                                    className="w-10 h-10 object-cover rounded-full"
-                                    alt="User avatar"
-                                    src="https://avatars3.githubusercontent.com/u/72724639?s=400&u=964a4803693899ad66a9229db55953a3dbaad5c6&v=4"
-                                />
-            
-                                <h1 className="text-gray-600">Charly Olivas</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-white space-y-6">
-                        <div className="md:inline-flex space-y-4 md:space-y-0 w-full px-10 py-2 text-gray-500 items-center">
-                            <h2 className="md:w-1/3 max-w-sm mx-auto">Personal info</h2>
-                            <div className="md:w-2/3 max-w-sm mx-auto">
-                                <label className="text-sm text-gray-400">Name</label>
-                                <div className="w-full inline-flex border">
-                                    <div className="w-1/12 pt-2 bg-gray-100">
-                                        <svg
-                                            fill="none"
-                                            className="w-6 text-gray-400 mx-auto"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                            />
-                                        </svg>
+            <section >
+                <Modal title="Cập nhật tài khoản " centered open={openAddModal} onCancel={handleModalClose} footer={null}>
+                    <UpdateAccount />
+                </Modal>
+                <div className="container py-3 p-8">
+                    <div className="row d-flex">
+                        <div className="col-lg-4">
+                            <div className="card mb-4">
+                                <div className="card-body text-center">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                        className="rounded-circle img-fluid w-[150px] ml-24" />
+                                    <h5 className="my-3">John Smith</h5>
+                                    <p className="text-muted mb-1">Khách hàng mới</p>
+                                    <div className="d-flex justify-content-center mb-2">
+                                        <Button type="primary" className="btn btn-outline-primary ms-1" onClick={handleAddCategory}>
+                                            Cập nhật thông tin
+                                        </Button>
                                     </div>
-                                    <input
-                                        type="text"
-                                        className="w-11/12 focus:outline-none focus:text-gray-600 p-2"
-                                        placeholder="Name"
-            
-                                    />
+                                </div>
+                            </div>
+                            <div className="card mb-4 mb-lg-0">
+                                <div className="card-body p-0">
+
+                                    <ul className="list-group list-group-flush rounded-3">
+                                        <p className="mb-2 list-group-item d-flex justify-content-start align-items-center p-3">Đơn hàng của bạn
+                                        </p>
+                                        <li className="list-group-item d-flex justify-content-start align-items-center p-3">
+                                            <i className="fas fa-globe fa-lg text-warning"></i>
+                                            <p className="mb-0">Đơn 1 </p>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-start align-items-center p-3">
+                                            <i className="fab fa-github fa-lg" ></i>
+                                            <p className="mb-0">Đơn 2</p>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-start align-items-center p-3">
+                                            <i className="fab fa-twitter fa-lg" ></i>
+                                            <p className="mb-0">Đơn 3</p>
+                                        </li>
+
+                                    </ul>
+                                    <Link to={'#'} className="text-primary align-items-center font-italic me-1 p-2">Xem thêm</Link>
+
                                 </div>
                             </div>
                         </div>
-            
-                        <hr />
-                        <div className="md:inline-flex  space-y-4 md:space-y-0  w-full px-10 py-1 text-gray-500 items-center">
-                            <h2 className="md:w-1/3 mx-auto max-w-sm">Account</h2>
-                            <div className="md:w-2/3 mx-auto max-w-sm space-y-5">
-                                <div>
-                                    <label className="text-sm text-gray-400">Email</label>
-                                    <div className="w-full inline-flex border">
-            
-                                        <div className="pt-2 w-1/12 bg-gray-100 bg-opacity-50">
-                                            <svg
-                                                fill="none"
-                                                className="w-6 text-gray-400 mx-auto"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                                />
-                                            </svg>
+                        <div className="col-lg-8">
+                            <div className="card mb-4">
+                                <div className="card-body">
+                                    <div className="row p-2">
+                                        <div className="col-sm-3">
+                                            <p className="mb-0">Họ tên</p>
                                         </div>
-                                        <input
-                                            type="email"
-                                            className="w-11/12 focus:outline-none focus:text-gray-600 p-2"
-                                            placeholder="email@example.com"
-                                        />
+                                        <div className="col-sm-9">
+                                            <p className="text-muted mb-0">{authData?.username}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="text-sm text-gray-400">Avata</label>
-                                    <div className="w-full inline-flex border">
-            
-                                        <input
-                                            type="file"
-                                            className="w-11/12 focus:outline-none focus:text-gray-600 p-2"
-                                            placeholder="12341234"
-                                        />
+                                    <hr />
+                                    <div className="row p-2">
+                                        <div className="col-sm-3">
+                                            <p className="mb-0">Email</p>
+                                        </div>
+                                        <div className="col-sm-9">
+                                            <p className="text-muted mb-0">{authData?.email}</p>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className="row p-2">
+                                        <div className="col-sm-3">
+                                            <p className="mb-0">Số điện thoại</p>
+                                        </div>
+                                        <div className="col-sm-9">
+                                            <p className="text-muted mb-0">{authData?.phone}</p>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className="row p-2">
+                                        <div className="col-sm-3">
+                                            <p className="mb-0">Địa chỉ</p>
+                                        </div>
+                                        <div className="col-sm-9">
+                                            <p className="text-muted mb-0">{authData?.address}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-            
-                        <hr />
-                        <div className="md:inline-flex w-full space-y-4 md:space-y-0 py-2 px-4 text-gray-500 items-center">
-                            <h2 className="md:w-4/12 max-w-sm mx-auto">Change password</h2>
-            
-                            <div className="md:w-5/12 w-full md:pl-9 max-w-sm mx-auto space-y-5 md:inline-flex pl-2">
-                                <div className="w-full inline-flex border-b">
-                                    <div className="w-1/12 pt-2">
-                                        <svg
-                                            fill="none"
-                                            className="w-6 text-gray-400 mx-auto"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                                            />
-                                        </svg>
+                            <div className="row d-flex">
+                                <div className="col-md-5">
+                                    <div className="card mb-4 mb-md-0">
+                                        <div className="card-body ">
+                                            <p className="mb-4"> Sản phẩm yêu thích
+                                            </p>
+
+                                            <div className="" >
+                                                {currentPageItems.map((item: any) => (
+                                                    <div className="p-2">
+                                                        <Link to={`/detail/${item.product_id?._id}`}>
+                                                            <p className="mb-1" >{item.product_id?.name}</p>
+                                                            <div className="bg-slate-50	" >
+                                                                <img src={item.product_id?.images[0]} className="w-[80px] p-1" alt="no images" />
+                                                            </div>
+                                                        </Link>
+                                                    </div>
+                                                ))}
+
+
+
+                                            </div>
+                                            <Link to={'your-favorite'} className="text-primary align-items-center font-italic me-1">Xem thêm</Link>
+                                        </div>
                                     </div>
-                                    <input
-                                        type="password"
-                                        className="w-11/12 focus:outline-none focus:text-gray-600 p-2 ml-4"
-                                        placeholder="New"
-                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="card mb-4 mb-md-0">
+                                        <div className="card-body">
+                                            <p className="mb-4"> Sản phẩm ...
+                                            </p>
+                                            <Link to={'#'}>
+                                                <p className="mb-1" >Tên sản phẩm</p>
+                                                <div className="bg-gray-100" >
+                                                    <img src="https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/W77TP20251.jpg " className="w-[70px]" alt="no images" />
+                                                </div>
+                                            </Link>
+                                            <Link to={'#'}>
+                                                <p className="mt-2 mb-1" >Website Markup</p>
+                                                <div className="" >
+                                                    <div className="bg-gray-100" >
+                                                        <img src="https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/W77TP20251.jpg " className="w-[70px]" alt="no images" />
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                            <Link to={'#'}>
+                                                <p className="mt-2 mb-1" >One Page</p>
+                                                <div className="" >
+                                                    <div className="bg-gray-100" >
+                                                        <img src="https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/W77TP20251.jpg " className="w-[70px]" alt="no images" />
+                                                    </div>
+                                                </div>
+                                            </Link>
+
+
+                                            <Link to={'#'} className="text-primary align-items-center font-italic me-1">Xem thêm</Link>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-            
-                            <div className="md:w-3/12 text-center md:pl-6">
-                                <button className="text-white w-full mx-auto max-w-sm rounded-md text-center bg-indigo-400 py-2 px-4 inline-flex items-center focus:outline-none md:float-right">
-                                    <svg
-                                        fill="none"
-                                        className="w-4 text-white mr-2"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                        />
-                                    </svg>
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-            
-                        <hr />
-                        <div className="w-full py-4 px-8 text-right text-gray-500">
-                            <button className="inline-flex items-center focus:outline-none mr-4 py-2 px-4 bg-red-600 text-white rounded-md ">
-                                <svg
-                                    fill="none"
-                                    className="w-4 mr-2"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                    />
-                                </svg>
-                                Delete account
-                            </button>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import InputField from '@/components/ui/InputField';
 import Loading from '@/components/ui/Loading';
 import { useMeQuery, useSignupMutation } from '@/services/auth';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { Button, Checkbox, Form} from 'antd';
+import { Button, Checkbox, Form } from 'antd';
 import { FormEvent, useEffect, useState } from 'react';
 import { AiOutlineUser, AiOutlineLock, AiOutlineMail } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,13 +18,13 @@ type FieldType = {
 const Signup = () => {
     const router = useNavigate();
 
-    const { data:authData,isLoading:authLoading } = useMeQuery();
+    const { data: authData, isLoading: authLoading } = useMeQuery();
 
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassowrd] = useState<string>('');
-    const [rule,setRule] = useState(false)
+    const [rule, setRule] = useState(false)
 
     const [register, { isLoading, isError, isSuccess, error }] = useSignupMutation();
 
@@ -203,9 +203,9 @@ const Signup = () => {
                                             />
                                         </Form.Item>
 
-                                        
 
-                                        
+
+
                                         <Form.Item<FieldType>
                                             label="Mật khẩu"
                                             name="password"

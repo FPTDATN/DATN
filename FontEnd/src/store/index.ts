@@ -1,6 +1,7 @@
 import authApi from '@/services/auth';
 import categoryApi from '@/services/category';
 import commentApi from '@/services/comment';
+import { favouriteapi } from '@/services/favourite';
 import optionApi from '@/services/option';
 import orderApi from '@/services/order';
 import productApi from '@/services/product';
@@ -25,6 +26,10 @@ const rootReducer = combineReducers({
     [commentApi.reducerPath]: commentApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [optionApi.reducerPath]: optionApi.reducer,
+    [favouriteapi.reducerPath]: favouriteapi.reducer,
+
+
+
 });
 
 // Middleware
@@ -36,6 +41,7 @@ const middleware: any[] = [
     commentApi.middleware,
     userApi.middleware,
     optionApi.middleware,
+    favouriteapi.middleware
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

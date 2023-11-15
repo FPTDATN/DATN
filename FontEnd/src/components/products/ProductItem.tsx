@@ -1,26 +1,45 @@
 import { Rate } from 'antd';
 import { FunctionComponent, useState } from 'react';
-import { AiOutlineShoppingCart } from 'react-icons/ai';
+import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import SaleOffCard from '../ui/SaleOffCard';
 import { ProductType } from '@/types/Product';
 import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
+import { useAddToWishlistMutation } from '@/services/favourite';
+import { useMeQuery } from '@/services/auth';
+import { toast } from 'react-toastify';
 
 interface ProductItemProps {
     arrangeList?: boolean;
     product?: ProductType;
 }
-
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product }) => {
     const dispatch = useAppDispatch();
+    const { data: authData } = useMeQuery();
 
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
-    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!)/100)
+    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100)
+
+    //favourite product
+    const [addToWishlist] = useAddToWishlistMutation();
+    const handleAddToWishlist = (productId: any, user_id: any) => {
+        if (authData) {
+            if (addToWishlist) {
+                setTimeout(() => {
+                    addToWishlist({ product_id: productId, user_id: authData._id });
+                    toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
+                }, 500);
+            } else {
+            }
+        } else {
+            toast.warning('Bạn chưa đăng nhập !', { position: 'top-right' });
+        }
+    };
 
     return (
         <>
@@ -30,8 +49,19 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <Skeleton count={4} />
                 </div>
             ) : !arrangeList ? (
-                <div className="shadow-sm px-2 py-2 max-h-[517px]">
-                    <div className="relative ">
+                <div className="shadow-sm">
+                    <div className="relative group ">
+
+                        <div className="favourite hidden group-hover:block ">
+
+                            <div
+                                onClick={() => handleAddToWishlist(product?._id, authData?._id)}
+                                className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
+                            >
+                                <AiOutlineHeart />
+                            </div>
+
+                        </div>
                         <Link to={`/detail/${product?._id}`} className="">
                             <img
                                 src={product?.images[0]}
@@ -49,7 +79,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                     dispatch(
                                         addToCart({
                                             ...product!,
-                                            price:hasSale,
+                                            price: hasSale,
                                             quantity: 1,
                                             colorId: product?.colorId![0].name as any,
                                             sizeId: product?.sizeId![0].name as any,
@@ -61,18 +91,20 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                 <AiOutlineShoppingCart />
                             </div>
                         </div>
+
                     </div>
+
                     <div className="py-6 text-left">
-                        <h3 className="mb-3 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
+                        <h3 className="text-center mt-4 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">
                             <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">
-                                ${hasSale}
+                                ${product?.price}
                             </span>
                             {product?.sale_off! > 0 && (
                                 <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    ${product?.price}
+                                    ${hasSale}
                                 </span>
                             )}
                         </p>

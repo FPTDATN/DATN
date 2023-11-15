@@ -8,7 +8,7 @@ const Footer: FunctionComponent<FooterProps> = () => {
     return (
         <section className="flex flex-col lg:justify-end font-poppins">
             <div className="relative py-10 bg-center bg-no-repeat bg-cover"
-                >
+            >
                 <div className="absolute top-0 left-0 w-full h-full bg-gray-100 bg-opacity-60 "></div>
                 <div className="relative z-10 justify-center flex-1 max-w-5xl px-4 py-4 mx-auto lg:py-0">
                     <div className="flex flex-wrap pb-10 -mx-3">

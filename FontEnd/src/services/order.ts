@@ -12,7 +12,18 @@ import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
                 return fetch(...arg)
             }
         }),
+
+        
         endpoints: (builder) => ({ 
+
+            getRevenueStatistics: builder.query<{ totalRevenue: number }, void>({
+                query: () => ({
+                  url: '/orders',
+                  method: 'GET',
+                  credentials: 'include',
+                }),
+                providesTags: ['Order'],
+              }),
             getsOrder:builder.query<PaginatedOrder,void>({
                 query: () => '/order',
                 providesTags: ['Order'],
@@ -39,6 +50,6 @@ import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
                 }),
               }),
         })
- export const {useGetsOrderQuery,useGetProductByIdQuery,useCreateOrderMutation , useUpdateOrderStatusMutation} = orderApi
+ export const {useGetsOrderQuery,useGetProductByIdQuery,useCreateOrderMutation , useUpdateOrderStatusMutation,useGetRevenueStatisticsQuery} = orderApi
  export default orderApi
  

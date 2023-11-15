@@ -17,5 +17,4 @@ router.get("/products/:id", getById);
 router.delete("/products/:id", remove);
 router.post("/products", create);
 router.patch("/products/:id", update);
-
 export default router;

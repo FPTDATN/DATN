@@ -3,3 +3,4 @@ export const reduceTotal = (carts: any[]) => {
         return sum + item.price * item.quantity;
     }, 0);
 };
+

@@ -7,12 +7,12 @@ import MobileMenuModal from '../modal/MobileMenuModal';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useGetCategoriesQuery } from '@/services/category';
+import WishlistItemsLength from '../modal/wishlistItemsLength ';
 
-interface NavbarProps {}
+interface NavbarProps { }
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
     const { data } = useGetCategoriesQuery();
-
     const [openAbsolute, setOpenAbsolute] = useState(false);
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
@@ -23,8 +23,8 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
     };
 
     return (
-        <div className="relative h-[75px] shadow">
-            <section className="absolute w-full flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-50">
+        <div className="relative h-[75px] shadow fixed-top">
+            <section className="absolute w-full  flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-50">
                 <div className="max-w-5xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
                         <Link to="/" className="hidden w-[200px] h-[70px] lg:block font-semibold leading-none">
@@ -36,7 +36,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                         >
                             <AiOutlineMenu />
                         </button>
-                        
+
                         <div className="flex items-center lg:hidden ">
                             <div className="mr-5 text-2xl flex">
                                 <AiOutlineHeart />
@@ -102,12 +102,17 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                     About
                                 </a>
                             </li>
-                    
+
                         </ul>
                         <div className="items-center justify-end hidden lg:flex">
-                            <div className="mr-5 text-2xl flex">
-                                <AiOutlineHeart />
-                            </div>
+                            {/* <div className="mr-5 text-2xl flex relative">
+                                <Link to={'your-favorite'}><AiOutlineHeart />
+                                    <span className="bg-primary/90 text-white w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">
+                                        1
+                                    </span></Link>
+
+                            </div> */}
+                            <WishlistItemsLength />
                             <CartModal />
                             <Notification />
                             <AccountIcon />
