@@ -23,7 +23,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
     };
 
     return (
-        <div className="relative h-[75px] shadow fixed-top">
+        <div className="relative h-[75px] shadow fixed-top z-50">
             <section className="absolute w-full  flex-grow left-0 right-0 flex items-center top-0 bottom-0 font-poppins dark:bg-gray-800 bg-gray-50">
                 <div className="max-w-5xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">

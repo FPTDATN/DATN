@@ -40,7 +40,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                 onClose={onClose}
                 open={open}
                 key={placement}
-                className="px-0 py-0"
+                style={{zIndex:99999,position:'relative'}}
             >
                 <div className="flex-1 overflow-y-auto px-0 py-4 sm:px-6">
                     <div className="mt-0">

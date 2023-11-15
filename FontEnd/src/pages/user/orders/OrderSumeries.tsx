@@ -41,11 +41,11 @@ const OrderSumeries = ({}: Props) => {
         }
     };
 
-    const filterOrders = orders?.docs.filter((order) => order.buyer === authdata?._id);
+    const filterOrders = orders?.docs?.filter((order) => order.buyer === authdata?._id);
 
     return (
         <div>
-            {filterOrders?.length === 0 ? (
+            {!filterOrders ? (
                 <div className="flex items-center flex-col justify-center gap-y-2">
                     <img
                         src="https://cdn-icons-png.flaticon.com/512/4555/4555971.png"
