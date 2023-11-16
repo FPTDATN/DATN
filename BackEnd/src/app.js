@@ -18,6 +18,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
+import stripe from './routers/stripe.js'
 import { sendEmail } from "./utils/sendEmail.js";
 
 const app = express();
@@ -60,6 +61,8 @@ app.use("/api", colorRouter);
 app.use("/api", payMethod);
 
 app.use("/api", orderroute);
+
+app.use('/stripe', stripe)
 // app.use("/api", routerVNPAY);
 
 const PORT = 8080;

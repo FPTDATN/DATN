@@ -10,21 +10,15 @@ export const createOrder = async (req, res) => {
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
 
-    const { status, customerName, shippingAddress, products, buyer, customerPhone,payMethod } = req.body;
+    const { status, fullName, shipping, products, userId, phone, payMethod, total, email } = req.body;
     // Tính tổng tiền từ danh sách sản phẩm
-    let totalAmount = 0;
-    products.forEach(product => {
-      // Đảm bảo rằng cả price và quantity đều là số hợp lệ
-      if (!isNaN(product.price) && !isNaN(product.quantity)) {
-        totalAmount += product.price * product.quantity;
-      }
-    });
-    const newOrder = new Order({ orderNumber, status, customerName, shippingAddress, products, buyer, totalAmount, customerPhone,payMethod });
+
+    const newOrder = new Order({ orderNumber, status, fullName, shipping, products, total, phone, payMethod, email, userId });
     const savedOrder = await newOrder.save();
-    res.status(201).json(savedOrder);
+    return res.status(201).json(savedOrder);
   } catch (error) {
     console.error('Lỗi khi tạo đơn hàng:', error);
-    res.status(500).json({ error: 'Không thể tạo đơn hàng' });
+    return res.status(500).json({ error: 'Không thể tạo đơn hàng' });
   }
 };
 

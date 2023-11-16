@@ -26,6 +26,7 @@ import ListComment from '@/pages/admin/product/listComment';
 import YourFavourite from '@/pages/user/your-favourite';
 import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
+import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
 
 const router = createBrowserRouter([
     // Main layout
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
     {
         path: 'success/:id',
         element: <CheckoutSuccess />,
+    },
+    {
+        path: 'cancelled/:id',
+        element: <CancelCheckout/>
     },
     // Admin
     {

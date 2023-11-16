@@ -234,32 +234,32 @@ const ListOrder: React.FC = () => {
         },
         {
             title: 'Tên khách hàng',
-            dataIndex: 'customerName',
+            dataIndex: 'fullName',
             width: '20%',
-            ...getColumnSearchProps('customerName'),
+            ...getColumnSearchProps('fullName'),
         },
         {
             title: 'ID khách hàng',
-            dataIndex: 'buyer',
+            dataIndex: 'userId',
             width: '15%',
-            ...getColumnSearchProps('buyer'),
+            ...getColumnSearchProps('userId'),
         },
         {
             title: 'Địa chỉ',
-            dataIndex: 'shippingAddress',
+            dataIndex: 'shipping',
             width: '25%',
-            ...getColumnSearchProps('shippingAddress'),
+            ...getColumnSearchProps('shipping'),
         },
         {
             title: 'Số điện thoại',
-            dataIndex: 'customerPhone',
+            dataIndex: 'phone',
             width: '15%',
-            ...getColumnSearchProps('customerPhone'),
+            ...getColumnSearchProps('phone'),
             render: (value: number) => `0${value}`,
         },
         {
             title: 'Tổng số tiền',
-            dataIndex: 'totalAmount',
+            dataIndex: 'total',
             render: (value: number) => `$ ${value}`,
             width: '10%',
         },
@@ -317,7 +317,7 @@ const ListOrder: React.FC = () => {
             title: (
                 <p>
                     Bạn có thực sự muốn hủy đơn hàng của khách hàng{' '}
-                    <span className="text-red-500">{record.customerName}</span>?
+                    <span className="text-red-500">{record.fullName}</span>?
                 </p>
             ),
             content: (
@@ -405,6 +405,12 @@ const ListOrder: React.FC = () => {
                                             <th scope="col" className="px-6 text-xs font-medium py-3">
                                                 Tên đơn hàng
                                             </th>
+                                            <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                Màu
+                                            </th>
+                                            <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                Size
+                                            </th>
                                             <th scope="col" className="text-left px-6 text-xs font-medium py-3">
                                                 Số lượng
                                             </th>
@@ -427,6 +433,8 @@ const ListOrder: React.FC = () => {
                                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                                 >
                                                     <td className="px-6 py-4 text-left">{product?.name}</td>
+                                                    <td className="px-6 py-4 text-left">{product?.colorId}</td>
+                                                    <td className="px-6 py-4 text-left">{product?.sizeId}</td>
                                                     <td className="px-6 py-4 text-left">{product?.quantity}</td>
                                                 </tr>
                                             ))}

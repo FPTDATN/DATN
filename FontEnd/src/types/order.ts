@@ -12,11 +12,11 @@ export interface PaginatedOrder {
 }
 interface IProductorder {
       _id?: number | string,
-      product: string;
       quantity: number;
       name: string;
-      phone:string;
-      status:number;
+      price:number;
+      colorId:string;
+      sizeId:string;
 }
 export interface Iuser {
       _id: string;
@@ -27,15 +27,14 @@ export interface IOrder {
       _id: string;
       orderNumber: string;
       status: number;
-      customerPhone:string;
-      customerName: string;
-      shippingAddress: string;
+      phone: number;
+      fullName: string;
+      shipping: string;
       products: IProductorder[];
-      buyer: string;
-      payMethod:number;
-      totalAmount: number;
-      timestamps: {
-            createdAt: Date;
-            updatedAt: Date;
-      }
+      userId: string;
+      payMethod: number;
+      total: number;
+      createdAt: Date;
+      updatedAt: Date;
+
 }  

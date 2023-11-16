@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
-import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { StripePaymentElementOptions } from '@stripe/stripe-js/types/stripe-js/elements';
-import { Button, Form, FormInstance, Input, InputNumber, message } from 'antd';
-import { useAppDispatch } from '@/store/hook';
-import { useCreateOrderMutation } from '@/services/order';
+import { Button, Form, FormInstance, Input, InputNumber } from 'antd';
 import { Status } from '@/types/status';
-import { clear } from '@/slices/cart';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { reduceTotal } from '@/utils/reduce';
 
 interface Props {
     cartItems: any[];
@@ -21,114 +16,30 @@ interface Props {
 
 export default function CheckoutForm({ authData, cartItems, payMethod, form }: Props) {
 
-    const router = useNavigate();
+    const handleCheckout = (values: any) => {
+        const { ...rest } = values;
 
-    const stripe = useStripe();
-    const elements = useElements();
-    const dispatch = useAppDispatch();
-
-    const [messageStripe, setMessage] = useState<string | null>(null);
-
-    const [orders, { data: _order,  isLoading: orderLoading }] =
-        useCreateOrderMutation();
-
-    useEffect(() => {
-        if (authData) {
-            form.setFieldsValue({
-                email: authData.email,
-                username: authData.username,
-            });
-        }
-    }, [authData, form]);
-
-    useEffect(() => {
-        if (!stripe) {
-            return;
-        }
-
-        const clientSecret = new URLSearchParams(window.location.search).get('payment_intent_client_secret');
-
-        if (!clientSecret) {
-            return;
-        }
-
-        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-            switch (paymentIntent?.status) {
-                case 'succeeded':
-                    setMessage('Payment succeeded!');
-                    break;
-                case 'processing':
-                    setMessage('Your payment is processing.');
-                    break;
-                case 'requires_payment_method':
-                    setMessage('Your payment was not successful, please try again.');
-                    break;
-                default:
-                    setMessage('Something went wrong.');
-                    break;
-            }
-        });
-    }, [stripe]);
-
-    const handleSubmit = async (values: any) => {
-        if (!stripe || !elements) {
-            // Stripe.js hasn't yet loaded.
-            // Make sure to disable form submission until Stripe.js has loaded.
-            return;
-        }
-
-        const { error } = await stripe.confirmPayment({
-            elements,
-            clientSecret:
-                'sk_test_51OCJujAEqVUq8VkzDJtQAGwMBgQB9tD2buWu9urM0s1WsOsNeD1DfRmaBPmKBr7H5cpbbTnXoApDNQJjrOgCTdH700viotKJEd' as string,
-            redirect: 'if_required',
-            confirmParams: {
-                payment_method_data: {
-                    billing_details: {
-                        address: values.shippingAddress,
-                        email: authData.email,
-                        name: values.customerName,
-                        phone: values.customerPhone,
-                    },
-                },
-            },
-        });
-
-        // This point will only be reached if there is an immediate error when
-        // confirming the payment. Otherwise, your customer will be redirected to
-        // your `return_url`. For some payment methods like iDEAL, your customer will
-        // be redirected to an intermediate site first to authorize the payment, then
-        // redirected to the `return_url`.
-        if (error?.type === 'card_error' || error?.type === 'validation_error') {
-            setMessage(error?.message || 'Something error message');
-        } else if (!error) {
-            const { username, ...customer } = values;
-            orders({
-                ...customer,
-                buyer: authData._id,
-                products: cartItems,
-                status: Status.ORDER_CONFIRM,
+        axios
+            .post('http://localhost:8080/stripe/create-checkout-session', {
+                cartItems,
+                userId: authData._id,
+                ...rest,
                 payMethod,
-            });
-
-            router(`/success/${authData._id}`);
-            message.success('Thanh toán thành công');
-            dispatch(clear());
-            setMessage('Something went wrong!');
-        }
-    };
-
-    const paymentElementOptions: StripePaymentElementOptions = {
-        layout: 'tabs',
+                status: Status.INFORMATION,
+                total: Number(reduceTotal(cartItems)),
+            })
+            .then((res) => {
+                if (res.data.url) {
+                    window.location.href = res.data.url;
+                }
+            })
+            .catch((err) => console.log(err.message));
     };
 
     return (
-        <Form id="payment-form" className="mt-4" form={form} layout="vertical" onFinish={handleSubmit}>
-            <PaymentElement id="payment-element" options={paymentElementOptions} />
-            {/* Show any error or success messages */}
-            {messageStripe && <div id="payment-message">{messageStripe}</div>}
-            <Form.Item label={'Tên đăng nhập'} name={'username'}>
-                <Input disabled />
+        <Form id="payment-form" className="mt-4" form={form} layout="vertical" onFinish={handleCheckout}>
+            <Form.Item initialValue={authData.username} label={'Tên đăng nhập'}>
+                <Input disabled value={authData.username} />
             </Form.Item>
             <Form.Item
                 rules={[
@@ -143,24 +54,24 @@ export default function CheckoutForm({ authData, cartItems, payMethod, form }: P
             <Form.Item
                 rules={[{ required: true, message: 'Bắt buộc' }]}
                 label={'Địa chỉ chi tiết (Ví dụ: "Xã - Huyện/Quận - Tỉnh/Thành phố")'}
-                name={'shippingAddress'}
+                name={'shipping'}
             >
                 <Input />
             </Form.Item>
 
-            <Form.Item rules={[{ required: true, message: 'Bắt buộc' }]} label={'Tên đẩy đủ'} name={'customerName'}>
+            <Form.Item rules={[{ required: true, message: 'Bắt buộc' }]} label={'Tên đẩy đủ'} name={'fullName'}>
                 <Input />
             </Form.Item>
 
             <Form.Item
                 rules={[{ required: true, message: 'Bắt buộc', type: 'number' }]}
                 label={'Số điện thoại'}
-                name={'customerPhone'}
+                name={'phone'}
             >
                 <InputNumber className="w-full" type="number" />
             </Form.Item>
 
-            <Button loading={orderLoading} htmlType="submit">
+            <Button htmlType="submit">
                 Gửi biểu mẫu
             </Button>
         </Form>
