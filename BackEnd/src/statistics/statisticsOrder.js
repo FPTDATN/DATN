@@ -1,17 +1,19 @@
 import Order from "../models/order.js";
 
-export const getRevenueByMonth = async (req, res) => {
-    try {
-      const data = await Order.find();
- 
-      let totalRevenue = 0;
-      data.forEach((order) => {
-        totalRevenue += order.totalAmount;
-      });
-  
-      res.status(200).json({ totalRevenue });
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách đơn hàng:", error);
-      res.status(500).json({ error: "Lỗi khi lấy danh sách đơn hàng" });
-    }
-  };
+
+
+export const getRevenue = async (req, res) => {
+  try {
+    // Lấy danh sách đơn hàng
+    const orders = await Order.find();
+
+    // Tính tổng doanh thu
+    const totalRevenue = orders.reduce((total, order) => total + order.total, 0);
+
+    // Gửi kết quả về cho client
+    return res.status(200).json({ totalRevenue });
+  } catch (error) {
+    console.error('Lỗi khi thống kê doanh thu:', error);
+    return res.status(500).json({ error: 'Lỗi khi thống kê doanh thu' });
+  }
+};
