@@ -55,6 +55,14 @@ router.post('/create-checkout-session', async (req, res) => {
 
     await newOrder.save();
 
+    if(newOrder.status === 1) {
+        setTimeout(() => {
+            newOrder.deleteOne({_id:newOrder._id})
+        },2*60*1000)
+    }
+
+    await newOrder.save();
+
     const session = await stripe.checkout.sessions.create({
 
         payment_method_types: ["card"],
