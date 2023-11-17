@@ -1,49 +1,27 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-const orderSchema = new mongoose.Schema({
-  orderNumber: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  customerName: String,
-  status: {
-    type: Number,
-    // enum: ['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'],
-    default: 0,
-  },
-  shippingAddress: String,
-  products: [
-    {
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-      },
-      quantity: Number,
-      name: String,
-      price: Number
+const orderSchema = new mongoose.Schema(
+  {
+    orderNumber: { type: String },
+    userId: {
+      type: mongoose.Types.ObjectId,
+      require: true
     },
-  ],
-
-  buyer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Auth',
-  },
-  customerPhone: Number,
-  totalAmount: {
-    type: Number,
-    required: true,
-  },
-  timestamps: {
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-});
+    email: { type: String },
+    products: [
+      {
+        type: Object
+      }
+    ],
+    total: { type: Number, require: true },
+    shipping: { type: String, require: true },
+    phone: { type: Number },
+    fullName: { type: String },
+    payMethod: { type: Number, default: 0 },
+    status: { type: Number, default: 1 },
+  }, {
+  timestamps: true
+}
+);
 orderSchema.plugin(mongoosePaginate);
 export default mongoose.model('Order', orderSchema);

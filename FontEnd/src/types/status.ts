@@ -1,7 +1,8 @@
 
 export enum Status {
-    processing = 1,
-    confirmation = 2,
-    delivered = 3,
-    cancelled = 4,
+    CANCELLED = 0,
+    INFORMATION = 1,
+    ORDER_CONFIRM = 2,
+    SHIPPING = 3,
+    COMPLETE = 4,
 }
