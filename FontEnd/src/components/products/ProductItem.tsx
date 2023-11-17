@@ -1,5 +1,5 @@
 import { Rate } from 'antd';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
@@ -7,7 +7,7 @@ import SaleOffCard from '../ui/SaleOffCard';
 import { ProductType } from '@/types/Product';
 import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
-import { useAddToWishlistMutation } from '@/services/favourite';
+import { useAddToWishlistMutation, useCheckProductInWishlistMutation, useGetWishlistQuery } from '@/services/favourite';
 import { useMeQuery } from '@/services/auth';
 import { toast } from 'react-toastify';
 
@@ -27,19 +27,62 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
 
     //favourite product
     const [addToWishlist] = useAddToWishlistMutation();
-    const handleAddToWishlist = (productId: any, user_id: any) => {
+    const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
+    const [checkProductInWishlist] = useCheckProductInWishlistMutation();
+    const [isInWishlist, setIsInWishlist] = useState(false);
+    const handleAddToWishlist = async (productId: string, userId: any) => {
         if (authData) {
-            if (addToWishlist) {
-                setTimeout(() => {
-                    addToWishlist({ product_id: productId, user_id: authData._id });
+            try {
+                // Kiểm tra xem người dùng đã có danh sách yêu thích hay chưa
+                const wishlistResponse = await wishlistData;
+
+                // Nếu không có danh sách yêu thích, tạo một danh sách mới
+                if (!wishlistResponse || !wishlistResponse.wishlist_items || wishlistResponse.wishlist_items.length === 0) {
+                    await addToWishlist({ product_id: productId, user_id: authData._id });
                     toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
-                }, 500);
-            } else {
+                    setIsInWishlist(true);
+                } else {
+                    // Sau đó kiểm tra sản phẩm trong danh sách yêu thích
+                    const response = await checkProductInWishlist({ product_id: productId, user_id: authData._id });
+                    const { exists } = response?.data;
+
+                    if (exists) {
+                        toast.warning('Sản phẩm đã tồn tại trong danh sách yêu thích', { position: 'top-right' });
+                    } else {
+                        // Thêm sản phẩm vào danh sách yêu thích
+                        await addToWishlist({ product_id: productId, user_id: authData._id });
+                        toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
+                        setIsInWishlist(true);
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error('Đã xảy ra lỗi khi kiểm tra hoặc thêm sản phẩm vào danh sách yêu thích', { position: 'top-right' });
             }
         } else {
-            toast.warning('Bạn chưa đăng nhập !', { position: 'top-right' });
+            toast.warning('Bạn chưa đăng nhập!', { position: 'top-right' });
         }
     };
+
+    useEffect(() => {
+        const checkProductInWishlistAsync = async () => {
+            try {
+                const response = await checkProductInWishlist({
+                    product_id: product?._id,
+                    user_id: authData?._id,
+                });
+                const { exists } = response?.data;
+                setIsInWishlist(exists);
+            } catch (error) {
+
+            }
+        };
+
+        if (authData) {
+            checkProductInWishlistAsync();
+        }
+    }, [authData, product?._id]);
+
 
     return (
         <>
@@ -54,13 +97,14 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
 
                         <div className="favourite hidden group-hover:block ">
 
-                            <div
-                                onClick={() => handleAddToWishlist(product?._id, authData?._id)}
-                                className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
-                            >
-                                <AiOutlineHeart />
-                            </div>
-
+                            {!isInWishlist && (
+                                <div
+                                    onClick={() => handleAddToWishlist(product?._id, authData?._id)}
+                                    className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
+                                >
+                                    <AiOutlineHeart />
+                                </div>
+                            )}
                         </div>
                         <Link to={`/detail/${product?._id}`} className="">
                             <img

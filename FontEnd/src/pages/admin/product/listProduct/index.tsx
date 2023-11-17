@@ -66,7 +66,7 @@ const ListProduct: React.FC = () => {
   }, [data, searchValue]);
   // limit
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
+  const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang
   const productList = data?.docs || [];
 
   const paginationOptions = {

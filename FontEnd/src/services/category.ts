@@ -1,14 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { waiting } from '@/utils/waiting';
-import { CategoryType, PaginatedCategory } from '@/types/category';
+import { PaginatedCategory } from '@/types/category';
+import { ProductType } from '@/types/Product';
 
 export type TCategory = {
     _id: string;
     name: string;
     createdAt: string;
-    updateAt:string;
-  };
+    updateAt: string;
+    products: ProductType[];
+};
 
 const categoryApi = createApi({
     reducerPath: 'category',
@@ -44,18 +46,18 @@ const categoryApi = createApi({
             }),
             invalidatesTags: ['Category'],
         }),
-        
+
         updateCategory: builder.mutation<TCategory, { categoryId: string; category: Partial<TCategory> }>({
             query: ({ categoryId, category }) => ({
-              url: `/categories/${categoryId}`,
-              method: 'PUT',
-              body: { ...category, updateAt: new Date().toISOString() }, 
-          
+                url: `/categories/${categoryId}`,
+                method: 'PUT',
+                body: { ...category, updateAt: new Date().toISOString() },
+
             }),
             invalidatesTags: ['Category'],
-          }),
+        }),
     }),
 });
 
-export const { useGetCategoriesQuery, useGetCatgoryByIdQuery, useCreateCategoryMutation, useDeleteCategoryMutation,useUpdateCategoryMutation} = categoryApi;
+export const { useGetCategoriesQuery, useGetCatgoryByIdQuery, useCreateCategoryMutation, useDeleteCategoryMutation, useUpdateCategoryMutation } = categoryApi;
 export default categoryApi;
