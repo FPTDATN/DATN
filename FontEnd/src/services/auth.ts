@@ -34,6 +34,7 @@ export interface ApiRenponse {
     role: string;
     phone: number;
     address: string;
+    avatar:string;
 }
 
 const authApi = createApi({

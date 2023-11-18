@@ -1,33 +1,67 @@
 import Auth from "../models/auth.js";
-import { UserSchema } from "../Schemas/user.js";
 import bcryptjs from 'bcryptjs';
 
 export const update = async (req, res) => {
 
     try {
 
-        const { password } = req.body;
+        const { password, username, email, avatar,role } = req.body;
 
-        const hashPassword = await bcryptjs.hash(password, 10)
+        const user = await Auth.findOne({ _id: req.params.id })
 
-        const data = await Auth.findOneAndUpdate({ _id: req.params.id }, { ...req.body, password: hashPassword }, {
-            new: true,
-        });
-        if (data.length === 0) {
-            return res.status(200).json({
-                message: "Cập nhật User không thành công",
-            });
+        if (!user) {
+            return res.status(401).json({ message: 'Unauthorized' })
         }
-        return res.status(200).json({
-            message: "Cập nhật User thành công",
-            data,
-        });
+
+        if (password === '') {
+            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, avatar,role }, {
+                new: true,
+            });
+
+            return res.status(200).json({ success: true })
+        } else if (password.length > 0) {
+            const hashPassword = await bcryptjs.hash(password, 10)
+
+            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, password: hashPassword, avatar,role }, {
+                new: true,
+            });
+
+            return res.status(200).json({ success: true })
+        }
+
+        const newUser = await user.save({ username, password, avatar,role })
+
+        return res.status(200).json(newUser)
+
     } catch (error) {
         return res.status(404).json({
-            message: error,
+            message: error.message,
         });
     }
 };
+
+export const avatar = async (req, res) => {
+    try {
+
+        const { avatar } = req.body;
+
+        const user = await Auth.findOne({ _id: req.params.id });
+
+        if (!user) {
+            return res.status(403).json({ message: 'Unauthorized' })
+        }
+
+        await Auth.findByIdAndUpdate({ _id: user._id }, { avatar }, {
+            new: true,
+        });
+
+        return res.status(200).json({ success: true })
+
+    } catch (error) {
+        return res.status(400).json({ message: error.message })
+    }
+}
+
 export const remove = async (req, res) => {
 
     try {
