@@ -28,7 +28,7 @@ const ProductDetail = () => {
     const [quantity, setQuantity] = useState<number>(1);
 
     const hasSale = data?.price! - (data?.price! * data?.sale_off!) / 100;
-
+    const myCategoryId = data?.categoryId?._id;
     useEffect(() => {
         setColor(data?.colorId![0]?.name);
         setSize(data?.sizeId![0]?.name);
@@ -216,7 +216,7 @@ const ProductDetail = () => {
                 </div>
             )}
             <div className="p-4 mx-auto">
-                <RelatedProducts />
+                <RelatedProducts categoryId={myCategoryId} />
             </div>
             <div className="p-4 mx-auto">
                 <Comment comments={data?.comments!} userId={authData?._id} productId={data?._id} />

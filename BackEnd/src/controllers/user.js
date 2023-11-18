@@ -105,14 +105,14 @@ export const getOne = async (req, res) => {
 
 export const getAll = async (req, res) => {
     const {
-        _limit = 7,
+        // _limit = 7,
         _sort = "createAt",
         _order = "asc",
         _page = 1,
     } = req.query;
 
     const options = {
-        limit: _limit,
+        // limit: _limit,
         page: _page,
         sort: {
             [_sort]: _order === "desc" ? -1 : 1,
