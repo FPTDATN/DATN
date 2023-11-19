@@ -1,7 +1,6 @@
 import AccountIcon from '../ui/AccountIcon';
 import { FunctionComponent, useState } from 'react';
 import { AiOutlineHeart, AiOutlineMenu } from 'react-icons/ai';
-import Notification from '../ui/Notification';
 import CartModal from '../modal/CartModal';
 import MobileMenuModal from '../modal/MobileMenuModal';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,7 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useGetCategoriesQuery } from '@/services/category';
 import WishlistItemsLength from '../modal/wishlistItemsLength ';
 
-interface NavbarProps { }
+interface NavbarProps {}
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
     const { data } = useGetCategoriesQuery();
@@ -28,7 +27,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                 <div className="max-w-5xl px-2 lg:px-4 w-full mx-auto">
                     <nav className="relative flex items-center justify-between py-4 ">
                         <Link to="/" className="hidden w-[200px] h-[70px] lg:block font-semibold leading-none">
-                            <img src="../logo.svg" className='w-[200px] h-[70px]' alt="" />
+                            <img src="../logo.svg" className="w-[200px] h-[70px]" alt="" />
                         </Link>
                         <button
                             onClick={showDrawer}
@@ -42,22 +41,26 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                 <AiOutlineHeart />
                             </div>
                             <CartModal />
-                            <Notification />
+
                             <AccountIcon />
                         </div>
 
-                        <ul className="hidden lg:w-auto lg:space-x-12 lg:items-center lg:flex ">
-                            <li>
-                                <Link
-                                    to="/"
-                                    className="text-sm hover:text-primary dark:hover:text-blue-400"
-                                >
+                        <ul className="hidden lg:w-auto lg:space-x-12 lg:items-center lg:flex h-[75px]">
+                            <li
+                                className="h-[75px]"
+                                style={{ lineHeight: '75px', display: 'flex', alignItems: 'center' }}
+                            >
+                                <Link to="/" className="text-sm hover:text-primary dark:hover:text-blue-400 block">
                                     Trang chủ
                                 </Link>
                             </li>
-                            <li className="relative">
+                            <li
+                                className="relative group h-[75px]"
+                                style={{ lineHeight: '75px', display: 'flex', alignItems: 'center' }}
+                            >
                                 <a
-                                    onClick={() => setOpenAbsolute(!openAbsolute)}
+                                    // onMouseOver={() => setOpenAbsolute(!openAbsolute)}
+                                    // onMouseLeave={() => setOpenAbsolute(false)}
                                     className="flex items-center cursor-pointer text-sm hover:text-primary dark:hover:text-blue-400"
                                 >
                                     Thể loại
@@ -65,44 +68,49 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                         <MdKeyboardArrowDown />
                                     </span>
                                 </a>
-                                {openAbsolute && (
-                                    <div className="absolute z-50 bg-gray-100 text-gray-900 rounded-sm top-10 left-0 right-0 w-[480px] py-2 px-2 shadow-md">
-                                        <ul className="grid grid-cols-3">
-                                            {data?.docs.map((category) => (
-                                                <li
-                                                    onClick={() => setOpenAbsolute(false)}
-                                                    key={category._id}
-                                                    className="line-clamp-1"
+
+                                <div className="absolute group-hover:block hidden z-50 bg-gray-100 text-gray-900 rounded-sm top-full left-0 right-0 w-[480px] py-2 px-2 shadow-md">
+                                    <div className=""></div>
+                                    <ul className="grid grid-cols-3 ">
+                                        {data?.docs.map((category) => (
+                                            <li
+                                                onClick={() => setOpenAbsolute(false)}
+                                                key={category._id}
+                                                className="line-clamp-1"
+                                            >
+                                                <Link
+                                                    className="hover:text-primary/90 text-left text-base px-2 py-1 block"
+                                                    to={''}
                                                 >
-                                                    <Link
-                                                        className="hover:text-primary/90 text-left text-base px-2 py-1 block"
-                                                        to={''}
-                                                    >
-                                                        {category.name}
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
+                                                    {category.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </li>
-                            <li>
+                            <li
+                                className="h-[75px]"
+                                style={{ lineHeight: '75px', display: 'flex', alignItems: 'center' }}
+                            >
                                 <Link
                                     to={'/filter'}
-                                    className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400"
+                                    className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400 block"
                                 >
                                     Cửa hàng
                                 </Link>
                             </li>
-                            <li>
+                            <li
+                                className="h-[75px]"
+                                style={{ lineHeight: '75px', display: 'flex', alignItems: 'center' }}
+                            >
                                 <a
                                     href=""
-                                    className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400"
+                                    className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400 block"
                                 >
                                     About
                                 </a>
                             </li>
-
                         </ul>
                         <div className="items-center justify-end hidden lg:flex">
                             {/* <div className="mr-5 text-2xl flex relative">
@@ -114,7 +122,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                             </div> */}
                             <WishlistItemsLength />
                             <CartModal />
-                            <Notification />
+
                             <AccountIcon />
                         </div>
                     </nav>

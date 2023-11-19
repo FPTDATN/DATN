@@ -1,9 +1,7 @@
-import { provinces } from '@/seeds';
 import { useMeQuery } from '@/services/auth';
 import { useGetUserByIdQuery, useUpdateUserMutation } from '@/services/user';
-import { Button, Form, Input, Select, Spin } from 'antd';
-import { useEffect } from 'react';
-
+import { Button, Form, Input, Spin, message } from 'antd';
+import { Dispatch, FC, SetStateAction, useEffect } from 'react';
 
 type FieldType = {
     username?: string;
@@ -14,30 +12,43 @@ type FieldType = {
     address?: string;
 };
 
-const { Option } = Select;
+interface Props {
+    setOpenAddModal:Dispatch<SetStateAction<boolean>>
+}
 
-const UpdateAccount: React.FC = () => {
+const UpdateAccount: FC<Props> = ({
+    setOpenAddModal
+}) => {
     const { data: authData } = useMeQuery();
+    const [form] = Form.useForm();
 
     const id: string | undefined = authData?._id as string | undefined;
 
     const { data: userData, isLoading } = useGetUserByIdQuery(id as string);
-    const [updateUser, { isLoading: userLoading, isSuccess }] = useUpdateUserMutation();
-
-
-
-    const onFinish = (values: any) => {
-        updateUser({ _id: userData?.data._id, ...values });
-    };
+    const [updateUser, { isLoading: userLoading }] = useUpdateUserMutation();
 
     useEffect(() => {
-        isSuccess === true;
-    }, [isSuccess]);
+        form.setFieldsValue({
+            username: authData?.username,
+            email: authData?.email,
+            password: ''
+        });
+    }, [form]);
+
+    const onFinish = (values: any) => {
+        try {           
+            updateUser({ _id: authData?._id, ...values });
+            message.success('Cập nhật thành công');
+            setOpenAddModal(false)
+
+        } catch (error:any) {
+            message.error(error.message)
+        }
+    };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-
 
     return (
         <>
@@ -46,6 +57,7 @@ const UpdateAccount: React.FC = () => {
             ) : (
                 <Form
                     name="basic"
+                    form={form}
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
                     style={{ maxWidth: 600 }}
@@ -57,7 +69,6 @@ const UpdateAccount: React.FC = () => {
                     <Form.Item<FieldType>
                         label="Username"
                         name="username"
-                        initialValue={userData?.data.username}
                         rules={[{ required: true, message: 'Please input your username!' }]}
                     >
                         <Input />
@@ -65,39 +76,18 @@ const UpdateAccount: React.FC = () => {
                     <Form.Item<FieldType>
                         label="Email"
                         name="email"
-                        initialValue={userData?.data.email}
                         rules={[{ required: true, message: 'Please input your Email!' }]}
                     >
                         <Input />
                     </Form.Item>
-
-                    <Form.Item<FieldType>
-                        label="Số điện thoại"
-                        name="phone"
-                        initialValue={`0${userData?.data.phone}`}
-                        rules={[{ required: true, message: 'Please input your phone!' }]}
-                    >
-                        <Input type="number" />
+                    <Form.Item<FieldType> label="Mật khẩu">
+                        <Input.Password value={userData?.data.password} disabled />
                     </Form.Item>
-                    <Form.Item<FieldType>
-                        label="Địa chỉ"
-                        name="address"
-                        initialValue={userData?.data.address}
-                        rules={[{ required: true, message: 'Please input your address!' }]}
-                    >
-                        <Select>
-                            {provinces.map((prov) => (
-                                <Option key={prov.value} value={prov.value}>
-                                    {prov.label}
-                                </Option>
-                            ))}
-                        </Select>
+                    <Form.Item<FieldType> label="Mật khẩu mới" name={'password'}>
+                        <Input.Password />
                     </Form.Item>
-
 
                     <Form.Item>
-
-
                         <Button loading={userLoading} htmlType="submit" type="default" className="ml-2">
                             Lưu
                         </Button>

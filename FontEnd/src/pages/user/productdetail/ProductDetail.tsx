@@ -23,15 +23,15 @@ const ProductDetail = () => {
     const { data: authData } = useMeQuery();
     const [mode, setMode] = useState<TabsPosition>('top');
     const [value, setValue] = useState(3);
-    const [color, setColor] = useState(data?.colorId![0].name);
-    const [size, setSize] = useState(data?.sizeId![0].name);
+    const [color, setColor] = useState(data?.colorId![0]?.name);
+    const [size, setSize] = useState(data?.sizeId![0]?.name);
     const [quantity, setQuantity] = useState<number>(1);
 
     const hasSale = data?.price! - (data?.price! * data?.sale_off!) / 100;
     const myCategoryId = data?.categoryId?._id;
     useEffect(() => {
-        setColor(data?.colorId![0].name);
-        setSize(data?.sizeId![0].name);
+        setColor(data?.colorId![0]?.name);
+        setSize(data?.sizeId![0]?.name);
     }, [data]);
 
     const onChange3 = ({ target: { value } }: RadioChangeEvent) => {
@@ -106,8 +106,8 @@ const ProductDetail = () => {
                                                 <div className="flex flex-wrap -mx-2 -mb-2">
                                                     <Radio.Group onChange={onChange3} value={color} optionType="button">
                                                         {data?.colorId?.map((color) => (
-                                                            <Radio key={color._id} value={color.name}>
-                                                                {color.name}
+                                                            <Radio key={color?._id} value={color?.name}>
+                                                                {color?.name}
                                                             </Radio>
                                                         ))}
                                                     </Radio.Group>
@@ -124,8 +124,8 @@ const ProductDetail = () => {
                                                         optionType="button"
                                                     >
                                                         {data?.sizeId?.map((size) => (
-                                                            <Radio key={size._id} value={size.name}>
-                                                                {size.name}
+                                                            <Radio key={size?._id} value={size?.name}>
+                                                                {size?.name}
                                                             </Radio>
                                                         ))}
                                                     </Radio.Group>
@@ -138,18 +138,19 @@ const ProductDetail = () => {
                                                 <div className="relative flex flex-row w-full h-10 mt-4 bg-transparent rounded-lg">
                                                     <button
                                                         onClick={() => setQuantity(quantity - 1)}
-                                                        className="w-20 h-full text-gray-600 bg-gray-300 rounded-l outline-none cursor-pointer dark:hover:bg-gray-700 dark:text-gray-400 hover:text-gray-700 dark:bg-gray-900 hover:bg-gray-400"
+                                                        className="w-20 h-full text-gray-600 border rounded-l outline-none cursor-pointer dark:hover:bg-gray-700 dark:text-gray-400 hover:text-gray-700 dark:bg-gray-900 hover:bg-gray-400"
                                                     >
                                                         <span className="m-auto text-2xl font-thin">-</span>
                                                     </button>
                                                     <input
                                                         onChange={(e) => setQuantity(Number(e.target.value))}
                                                         type="number"
-                                                        className="flex items-center w-full font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-300 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
+                                                        value={quantity}
+                                                        className="flex items-center w-full border font-semibold text-center text-gray-700 placeholder-gray-700 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
                                                     />
                                                     <button
                                                         onClick={() => setQuantity(quantity + 1)}
-                                                        className="w-20 h-full text-gray-600 bg-gray-300 rounded-r outline-none cursor-pointer dark:hover:bg-gray-700 dark:text-gray-400 dark:bg-gray-900 hover:text-gray-700 hover:bg-gray-400"
+                                                        className="w-20 h-full text-gray-600 border rounded-r outline-none cursor-pointer dark:hover:bg-gray-700 dark:text-gray-400 dark:bg-gray-900 hover:text-gray-700 hover:bg-gray-400"
                                                     >
                                                         <span className="m-auto text-2xl font-thin">+</span>
                                                     </button>

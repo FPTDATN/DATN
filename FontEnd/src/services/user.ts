@@ -42,6 +42,14 @@ const userApi = createApi({
             }),
             invalidatesTags: ['User']
         }),
+        avatar: builder.mutation<ExtendUser, {_id:string,avatar:string}>({
+            query: (user) => ({
+                method: 'PUT',
+                url: `/user/${user._id}`,
+                body: user,
+            }),
+            invalidatesTags: ['User']
+        }),
         removeUser: builder.mutation<UserType, string>({
             query: (id) => ({
                 url: `/User/${id}`,
@@ -52,5 +60,5 @@ const userApi = createApi({
     }),
 });
 
-export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation,useGetAccountQuery } = userApi;
+export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation, useGetAccountQuery,useAvatarMutation } = userApi;
 export default userApi;

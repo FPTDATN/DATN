@@ -3,7 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Status } from '@/types/status';
 import { Button, Form, Input, InputRef, Modal, Popconfirm, Select, Space, Table, Typography, message } from 'antd';
 import { IOrder } from '@/types/order';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ColumnType, FilterConfirmProps } from 'antd/es/table/interface';
 import { AiOutlineSearch } from 'react-icons/ai';
 import Highlighter from 'react-highlight-words';
@@ -30,13 +30,13 @@ const renderState = (state: number) => {
     if (Status.INFORMATION === state) return <span>Xác thực thông tin</span>;
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
-    if (Status.COMPLETE === state) return <span className='text-green-500'>Hoàn thành</span>;
+    if (Status.COMPLETE === state) return <span className="text-green-500">Hoàn thành</span>;
 };
 
-const renderMethod = (method:number) => {
-    if(method === 0) return <span className='text-green-600'>Thanh toán khi nhận hàng</span>
-    if(method === 1) return <span className='text-green-600'>Đã thanh toán</span>
-}
+const renderMethod = (method: number) => {
+    if (method === 0) return <span className="text-yellow-500">Thanh toán khi nhận hàng</span>;
+    if (method === 1) return <span className="text-green-500">Đã thanh toán</span>;
+};
 
 const EditableCell: React.FC<EditableCellProps> = ({
     editing,
@@ -87,6 +87,27 @@ const ListOrder: React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [editingKey, setEditingKey] = useState('');
+
+    // Filtering Data
+    const [orders, setOrders] = useState<IOrder[]>([]);
+
+    useEffect(() => {
+        setOrders(data?.docs as any);
+    }, [data]);
+
+    // Filtering Order
+
+    const handleFilterPaidTrue = () => {
+        const filterIsPaidTrue = data?.docs.filter((order) => order.payMethod === 1);
+        setOrders(filterIsPaidTrue!);
+    };
+
+    const handleFilterIsPaidFalse = () => {
+        const filterIsPaidFalse = data?.docs.filter((order) => order.payMethod === 0);
+        setOrders(filterIsPaidFalse!);
+    };
+
+    // Editting
 
     const isEditing = (record: IOrder) => record._id === editingKey;
 
@@ -161,7 +182,7 @@ const ListOrder: React.FC = () => {
                 />
                 <Space>
                     <Button
-                        type="primary"
+                        type="default"
                         onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
                         icon={<AiOutlineSearch />}
                         size="small"
@@ -225,24 +246,18 @@ const ListOrder: React.FC = () => {
 
     const columns = [
         {
-            title: 'Mã đơn hàng',
+            title: 'Mã đơn',
             dataIndex: 'orderNumber',
             filterSearch: true,
-            width: '10%',
-            
+            width: '15%',
+
             ...getColumnSearchProps('orderNumber'),
         },
         {
             title: 'Tên khách hàng',
             dataIndex: 'fullName',
-            width: '20%',
+            width: '25%',
             ...getColumnSearchProps('fullName'),
-        },
-        {
-            title: 'ID khách hàng',
-            dataIndex: 'userId',
-            width: '15%',
-            ...getColumnSearchProps('userId'),
         },
         {
             title: 'Địa chỉ',
@@ -258,7 +273,7 @@ const ListOrder: React.FC = () => {
             render: (value: number) => `0${value}`,
         },
         {
-            title: 'Tổng số tiền',
+            title: 'Tổng',
             dataIndex: 'total',
             render: (value: number) => `$ ${value}`,
             width: '10%',
@@ -292,8 +307,15 @@ const ListOrder: React.FC = () => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <Space className='flex flex-col'>
-                        <Button disabled={editingKey !== '' || record.status === Status.CANCELLED || record.status === Status.COMPLETE} onClick={() => edit(record as any)}>
+                    <Space className="flex flex-col">
+                        <Button
+                            disabled={
+                                editingKey !== '' ||
+                                record.status === Status.CANCELLED ||
+                                record.status === Status.COMPLETE
+                            }
+                            onClick={() => edit(record as any)}
+                        >
                             Cập nhật
                         </Button>
 
@@ -384,69 +406,76 @@ const ListOrder: React.FC = () => {
             {isLoading ? (
                 <Loading />
             ) : (
-                <Form form={form} component={false}>
-                    <Table
-                        bordered
-                        components={{
-                            body: {
-                                cell: EditableCell,
-                            },
-                        }}
-                        className="overflow-x-scroll"
-                        scroll={{ x: 1300 }}
-                        columns={mergedColumns as any}
-                        dataSource={data?.docs!}
-                        rowKey={'_id'}
-                        expandable={{
-                            expandedRowRender: (record) => (
-                                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                Tên đơn hàng
-                                            </th>
-                                            <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                Màu
-                                            </th>
-                                            <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                Size
-                                            </th>
-                                            <th scope="col" className="text-left px-6 text-xs font-medium py-3">
-                                                Số lượng
-                                            </th>
-                                        </tr>
-                                    </thead>
+                <>
+                    <div className="flex gap-x-2 mb-4">
+                        <Button type='primary' ghost onClick={() => setOrders(data?.docs!)}>Xem tất cả</Button>
+                        <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
+                        <Button onClick={handleFilterIsPaidFalse}>Hàng trả sau</Button>
+                    </div>
 
-                                    {isLoading ? (
-                                        <tbody>
+                    <Form form={form} component={false}>
+                        <Table
+                            bordered
+                            components={{
+                                body: {
+                                    cell: EditableCell,
+                                },
+                            }}
+                            className="overflow-x-scroll"
+                            scroll={{ x: 1300 }}
+                            columns={mergedColumns as any}
+                            dataSource={orders}
+                            rowKey={'_id'}
+                            expandable={{
+                                expandedRowRender: (record) => (
+                                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                <td colSpan={7}>
-                                                    <Skeleton count={3} className="h-[98px]" />
-                                                </td>
+                                                <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                    Tên đơn hàng
+                                                </th>
+                                                <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                    Màu
+                                                </th>
+                                                <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                    Size
+                                                </th>
+                                                <th scope="col" className="text-left px-6 text-xs font-medium py-3">
+                                                    Số lượng
+                                                </th>
                                             </tr>
-                                        </tbody>
-                                    ) : (
-                                        <tbody>
-                                            {record?.products.map((product) => (
-                                                <tr
-                                                    key={product._id}
-                                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                                >
-                                                    <td className="px-6 py-4 text-left">{product?.name}</td>
-                                                    <td className="px-6 py-4 text-left">{product?.colorId}</td>
-                                                    <td className="px-6 py-4 text-left">{product?.sizeId}</td>
-                                                    <td className="px-6 py-4 text-left">{product?.quantity}</td>
+                                        </thead>
+
+                                        {isLoading ? (
+                                            <tbody>
+                                                <tr>
+                                                    <td colSpan={7}>
+                                                        <Skeleton count={3} className="h-[98px]" />
+                                                    </td>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    )}
-                                </table>
-                            ),
-                        }}
-                    />
-                </Form>
+                                            </tbody>
+                                        ) : (
+                                            <tbody>
+                                                {record?.products.map((product) => (
+                                                    <tr
+                                                        key={product._id}
+                                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                    >
+                                                        <td className="px-6 py-4 text-left">{product?.name}</td>
+                                                        <td className="px-6 py-4 text-left">{product?.colorId}</td>
+                                                        <td className="px-6 py-4 text-left">{product?.sizeId}</td>
+                                                        <td className="px-6 py-4 text-left">{product?.quantity}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        )}
+                                    </table>
+                                ),
+                            }}
+                        />
+                    </Form>
+                </>
             )}
-            ;
         </>
     );
 };
