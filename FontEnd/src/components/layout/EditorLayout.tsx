@@ -3,9 +3,21 @@ import { Outlet, Link } from 'react-router-dom';
 import Loading from '../ui/Loading';
 import { checkEditor } from '@/utils/checkEditor';
 import { RiListOrdered } from "react-icons/ri";
+import { Dropdown, MenuProps } from 'antd';
+import { useLogoutMutation } from '@/services/auth';
 const EditorLayout = () => {
     const { data: authData, isLoading } = checkEditor();
+    const [logout, {}] = useLogoutMutation();
+    const handleLogout = () => {
+        logout().then(() => window.location.reload());
+    };
 
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: <button onClick={handleLogout}>Đăng xuất</button>,
+        },
+    ];
     return (
         <>
             {isLoading || (!isLoading && authData?.role !== 'editor') ? (
@@ -52,19 +64,29 @@ const EditorLayout = () => {
                                 <div className="flex items-center">
                                     <div className="flex items-center ml-3">
                                         <div>
-                                            <button
-                                                type="button"
-                                                className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                                                aria-expanded="false"
-                                                data-dropdown-toggle="dropdown-user"
+                                            <Dropdown
+                                                arrow
+                                                trigger={['click']}
+                                                placement="bottomRight"
+                                                menu={{ items }}
                                             >
-                                                <span className="sr-only">Open user menu</span>
-                                                <img 
-                                                    className="w-8 h-8 rounded-full"
-                                                    src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                                    alt="user photo"
-                                                />
-                                            </button>
+                                                <button
+                                                    type="button"
+                                                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                                                    aria-expanded="false"
+                                                    data-dropdown-toggle="dropdown-user"
+                                                >
+                                                    <span className="sr-only">Open user menu</span>
+                                                    <img
+                                                        className="w-8 h-8 rounded-full"
+                                                        src={
+                                                            authData?.avatar ||
+                                                            'https://cdn-icons-png.flaticon.com/512/2206/2206368.png'
+                                                        }
+                                                        alt="user photo"
+                                                    />
+                                                </button>
+                                            </Dropdown>
                                         </div>
                                         <div
                                             className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
