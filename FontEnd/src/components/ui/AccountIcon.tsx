@@ -1,5 +1,5 @@
 import { useLogoutMutation, useMeQuery } from '@/services/auth';
-import { Avatar, Button, Dropdown, MenuProps, Popover } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, Popover, Spin } from 'antd';
 import { useEffect } from 'react';
 import { AiOutlineDropbox, AiOutlineUser } from 'react-icons/ai';
 import { CiLogout } from 'react-icons/ci';
@@ -20,7 +20,7 @@ const content = (
 );
 
 const AccountIcon: React.FC = () => {
-    const { data: authData } = useMeQuery();
+    const { data: authData,isLoading } = useMeQuery();
     const [logout, { data }] = useLogoutMutation();
 
     const handleLogout = async () => {
@@ -82,13 +82,23 @@ const AccountIcon: React.FC = () => {
         <div className="clear-both whitespace-nowrap flex items-center">
             <div className="flex items-center">
                 {authData ? (
-                    <Dropdown menu={{ items }} trigger={['click']} arrow>
-                        <Avatar size={'default'} src="./vite.svg" />
-                    </Dropdown>
+                    <div>
+                        <Dropdown menu={{ items }} trigger={['click']} arrow>
+                            {isLoading && !authData ? (
+                                <Spin />
+                            ) : (
+                                <Avatar
+                                    className="cursor-pointer max-w-[38px] max-h-[38px]"
+                                    size={'large'}
+                                    src={authData.avatar || 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png'}
+                                />
+                            )}
+                        </Dropdown>
+                    </div>
                 ) : (
                     <Popover placement="bottom" title={text} arrow content={content} trigger="click">
-                        <span className="relative inline-block mr-5 text-2xl cursor-pointer">
-                            <IoPersonCircleOutline className="text-3xl" />
+                        <span className="relative inline-block text-2xl cursor-pointer max-w-[38px] max-h-[38px]">
+                            <IoPersonCircleOutline className=" min-w-[38px] min-h-[38px]" />
                         </span>
                     </Popover>
                 )}
