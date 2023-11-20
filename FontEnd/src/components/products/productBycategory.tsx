@@ -10,6 +10,7 @@ import { addToCart } from '@/slices/cart';
 import { useAddToWishlistMutation, useCheckProductInWishlistMutation, useGetWishlistQuery } from '@/services/favourite';
 import { useMeQuery } from '@/services/auth';
 import { toast } from 'react-toastify';
+import { useGetCatgoryByIdQuery } from '@/services/category';
 
 interface ProductItemProps {
     arrangeList?: boolean;
@@ -18,7 +19,7 @@ interface ProductItemProps {
 }
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
-const ProductByid: FunctionComponent<ProductItemProps> = ({ arrangeList, product, categoryId }) => {
+const ProductByid: FunctionComponent<ProductItemProps> = ({ arrangeList, product }) => {
     const dispatch = useAppDispatch();
     const { data: authData } = useMeQuery();
     const [value, setValue] = useState(3);
@@ -28,7 +29,7 @@ const ProductByid: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     //favourite product
     const [addToWishlist] = useAddToWishlistMutation();
     const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
-    const { data: getProductBycategory } = useGetWishlistQuery(categoryId || '');
+
 
 
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();

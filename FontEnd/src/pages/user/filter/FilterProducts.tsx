@@ -1,7 +1,7 @@
 import { Checkbox, List } from 'antd';
 import { FunctionComponent, useState } from 'react';
 import { useGetProductsQuery } from '@/services/product';
-import { useGetCategoriesQuery } from '@/services/category';
+import { useGetCategoriesQuery, useGetCatgoryByIdQuery } from '@/services/category';
 import Loading from '@/components/ui/Loading';
 import { useGetBrandsQuery, useGetColorsQuery } from '@/services/option';
 import ReactPaginate from 'react-paginate';
@@ -22,10 +22,11 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
     const handleCategoryChange = (categoryId: string) => {
         setSelectedCategoryId(categoryId);
     };
+    const { data: getProductBycategory } = useGetCatgoryByIdQuery(selectedCategoryId || '');
     // limit
     const [currentPage, setCurrentPage] = useState(0);
     const perPage = 8;
-    const productList = productsData?.docs || [];
+    const productList = getProductBycategory?.products || [];
     const paginationOptions = {
         currentPage,
         perPage,
@@ -34,11 +35,9 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
     };
 
     const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
-
     const handlePageChange = (selectedPage: any) => {
         setCurrentPage(selectedPage.selected);
     };
-
     return (
         <section className="py-6 min-h-screen bg-gray-50 font-poppins dark:bg-gray-800 ">
             {isLoading ? (
@@ -83,38 +82,43 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                             </div>
                         </div>
                         <div className="w-full lg:w-3/4 flex-1">
-
-                            <div className={`grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4  items-center px-2`}>
-                                {currentPageItems.map((product) => (
-                                    <div key={product._id} className="w-full mb-6">
-                                        <ProductByid categoryId={selectedCategoryId} product={product} />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex justify-end mt-6">
-                                <ReactPaginate
-                                    previousLabel={'Quay lại'}
-                                    nextLabel={'Tiếp theo'}
-                                    breakLabel={'...'}
-                                    pageCount={pageCount}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={handlePageChange}
-                                    containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
-                                    activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
-                                    pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
-                                    previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
-                                    nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
-                                    previousLinkClassName={'h-8 p-1 leading-6 '}
-                                    nextLinkClassName={'h-8 p-1 leading-6 '}
-                                    breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
-                                />
-                            </div>
+                            {currentPageItems.length === 0 ? (
+                                <p className="text-lg text-center text-gray-500">Hãy chọn danh mục sản phẩm bạn muốn.</p>
+                            ) : (
+                                <div className={`grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4  items-center px-2`}>
+                                    {currentPageItems.map((product) => (
+                                        <div key={product._id} className="w-full mb-6">
+                                            <ProductByid product={product} />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
+                    <div className="flex justify-end mt-6">
+                        <ReactPaginate
+                            previousLabel={'Quay lại'}
+                            nextLabel={'Tiếp theo'}
+                            breakLabel={'...'}
+                            pageCount={pageCount}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={handlePageChange}
+                            containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
+                            activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
+                            pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+                            previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+                            nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
+                            previousLinkClassName={'h-8 p-1 leading-6 '}
+                            nextLinkClassName={'h-8 p-1 leading-6 '}
+                            breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
+                        />
+                    </div>
                 </div>
-            )}
-        </section>
+
+            )
+            }
+        </section >
     );
 };
 
