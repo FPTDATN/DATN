@@ -1,5 +1,5 @@
 import { ProductType } from '@/types/Product';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import ProductItem from './ProductItem';
 import { Link } from 'react-router-dom';
 import { useGetProductsQuery } from '@/services/product';
@@ -11,8 +11,12 @@ interface ListProductItemsProps {
 }
 
 const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading }) => {
-    const { data, isLoading } = useGetProductsQuery();
-
+    const { data: dataProduct, isLoading } = useGetProductsQuery();
+    //limit
+    const [currentPage, setCurrentPage] = useState(0);
+    const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang
+    const offset = currentPage * perPage;
+    const currentPageItems = dataProduct?.docs.slice(offset, offset + perPage);
     return (
         <section className="flex items-center font-poppins">
             <div className="justify-center flex-1 max-w-5xl px-0 py-4 mx-auto lg:py-8 md:px-4">
@@ -30,8 +34,8 @@ const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading })
                         ))}
                     </div>
                 ) : (
-                    <div className="grid gap-2 mb-11 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-                        {data?.docs.map((product) => (
+                    <div className="grid gap-3 mb-11 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+                        {currentPageItems.map((product) => (
                             <ProductItem key={product._id} product={product} />
                         ))}
                     </div>

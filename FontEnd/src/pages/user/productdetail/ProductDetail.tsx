@@ -146,6 +146,7 @@ const ProductDetail = () => {
                                                         onChange={(e) => setQuantity(Number(e.target.value))}
                                                         type="number"
                                                         value={quantity}
+
                                                         className="flex items-center w-full border font-semibold text-center text-gray-700 placeholder-gray-700 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
                                                     />
                                                     <button
@@ -174,14 +175,7 @@ const ProductDetail = () => {
                                                     Thêm Vào Giỏ Hàng
                                                 </button>
                                             </div>
-                                            <div className="flex gap-4 mb-6">
-                                                <a
-                                                    href="#"
-                                                    className="w-full px-4 py-3 text-center text-gray-100 bg-primary/90 border border-transparent dark:border-gray-700 hover:border-primary/95 hover:text-blue-700 hover:bg-blue-100 dark:text-gray-400 dark:bg-gray-700 dark:hover:bg-gray-900 rounded-xl"
-                                                >
-                                                    Mua Ngay
-                                                </a>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

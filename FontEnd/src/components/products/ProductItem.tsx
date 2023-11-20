@@ -30,6 +30,8 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();
     const [isInWishlist, setIsInWishlist] = useState(false);
+
+
     const handleAddToWishlist = async (productId: string, userId: any) => {
         if (authData) {
             try {
@@ -93,7 +95,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                 </div>
             ) : !arrangeList ? (
                 <div className="shadow-sm">
-                    <div className="relative group ">
+                    <div className="relative group p-3">
 
                         <div className="favourite hidden group-hover:block ">
 
