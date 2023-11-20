@@ -27,6 +27,7 @@ import YourFavourite from '@/pages/user/your-favourite';
 import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
 import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
+import EditorLayout from '@/components/layout/EditorLayout';
 
 const router = createBrowserRouter([
     // Main layout
@@ -121,6 +122,22 @@ const router = createBrowserRouter([
             { path: 'product/:id/comments', element: <ListComment /> },
         ],
     },
+    // Editer
+    {
+        path: '/editor',
+        element: <EditorLayout/>,
+        children: [
+            {
+                index: true,
+                element: <Navigate to="dashboard" />,
+            },
+            { path: 'dashboard', element: <Dashbroad /> },
+            { path: 'product', element: <ListProduct /> },
+            { path: 'category', element: <ListCaegory /> },
+            { path: 'test', element: <AppTest /> },
+            { path: 'order', element: <ListOrder /> },
+            { path: 'product/:id/comments', element: <ListComment /> },
+        ],
+    },
 ]);
-
 export default router;

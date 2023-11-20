@@ -1,5 +1,5 @@
 import { useLogoutMutation, useMeQuery } from '@/services/auth';
-import { Avatar, Button, Dropdown, MenuProps, Popover, Spin } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, Popover } from 'antd';
 import { useEffect } from 'react';
 import { AiOutlineDropbox, AiOutlineUser } from 'react-icons/ai';
 import { CiLogout } from 'react-icons/ci';
@@ -20,7 +20,7 @@ const content = (
 );
 
 const AccountIcon: React.FC = () => {
-    const { data: authData, isLoading } = useMeQuery();
+    const { data: authData } = useMeQuery();
     const [logout, { data }] = useLogoutMutation();
 
     const handleLogout = async () => {
@@ -43,13 +43,26 @@ const AccountIcon: React.FC = () => {
             key: '0',
             icon: <AiOutlineUser style={{ fontSize: '18px' }} />,
         },
+        // Kiểm tra và hiển thị phần tử menu chỉ khi vai trò là editor
+        authData && authData.role === 'editor'
+            ? {
+                label: (
+                    <Link className="text-base" to={`/editor`}>
+                        Editor
+                    </Link>
+                ),
+                key: '1',
+                icon: <AiOutlineDropbox style={{ fontSize: '18px' }} />,
+            }
+            : null,
+        // Các phần tử menu khác
         {
             label: (
                 <Link className="text-base" to={`/orders/${authData?._id}`}>
                     Hàng đã đặt
                 </Link>
             ),
-            key: '1',
+            key: '2',
             icon: <AiOutlineDropbox style={{ fontSize: '18px' }} />,
         },
         {
@@ -65,28 +78,17 @@ const AccountIcon: React.FC = () => {
             icon: <CiLogout style={{ fontSize: '18px' }} />,
         },
     ];
-
     return (
         <div className="clear-both whitespace-nowrap flex items-center">
             <div className="flex items-center">
                 {authData ? (
-                    <div>
-                        <Dropdown menu={{ items }} trigger={['click']} arrow>
-                            {isLoading && !authData ? (
-                                <Spin />
-                            ) : (
-                                <Avatar
-                                    className="cursor-pointer max-w-[38px] max-h-[38px]"
-                                    size={'large'}
-                                    src={authData.avatar || 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png'}
-                                />
-                            )}
-                        </Dropdown>
-                    </div>
+                    <Dropdown menu={{ items }} trigger={['click']} arrow>
+                        <Avatar size={'default'} src="./vite.svg" />
+                    </Dropdown>
                 ) : (
                     <Popover placement="bottom" title={text} arrow content={content} trigger="click">
-                        <span className="relative inline-block text-2xl cursor-pointer max-w-[38px] max-h-[38px]">
-                            <IoPersonCircleOutline className=" min-w-[38px] min-h-[38px]" />
+                        <span className="relative inline-block mr-5 text-2xl cursor-pointer">
+                            <IoPersonCircleOutline className="text-3xl" />
                         </span>
                     </Popover>
                 )}

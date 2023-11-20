@@ -33,7 +33,7 @@ const UpdateUser: React.FC = () => {
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-    const OPTIONS = ['admin', 'member', 'personnel'];
+    const OPTIONS = ['admin', 'member', 'editor'];
 
     return (
         <>
