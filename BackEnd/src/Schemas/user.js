@@ -1,7 +1,7 @@
 import joi from "joi";
 
 export const UserSchema = joi.object({
-    name: joi.string().required().messages({
+    username: joi.string().required().messages({
         "string.empty": "Tên không được để trống",
         "any.required": "Trường tên là bắt buộc",
     }),
@@ -9,4 +9,6 @@ export const UserSchema = joi.object({
         "string.empty": "Email không được để trống",
         "any.required": "Trường email là bắt buộc",
     }),
+    avatar: joi.string(),
+    password: joi.string()
 })

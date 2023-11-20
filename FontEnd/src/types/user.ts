@@ -13,13 +13,10 @@ export interface PaginatedUser {
 
 export interface UserType {
     _id: string;
-    address: string;
-    email: string;
-    favourite: any[];
-    firstName: string;
-    lastName: string;
-    phone: number;
-    role: string;
-    username: string;
-    password:string;
+    email?: string;
+    favourite?: any[];
+    role?: string;
+    avatar?:string;
+    username?: string;
+    password?:string;
 }

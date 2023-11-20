@@ -1,4 +1,3 @@
-import { provinces } from '@/seeds';
 import { useGetUserByIdQuery, useUpdateUserMutation } from '@/services/user';
 import { Button, Form, Input, Select, Spin } from 'antd';
 import { useEffect, useState } from 'react';
@@ -20,10 +19,11 @@ const UpdateUser: React.FC = () => {
     const { id } = useParams();
     const { data: userData, isLoading } = useGetUserByIdQuery(id as string);
     const [updateUser, { isLoading: userLoading, isSuccess }] = useUpdateUserMutation();
+    const [selectedItems, setSelectedItems] = useState<string>(userData?.data.role!);
 
 
     const onFinish = async (values: any) => {
-        await updateUser({ _id: userData?.data._id, ...values });
+        await updateUser({ _id: userData?.data._id, ...values, role: selectedItems });
     };
 
     useEffect(() => {
@@ -34,7 +34,6 @@ const UpdateUser: React.FC = () => {
         console.log('Failed:', errorInfo);
     };
     const OPTIONS = ['admin', 'member', 'personnel'];
-    const [selectedItems, setSelectedItems] = useState<string>('');
 
     return (
         <>
@@ -75,28 +74,7 @@ const UpdateUser: React.FC = () => {
                     >
                         <Input.Password />
                     </Form.Item>
-                    <Form.Item<FieldType>
-                        label="Số điện thoại"
-                        name="phone"
-                        initialValue={`0${userData?.data.phone}`}
-                        rules={[{ required: true, message: 'Please input your phone!' }]}
-                    >
-                        <Input type="number" />
-                    </Form.Item>
-                    <Form.Item<FieldType>
-                        label="Địa chỉ"
-                        name="address"
-                        initialValue={userData?.data.address}
-                        rules={[{ required: true, message: 'Please input your address!' }]}
-                    >
-                        <Select>
-                            {provinces.map((prov) => (
-                                <Option key={prov.value} value={prov.value}>
-                                    {prov.label}
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+
                     <Form.Item<FieldType>
                         label="Chức vụ"
                         name="role"
@@ -105,7 +83,7 @@ const UpdateUser: React.FC = () => {
                     >
                         <Select
                             placeholder="Hãy chọn chưc vụ cho tài khoản"
-                            value={selectedItems}
+                            value={userData?.data.role}
                             onChange={setSelectedItems}
                             style={{ width: '100%' }}
                         >
