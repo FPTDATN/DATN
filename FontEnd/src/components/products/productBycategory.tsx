@@ -14,13 +14,13 @@ import { toast } from 'react-toastify';
 interface ProductItemProps {
     arrangeList?: boolean;
     product?: ProductType;
+    categoryId?: string;
 }
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
-const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product }) => {
+const ProductByid: FunctionComponent<ProductItemProps> = ({ arrangeList, product, categoryId }) => {
     const dispatch = useAppDispatch();
     const { data: authData } = useMeQuery();
-
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
     const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100)
@@ -28,6 +28,9 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     //favourite product
     const [addToWishlist] = useAddToWishlistMutation();
     const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
+    const { data: getProductBycategory } = useGetWishlistQuery(categoryId || '');
+
+
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();
     const [isInWishlist, setIsInWishlist] = useState(false);
 
@@ -219,4 +222,4 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     );
 };
 
-export default ProductItem;
+export default ProductByid;

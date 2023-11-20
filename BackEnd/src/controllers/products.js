@@ -4,14 +4,14 @@ import Category from "../models/category.js";
 
 export const getAll = async (req, res) => {
   const {
-    // _limit = 8,
+    _limit = 155,
     _sort = "createAt",
-    _order = "asc",
+    _order = "desc",
     _page = 1,
   } = req.query;
 
   const options = {
-    // limit: _limit,
+    limit: _limit,
     page: _page,
     sort: {
       [_sort]: _order === "desc" ? -1 : 1,
@@ -94,6 +94,7 @@ export const getById = async (req, res) => {
     });
   }
 };
+
 export const update = async (req, res) => {
   try {
     const products = await Products.findOneAndUpdate(
