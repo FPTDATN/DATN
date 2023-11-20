@@ -18,7 +18,7 @@ const OrderSumeries = ({}: Props) => {
 
     const { token } = theme.useToken();
 
-    const renderPayMethod = (method: number, status?: number) => {
+    const renderPayMethod = (method: number, status?: number, isPaid?: boolean) => {
         if (status === Status.CANCELLED) {
             return (
                 <Tag color="red-inverse" style={{ padding: 4 }}>
@@ -26,6 +26,14 @@ const OrderSumeries = ({}: Props) => {
                 </Tag>
             );
         } else {
+            if (isPaid === false) {
+                return (
+                    <Tag color="red-inverse" style={{ padding: 4 }}>
+                        Thanh toán thất bại
+                    </Tag>
+                );
+            }
+
             if (method === 0)
                 return (
                     <Tag color="orange-inverse" style={{ padding: 4 }}>
@@ -86,7 +94,7 @@ const OrderSumeries = ({}: Props) => {
                                                         Đơn hàng của {order.fullName} - Đặt hàng vào lúc :
                                                         {formatTimeToNow(new Date(order?.createdAt))}
                                                         <span className="ml-4">
-                                                            {renderPayMethod(order.payMethod, order.status)}
+                                                            {renderPayMethod(order.payMethod, order.status,order.isPaid)}
                                                         </span>
                                                     </div>
                                                 }

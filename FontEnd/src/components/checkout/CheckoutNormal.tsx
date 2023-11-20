@@ -34,6 +34,7 @@ const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
                 payMethod,
                 products: cartItems,
                 userId: authData!._id,
+                isPaid: true,
             });
         } catch (error) {
             return;

@@ -13,6 +13,7 @@ const orderSchema = new mongoose.Schema(
         type: Object
       }
     ],
+    isPaid: { type: Boolean, default: false },
     total: { type: Number, require: true },
     shipping: { type: String, require: true },
     phone: { type: Number },

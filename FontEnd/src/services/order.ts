@@ -16,7 +16,7 @@ const orderApi = createApi({
 
   endpoints: (builder) => ({
 
-    getOrderStatistics: builder.query<{totalOrders: number}, void>({
+    getOrderStatistics: builder.query<{ totalOrders: number }, void>({
       query: () => '/order/statistics',
     }),
 
@@ -44,20 +44,20 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order']
     }),
-    updateOrderStatus: builder.mutation<IOrder, { orderId: string, status: number }>({
-      query: ({ orderId, status }) => ({
+    updateOrderStatus: builder.mutation<IOrder, { orderId: string, status: number, isPaid?: boolean }>({
+      query: ({ orderId, status, isPaid }) => ({
         url: `/order/${orderId}/status`,
         method: 'PUT',
-        body: { status },
+        body: { status, isPaid },
       }),
       invalidatesTags: ['Order'],
     }),
   }),
 })
 export const { useGetsOrderQuery,
-   useGetProductByIdQuery, 
-   useCreateOrderMutation, 
-   useUpdateOrderStatusMutation, 
-   useGetRevenueStatisticsQuery,
+  useGetProductByIdQuery,
+  useCreateOrderMutation,
+  useUpdateOrderStatusMutation,
+  useGetRevenueStatisticsQuery,
   useGetOrderStatisticsQuery } = orderApi
 export default orderApi

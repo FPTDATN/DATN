@@ -275,8 +275,8 @@ const ListOrder: React.FC = () => {
         {
             title: 'Tổng',
             dataIndex: 'total',
-            render: (value: number) => `$ ${value}`,
-            width: '10%',
+            render: (value: number) => `$${value}`,
+            width: '15%',
         },
         {
             title: 'Trạng thái',
@@ -284,6 +284,12 @@ const ListOrder: React.FC = () => {
             render: (value: number) => renderState(value),
             width: '20%',
             editable: true,
+        },
+        {
+            title: 'Kiểm tra',
+            dataIndex: 'isPaid',
+            render: (record:boolean) => <p>{record ? <span className='text-green-500'>Thành công</span> : <span className='text-red-500'>Thất bại</span>}</p>,
+            width: '15%',
         },
         {
             title: 'Thanh toán',
@@ -408,7 +414,9 @@ const ListOrder: React.FC = () => {
             ) : (
                 <>
                     <div className="flex gap-x-2 mb-4">
-                        <Button type='primary' ghost onClick={() => setOrders(data?.docs!)}>Xem tất cả</Button>
+                        <Button type="primary" ghost onClick={() => setOrders(data?.docs!)}>
+                            Xem tất cả
+                        </Button>
                         <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
                         <Button onClick={handleFilterIsPaidFalse}>Hàng trả sau</Button>
                     </div>
