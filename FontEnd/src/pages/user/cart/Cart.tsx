@@ -1,5 +1,6 @@
 import { decrease, increase, remove } from '@/slices/cart';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { formartVND } from '@/utils/formartVND';
 import { reduceTotal } from '@/utils/reduce';
 import { Button } from 'antd';
 import { FunctionComponent } from 'react';
@@ -10,7 +11,7 @@ interface CartProps {}
 const Cart: FunctionComponent<CartProps> = () => {
     const { cartItems } = useAppSelector((state) => state.cart);
 
-    const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();    
 
     return (
         <div className="px-6 mt-20">
@@ -70,7 +71,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                         <strong>Type:</strong> {item.categoryId?.name ? item.categoryId?.name : 'Chưa cập nhật'}
                                                     </p>
                                                 </td>
-                                                <td className="product-price">${item.price * item.quantity}</td>
+                                                <td className="product-price">{formartVND(item.price * item.quantity)}</td>
                                                 <td className="product-quantity">
                                                     <div className="flex flex-col items-center gap-y-1">
                                                         <Button onClick={() => dispatch(decrease(item._id))}>
@@ -82,7 +83,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                         </Button>
                                                     </div>
                                                 </td>
-                                                <td className="product-total">${item.price * item.quantity}</td>
+                                                <td className="product-total">{formartVND(item.price * item.quantity)}</td>
                                                 <td className="product-remove">
                                                     <Button
                                                         onClick={() => dispatch(remove(item._id))}
@@ -117,13 +118,13 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                 Summary
                                             </td>
                                             <td className="cart-subtotals">
-                                                <span>Subtotal:</span> ${reduceTotal(cartItems)}
+                                                <span>Subtotal:</span> {formartVND(reduceTotal((cartItems)))}
                                             </td>
                                             <td className="cart-shipping">
                                                 <span>Shipment:</span> Free
                                             </td>
                                             <td className="cart-total">
-                                                <span>Total to pay:</span> ${reduceTotal(cartItems)}
+                                                <span>Total to pay:</span> {formartVND(reduceTotal((cartItems)))}
                                             </td>
                                             <td className="">
                                                 <a href="/checkout" className='block text-sm text-white bg-gray-800 px-6 py-2'>Thanh toán</a>

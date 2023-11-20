@@ -42,10 +42,8 @@ const LocationList: React.FC = () => {
         } else if (payMethod === 0) {
             setLoading(true);
             setMethodBody(
-                <div>
-                    <div className="mt-2">
-                        <CheckoutNormal form={form} cartItems={cartItems} payMethod={payMethod} />
-                    </div>
+                <div className="mt-2">
+                    <CheckoutNormal form={form} cartItems={cartItems} payMethod={payMethod} />
                 </div>,
             );
         }
@@ -122,6 +120,9 @@ const LocationList: React.FC = () => {
                                                 </Radio>
                                                 <Radio className="w-full mt-2" value={1}>
                                                     Thanh toán ngay
+                                                </Radio>
+                                                <Radio className="w-full mt-2" value={2}>
+                                                    Thanh toán bằng VNPAY
                                                 </Radio>
                                             </Radio.Group>
                                             {methodBody}

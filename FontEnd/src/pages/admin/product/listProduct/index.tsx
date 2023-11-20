@@ -10,6 +10,7 @@ import { ProductType } from '@/types/Product';
 import { Link } from 'react-router-dom';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
+import { formartVND } from '@/utils/formartVND';
 
 const ListProduct: React.FC = () => {
   const { data, isLoading } = useGetProductsQuery();
@@ -147,7 +148,7 @@ const ListProduct: React.FC = () => {
                   </td>
                   <td className="text-center py-4">{product.quantity}</td>
                   <td className="text-center py-4">{product.categoryId?.name}</td>
-                  <td className="pr-4 text-center py-4">{product.price}</td>
+                  <td className="pr-4 text-center py-4">{formartVND(product.price)}</td>
                   <td className="pr-4 py-4">
                     <Space size="middle">
                       <Button type="dashed" onClick={() => handleUpdateProduct(product._id)}>
