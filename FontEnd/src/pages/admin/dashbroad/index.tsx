@@ -1,3 +1,4 @@
+import { useLogoutMutation, useMeQuery } from "@/services/auth";
 import { useGetAccountCommentsQuery } from "@/services/comment";
 import { useGetOrderStatisticsQuery, useGetRevenueStatisticsQuery } from "@/services/order";
 import { useGetTotalProductQuery } from "@/services/product";
@@ -14,7 +15,8 @@ const Dashbroad = () => {
     const totalP = totalProduct?.total ?? 0;
     const totalRevenue = revenueData?.totalRevenue ?? 0;
     const totalTotal = DataOrders?.totalOrders ?? 0;
-
+    const { data: authData } = useMeQuery();
+    const isAdmin = authData?.role === 'admin';
     return (
         <>
             <div className="grid grid-cols-4 gap-4 mb-4">
@@ -86,6 +88,7 @@ const Dashbroad = () => {
                         </p>
                     </div>
                 </article>
+                {isAdmin && (
                 <article
                     className="flex flex-col gap-4 rounded-lg border border-gray-100 bg-white p-6"
                 >
@@ -106,20 +109,17 @@ const Dashbroad = () => {
                                 d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                             />
                         </svg>
-
-                        {/* <span className="text-xs font-medium"> 67.81% </span> */}
                     </div>
-
                     <div>
                         <strong className="block text-sm font-medium text-gray-500"> User </strong>
-
                         <p>
                             <span className="text-2xl font-medium text-gray-900"> {usage}</span>
-
                             <span className="text-xs text-gray-500"> user </span>
                         </p>
                     </div>
                 </article>
+            )}
+
                 <article
                     className="flex flex-col gap-4 rounded-lg border border-gray-100 bg-white p-6"
                 >
@@ -156,7 +156,13 @@ const Dashbroad = () => {
 
                 </article>
             </div>
-            
+            {/* <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+                <p className="text-2xl text-gray-400 dark:text-gray-500">
+                    <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
+                    </svg>
+                </p>
+            </div> */}
             <div className="grid grid-cols-4 gap-4 mb-4">
                 <article
                     className="flex flex-col gap-4 rounded-lg border border-gray-100 bg-white p-6"
@@ -193,14 +199,6 @@ const Dashbroad = () => {
                     </div>
 
                 </article>
-            </div>
-
-            <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
-                    </svg>
-                </p>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
