@@ -25,6 +25,7 @@ export interface Iuser {
 }
 export interface IOrder {
       _id: string;
+      isPaid:boolean,
       orderNumber: string;
       status: number;
       phone: number;

@@ -10,10 +10,10 @@ export const createOrder = async (req, res) => {
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
 
-    const { status, fullName, shipping, products, userId, phone, payMethod, total, email } = req.body;
+    const { status, fullName, shipping, products, userId, phone, payMethod, total, email,isPaid } = req.body;
     // Tính tổng tiền từ danh sách sản phẩm
 
-    const newOrder = new Order({ orderNumber, status, fullName, shipping, products, total, phone, payMethod, email, userId });
+    const newOrder = new Order({ orderNumber,isPaid, status, fullName, shipping, products, total, phone, payMethod, email, userId });
     const savedOrder = await newOrder.save();
     return res.status(201).json(savedOrder);
   } catch (error) {
@@ -59,7 +59,7 @@ export const getOrders = async (req, res) => {
 export const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status } = req.body;
+    const { status,isPaid } = req.body;
 
     // Tìm đơn hàng dựa trên orderId
     const order = await Order.findById(orderId);
@@ -74,7 +74,7 @@ export const cancelOrder = async (req, res) => {
     // }
 
     // Cập nhật trạng thái của đơn hàng thành trạng thái mới
-    const newSatus = await Order.updateOne({ _id: orderId }, { status }, { new: true })
+    const newSatus = await Order.updateOne({ _id: orderId }, { status,isPaid }, { new: true })
 
     // Lưu thay đổi vào cơ sở dữ liệu
 

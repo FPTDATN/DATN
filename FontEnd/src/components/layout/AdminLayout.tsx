@@ -9,8 +9,7 @@ const AdminLayout = () => {
     const [logout, {}] = useLogoutMutation();
 
     const handleLogout = () => {
-        logout();
-        window.location.reload();
+        logout().then(() => window.location.reload());
     };
 
     const items: MenuProps['items'] = [
@@ -67,12 +66,10 @@ const AdminLayout = () => {
                                     <div className="flex items-center ml-3">
                                         <div>
                                             <Dropdown
-                                                
                                                 arrow
                                                 trigger={['click']}
                                                 placement="bottomRight"
                                                 menu={{ items }}
-                                                
                                             >
                                                 <button
                                                     type="button"

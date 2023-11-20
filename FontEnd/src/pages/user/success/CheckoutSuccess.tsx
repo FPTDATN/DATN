@@ -4,7 +4,7 @@ import { clear } from '@/slices/cart';
 import { useAppDispatch } from '@/store/hook';
 import { Status } from '@/types/status';
 import { runFireworks } from '@/utils/success';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CheckoutSuccess = () => {
@@ -13,12 +13,19 @@ const CheckoutSuccess = () => {
     const dispatch = useAppDispatch();
 
     const [update] = useUpdateOrderStatusMutation();
+    const [timerCount, setTimer] = useState(5);
+    const [disable, setDisable] = useState(true);
     const { data } = useMeQuery();
 
     const makeRequest = () => {
         update({
             orderId: id!,
             status: Status.ORDER_CONFIRM,
+            isPaid:true
+        }).then(() => {
+            setTimeout(() => {
+                router('/');
+            }, 5000);
         });
     };
 
@@ -26,11 +33,20 @@ const CheckoutSuccess = () => {
         makeRequest();
         runFireworks();
         dispatch(clear());
+    }, [id]);
 
-        setTimeout(() => {
-            router('/');
-        }, 3000);
-    }, []);
+    useEffect(() => {
+        let interval = setInterval(() => {
+            setTimer((lastTimerCount) => {
+                lastTimerCount <= 1 && clearInterval(interval);
+                if (lastTimerCount <= 1) setDisable(false);
+                if (lastTimerCount <= 0) return lastTimerCount;
+                return lastTimerCount - 1;
+            });
+        }, 1000); //each count lasts for a second
+        //cleanup the interval on complete
+        return () => clearInterval(interval);
+    }, [disable]);
 
     return (
         <div className="bg-gray-100 h-screen flex items-center">
@@ -50,10 +66,8 @@ const CheckoutSuccess = () => {
                         </span>
                     </p>
                     <p> Chúc bạn 1 ngày vui vẻ 🥰! </p>
-                    <div className="py-10 text-center">
-                        <a href="/" className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">
-                            GO BACK
-                        </a>
+                    <div className="flex mt-4 flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+                        {disable && `Trở lại sau ${timerCount}s` }
                     </div>
                 </div>
             </div>
