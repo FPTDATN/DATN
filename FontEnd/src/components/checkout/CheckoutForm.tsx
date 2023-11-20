@@ -2,6 +2,7 @@ import { Button, Form, FormInstance, Input, InputNumber } from 'antd';
 import { Status } from '@/types/status';
 import axios from 'axios';
 import { reduceTotal } from '@/utils/reduce';
+import { useState } from 'react';
 
 interface Props {
     cartItems: any[];
@@ -15,25 +16,45 @@ interface Props {
 }
 
 export default function CheckoutForm({ authData, cartItems, payMethod, form }: Props) {
+    const [methodPay, setMethodPay] = useState(0);
 
     const handleCheckout = (values: any) => {
-        const { ...rest } = values;
+        if (methodPay === 0) {
+            const { ...rest } = values;
 
-        axios
-            .post('http://localhost:8080/stripe/create-checkout-session', {
-                cartItems,
-                userId: authData._id,
-                ...rest,
-                payMethod,
-                status: Status.INFORMATION,
-                total: Number(reduceTotal(cartItems)),
-            })
-            .then((res) => {
-                if (res.data.url) {
-                    window.location.href = res.data.url;
-                }
-            })
-            .catch((err) => console.log(err.message));
+            axios
+                .post('http://localhost:8080/stripe/create-checkout-session', {
+                    cartItems,
+                    userId: authData._id,
+                    ...rest,
+                    payMethod,
+                    status: Status.INFORMATION,
+                    total: Number(reduceTotal(cartItems)),
+                })
+                .then((res) => {
+                    if (res.data.url) {
+                        window.location = res.data.url;
+                    }
+                })
+                .catch((err) => console.log(err.message));
+        } else {
+            const { ...rest } = values;
+            axios
+                .post('http://localhost:8080/api/vnpay/create_payment_url', {
+                    amount: reduceTotal(cartItems),
+                    bankCode: '',
+                    orderDescription: 'vnpay',
+                    orderType: 2,
+                    language: '',
+                    orderid: Math.random(),
+                    userId: authData?._id,
+                    products: cartItems,
+                    ...rest,
+                })
+                .then((res) => {
+                    window.location = res.data.url;
+                });
+        }
     };
 
     return (
@@ -71,8 +92,12 @@ export default function CheckoutForm({ authData, cartItems, payMethod, form }: P
                 <InputNumber className="w-full" type="number" />
             </Form.Item>
 
-            <Button htmlType="submit">
-                Gửi biểu mẫu
+            <Button htmlType="submit" onClick={() => setMethodPay(0)}>
+                Thanh toán bằng Stripe
+            </Button>
+
+            <Button htmlType="submit" onClick={() => setMethodPay(1)}>
+                Thanh toán bằng VNPay
             </Button>
         </Form>
     );

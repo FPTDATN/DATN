@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { reduceTotal } from '@/utils/reduce';
 import { remove } from '@/slices/cart';
+import { formartVND } from '@/utils/formartVND';
 
 interface CartModalProps {}
 
@@ -62,7 +63,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                                                     <h3 className='line-clamp-3'>
                                                         <a href="#">{item?.name}</a>
                                                     </h3>
-                                                    <p className="ml-4">${item?.price}</p>
+                                                    <p className="ml-4">{formartVND(item?.price)}</p>
                                                 </div>
                                                 <p className="mt-1 text-sm text-gray-500">{item?.categoryId?.name}</p>
                                             </div>
@@ -90,7 +91,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                 <div className="border-t border-gray-200 px-0 py-4 sm:px-6">
                     <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Tổng phụ</p>
-                        <p>${reduceTotal(cartItems)}</p>
+                        <p>{formartVND(reduceTotal(cartItems))}</p>
                     </div>
                     <p className="mt-0.5 text-sm text-gray-500">Vận chuyển và thuế được tính khi thanh toán.</p>
                     <div className="mt-6">

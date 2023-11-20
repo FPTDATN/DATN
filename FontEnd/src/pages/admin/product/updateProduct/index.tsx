@@ -67,6 +67,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                 updatedProduct: {
                     ...currentProduct,
                     ...values,
+                    price: values.pirce * 1000,
                     colorId,
                     sizeId,
                     images,
@@ -143,7 +144,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                     </Form.Item>
                     <Form.Item
                         name="price"
-                        label="Price"
+                        label="Giá (VNĐ * 1000)"
                         rules={[
                             {
                                 required: true,

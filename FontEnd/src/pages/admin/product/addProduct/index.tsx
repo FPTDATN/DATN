@@ -32,9 +32,9 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         try {
             setIsLoading(true);
 
-            const { size, ...restValues } = values;
+            const { size, price, ...restValues } = values;
 
-            await mutateCreateProduct({ ...restValues, images }).unwrap();
+            await mutateCreateProduct({ ...restValues, images, price: price * 1000 }).unwrap();
             const newProduct = { ...restValues };
             setProducts((prevProducts) => [...prevProducts, newProduct]);
             form.resetFields();
@@ -48,13 +48,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
     };
 
     return (
-        <Form
-            form={form}
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            layout="horizontal"
-            onFinish={onFinish}
-        >
+        <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} layout="horizontal" onFinish={onFinish}>
             <Form.Item label="Form Size" name="size">
                 <Radio.Group>
                     <Radio.Button value="small">Small</Radio.Button>
@@ -71,11 +65,15 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
                 <Input placeholder="Tên sản phẩm" type="text" />
             </Form.Item>
 
-            <Form.Item label="Giá gốc" name="price" rules={[{ required: true, message: 'Vui lòng nhập Giá' }]}>
+            <Form.Item
+                label="Giá gốc (VND * 1000)"
+                name="price"
+                rules={[{ required: true, message: 'Vui lòng nhập Giá' }]}
+            >
                 <Input placeholder="Giá gốc sản phẩm" type="number" />
             </Form.Item>
 
-            <Form.Item label="Giá sale" name="sale_off">
+            <Form.Item label="Giá sale (%)" name="sale_off">
                 <Input placeholder="Giá sale sản phẩm" type="number" />
             </Form.Item>
 

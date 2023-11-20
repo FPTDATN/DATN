@@ -8,7 +8,7 @@ import { ColumnType, FilterConfirmProps } from 'antd/es/table/interface';
 import { AiOutlineSearch } from 'react-icons/ai';
 import Highlighter from 'react-highlight-words';
 import Loading from '@/components/ui/Loading';
-// import React, { useState } from 'react';
+import { formartVND } from '@/utils/formartVND';
 
 type DataIndex = keyof IOrder;
 
@@ -275,7 +275,7 @@ const ListOrder: React.FC = () => {
         {
             title: 'Tổng',
             dataIndex: 'total',
-            render: (value: number) => `$${value}`,
+            render: (value: number) => `${formartVND(value)}`,
             width: '15%',
         },
         {

@@ -10,6 +10,7 @@ import { addToCart } from '@/slices/cart';
 import { useAddToWishlistMutation, useCheckProductInWishlistMutation, useGetWishlistQuery } from '@/services/favourite';
 import { useMeQuery } from '@/services/auth';
 import { toast } from 'react-toastify';
+import { formartVND } from '@/utils/formartVND';
 
 interface ProductItemProps {
     arrangeList?: boolean;
@@ -23,14 +24,13 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
 
     const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
-    const hasSale = (product?.price!) - ((product?.price! * product?.sale_off!) / 100)
+    const hasSale = product?.price! - (product?.price! * product?.sale_off!) / 100;
 
     //favourite product
     const [addToWishlist] = useAddToWishlistMutation();
     const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();
     const [isInWishlist, setIsInWishlist] = useState(false);
-
 
     const handleAddToWishlist = async (productId: string, userId: any) => {
         if (authData) {
@@ -39,14 +39,18 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                 const wishlistResponse = await wishlistData;
 
                 // Nếu không có danh sách yêu thích, tạo một danh sách mới
-                if (!wishlistResponse || !wishlistResponse.wishlist_items || wishlistResponse.wishlist_items.length === 0) {
+                if (
+                    !wishlistResponse ||
+                    !wishlistResponse.wishlist_items ||
+                    wishlistResponse.wishlist_items.length === 0
+                ) {
                     await addToWishlist({ product_id: productId, user_id: authData._id });
                     toast.success('Thêm sản phẩm yêu thích thành công', { position: 'top-right' });
                     setIsInWishlist(true);
                 } else {
                     // Sau đó kiểm tra sản phẩm trong danh sách yêu thích
                     const response = await checkProductInWishlist({ product_id: productId, user_id: authData._id });
-                    const { exists } = response?.data;
+                    const { exists } = (response as any)?.data;
 
                     if (exists) {
                         toast.warning('Sản phẩm đã tồn tại trong danh sách yêu thích', { position: 'top-right' });
@@ -59,7 +63,9 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                 }
             } catch (error) {
                 console.error(error);
-                toast.error('Đã xảy ra lỗi khi kiểm tra hoặc thêm sản phẩm vào danh sách yêu thích', { position: 'top-right' });
+                toast.error('Đã xảy ra lỗi khi kiểm tra hoặc thêm sản phẩm vào danh sách yêu thích', {
+                    position: 'top-right',
+                });
             }
         } else {
             toast.warning('Bạn chưa đăng nhập!', { position: 'top-right' });
@@ -70,21 +76,18 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
         const checkProductInWishlistAsync = async () => {
             try {
                 const response = await checkProductInWishlist({
-                    product_id: product?._id,
+                    product_id: product?._id!,
                     user_id: authData?._id,
                 });
-                const { exists } = response?.data;
+                const { exists } = (response as any)?.data;
                 setIsInWishlist(exists);
-            } catch (error) {
-
-            }
+            } catch (error) {}
         };
 
         if (authData) {
             checkProductInWishlistAsync();
         }
     }, [authData, product?._id]);
-
 
     return (
         <>
@@ -96,12 +99,10 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
             ) : !arrangeList ? (
                 <div className="shadow-sm">
                     <div className="relative group p-3">
-
                         <div className="favourite hidden group-hover:block ">
-
                             {!isInWishlist && (
                                 <div
-                                    onClick={() => handleAddToWishlist(product?._id, authData?._id)}
+                                    onClick={() => handleAddToWishlist(product?._id!, authData?._id)}
                                     className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
                                 >
                                     <AiOutlineHeart />
@@ -137,7 +138,6 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                 <AiOutlineShoppingCart />
                             </div>
                         </div>
-
                     </div>
 
                     <div className="py-6 text-left">
@@ -146,11 +146,11 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">
                             <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">
-                                ${product?.price}
+                                {formartVND(product?.price!)}
                             </span>
                             {product?.sale_off! > 0 && (
                                 <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    ${hasSale}
+                                    {formartVND(hasSale)}
                                 </span>
                             )}
                         </p>
@@ -178,12 +178,10 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                             <Link to={''}> {product?.name}</Link>
                         </h3>
                         <p className="mb-3 text-lg font-medium text-center text-gray-600">
-                            <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">
-                                ${hasSale}
-                            </span>
+                            <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">${hasSale}</span>
                             {product?.sale_off! > 0 && (
                                 <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    ${product?.price}
+                                    {formartVND(product?.price!)}
                                 </span>
                             )}
                         </p>
