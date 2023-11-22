@@ -133,8 +133,7 @@ const ListProduct: React.FC = () => {
                   key={product._id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  <td className="pl-4">
-
+                  <td className="pl-6">
                     <Avatar.Group maxCount={3}>
                       {product.images?.map((url: string) => (
                         <div key={url} style={{ borderRadius: '50%', overflow: 'hidden' }}>
@@ -143,15 +142,17 @@ const ListProduct: React.FC = () => {
                       ))}
                     </Avatar.Group>
                   </td>
-                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <td className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {product.name.slice(0, 20)}...
                   </td>
                   <td className="text-center py-4">{product.quantity}</td>
-                  <td className="text-center py-4">{product.categoryId?.name}</td>
+                  <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {product.categoryId?.name.slice(0, 20)}...
+                  </td>
                   <td className="pr-4 text-center py-4">{formartVND(product.price)}</td>
                   <td className="pr-4 py-4">
                     <Space size="middle">
-                      <Button type="dashed" onClick={() => handleUpdateProduct(product._id)}>
+                      <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateProduct(product._id)}>
                         Update
                       </Button>
 
@@ -163,12 +164,12 @@ const ListProduct: React.FC = () => {
                         okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
                         onConfirm={() => handleDelete(product._id)}
                       >
-                        <Button type="link">Delete</Button>
+                        <Button type="link" className='bg-reds text-layer'>Delete</Button>
                       </Popconfirm>
 
                       <Button type="primary" className="bg-primary">
                         <Link to={`${product._id}/comments`} className="bg-primary">
-                          Xem Comment
+                          Comment
                         </Link>
                       </Button>
                     </Space>

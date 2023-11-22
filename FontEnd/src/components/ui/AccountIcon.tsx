@@ -36,7 +36,7 @@ const AccountIcon: React.FC = () => {
     const items: MenuProps['items'] = [
         {
             label: (
-                <Link className="text-base" to={'/account/details'}>
+                <Link className="text-base" to={'/details'}>
                     Cá nhân
                 </Link>
             ),

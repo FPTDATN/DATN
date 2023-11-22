@@ -323,7 +323,7 @@ const ListOrder: React.FC = () => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)}>
+                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='bg-gree text-layer'>
                             Lưu
                         </Typography.Link>
                         <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">
@@ -339,6 +339,7 @@ const ListOrder: React.FC = () => {
                                 record.status === Status.COMPLETE
                             }
                             onClick={() => edit(record as any)}
+                            className='bg-gree text-layer'
                         >
                             Cập nhật
                         </Button>
@@ -355,7 +356,7 @@ const ListOrder: React.FC = () => {
                             <div className="flex ">
                                 <Button
                                     disabled={record.status === Status.CANCELLED || record.status === Status.COMPLETE}
-                                    className="  rounded-md px-6 flex items-center"
+                                    className="  rounded-md px-6 flex items-center bg-primary text-layer"
                                     onClick={() => handleButtonClick(record._id)}
                                 >
 

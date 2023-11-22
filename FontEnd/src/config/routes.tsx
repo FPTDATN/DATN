@@ -65,6 +65,10 @@ const router = createBrowserRouter([
             }, {
                 path: 'orders/:userId',
                 element: <OrderSumeries/>
+            },
+            {
+                path: 'details',
+                element: <AccountDetail />,
             }
         ],
     },
@@ -79,10 +83,7 @@ const router = createBrowserRouter([
                 path: 'signin',
                 element: <Signin />,
             },
-            {
-                path: 'details',
-                element: <AccountDetail />,
-            },
+            
             {
                 path: 'forgot-password',
                 element: <ForgotPassword/>
@@ -129,9 +130,8 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to="dashboard" />,
+                element: <Navigate to="category" />,
             },
-            { path: 'dashboard', element: <Dashbroad /> },
             { path: 'product', element: <ListProduct /> },
             { path: 'category', element: <ListCaegory /> },
             { path: 'test', element: <AppTest /> },
