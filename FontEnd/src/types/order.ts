@@ -10,7 +10,7 @@ export interface PaginatedOrder {
       totalDocs: number;
       totalPages: number;
 }
-interface IProductorder {
+export interface IProductorder {
       _id?: number | string,
       quantity: number;
       name: string;

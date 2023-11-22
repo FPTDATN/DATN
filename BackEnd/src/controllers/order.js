@@ -84,3 +84,18 @@ export const cancelOrder = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+export const getOrderById = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+    }
+
+    return res.json(order);
+  } catch (error) {
+    console.error('Lỗi khi lấy đơn hàng theo ID:', error);
+    return res.status(500).json({ error: 'Lỗi khi lấy đơn hàng' });
+  }
+};

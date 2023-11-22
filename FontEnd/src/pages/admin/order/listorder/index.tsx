@@ -9,7 +9,8 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Highlighter from 'react-highlight-words';
 import Loading from '@/components/ui/Loading';
 import { formartVND } from '@/utils/formartVND';
-
+import { PrinterOutlined } from '@ant-design/icons';
+import Hoadon from './print';
 type DataIndex = keyof IOrder;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -88,6 +89,23 @@ const ListOrder: React.FC = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [editingKey, setEditingKey] = useState('');
 
+    //print
+    const [showModal, setShowModal] = useState(false);
+    const [selectedOrderId, setSelectedOrderId] = useState('');
+    const handleButtonClick = (orderId: string) => {
+        setShowModal(true);
+        setSelectedOrderId(orderId);
+
+    };
+
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+    
+    
+    
+    
     // Filtering Data
     const [orders, setOrders] = useState<IOrder[]>([]);
 
@@ -333,6 +351,39 @@ const ListOrder: React.FC = () => {
                         >
                             Hủy đơn
                         </Button>
+                        <div className="px-1 md:ml-0 ml-20">
+                            <div className="flex ">
+                                <Button
+                                    disabled={record.status === Status.CANCELLED || record.status === Status.COMPLETE}
+                                    className="  rounded-md px-6 flex items-center"
+                                    onClick={() => handleButtonClick(record._id)}
+                                >
+
+                                    <PrinterOutlined />   in
+                                </Button>
+
+                            </div>
+                            <Modal
+                                title="Hóa Đơn"
+                                open={showModal}
+                                onCancel={handleCloseModal}
+                               
+                                destroyOnClose={true}
+                                width={1900}
+                                style={{ maxWidth: 900 }}
+                                centered
+                                footer={null}
+                                
+                            >
+                                <div className="max-w-3xl mx-auto">
+                                    <Hoadon orderId={selectedOrderId} />
+
+
+                                </div>
+                            </Modal>
+
+
+                        </div>
                     </Space>
                 );
             },

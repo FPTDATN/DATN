@@ -1,7 +1,28 @@
-import { PaginatedOrder } from '@/types/order';
+import { IProductorder, Iuser, PaginatedOrder } from '@/types/order';
 import { IOrder } from '@/types/order';
 import { waiting } from '@/utils/waiting';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+
+
+export type IdType = {
+  _id: string;
+  orderNumber: string;
+  status: number;
+  phone: number;
+  fullName: string;
+  shipping: string;
+  products: IProductorder[];
+  userId: string;
+  payMethod: number;
+  total: number;
+  createdAt: Date;
+  updatedAt: Date;
+  email: string;
+  Iuser:Iuser[]
+}
+
+
 const orderApi = createApi({
   reducerPath: "order",
   tagTypes: ['Order'],
@@ -52,9 +73,13 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    getOrderById: builder.query<IdType, string>({
+      query: (_id) => `/order/${_id}`,
+      providesTags: ['Order'],
+    }),
   }),
 })
-export const { useGetsOrderQuery,
+export const {useGetOrderByIdQuery, useGetsOrderQuery,
   useGetProductByIdQuery,
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,
