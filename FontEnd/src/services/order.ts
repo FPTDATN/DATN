@@ -37,6 +37,11 @@ const orderApi = createApi({
 
   endpoints: (builder) => ({
 
+    getRevenueByDays: builder.query({
+      query: () => '/revenue-by-day',
+      providesTags: ['Order'],
+    }),
+
     getOrderStatistics: builder.query<{ totalOrders: number }, void>({
       query: () => '/order/statistics',
     }),
@@ -84,5 +89,6 @@ export const {useGetOrderByIdQuery, useGetsOrderQuery,
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,
   useGetRevenueStatisticsQuery,
-  useGetOrderStatisticsQuery } = orderApi
+  useGetOrderStatisticsQuery,
+  useGetRevenueByDaysQuery} = orderApi
 export default orderApi
