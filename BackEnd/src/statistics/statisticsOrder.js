@@ -45,3 +45,26 @@ export const getOrderStatistics = async (req, res) => {
     return res.status(500).json({ error: 'Lỗi khi lấy thống kê đơn hàng' });
   }
 };
+
+
+
+export const getRevenueByDay = async (req, res) => {
+  try {
+    const orders = await Order.find();
+
+    const revenueByDay = {};
+    orders.forEach((order) => {
+      const createdAt = order.createdAt.toDateString();
+      if (!revenueByDay[createdAt]) {
+        revenueByDay[createdAt] = order.total;
+      } else {
+        revenueByDay[createdAt] += order.total;
+      }
+    });
+
+    res.status(200).json(revenueByDay);
+  } catch (error) {
+    console.error('Lỗi khi thống kê doanh thu theo ngày:', error);
+    res.status(500).json({ error: 'Lỗi khi thống kê doanh thu theo ngày' });
+  }
+};
