@@ -97,31 +97,18 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <Skeleton count={4} />
                 </div>
             ) : !arrangeList ? (
-                <div className="shadow-sm">
-                    <div className="relative group p-3">
-                        <div className="favourite hidden group-hover:block ">
+                <div className="px-2 m-0 ">
+                    <div className="relative group bg-white rounded shadow-md">
+                        <div className="favourite hidden group-hover:block flex flex-col ">
                             {!isInWishlist && (
                                 <div
                                     onClick={() => handleAddToWishlist(product?._id!, authData?._id)}
-                                    className="absolute left-0 z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
+                                    className="absolute left-5 top-5 z-10 text-xl font-semibold flex items-center justify-center p-2 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
                                 >
                                     <AiOutlineHeart />
                                 </div>
                             )}
-                        </div>
-                        <Link to={`/detail/${product?._id}`} className="">
-                            <img
-                                src={product?.images[0]}
-                                alt={product?.name}
-                                className="object-cover w-full mx-auto h-40 md:h-80 lg:h-60"
-                            />
-                        </Link>
-
-                        {/* Card sale off if saleoff > 0 */}
-                        <SaleOffCard type="saleoff" off={product?.sale_off} />
-
-                        <div className="flex justify-center">
-                            <div
+                             <div
                                 onClick={() =>
                                     dispatch(
                                         addToCart({
@@ -133,32 +120,46 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                         }),
                                     )
                                 }
-                                className="absolute z-10 text-xl font-semibold flex items-center justify-center p-2 -mt-6 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
+                                className="absolute left-5 top-10 z-10 text-xl font-semibold flex items-center justify-center p-2 mt-8 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11"
                             >
                                 <AiOutlineShoppingCart />
                             </div>
                         </div>
+                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                            <Link to={`/detail/${product?._id}`} className="">
+                                <img
+                                    src={product?.images[0]}
+                                    alt={product?.name}
+                                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                />
+                            </Link>
+                        </div>
+                        
+                        {/* Card sale off if saleoff > 0 */}
+                        <SaleOffCard type="saleoff" off={product?.sale_off} />
+
+                        
                     </div>
 
                     <div className="py-6 text-left">
-                        <h3 className="text-center mt-4 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
+                        <h3 className="text-left mt-0 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
-                        <p className="mb-3 text-lg font-medium text-center text-gray-600">
-                            <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">
-                                {formartVND(product?.price!)}
+                        <p className="my-3 text-lg font-medium text-left text-gray-600">
+                            <span className="text-red-500 dark:text-gray-300 text-xs lg:text-xl">
+                            {formartVND(hasSale)}
                             </span>
                             {product?.sale_off! > 0 && (
-                                <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    {formartVND(hasSale)}
+                                <span className="ml-2 text-gray-400 line-through ttext-xs lg:text-xl">
+                                    {formartVND(product?.price!)}
                                 </span>
                             )}
                         </p>
-                        <div className="flex justify-center">
+                        {/* <div className="flex justify-center">
                             <span>
                                 <Rate className="text-sm" tooltips={desc} onChange={setValue} value={value} />
                             </span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             ) : (
