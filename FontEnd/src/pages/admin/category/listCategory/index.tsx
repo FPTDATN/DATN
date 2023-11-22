@@ -53,8 +53,8 @@ const ListCategory = () => {
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
-  const categoryList = data?.docs || [];
+  const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
+  const categoryList = data?.docs.filter(category => category.name.includes(searchValue)) || [];
 
   const paginationOptions = {
     currentPage,
