@@ -4,7 +4,7 @@ import Order from "../models/order.js";
 
 export const getRevenue = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({ status: 4 }); 
 
     const totalRevenue = orders.reduce((total, order) => total + order.total, 0);
 
@@ -50,7 +50,7 @@ export const getOrderStatistics = async (req, res) => {
 
 export const getRevenueByDay = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({ status: 4 }); 
 
     const revenueByDay = {};
     orders.forEach((order) => {
