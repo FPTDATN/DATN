@@ -10,7 +10,9 @@ module.exports = {
     },
     colors: {
       primary: "#5256fa",
-      layer: '#fbfcff'
+      layer: '#fbfcff',
+      gree: "#32a852",
+      reds:"#cc291b"
     },
   },
   plugins: [],

@@ -78,7 +78,7 @@ const ListCategory = () => {
             </Space>
           </div>
           <div className="bg-gray-400 ml-[20px] rounded-md">
-            <Button type="primary" onClick={handleAddCategory}>
+            <Button type="primary" className='bg-primary' onClick={handleAddCategory}>
               Thêm danh mục
             </Button>
           </div>
@@ -120,7 +120,7 @@ const ListCategory = () => {
                     </td>
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">
-                        <Button type="dashed" onClick={() => handleUpdateCategory(category._id)}>
+                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateCategory(category._id)}>
                           Update
                         </Button>
                         <Popconfirm
@@ -131,7 +131,7 @@ const ListCategory = () => {
                           okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
                           onConfirm={() => handleDelete(category._id)}
                         >
-                          <Button type="link">Delete</Button>
+                          <Button type="link" className='bg-reds text-layer'>Delete</Button>
                         </Popconfirm>
                       </Space>
                     </td>
