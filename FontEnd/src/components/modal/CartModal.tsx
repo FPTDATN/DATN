@@ -30,8 +30,8 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
         <div className="flex mr-5 cursor-pointer">
             <div className="text-2xl relative">
                 <BsCart2 type="primary" onClick={showDrawer} />
-                <span className="bg-primary/90 text-white w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">
-                    {cartItems.length}
+                <span className="!bg-primary text-white w-5 h-5 flex justify-center items-center rounded-full absolute -top-2 -right-2 text-sm">
+                    {cartItems?.length}
                 </span>
             </div>
             <Drawer
@@ -72,7 +72,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
 
                                                 <div className="flex">
                                                     <button
-                                                        onClick={() => dispatch(remove(item._id))}
+                                                        onClick={() => dispatch(remove(index))}
                                                         type="button"
                                                         className="font-medium text-indigo-600 hover:text-indigo-500"
                                                     >
@@ -98,7 +98,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                         <Link
                             to={'/cart'}
                             onClick={onClose}
-                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                            className="flex items-center justify-center rounded-md border border-transparent !bg-primary px-6 py-3 text-base font-medium text-white shadow-sm hover:!bg-primary/90"
                         >
                             Xem giỏ hàng
                         </Link>
@@ -109,7 +109,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
-                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                                className="font-medium !text-primary"
                             >
                                 Tiếp mục mua hàng
                                 <span aria-hidden="true"> &rarr;</span>

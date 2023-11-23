@@ -96,7 +96,7 @@ export default function CheckoutForm({ authData, cartItems, payMethod, form }: P
                 Thanh toán bằng Stripe
             </Button>
 
-            <Button htmlType="submit" onClick={() => setMethodPay(1)}>
+            <Button htmlType="submit" style={{marginLeft:10}} onClick={() => setMethodPay(1)}>
                 Thanh toán bằng VNPay
             </Button>
         </Form>
