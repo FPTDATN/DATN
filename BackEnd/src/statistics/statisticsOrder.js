@@ -68,3 +68,41 @@ export const getRevenueByDay = async (req, res) => {
     res.status(500).json({ error: 'Lỗi khi thống kê doanh thu theo ngày' });
   }
 };
+
+export const calculateRevenueByMonth = async (req, res) => {
+  try {
+    // Perform the necessary calculations to retrieve revenue statistics by month
+
+    // Example logic to calculate revenue by month for completed orders
+    const revenueByMonth = await Order.aggregate([
+      { $match: { status: 4 } }, // Chỉ lấy những đơn hàng đã hoàn thành
+      {
+        $group: {
+          _id: { $month: '$createdAt' },
+          totalRevenue: { $sum: '$total' }
+        }
+      },
+      {
+        $sort: {
+          _id: 1
+        }
+      }
+    ]);
+    const formattedData = revenueByMonth.map(item => {
+      const month = new Date().toLocaleString('en-US', { month: 'long' });
+      const year = new Date().getFullYear();
+      const monthYear = `${month} ${year}`;
+
+      return {
+        monthYear,
+        totalRevenue: item.totalRevenue
+      };
+    });
+
+    return res.status(200).json(formattedData);
+
+  } catch (error) {
+    console.error('Error calculating revenue by month:', error);
+    return res.status(500).json({ error: 'Error calculating revenue by month' });
+  }
+};

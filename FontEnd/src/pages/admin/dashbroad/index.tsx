@@ -1,6 +1,6 @@
 import { useLogoutMutation, useMeQuery } from "@/services/auth";
 import { useGetAccountCommentsQuery } from "@/services/comment";
-import { useGetOrderStatisticsQuery, useGetRevenueByDaysQuery, useGetRevenueStatisticsQuery } from "@/services/order";
+import { useCalculateRevenueByMonthQuery, useGetOrderStatisticsQuery, useGetRevenueByDaysQuery, useGetRevenueStatisticsQuery } from "@/services/order";
 import { useGetTotalProductQuery } from "@/services/product";
 import { useGetAccountQuery } from "@/services/user";
 import { useEffect } from "react";
@@ -14,6 +14,7 @@ const Dashbroad = () => {
     const { data: totalProduct } = useGetTotalProductQuery()
     const { data: DataOrders } = useGetOrderStatisticsQuery()
     const { data: revenueByDay = {} } = useGetRevenueByDaysQuery()
+    const { data: revenueByMonthData } = useCalculateRevenueByMonthQuery();
     const usage = DataUser?.usage ?? 0;
     const totalComments = DataComment?.totalComments ?? 0;
     const totalP = totalProduct?.total ?? 0;
@@ -23,12 +24,15 @@ const Dashbroad = () => {
     const isAdmin = authData?.role === 'admin';
     useEffect(() => {
 
-    }, [revenueByDay]);
+    }, [revenueByDay, revenueByMonthData]);
 
     const chartData = Object.keys(revenueByDay).map((date) => ({
         name: date,
         revenue: revenueByDay[date],
     }));
+    
+
+
     return (
         <>
             <div className="grid grid-cols-4 gap-4 mb-4">
@@ -204,47 +208,39 @@ const Dashbroad = () => {
                     </div>
 
                 </article>
-                
+
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-            <BarChart width={600} height={300} data={chartData}>
-                    <XAxis dataKey="name" stroke="#8884d8" />
-                    <YAxis reversed={true} /> 
-                    <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} />
-                    <Legend
-                        width={100}
-                        wrapperStyle={{
-                            top: 40,
-                            right: 20,
-                            backgroundColor: '#f5f5f5',
-                            border: '1px solid #d5d5d5',
-                            borderRadius: 3,
-                            lineHeight: '40px',
-                        }}
-                    />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <Bar dataKey="revenue" fill="#8884d8" barSize={20} />
-                </BarChart>
+            <div className="grid grid-cols-2 gap-4 mb-20 mt-40">
                 <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                    <p className="text-2xl text-gray-400 dark:text-gray-500">
-                        <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
+                <BarChart width={600} height={300} data={revenueByMonthData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="monthYear" />
+                        <YAxis reversed={true} />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="totalRevenue" fill="#8884d8" barSize={20} />
+                    </BarChart>
                 </div>
                 <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                    <p className="text-2xl text-gray-400 dark:text-gray-500">
-                        <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                    <p className="text-2xl text-gray-400 dark:text-gray-500">
-                        <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
+                <BarChart width={600} height={300} data={chartData}>
+                        <XAxis dataKey="name" stroke="#8884d8" />
+                        <YAxis reversed={true} />
+                        <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} />
+                        <Legend
+                            width={100}
+                            wrapperStyle={{
+                                top: 40,
+                                right: 20,
+                                backgroundColor: '#f5f5f5',
+                                border: '1px solid #d5d5d5',
+                                borderRadius: 3,
+                                lineHeight: '40px',
+                            }}
+                        />
+                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                        <Bar dataKey="revenue" fill="#8884d8" barSize={10} />
+                    </BarChart>
                 </div>
             </div>
             <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
