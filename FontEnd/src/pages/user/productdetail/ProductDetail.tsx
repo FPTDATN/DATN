@@ -62,7 +62,7 @@ const ProductDetail = () => {
                                         <div className="sticky top-0 overflow-hidden ">
                                             <Carousel autoPlay>
                                                 {data?.images?.map((item, index) => (
-                                                    <div key={index} className="h-[600px]">
+                                                    <div key={index} className="h-[500px]">
                                                         <img
                                                             className="rounded-lg object-cover"
                                                             alt={item}
