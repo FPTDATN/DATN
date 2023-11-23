@@ -124,6 +124,13 @@ const ListOrder: React.FC = () => {
         const filterIsPaidFalse = data?.docs.filter((order) => order.payMethod === 0);
         setOrders(filterIsPaidFalse!);
     };
+    const [filterStatus, setFilterStatus] = useState<number | null>(null);
+
+    const handleFilterByStatus = (status: number) => {
+        const filteredData = data?.docs.filter((order) => order.status === status);
+        setOrders(filteredData);
+        setFilterStatus(status);
+    };
 
     // Editting
 
@@ -309,7 +316,7 @@ const ListOrder: React.FC = () => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='bg-gree text-layer'>
+                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='p-2 rounded-md border'>
                             Lưu
                         </Typography.Link>
                         <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">
@@ -457,6 +464,13 @@ const ListOrder: React.FC = () => {
                         </Button>
                         <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
                         <Button onClick={handleFilterIsPaidFalse}>Hàng trả sau</Button>
+                        <Select onChange={handleFilterByStatus} placeholder="Hàng theo trạng thái">
+                            <Option value={Status.INFORMATION}>Xác thực thông tin</Option>
+                            <Option value={Status.ORDER_CONFIRM}>Xác nhận đơn hàng</Option>
+                            <Option value={Status.SHIPPING}>Đang giao hàng</Option>
+                            <Option value={Status.COMPLETE}>Hoàn thành</Option>
+                            <Option value={Status.CANCELLED}>Đã hủy</Option>
+                        </Select>
                     </div>
 
                     <Form form={form} component={false}>
