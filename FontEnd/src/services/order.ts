@@ -19,7 +19,7 @@ export type IdType = {
   createdAt: Date;
   updatedAt: Date;
   email: string;
-  Iuser:Iuser[]
+  Iuser: Iuser[]
 }
 
 
@@ -36,6 +36,12 @@ const orderApi = createApi({
 
 
   endpoints: (builder) => ({
+
+
+    calculateRevenueByMonth: builder.query({
+      query: () => '/revenue-by-month',
+      providesTags: ['Order'],
+    }),
 
     getRevenueByDays: builder.query({
       query: () => '/revenue-by-day',
@@ -84,11 +90,12 @@ const orderApi = createApi({
     }),
   }),
 })
-export const {useGetOrderByIdQuery, useGetsOrderQuery,
+export const { useGetOrderByIdQuery, useGetsOrderQuery,
   useGetProductByIdQuery,
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,
   useGetRevenueStatisticsQuery,
   useGetOrderStatisticsQuery,
-  useGetRevenueByDaysQuery} = orderApi
+  useGetRevenueByDaysQuery,
+  useCalculateRevenueByMonthQuery } = orderApi
 export default orderApi
