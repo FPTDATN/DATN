@@ -12,6 +12,9 @@ const CheckoutSuccess = () => {
     const router = useNavigate();
     const dispatch = useAppDispatch();
 
+    console.log(id);
+    
+
     const [update] = useUpdateOrderStatusMutation();
     const [timerCount, setTimer] = useState(5);
     const [disable, setDisable] = useState(true);
@@ -33,7 +36,7 @@ const CheckoutSuccess = () => {
         makeRequest();
         runFireworks();
         dispatch(clear());
-    }, [id]);
+    }, []);
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -65,7 +68,7 @@ const CheckoutSuccess = () => {
                             {data ? data?.username : ''} đã ủng hộ
                         </span>
                     </p>
-                    <p> Chúc bạn 1 ngày vui vẻ 🥰! </p>
+                    <p> Chúc bạn 1 ngày vui vẻ 🥰! </p> <a href='/' className='text-primary mt-2 block'>Trở lại</a>
                     <div className="flex mt-4 flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
                         {disable && `Trở lại sau ${timerCount}s` }
                     </div>

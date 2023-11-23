@@ -1,4 +1,4 @@
-import { Rate } from 'antd';
+import { message } from 'antd';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
@@ -11,18 +11,15 @@ import { useAddToWishlistMutation, useCheckProductInWishlistMutation, useGetWish
 import { useMeQuery } from '@/services/auth';
 import { toast } from 'react-toastify';
 import { formartVND } from '@/utils/formartVND';
+import { CloseOutlined } from '@ant-design/icons';
 
 interface ProductItemProps {
-    arrangeList?: boolean;
     product?: ProductType;
 }
-const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
-const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product }) => {
+const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
     const dispatch = useAppDispatch();
     const { data: authData } = useMeQuery();
-
-    const [value, setValue] = useState(3);
     const [loading, _setLoading] = useState(false);
     const hasSale = product?.price! - (product?.price! * product?.sale_off!) / 100;
 
@@ -31,8 +28,26 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
     const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();
     const [isInWishlist, setIsInWishlist] = useState(false);
+    const [haveOption, setHaveOption] = useState(false);
+    const [color, setColor] = useState<string>('');
+    const [size, setSize] = useState<string>('');
 
-    const handleAddToWishlist = async (productId: string, userId: any) => {
+    const handleSelect = () => {
+        if (product?.sizeId?.length! > 0 || product?.colorId?.length! > 0) {
+            setHaveOption(true);
+        } else {
+            setHaveOption(false);
+            dispatch(addToCart({ ...product, quantity: 1 }));
+        }
+    };
+
+    const handleClose = () => {
+        setHaveOption(false);
+        setColor('');
+        setSize('');
+    };
+
+    const handleAddToWishlist = async (productId: string, _userId: any) => {
         if (authData) {
             try {
                 // Kiểm tra xem người dùng đã có danh sách yêu thích hay chưa
@@ -96,10 +111,10 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                     <Skeleton className="h-[260px]" />
                     <Skeleton count={4} />
                 </div>
-            ) : !arrangeList ? (
+            ) : (
                 <div className="px-2 m-0 ">
                     <div className="relative group bg-white rounded shadow-md">
-                        <div className="favourite hidden group-hover:block flex flex-col ">
+                        <div className="favourite hidden group-hover:block flex-col ">
                             {!isInWishlist && (
                                 <div
                                     onClick={() => handleAddToWishlist(product?._id!, authData?._id)}
@@ -108,18 +123,8 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                     <AiOutlineHeart />
                                 </div>
                             )}
-                             <div
-                                onClick={() =>
-                                    dispatch(
-                                        addToCart({
-                                            ...product!,
-                                            price: hasSale,
-                                            quantity: 1,
-                                            colorId: product?.colorId![0].name as any,
-                                            sizeId: product?.sizeId![0].name as any,
-                                        }),
-                                    )
-                                }
+                            <div
+                                onClick={handleSelect}
                                 className="absolute left-5 top-10 z-10 text-xl font-semibold flex items-center justify-center p-2 mt-8 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11"
                             >
                                 <AiOutlineShoppingCart />
@@ -134,11 +139,68 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                                 />
                             </Link>
                         </div>
-                        
+
                         {/* Card sale off if saleoff > 0 */}
                         <SaleOffCard type="saleoff" off={product?.sale_off} />
 
-                        
+                        {haveOption && (
+                            <div>
+                                <div
+                                    className={`absolute group top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-white/90 z-50`}
+                                >
+                                    <button className="absolute top-2 right-2 hover:opacity-70" onClick={handleClose}>
+                                        <CloseOutlined />
+                                        <span className="ml-1">Đóng</span>
+                                    </button>
+                                    <div className="flex flex-col w-full gap-y-2 px-3">
+                                        {product?.sizeId && (
+                                            <select
+                                                onChange={(e) => setSize(e.target.value)}
+                                                className="w-full shadow text-center text-nav group px-2 py-2 outline-none"
+                                            >
+                                                <option value="">-- Vui lòng chọn size --</option>
+                                                {product.sizeId.map((size) => (
+                                                    <option key={size._id} value={size.name}>
+                                                        {size.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
+
+                                        {product?.colorId && (
+                                            <select
+                                                onChange={(e) => setColor(e.target.value)}
+                                                className="w-full shadow text-center text-nav group px-2 py-2 outline-none"
+                                            >
+                                                <option value="">-- Vui lòng chọn màu --</option>
+
+                                                {product?.colorId?.map((color) => (
+                                                    <option key={color._id} value={color.name}>
+                                                        {color.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            if (color.length > 0 && size.length > 0) {
+                                                setColor('');
+                                                setSize('');
+                                                handleClose();
+                                                return dispatch(addToCart({ ...product, quantity: 1, color, size }));
+                                            } else {
+                                                message.info('Hãy hoàn tất lựa chọn của bạn');
+                                            }
+                                        }}
+                                        className="absolute bottom-0 w-full uppercase font-semibold text-white !bg-primary py-3"
+                                    >
+                                        Thêm vào giỏ hàng
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="py-6 text-left">
@@ -147,7 +209,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                         </h3>
                         <p className="my-3 text-lg font-medium text-left text-gray-600">
                             <span className="text-red-500 dark:text-gray-300 text-xs lg:text-xl">
-                            {formartVND(hasSale)}
+                                {formartVND(hasSale)}
                             </span>
                             {product?.sale_off! > 0 && (
                                 <span className="ml-2 text-gray-400 line-through ttext-xs lg:text-xl">
@@ -156,62 +218,11 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ arrangeList, product
                             )}
                         </p>
                         {/* <div className="flex justify-center">
-                            <span>
-                                <Rate className="text-sm" tooltips={desc} onChange={setValue} value={value} />
-                            </span>
-                        </div> */}
-                    </div>
-                </div>
-            ) : (
-                <div className="grid grid-cols-2 border border-gray-200 rounded-md bg-gray-50 dark:border-gray-900 rounded-b-md dark:bg-gray-900">
-                    <div className="relative">
-                        <Link to={''} className="">
-                            <img
-                                src={product?.images[0]}
-                                alt={product?.name}
-                                className="object-cover w-full mx-auto h-32 md:h-80 lg:h-52"
-                            />
-                        </Link>
-                        <SaleOffCard type="saleoff" off={0} />
-                    </div>
-                    <div className="px-6 py-0 md:py-6 lg:py-6">
-                        <h3 className="mb-3 mt-3 text-base lg:text-xl line-clamp-2 font-medium text-center">
-                            <Link to={''}> {product?.name}</Link>
-                        </h3>
-                        <p className="mb-3 text-lg font-medium text-center text-gray-600">
-                            <span className="text-primary/90 dark:text-gray-300 text-sm lg:text-xl">${hasSale}</span>
-                            {product?.sale_off! > 0 && (
-                                <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
-                                    {formartVND(product?.price!)}
+                                <span>
+                                    <Rate className="text-sm" tooltips={desc} onChange={setValue} value={value} />
                                 </span>
-                            )}
-                        </p>
-                        <div className="flex justify-center">
-                            <span>
-                                <Rate
-                                    className="text-sm md:text-base lg:text-xl"
-                                    tooltips={desc}
-                                    onChange={setValue}
-                                    value={value}
-                                />
-                            </span>
-                        </div>
+                            </div> */}
                     </div>
-                    <button
-                        onClick={() =>
-                            dispatch(
-                                addToCart({
-                                    ...product!,
-                                    quantity: 1,
-                                    colorId: product?.colorId![0].name as any,
-                                    sizeId: product?.sizeId![0].name as any,
-                                }),
-                            )
-                        }
-                        className="flex w-full col-span-2 text-sm md:text-base lg:text-xl justify-center px-4 py-2 text-primary/90 border border-primary/90 items-center dark:border-gray-600 hover:bg-primary/90 hover:text-gray-100 dark:hover:bg-gray-800 dark:hover:border-gray-900"
-                    >
-                        Thêm vào giỏ hàng
-                    </button>
                 </div>
             )}
         </>

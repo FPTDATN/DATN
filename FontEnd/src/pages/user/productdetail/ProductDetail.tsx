@@ -165,8 +165,8 @@ const ProductDetail = () => {
                                                                 ...(data! as any),
                                                                 price: hasSale,
                                                                 quantity: quantity,
-                                                                colorId: color,
-                                                                sizeId: size,
+                                                                color: color,
+                                                                size: size,
                                                             }),
                                                         )
                                                     }

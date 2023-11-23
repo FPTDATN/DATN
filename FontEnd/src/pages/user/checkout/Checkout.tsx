@@ -3,9 +3,11 @@ import { useAppSelector } from '@/store/hook';
 import { checkAuth } from '@/utils/checkAuth';
 import Loading from '@/components/ui/Loading';
 import { Form, Radio, RadioChangeEvent } from 'antd';
-import { reduceTotal } from '@/utils/reduce';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import CheckoutNormal from '@/components/checkout/CheckoutNormal';
+import CartComponent from '@/components/cart/CartComponent';
+import { formartVND } from '@/utils/formartVND';
+import { reduceTotal } from '@/utils/reduce';
 
 const LocationList: React.FC = () => {
     const { data: authData, isLoading: authLoading } = checkAuth();
@@ -83,46 +85,25 @@ const LocationList: React.FC = () => {
                                         <Loading />
                                     </div>
                                 ) : (
-                                    <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10">
-                                        <div className="px-4 pt-8">
-                                            <p className="text-xl font-medium">Order Summary</p>
-                                            <p className="text-gray-400">
-                                                Check your items. And select a suitable shipping method.
-                                            </p>
-                                            <table className="border mt-6">
-                                                <thead>
-                                                    <tr>
-                                                        <td className="px-2 py-2">SẢN PHẨM</td>
-                                                        <td className="line-clamp-1 px-2 py-2">SỐ</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {cartItems.map((item) => (
-                                                        <tr key={item._id}>
-                                                            <td className="border px-2 py-2 font-bold text-base">
-                                                                {item.name}
-                                                            </td>
-                                                            <td className="border px-2 py-2 font-bold text-base text-primary/90">{`x${item.quantity}`}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                            <h3 className="text-xl font-bold text-primary/90 mt-4">
-                                                TỔNG TIỀN: ${reduceTotal(cartItems)}
-                                            </h3>
-                                            <p className="mt-8 text-lg font-medium">Shipping Methods</p>
-                                        </div>
-
+                                    <div className="grid sm:px-10 lg:grid-cols-2 gap-x-6 lg:px-20 xl:px-32 py-10">
                                         <div>
+                                            <CartComponent />
+                                            <div className="mt-3 text-xl">
+                                                <p>
+                                                    Tổng:{' '}
+                                                    <span className="!text-primary font-semibold">
+                                                        {formartVND(reduceTotal(cartItems))}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className='border p-4 shadow-lg rounded'>
                                             <Radio.Group onChange={onChange} value={payMethod}>
                                                 <Radio className="w-full mt-2" value={0}>
                                                     Thanh toán khi nhận hàng
                                                 </Radio>
                                                 <Radio className="w-full mt-2" value={1}>
                                                     Thanh toán ngay
-                                                </Radio>
-                                                <Radio className="w-full mt-2" value={2}>
-                                                    Thanh toán bằng VNPAY
                                                 </Radio>
                                             </Radio.Group>
                                             {methodBody}

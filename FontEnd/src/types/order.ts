@@ -15,8 +15,10 @@ export interface IProductorder {
       quantity: number;
       name: string;
       price:number;
-      colorId:string;
-      sizeId:string;
+      colorId?:string;
+      sizeId?:string;
+      size?:string;
+      color?:string;
 }
 export interface Iuser {
       _id: string;

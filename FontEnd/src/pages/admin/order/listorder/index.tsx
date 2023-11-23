@@ -264,24 +264,10 @@ const ListOrder: React.FC = () => {
 
     const columns = [
         {
-            title: 'Mã đơn',
-            dataIndex: 'orderNumber',
-            filterSearch: true,
-            width: '15%',
-
-            ...getColumnSearchProps('orderNumber'),
-        },
-        {
             title: 'Tên khách hàng',
             dataIndex: 'fullName',
             width: '25%',
             ...getColumnSearchProps('fullName'),
-        },
-        {
-            title: 'Địa chỉ',
-            dataIndex: 'shipping',
-            width: '25%',
-            ...getColumnSearchProps('shipping'),
         },
         {
             title: 'Số điện thoại',
@@ -488,19 +474,19 @@ const ListOrder: React.FC = () => {
                             rowKey={'_id'}
                             expandable={{
                                 expandedRowRender: (record) => (
-                                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <table className="w-full border text-sm text-left text-gray-500 dark:text-gray-400">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="border px-6 text-xs font-medium py-3">
                                                     Tên đơn hàng
                                                 </th>
-                                                <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="border px-6 text-xs font-medium py-3">
                                                     Màu
                                                 </th>
-                                                <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="border px-6 text-xs font-medium py-3">
                                                     Size
                                                 </th>
-                                                <th scope="col" className="text-left px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="border text-left px-6 text-xs font-medium py-3">
                                                     Số lượng
                                                 </th>
                                             </tr>
@@ -516,15 +502,15 @@ const ListOrder: React.FC = () => {
                                             </tbody>
                                         ) : (
                                             <tbody>
-                                                {record?.products.map((product) => (
+                                                {record?.products.map((product:any,index) => (
                                                     <tr
-                                                        key={product._id}
-                                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                                        key={index}
+                                                        className="border bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                                     >
-                                                        <td className="px-6 py-4 text-left">{product?.name}</td>
-                                                        <td className="px-6 py-4 text-left">{product?.colorId}</td>
-                                                        <td className="px-6 py-4 text-left">{product?.sizeId}</td>
-                                                        <td className="px-6 py-4 text-left">{product?.quantity}</td>
+                                                        <td className="px-6 py-4 text-left border">{product?.name}</td>
+                                                        <td className="px-6 py-4 text-left border">{product?.color}</td>
+                                                        <td className="px-6 py-4 text-left border">{product?.size}</td>
+                                                        <td className="px-6 py-4 text-left border">{product?.quantity}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
