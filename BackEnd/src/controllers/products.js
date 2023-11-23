@@ -1,6 +1,7 @@
 import Products from "../models/products.js";
 import { productSchema } from "../Schemas/products.js";
 import Category from "../models/category.js";
+import mongoose, { ObjectId } from "mongoose";
 
 export const getAll = async (req, res) => {
   const {
@@ -163,3 +164,16 @@ export const getQuanlityProduct = async (req, res) => {
     });
   }
 };
+
+export const updateInStock = async (req, res) => {
+
+  try {
+    const { value } = req.body;
+
+    const newValue = await Products.findByIdAndUpdate({ _id: req.params.id }, { $inc: { inStock: -value } })
+
+    return res.status(201).json(newValue)
+  } catch (error) {
+    return res.status(400).json({ message: error.message })
+  }
+}

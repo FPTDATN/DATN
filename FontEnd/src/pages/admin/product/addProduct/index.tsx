@@ -34,7 +34,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
 
             const { size, price, ...restValues } = values;
 
-            await mutateCreateProduct({ ...restValues, images, price: price * 1000 }).unwrap();
+            await mutateCreateProduct({ ...restValues, images, price: price }).unwrap();
             const newProduct = { ...restValues };
             setProducts((prevProducts) => [...prevProducts, newProduct]);
             form.resetFields();
@@ -78,8 +78,8 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             </Form.Item>
 
             <Form.Item
-                label="Số lượng"
-                name="quantity"
+                label="Số lượng trong kho"
+                name="inStock"
                 rules={[{ required: true, message: 'Vui lòng nhập số lượng sản phẩm ' }]}
             >
                 <Space>

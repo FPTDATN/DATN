@@ -19,9 +19,12 @@ const cartSlice = createSlice({
 
             const itemIndex = state.cartItems.findIndex((item) => item?.size === newProduct.sizeId || item?.color === newProduct.color);
 
+            // const itemId = state.cartItems.findIndex(item => item._id === newProduct._id)
+
             const existingProduct = state.cartItems.find((item) => item._id === newProduct._id);
 
             if (itemIndex < 0) {
+                
                 state.cartItems.push({
                     ...newProduct,
                     color: newProduct.color,
@@ -29,46 +32,29 @@ const cartSlice = createSlice({
                     quantity: newProduct.quantity || 1,
                 });
                 message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
-            } else if (itemIndex === 0 && existingProduct?.color !== newProduct.color && existingProduct?.size !== newProduct.size) {
-                state.cartItems.push({
-                    ...newProduct,
-                    color: newProduct.color,
-                    size: newProduct.size,
-                    quantity: state.cartItems[itemIndex].quantity++ || newProduct.quantity
-                });
-                message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
-            } else if (itemIndex === 0) {
-                if (existingProduct?.color === newProduct.color && existingProduct?.size === newProduct.size) {
-                    state.cartItems[itemIndex].quantity++
-                    message.success(`Đã thêm ${newProduct.name} vào trong giỏ hàng`);
+            } else {
 
+                if (existingProduct.color === newProduct.color || existingProduct.size !== newProduct.size) {
+                    state.cartItems.push({
+                        ...newProduct,
+                        color: newProduct.color,
+                        size: newProduct.size,
+                        quantity: newProduct.quantity || 1,
+                    });
+                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
+                } else if (existingProduct.color !== newProduct.color || existingProduct.size === newProduct.size) {
+                    state.cartItems.push({
+                        ...newProduct,
+                        color: newProduct.color,
+                        size: newProduct.size,
+                        quantity: newProduct.quantity || 1,
+                    });
+                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
                 } else {
-                    if (existingProduct.color === newProduct.color && existingProduct.size !== newProduct.size) {
-
-                        state.cartItems.push({
-                            ...newProduct,
-                            color: newProduct.color,
-                            size: newProduct.size,
-                            quantity: newProduct.quantity || 1
-                        });
-                        message.success(`Đã thêm ${newProduct.name} vào trong giỏ hàng`);
-
-                    } else {
-
-                        state.cartItems[itemIndex].quantity++
-                        message.success(`Đã thêm ${newProduct.name} vào trong giỏ hàng`);
-                    }
-
-                }
-            } else if (!newProduct.color && newProduct.size) {
-                if (existingProduct) {
-                    message.info(`${newProduct.name} đã có trong giỏ hàng`);
-                } else {
-                    state.cartItems.push({ ...newProduct, color: newProduct.color, size: newProduct.size, quantity: 1 });
+                    state.cartItems[itemIndex].quantity++;
                     message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
                 }
             }
-
 
         },
         increase: (state, action: PayloadAction<number>) => {

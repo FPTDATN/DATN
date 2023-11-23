@@ -8,6 +8,7 @@ module.exports = {
             gree: '#32a852',
             reds: '#cc291b',
         },
+    
     },
     plugins: [],
 };

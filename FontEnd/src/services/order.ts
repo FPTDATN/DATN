@@ -29,7 +29,7 @@ const orderApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:8080/api',
     fetchFn: async (...arg) => {
-      await waiting(2000);
+      await waiting(1000);
       return fetch(...arg)
     }
   }),

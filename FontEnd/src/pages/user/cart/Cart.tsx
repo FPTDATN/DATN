@@ -3,14 +3,13 @@ import Loading from '@/components/ui/Loading';
 import { useAppSelector } from '@/store/hook';
 import { formartVND } from '@/utils/formartVND';
 import { reduceTotal } from '@/utils/reduce';
-import { Alert, } from 'antd';
+import { Alert } from 'antd';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface CartProps {}
 
 const Cart: FunctionComponent<CartProps> = () => {
-
     const { cartItems } = useAppSelector((state) => state.cart);
     const [loading, setLoading] = useState(false);
 
@@ -20,10 +19,6 @@ const Cart: FunctionComponent<CartProps> = () => {
             setLoading(false);
         }, 1000);
     }, [cartItems]);
-
-    const [shipping, setShipping] = useState<number | null>(null);
-
-
 
     return (
         <>
@@ -57,7 +52,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                         ) : (
                             <>
                                 <div className="col-span-2 p-4 text-nav">
-                                    <CartComponent/>
+                                    <CartComponent />
 
                                     {/* Apply Coupon */}
                                     <br />
@@ -87,48 +82,19 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                 <span>{formartVND(reduceTotal(cartItems))}</span>
                                             </div>
 
-                                            <div className="flex justify-between items-center border-b border-gray-200 py-3">
-                                                <p>Shipping</p>
-                                                <div className="grid grid-cols-1 place-items-end space-y-3 place-content-center">
-                                                    <div className="space-x-2">
-                                                        <label>
-                                                            Tiêu chuẩn{' '}
-                                                            <span className="!text-primary">{formartVND(2)}</span>
-                                                        </label>
-                                                        <input
-                                                            type="radio"
-                                                            name="method"
-                                                            id=""
-                                                            defaultChecked
-                                                            value={2}
-                                                            onChange={(e) => setShipping(Number(e.target.value))}
-                                                        />
-                                                    </div>
-                                                    <div className="space-x-2">
-                                                        <label>
-                                                            Nhanh <span className="!text-primary">{formartVND(4)}</span>
-                                                        </label>
-                                                        <input
-                                                            type="radio"
-                                                            name="method"
-                                                            id=""
-                                                            value={4}
-                                                            onChange={(e) => setShipping(Number(e.target.value))}
-                                                        />
-                                                    </div>
-                                                    <p className="font-normal">
-                                                        Shipping to <span className="font-semibold">Vietnam</span>
-                                                    </p>
-                                                </div>
-                                            </div>
                                             <div className="flex justify-between items-center text-xl py-2">
                                                 <p>Tổng</p>
                                                 <p className="!text-primary">
-                                                    {formartVND(reduceTotal(cartItems) + shipping!)}
+                                                    {formartVND(reduceTotal(cartItems))}
                                                 </p>
                                             </div>
 
-                                            <a href='/checkout'  className="block text-white text-center !bg-primary py-2">TIẾN HÀNH KIỂM TRA</a>
+                                            <a
+                                                href="/checkout"
+                                                className="block text-white text-center !bg-primary py-2"
+                                            >
+                                                TIẾN HÀNH KIỂM TRA
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

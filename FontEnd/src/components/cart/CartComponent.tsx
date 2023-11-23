@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { formartVND } from '@/utils/formartVND';
 import { CloseOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
+import { Link } from 'react-router-dom';
 
 const CartComponent = () => {
     const { cartItems } = useAppSelector((state) => state.cart);
@@ -38,11 +39,11 @@ const CartComponent = () => {
                                 </th>
                                 <th className="px-4 w-full py-8 text-left">
                                     {item?.size?.length || item?.color?.length > 0 ? (
-                                        <span>
-                                            {item.name} - {item.size} - {item.color}
-                                        </span>
+                                        <Link to={`/detail/${item._id}`}>
+                                            {item.name.slice(0,10)}... - {item.size} - {item.color}
+                                        </Link>
                                     ) : (
-                                        <span>{item.name}</span>
+                                        <Link to={`/detail/${item._id}`}>{item.name.slice(0,10)}...</Link>
                                     )}
                                 </th>
                                 <th className="px-2 py-8">{formartVND(item.price)}</th>

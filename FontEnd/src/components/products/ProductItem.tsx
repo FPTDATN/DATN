@@ -189,7 +189,12 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
                                                 setColor('');
                                                 setSize('');
                                                 handleClose();
-                                                return dispatch(addToCart({ ...product, quantity: 1, color, size }));
+
+                                                if (product?.inStock === 0) {
+                                                    message.warning('Sản phẩm đã hết hàng');
+                                                } else {
+                                                    dispatch(addToCart({ ...product, quantity: 1, color, size }));
+                                                }
                                             } else {
                                                 message.info('Hãy hoàn tất lựa chọn của bạn');
                                             }
