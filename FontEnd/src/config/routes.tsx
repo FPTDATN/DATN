@@ -135,7 +135,6 @@ const router = createBrowserRouter([
             { path: 'product', element: <ListProduct /> },
             { path: 'category', element: <ListCaegory /> },
             { path: 'test', element: <AppTest /> },
-            { path: 'order', element: <ListOrder /> },
             { path: 'product/:id/comments', element: <ListComment /> },
         ],
     },
