@@ -32,25 +32,25 @@ const Cart: FunctionComponent<CartProps> = () => {
                     <div className="row max-inner">
                         <div className="columns col-12">
                             {/* <!-- start: cart form --> */}
-                            <form>
+                            <form className='flex justify-center flex-col'>
                                 <table className="cart-table" cellSpacing={0}>
                                     <thead>
                                         <tr>
-                                            <th className="product-thumbnail text-center px-4">&nbsp;</th>
-                                            <th className="product-description text-center px-4" colSpan={1}>
-                                                Items
+                                            <th className="product-thumbnail text-center px-4 border py-2">Ảnh</th>
+                                            <th className="product-description text-center px-4 py-2" colSpan={1}>
+                                                Chi tiết
                                             </th>
-                                            <th className="product-price text-center px-4">Price</th>
-                                            <th className="product-quantity text-center px-4">Quantity</th>
-                                            <th className="product-total text-center px-4">Total</th>
-                                            <th className="product-remove text-center px-4">&nbsp;</th>
+                                            <th className="product-price text-center px-4 py-2">Giá</th>
+                                            <th className="product-quantity text-center px-4 py-2">Số Lượng</th>
+                                            <th className="product-total text-center px-4 py-2">Tổng tiền</th>
+                                            <th className="product-remove items-center text-center px-4 py-2">Tùy Chỉnh</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {/* <!-- start: cart item --> */}
                                         {cartItems.map((item) => (
                                             <tr key={item._id} className="cart-item">
-                                                <td className="product-thumbnail">
+                                                <td className="product-thumbnail border">
                                                     <a href={`/detail/${item._id}`} className="w-[205px] h-[220px]">
                                                         <img
                                                             src={item.images[0]}
@@ -84,10 +84,10 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                     </div>
                                                 </td>
                                                 <td className="product-total">{formartVND(item.price * item.quantity)}</td>
-                                                <td className="product-remove">
+                                                <td className="product-remove ">
                                                     <Button
                                                         onClick={() => dispatch(remove(item._id))}
-                                                        className="ml-2"
+                                                        className="mx-3"
                                                         danger
                                                     >
                                                         Xóa
@@ -95,15 +95,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                 </td>
                                             </tr>
                                         ))}
-                                        {/* <!-- end: cart item --> */}
-
-                                        {/* <!-- start: cart item --> */}
-
-                                        {/* <!-- end: cart item --> */}
-
-                                        {/* <!-- start: cart item --> */}
-
-                                        {/* <!-- end: cart item --> */}
+                                        
                                     </tbody>
                                 </table>
 
@@ -115,19 +107,19 @@ const Cart: FunctionComponent<CartProps> = () => {
                                         </tr>
                                         <tr>
                                             <td className="cart-summary" colSpan={1}>
-                                                Summary
+                                                Tổng Hợp
                                             </td>
                                             <td className="cart-subtotals">
-                                                <span>Subtotal:</span> {formartVND(reduceTotal((cartItems)))}
+                                                <span>Giá đơn hàng:</span> {formartVND(reduceTotal((cartItems)))}
                                             </td>
                                             <td className="cart-shipping">
                                                 <span>Shipment:</span> Free
                                             </td>
                                             <td className="cart-total">
-                                                <span>Total to pay:</span> {formartVND(reduceTotal((cartItems)))}
+                                                <span>Tổng tiền:</span> {formartVND(reduceTotal((cartItems)))}
                                             </td>
                                             <td className="">
-                                                <a href="/checkout" className='block text-sm text-white bg-gray-800 px-6 py-2'>Thanh toán</a>
+                                                <a href="/checkout" className='block text-sm text-white text-center bg-gray-700 px-6 py-2'>Thanh toán</a>
                                             </td>
                                         </tr>
                                     </tbody>
