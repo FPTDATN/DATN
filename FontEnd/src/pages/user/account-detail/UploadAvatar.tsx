@@ -40,15 +40,15 @@ const UploadAvatar: FC = () => {
     };
 
     return (
-        <div>
-            <Input type="file" onChange={handleUpload} />
+        <div className='p-2 w-[300px] h-[65px] d-flex ' >
+            <Input type="file" onChange={handleUpload} className='mt-[15px] mr-2' />
 
-            <form onSubmit={handleChange}>
-                <Button
+            <form onSubmit={handleChange} >
+                <Button className='w-[100px] mb-4'
                     type="default"
                     htmlType="submit"
                     disabled={avatar.length === 0}
-                    
+
                     style={{ marginTop: 16 }}
                 >
                     Uploading
