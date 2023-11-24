@@ -66,7 +66,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             </Form.Item>
 
             <Form.Item
-                label="Giá gốc (VND * 1000)"
+                label="Giá gốc"
                 name="price"
                 rules={[{ required: true, message: 'Vui lòng nhập Giá' }]}
             >
