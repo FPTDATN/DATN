@@ -10,13 +10,15 @@ export interface PaginatedOrder {
       totalDocs: number;
       totalPages: number;
 }
-interface IProductorder {
+export interface IProductorder {
       _id?: number | string,
       quantity: number;
       name: string;
       price:number;
-      colorId:string;
-      sizeId:string;
+      colorId?:string;
+      sizeId?:string;
+      size?:string;
+      color?:string;
 }
 export interface Iuser {
       _id: string;
@@ -25,6 +27,7 @@ export interface Iuser {
 }
 export interface IOrder {
       _id: string;
+      isPaid:boolean,
       orderNumber: string;
       status: number;
       phone: number;

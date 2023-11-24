@@ -13,6 +13,7 @@ import colorRouter from "./routers/color.js";
 import payMethod from './routers/pay.js'
 
 import orderroute from "./routers/order.js";
+import vnpay from './routers/vnpay.js'
 
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -63,6 +64,8 @@ app.use("/api", payMethod);
 app.use("/api", orderroute);
 
 app.use('/stripe', stripe)
+
+app.use('/api/vnpay', vnpay)
 
 
 const PORT = 8080;

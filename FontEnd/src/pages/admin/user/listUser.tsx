@@ -198,13 +198,13 @@ const ListUser: React.FC = () => {
                                     </td>
                                     <td className="px-6 py-4">
                                         <Link to={`/admin/user/update/${user._id}`}>
-                                            <Button type="dashed" onClick={onShow}>
+                                            <Button type="dashed" className='bg-gree text-layer' onClick={onShow}>
                                                 Cập nhật
                                             </Button>
                                         </Link>
 
-                                        <Space wrap className="ml-2 bg-red-300 rounded-md">
-                                            <Button onClick={() => showDeleteConfirm(user._id)} type="dashed">
+                                        <Space wrap className="ml-2 rounded-md">
+                                            <Button onClick={() => showDeleteConfirm(user._id)} type="dashed" className='bg-reds text-layer'>
                                                 Delete
                                             </Button>
                                         </Space>

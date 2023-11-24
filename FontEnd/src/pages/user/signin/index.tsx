@@ -8,6 +8,8 @@ import InputField from '@/components/ui/InputField';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { checkAuth } from '@/utils/checkAuth';
 import { toast } from 'react-toastify';
+import { checkEditor } from '@/utils/checkEditor';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 
 const { Text } = Typography;
@@ -15,7 +17,8 @@ const Signin = () => {
     const router = useNavigate();
 
     const { data: authData, isLoading: authLoading } = checkAuth();
-    // const { data: authAdmin, isLoading: adminLoading } = checkAdmin();
+    const { data: authAdmin} = checkAdmin();
+    const { data: authEditor } = checkEditor();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
 
@@ -31,31 +34,32 @@ const Signin = () => {
             password,
         });
     };
+    useEffect(() => {
+
+        if (authData) {
+            if (isSuccess) {
+                toast.success('Đăng nhập thành công', { position: 'top-right' });
+                if (authEditor?.role === "editor") {
+                    setTimeout(() => router('/editor'), 2000)
+                } else  if (authAdmin?.role === "admin") {
+                    setTimeout(() => router('/admin'), 2000)
+                } else {
+                    setTimeout(() => router('/'), 2000)
+                }
+            }
+        }
+
+    }, [authData, isSuccess, authEditor ,authAdmin]);
+
 
     // useEffect(() => {
-
-    //     if (authData) {
-    //         if (isSuccess) {
-    //             toast.success('Đăng nhập thành công', { position: 'top-right' });
-    //             if (authAdmin?.role === "admin") {
-    //                 setTimeout(() => router('/admin'), 2000)
-    //             } else {
-    //                 setTimeout(() => router('/'), 2000)
-    //             }
-    //         }
+    //     if (isSuccess) {
+    //         toast.success('Đăng nhập thành công', { position: 'top-right' });
+    //         setTimeout(() => router('/'), 4000);
+    //     } else {
+    //         return;
     //     }
-
-    // }, [authData, isSuccess, authAdmin]);
-
-
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Đăng nhập thành công', { position: 'top-right' });
-            setTimeout(() => router('/'), 4000);
-        } else {
-            return;
-        }
-    }, [isSuccess]);
+    // }, [isSuccess]);
 
     // useEffect(() => {
     //     if (authData) {

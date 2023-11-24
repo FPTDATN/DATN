@@ -9,7 +9,7 @@ export interface PaginatedProduct {
     totalPages: number;
     _page?: number;
     _limit?: number;
-  _search?: string;
+    _search?: string;
 }
 
 export interface ProductType {
@@ -21,38 +21,37 @@ export interface ProductType {
     quantity: number;
     colorId?: Colors[];
     sizeId?: Sizes[];
-     brandId?:Brand;
+    brandId?: Brand;
     images: string[];
-    createAt:Date;
-    updateAt:Date;
+    createAt: Date;
+    updateAt: Date;
     categoryId?: Category;
-    
+    inStock:number;
+
 }
 
 export type ExtendProduct = ProductType & {
-    colorId: Colors;
-    sizeId?: Sizes;
-    categoryId?: Category;
+    color?: string;
+    size?: string;
 }
 
 interface Brand {
-    _id:string;
-    name:string;
+    _id: string;
+    name: string;
 }
 
 interface Colors {
-    _id:string;
-    name:string;
+    _id: string;
+    name: string;
 }
 
 interface Sizes {
-    _id:string;
-    name:string;
+    _id: string;
+    name: string;
 }
 
 interface Category {
-    _id:string;
-    name:string;
+    _id: string;
+    name: string;
 }
 
-  
