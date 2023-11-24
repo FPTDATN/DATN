@@ -1,6 +1,7 @@
 import Products from "../models/products.js";
 import { productSchema } from "../Schemas/products.js";
 import Category from "../models/category.js";
+import Brand from "../models/brand.js";
 import mongoose, { ObjectId } from "mongoose";
 
 export const getAll = async (req, res) => {
@@ -44,10 +45,13 @@ export const create = async (req, res) => {
       });
     }
     const products = await Products.create(req.body);
-    //
-    // Thêm ObjectId vào thuộc tính products trong model Category
-    //
+
     await Category.findByIdAndUpdate(products.categoryId, {
+      $addToSet: {
+        products: products._id,
+      },
+    });
+    await Brand.findByIdAndUpdate(products.brandId, {
       $addToSet: {
         products: products._id,
       },

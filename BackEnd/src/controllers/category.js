@@ -1,16 +1,17 @@
 import { categorySchema } from "../Schemas/category.js";
 import Category from "../models/category.js";
+import Products from "../models/products.js";
 
 export const getAllCategory = async (req, res) => {
   const {
-    // _limit = 8,
+    _limit = 999,
     _sort = "createAt",
     _order = "asc",
     _page = 1,
   } = req.query;
 
   const options = {
-    // limit: _limit,
+    limit: _limit,
     page: _page,
     sort: {
       [_sort]: _order === "desc" ? -1 : 1,
@@ -103,6 +104,33 @@ export const removeCategory = async (req, res) => {
     });
   } catch (error) {
     return res.status(404).json({
+      message: error.message,
+    });
+  }
+};
+export const getProductsByCategories = async (req, res) => {
+  try {
+    const { categoryIds, brandId } = req.body;
+
+    // Chuyển chuỗi danh mục thành một mảng nếu có
+    const categoryIdArray = categoryIds ? categoryIds.split(',') : [];
+
+    // Query sản phẩm dựa trên danh mục và thương hiệu
+    const query = {};
+
+    if (categoryIdArray.length > 0) {
+      query.categoryId = { $in: categoryIdArray };
+    }
+
+    if (brandId) {
+      query.brandId = brandId;
+    }
+
+    const products = await Products.find(query);
+
+    return res.json(products);
+  } catch (error) {
+    return res.status(500).json({
       message: error.message,
     });
   }
