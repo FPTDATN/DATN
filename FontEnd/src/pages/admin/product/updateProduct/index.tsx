@@ -67,7 +67,6 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                 updatedProduct: {
                     ...currentProduct,
                     ...values,
-                    price: values.pirce * 1000,
                     colorId,
                     sizeId,
                     images,
@@ -92,7 +91,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                 name: currentProduct.name,
                 price: currentProduct.price,
                 sale_off: currentProduct.sale_off,
-                quantity: currentProduct.quantity,
+                inStock: currentProduct.inStock,
                 description: currentProduct.description,
                 categoryId: currentProduct.categoryId?._id,
                 brandId: currentProduct.brandId?._id,
@@ -159,8 +158,8 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                     </Form.Item>
 
                     <Form.Item
-                        label="Số lượng"
-                        name="quantity"
+                        label="Số lượng trong kho"
+                        name="inStock"
                         rules={[
                             {
                                 required: true,

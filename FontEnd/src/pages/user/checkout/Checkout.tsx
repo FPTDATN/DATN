@@ -20,6 +20,24 @@ const LocationList: React.FC = () => {
 
     const { cartItems } = useAppSelector((state) => state.cart);
 
+    let holder:any = {};
+
+    cartItems.forEach((d) => {
+      if (holder.hasOwnProperty(d._id)) {
+        holder[d._id] = holder[d._id] + d.quantity;
+      } else {
+        holder[d._id] = d.quantity;
+      }
+    });
+
+    let obj2 = [];
+
+    for (const prop in holder) {
+      obj2.push({ key: prop, value: holder[prop] });
+    }
+
+    console.log(obj2);
+
     const onChange = (e: RadioChangeEvent) => {
         setPayMethod(e.target.value);
     };

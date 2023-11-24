@@ -10,6 +10,7 @@ import Highlighter from 'react-highlight-words';
 import Loading from '@/components/ui/Loading';
 import { formartVND } from '@/utils/formartVND';
 import { PrinterOutlined } from '@ant-design/icons';
+import { Image } from 'antd';
 import Hoadon from './print';
 type DataIndex = keyof IOrder;
 
@@ -95,33 +96,28 @@ const ListOrder: React.FC = () => {
     const handleButtonClick = (orderId: string) => {
         setShowModal(true);
         setSelectedOrderId(orderId);
-
     };
-
 
     const handleCloseModal = () => {
         setShowModal(false);
     };
-    
-    
-    
-    
+
     // Filtering Data
     const [orders, setOrders] = useState<IOrder[]>([]);
 
     useEffect(() => {
-        setOrders(data?.docs as any);
+        setOrders(data?.docs?.filter((order) => order.isPaid === true) as any);
     }, [data]);
 
     // Filtering Order
 
     const handleFilterPaidTrue = () => {
-        const filterIsPaidTrue = data?.docs.filter((order) => order.payMethod === 1);
+        const filterIsPaidTrue = data?.docs?.filter((order) => order.payMethod === 1 && order.isPaid === true);
         setOrders(filterIsPaidTrue!);
     };
 
     const handleFilterIsPaidFalse = () => {
-        const filterIsPaidFalse = data?.docs.filter((order) => order.payMethod === 0);
+        const filterIsPaidFalse = data?.docs?.filter((order) => order.payMethod === 0 && order.isPaid === true);
         setOrders(filterIsPaidFalse!);
     };
     const [filterStatus, setFilterStatus] = useState<number | null>(null);
@@ -297,12 +293,6 @@ const ListOrder: React.FC = () => {
             editable: true,
         },
         {
-            title: 'Kiểm tra',
-            dataIndex: 'isPaid',
-            render: (record:boolean) => <p>{record ? <span className='text-green-500'>Thành công</span> : <span className='text-red-500'>Thất bại</span>}</p>,
-            width: '15%',
-        },
-        {
             title: 'Thanh toán',
             dataIndex: 'payMethod',
             render: (value: number) => renderMethod(value),
@@ -316,7 +306,7 @@ const ListOrder: React.FC = () => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='p-2 rounded-md border'>
+                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='bg-gree text-layer'>
                             Lưu
                         </Typography.Link>
                         <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">
@@ -332,7 +322,7 @@ const ListOrder: React.FC = () => {
                                 record.status === Status.COMPLETE
                             }
                             onClick={() => edit(record as any)}
-                            className='bg-gree text-layer'
+                            className="bg-gree text-layer"
                         >
                             Cập nhật
                         </Button>
@@ -352,31 +342,23 @@ const ListOrder: React.FC = () => {
                                     className="  rounded-md px-6 flex items-center bg-primary text-layer"
                                     onClick={() => handleButtonClick(record._id)}
                                 >
-
-                                    <PrinterOutlined />   in
+                                    <PrinterOutlined /> in
                                 </Button>
-
                             </div>
                             <Modal
                                 title="Hóa Đơn"
                                 open={showModal}
                                 onCancel={handleCloseModal}
-                               
                                 destroyOnClose={true}
                                 width={1900}
                                 style={{ maxWidth: 900 }}
                                 centered
                                 footer={null}
-                                
                             >
                                 <div className="max-w-3xl mx-auto">
                                     <Hoadon orderId={selectedOrderId} />
-
-
                                 </div>
                             </Modal>
-
-
                         </div>
                     </Space>
                 );
@@ -439,7 +421,7 @@ const ListOrder: React.FC = () => {
         });
     };
 
-    const mergedColumns = columns.map((col) => {
+    const mergedColumns = columns?.map((col) => {
         if (!col.editable) {
             return col;
         }
@@ -459,7 +441,11 @@ const ListOrder: React.FC = () => {
             ) : (
                 <>
                     <div className="flex gap-x-2 mb-4">
-                        <Button type="primary" ghost onClick={() => setOrders(data?.docs!)}>
+                        <Button
+                            type="primary"
+                            ghost
+                            onClick={() => setOrders(data?.docs?.filter((order) => order.isPaid === true)!)}
+                        >
                             Xem tất cả
                         </Button>
                         <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
@@ -491,6 +477,7 @@ const ListOrder: React.FC = () => {
                                     <table className="w-full border text-sm text-left text-gray-500 dark:text-gray-400">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
+                                                <th></th>
                                                 <th scope="col" className="border px-6 text-xs font-medium py-3">
                                                     Tên đơn hàng
                                                 </th>
@@ -500,7 +487,10 @@ const ListOrder: React.FC = () => {
                                                 <th scope="col" className="border px-6 text-xs font-medium py-3">
                                                     Size
                                                 </th>
-                                                <th scope="col" className="border text-left px-6 text-xs font-medium py-3">
+                                                <th
+                                                    scope="col"
+                                                    className="border text-left px-6 text-xs font-medium py-3"
+                                                >
                                                     Số lượng
                                                 </th>
                                             </tr>
@@ -516,15 +506,25 @@ const ListOrder: React.FC = () => {
                                             </tbody>
                                         ) : (
                                             <tbody>
-                                                {record?.products.map((product:any,index) => (
+                                                {record?.products.map((product: any, index) => (
                                                     <tr
                                                         key={index}
                                                         className="border bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                                     >
+                                                        <td className="text-center border">
+                                                            <Image
+                                                                width={55}
+                                                                height={55}
+                                                                src={product.images![index]}
+                                                                preview
+                                                            />
+                                                        </td>
                                                         <td className="px-6 py-4 text-left border">{product?.name}</td>
                                                         <td className="px-6 py-4 text-left border">{product?.color}</td>
                                                         <td className="px-6 py-4 text-left border">{product?.size}</td>
-                                                        <td className="px-6 py-4 text-left border">{product?.quantity}</td>
+                                                        <td className="px-6 py-4 text-left border">
+                                                            {product?.quantity}
+                                                        </td>
                                                     </tr>
                                                 ))}
                                             </tbody>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import type { RadioChangeEvent } from 'antd';
-import { Radio, Rate, Tabs } from 'antd';
+import { Radio, Rate, Tabs, message } from 'antd';
 import { TabsPosition } from 'antd/es/tabs';
 import RelatedProducts from '@/components/ui/RelatedProduct';
 import Breadcrumbs1 from '@/components/breadcrumbs/index1';
@@ -13,6 +13,7 @@ import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
 import { useMeQuery } from '@/services/auth';
 import Loading from '@/components/ui/Loading';
+import { da } from 'date-fns/locale';
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
@@ -80,7 +81,19 @@ const ProductDetail = () => {
                                                     {data?.categoryId?.name}
                                                 </span>
                                                 <h2 className="max-w-xl mt-6 mb-6 text-xl font-semibold leading-loose tracking-wide text-gray-700 md:text-2xl dark:text-gray-300">
-                                                    {data?.name}
+                                                    {data?.name}{' '}
+                                                    {data?.inStock === 0 ? (
+                                                        <span className="!text-primary"> - (Hết hàng)</span>
+                                                    ) : (
+                                                        <span className="mb-2 text-base font-normal">
+                                                            <span className="">
+                                                                - Hiện còn:{' '}
+                                                                <span className="!text-primary font-semibold">
+                                                                    ({data.inStock})
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    )}
                                                 </h2>
                                                 <div className="flex flex-wrap items-center mb-6">
                                                     <span>
@@ -146,7 +159,6 @@ const ProductDetail = () => {
                                                         onChange={(e) => setQuantity(Number(e.target.value))}
                                                         type="number"
                                                         value={quantity}
-
                                                         className="flex items-center w-full border font-semibold text-center text-gray-700 placeholder-gray-700 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
                                                     />
                                                     <button
@@ -159,23 +171,28 @@ const ProductDetail = () => {
                                             </div>
                                             <div className="flex gap-4 mb-6">
                                                 <button
-                                                    onClick={() =>
-                                                        dispatch(
-                                                            addToCart({
-                                                                ...(data! as any),
-                                                                price: hasSale,
-                                                                quantity: quantity,
-                                                                color: color,
-                                                                size: size,
-                                                            }),
-                                                        )
-                                                    }
+                                                    onClick={() => {
+                                                        if (data.inStock === 0) {
+                                                            message.warning('Sản phẩm đã hết hàng');
+                                                        } else if (data.inStock < quantity) {
+                                                            message.error('Hàng trong kho không đủ');
+                                                        } else {
+                                                            dispatch(
+                                                                addToCart({
+                                                                    ...(data! as any),
+                                                                    price: hasSale,
+                                                                    quantity: quantity,
+                                                                    color: color,
+                                                                    size: size,
+                                                                }),
+                                                            );
+                                                        }
+                                                    }}
                                                     className="w-full px-4 py-3 text-center text-gray-100 bg-primary/90 border border-transparent dark:border-gray-700 hover:border-primary/95 hover:text-blue-700 hover:bg-blue-100 dark:text-gray-400 dark:bg-gray-700 dark:hover:bg-gray-900 rounded-xl"
                                                 >
                                                     Thêm Vào Giỏ Hàng
                                                 </button>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
