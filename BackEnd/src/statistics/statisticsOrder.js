@@ -71,11 +71,9 @@ export const getRevenueByDay = async (req, res) => {
 
 export const calculateRevenueByMonth = async (req, res) => {
   try {
-    // Perform the necessary calculations to retrieve revenue statistics by month
-
-    // Example logic to calculate revenue by month for completed orders
+   
     const revenueByMonth = await Order.aggregate([
-      { $match: { status: 4 } }, // Chỉ lấy những đơn hàng đã hoàn thành
+      { $match: { status: 4 } }, 
       {
         $group: {
           _id: { $month: '$createdAt' },
@@ -104,5 +102,41 @@ export const calculateRevenueByMonth = async (req, res) => {
   } catch (error) {
     console.error('Error calculating revenue by month:', error);
     return res.status(500).json({ error: 'Error calculating revenue by month' });
+  }
+};
+
+
+
+export const calculateRevenueByYear = async (req, res) => {
+  try {
+    const revenueByYear = await Order.aggregate([
+      { $match: { status: 4 } },
+      {
+        $group: {
+          _id: { $year: '$createdAt' },
+          totalRevenue: { $sum: '$total' }
+        }
+      },
+      {
+        $sort: {
+          _id: 1
+        }
+      }
+    ]);
+
+    const formattedData = revenueByYear.map(item => {
+      const year = item._id;
+      const totalRevenue = item.totalRevenue;
+
+      return {
+        year,
+        totalRevenue
+      };
+    });
+
+    return res.status(200).json(formattedData);
+  } catch (error) {
+    console.error('Error calculating revenue by year:', error);
+    return res.status(500).json({ error: 'Error calculating revenue by year' });
   }
 };
