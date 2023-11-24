@@ -56,8 +56,15 @@ const categoryApi = createApi({
             }),
             invalidatesTags: ['Category'],
         }),
+        getProductsByCategoryAndBrand: builder.query<ProductType[], { categoryIds: string; brandId: string }>({
+            query: ({ categoryIds, brandId }) => ({
+                url: '/products/categories',
+                method: 'POST',
+                body: { categoryIds, brandId },
+            }),
+        }),
     }),
 });
 
-export const { useGetCategoriesQuery, useGetCatgoryByIdQuery, useCreateCategoryMutation, useDeleteCategoryMutation, useUpdateCategoryMutation } = categoryApi;
+export const { useGetCategoriesQuery, useGetCatgoryByIdQuery, useCreateCategoryMutation, useDeleteCategoryMutation, useUpdateCategoryMutation, useGetProductsByCategoryAndBrandQuery } = categoryApi;
 export default categoryApi;
