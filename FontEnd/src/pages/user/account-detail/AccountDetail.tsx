@@ -136,13 +136,11 @@ const AccountDetail: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="table-responsive card  h-[500px]">
-                                    <OrderSumeries />
-                                </div>
+
                             </div>
 
                             <div>
-                                <Link to={'/your-favorite'} className="list-group-item w-[500px] ">
+                                <Link to={'/your-favorite'} className="list-group-item w-[400px] ">
                                     <div className="d-flex justify-content-between align-items-center ">
                                         <div>
                                             <div className="d-inline-block font-weight-medium text-uppercase">Danh sách yêu thích</div>
