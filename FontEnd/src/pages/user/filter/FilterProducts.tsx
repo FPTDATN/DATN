@@ -95,16 +95,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                                     </List>
                                 </div>
 
-                                <div className="mt-3 overflow-y-auto max-h-[280px]">
-                                    <h1 className='sticky bg-white h-[30px] z-50 top-0 left-0'>Màu sắc</h1>
-                                    <List>
-                                        {colors?.map((color) => (
-                                            <List.Item key={color._id}>
-                                                <Checkbox>{color.name}</Checkbox>
-                                            </List.Item>
-                                        ))}
-                                    </List>
-                                </div>
+
                             </div>
                         </div>
                         <div className="w-full lg:w-3/4 flex-1">

@@ -17,7 +17,7 @@ interface ProductItemProps {
     product?: ProductType;
 }
 
-const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
+const ProductHot: FunctionComponent<ProductItemProps> = ({ product }) => {
     const dispatch = useAppDispatch();
     const { data: authData } = useMeQuery();
     const [loading, _setLoading] = useState(false);
@@ -46,6 +46,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
         setColor('');
         setSize('');
     };
+    console.log('product', product);
 
     const handleAddToWishlist = async (productId: string, _userId: any) => {
         if (authData) {
@@ -112,8 +113,8 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
                     <Skeleton count={4} />
                 </div>
             ) : (
-                <div className="px-2 m-0 ">
-                    <div className="relative group bg-white rounded shadow-md">
+                <div className="px-2 m-0 p-4">
+                    <div className="relative group bg-white rounded shadow-md ">
                         <div className="favourite hidden group-hover:block flex-col ">
                             {!isInWishlist && (
                                 <div
@@ -208,7 +209,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
                         )}
                     </div>
 
-                    <div className="py-6 text-left">
+                    <div className="py-4 text-left">
                         <h3 className="text-left mt-0 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
@@ -230,4 +231,4 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
     );
 };
 
-export default ProductItem;
+export default ProductHot;

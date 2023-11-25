@@ -3,6 +3,7 @@ import { productSchema } from "../Schemas/products.js";
 import Category from "../models/category.js";
 import Brand from "../models/brand.js";
 import mongoose, { ObjectId } from "mongoose";
+import Order from "../models/order.js";
 
 export const getAll = async (req, res) => {
   const {
@@ -16,7 +17,7 @@ export const getAll = async (req, res) => {
     limit: _limit,
     page: _page,
     sort: {
-      [_sort]: _order === "desc" ? -1 : 1,
+      [_sort]: _order === "asc" ? -1 : 1,
     },
     populate: ['categoryId', 'colorId', 'sizeId', 'brandId']
   };
@@ -181,3 +182,30 @@ export const updateInStock = async (req, res) => {
     return res.status(400).json({ message: error.message })
   }
 }
+
+export const getTopProducts = async (req, res) => {
+
+  try {
+    const result = await Order.aggregate([
+      { $unwind: '$products' },
+      {
+        $group: {
+          _id: '$products._id', // Sử dụng _id của sản phẩm thay vì _id của đơn hàng
+          name: { $first: '$products.name' }, // Lấy tên sản phẩm
+          quantity: { $sum: '$products.quantity' }, // Tổng số lượng của từng sản phẩm
+          price: { $first: '$products.price' }, // Lấy giá của sản phẩm (nếu cần)
+        },
+      },
+      { $sort: { quantity: -1 } },
+      { $limit: 10 }
+    ]);
+
+
+    const topProducts = await Products.populate(result, { path: '_id' });
+
+    res.json({ success: true, data: topProducts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+};

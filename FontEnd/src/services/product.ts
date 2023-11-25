@@ -33,6 +33,10 @@ const productApi = createApi({
             query: () => '/products',
             providesTags: ['Product'],
         }),
+        getProductsHot: builder.query<ProductType, void>({
+            query: () => '/products/topProduct',
+            providesTags: ['Product'],
+        }),
         getProductById: builder.query<ExtendProduct, string>({
             query: (_id) => `/products/${_id}`,
             providesTags: ['Product'],
@@ -74,5 +78,5 @@ const productApi = createApi({
 })
 
 
-export const { useGetProductsQuery, useGetProductByIdQuery, useDeleteProductMutation, useUpdateProductMutation, useCreateProductMutation, useGetTotalProductQuery } = productApi;
+export const { useGetProductsQuery, useGetProductByIdQuery, useDeleteProductMutation, useUpdateProductMutation, useCreateProductMutation, useGetTotalProductQuery, useGetProductsHotQuery } = productApi;
 export default productApi

@@ -5,6 +5,7 @@ import {
   getById,
 
   getQuanlityProduct,
+  getTopProducts,
   remove,
   update,
   updateInStock,
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/products", getAll);
 
 router.get("/products/quanlity", getQuanlityProduct);
+router.get("/products/topProduct", getTopProducts);
 
 router.get("/products/:id", getById);
 router.delete("/products/:id", remove);
