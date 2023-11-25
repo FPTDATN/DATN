@@ -1,3 +1,4 @@
+import CategoryTest from "@/components/category/CategoryTest";
 import Gallery from "@/components/gallery/Gallery";
 import SliderTestDemo from "@/components/gallery/SliderTestDemo";
 import ListProductItems from "@/components/products/ListItems";
@@ -14,6 +15,7 @@ const Home: FunctionComponent<HomeProps> = () => {
     return <div>
         {/* <CarouselSlide /> */}
         <SliderTestDemo />
+
         <div className="my-10 ">
             <ListProductItems heading="Sản phẩm Mới" />
         </div>
