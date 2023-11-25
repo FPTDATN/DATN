@@ -28,6 +28,8 @@ import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
 import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
 import EditorLayout from '@/components/layout/EditorLayout';
+import Hoandon from '@/pages/user/orders/Hoandon';
+import Hoan from '@/pages/admin/order/listorder/hoan';
 
 const router = createBrowserRouter([
     // Main layout
@@ -69,7 +71,17 @@ const router = createBrowserRouter([
             {
                 path: 'details',
                 element: <AccountDetail />,
-            }
+            },
+            {
+                path: '/orders/:id/return',
+                element: <Hoandon />,
+                
+            }, 
+            {
+                path: '/hoan/:id/',
+                element: <Hoan />,
+                
+            }, 
         ],
     },
     {

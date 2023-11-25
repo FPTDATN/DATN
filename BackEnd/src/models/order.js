@@ -20,6 +20,9 @@ const orderSchema = new mongoose.Schema(
     fullName: { type: String },
     payMethod: { type: Number, default: 0 },
     status: { type: Number, default: 1 },
+    LydoHoandon: { type: String },
+    Motahoandon: { type: String },
+    Emaill: { type: String },
   }, {
   timestamps: true
 }

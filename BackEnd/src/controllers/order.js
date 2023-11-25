@@ -99,3 +99,39 @@ export const getOrderById = async (req, res) => {
     return res.status(500).json({ error: 'Lỗi khi lấy đơn hàng' });
   }
 };
+export const returnOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status, isPaid, LydoHoandon, Motahoandon, Emaill, products } = req.body;
+
+ 
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        $set: {
+          status,
+          isPaid,
+          LydoHoandon,
+          Motahoandon,
+          Emaill,
+          products
+        },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: 'Cập nhật trạng thái hoàn hàng và thông tin thành công',
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error('Lỗi khi cập nhật trạng thái hoàn hàng và thông tin:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};

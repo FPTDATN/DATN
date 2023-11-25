@@ -1,4 +1,4 @@
-import { IProductorder, Iuser, PaginatedOrder } from '@/types/order';
+import { Hoandon, IProductorder, Iuser, PaginatedOrder } from '@/types/order';
 import { IOrder } from '@/types/order';
 import { waiting } from '@/utils/waiting';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
@@ -20,6 +20,10 @@ export type IdType = {
   updatedAt: Date;
   email: string;
   Iuser: Iuser[]
+  order:IOrder[],
+  LydoHoandon:string;
+  Motahoandon:string,
+  Emaill:string,
 }
 
 
@@ -89,13 +93,21 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    returnOrder: builder.mutation<Hoandon, { orderId: string, LydoHoandon: string, Motahoandon: string, Emaill: string }>({
+      query: ({ orderId, LydoHoandon, Motahoandon, Emaill }) => ({
+        url: `/order/${orderId}/return`,
+        method: 'POST',
+        body: { status: 5, LydoHoandon, Motahoandon, Emaill },
+      }),
+      invalidatesTags: ['Order'],
+    }),
     getOrderById: builder.query<IdType, string>({
       query: (_id) => `/order/${_id}`,
       providesTags: ['Order'],
     }),
   }),
 })
-export const { useGetOrderByIdQuery, useGetsOrderQuery,
+export const {useReturnOrderMutation,  useGetOrderByIdQuery, useGetsOrderQuery,
   useGetProductByIdQuery,
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,

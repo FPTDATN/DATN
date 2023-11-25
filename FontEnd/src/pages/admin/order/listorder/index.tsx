@@ -12,6 +12,8 @@ import { formartVND } from '@/utils/formartVND';
 import { PrinterOutlined } from '@ant-design/icons';
 import { Image } from 'antd';
 import Hoadon from './print';
+import { Link } from 'react-router-dom';
+import Hoan from './hoan';
 type DataIndex = keyof IOrder;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -33,6 +35,7 @@ const renderState = (state: number) => {
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
     if (Status.COMPLETE === state) return <span className="text-green-500">Hoàn thành</span>;
+    if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
 };
 
 const renderMethod = (method: number) => {
@@ -56,6 +59,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Option value={2}>{renderState(2)}</Option>
             <Option value={3}>{renderState(3)}</Option>
             <Option value={4}>{renderState(4)}</Option>
+            <Option value={5}>{renderState(5)}</Option>
         </Select>
     );
 
@@ -174,7 +178,16 @@ const ListOrder: React.FC = () => {
     };
 
     const searchInput = useRef<InputRef>(null);
+    //
+    const [open, setOpen] = useState(false);
 
+    const onShow = () => {
+        setOpen(true);
+
+    };
+
+
+    //
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
@@ -306,15 +319,49 @@ const ListOrder: React.FC = () => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='border p-2 rounded'>
+                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='bg-gree text-layer'>
                             Lưu
                         </Typography.Link>
                         <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">
                             <a>Hủy</a>
                         </Popconfirm>
                     </span>
+                ) : record.status === Status.HOAN ? (
+                    <Space className="flex flex-col">
+                        <div className="">
+                            <div className="flex">
+                            <Button type="dashed" className='bg-reds px-2.5 text-layer' >
+                                  xác nhận
+                                </Button>
+                            </div>
+                        </div>
+                        <div className=" md:ml-0 ml-20">
+                            <Link to={`/hoan/${record._id}`} >
+
+
+                                <Button type="dashed" className='bg-gree text-layer' onClick={onShow}>
+                                    chi tiết
+                                </Button>
+                            </Link>
+                            <Modal
+                                title="Update User"
+                                centered
+                                open={open}
+                                onOk={() => setOpen(false)}
+                                onCancel={() => setOpen(false)}
+                                width={1000}
+                                footer={null}
+
+                            >
+                                <Hoan />
+                            </Modal>
+
+
+                        </div>
+                    </Space>
                 ) : (
                     <Space className="flex flex-col">
+                        {/* Your existing buttons */}
                         <Button
                             disabled={
                                 editingKey !== '' ||
@@ -336,7 +383,7 @@ const ListOrder: React.FC = () => {
                             Hủy đơn
                         </Button>
                         <div className="px-1 md:ml-0 ml-20">
-                            <div className="flex ">
+                            <div className="flex">
                                 <Button
                                     disabled={record.status === Status.CANCELLED || record.status === Status.COMPLETE}
                                     className="  rounded-md px-6 flex items-center bg-primary text-layer"
@@ -365,6 +412,7 @@ const ListOrder: React.FC = () => {
             },
             width: '12%',
         },
+
     ];
 
     const showDeleteConfirm = (record: IOrder) => {
@@ -456,6 +504,7 @@ const ListOrder: React.FC = () => {
                             <Option value={Status.SHIPPING}>Đang giao hàng</Option>
                             <Option value={Status.COMPLETE}>Hoàn thành</Option>
                             <Option value={Status.CANCELLED}>Đã hủy</Option>
+                            <Option value={Status.HOAN}>Hàng Hoàn</Option>
                         </Select>
                     </div>
 

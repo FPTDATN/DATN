@@ -15,10 +15,11 @@ export interface IProductorder {
       quantity: number;
       name: string;
       price:number;
-      colorId?:string;
-      sizeId?:string;
-      size?:string;
-      color?:string;
+      colorId:string;
+      sizeId:string;
+      images: string[];
+      sale_off: number;
+      
 }
 export interface Iuser {
       _id: string;
@@ -39,5 +40,15 @@ export interface IOrder {
       total: number;
       createdAt: Date;
       updatedAt: Date;
-
+      completed: boolean
+      LydoHoandon:string;
+      Motahoandon:string,
+      Emaill:string,
 }  
+export interface Hoandon{
+      LydoHoandon:string;
+      Motahoandon:string,
+      Emaill:string,
+      order:IOrder[],
+      products: IProductorder[];
+}

@@ -7,7 +7,12 @@ import { FaShippingFast } from 'react-icons/fa';
 import { BsPersonVcardFill, BsDropbox, BsCheckCircleFill } from 'react-icons/bs';
 import { checkAuth } from '@/utils/checkAuth';
 import { formatTimeToNow } from '@/utils/formartDate';
-import { formartVND } from '@/utils/formartVND';
+
+import { useState } from 'react';
+import { Button } from 'antd/es/radio';
+import { Link } from 'react-router-dom';
+import Modal from 'antd/es/modal/Modal';
+import Hoandon from './Hoandon';
 
 const { Panel } = Collapse;
 
@@ -18,6 +23,11 @@ const OrderSumeries = ({}: Props) => {
     const { data: authdata } = checkAuth();
 
     const { token } = theme.useToken();
+    const [open, setOpen] = useState(false);
+
+    const onShow = () => {
+        setOpen(true);
+    };
 
     const renderPayMethod = (method: number, status?: number, isPaid?: boolean) => {
         if (status === Status.CANCELLED) {
@@ -131,7 +141,42 @@ const OrderSumeries = ({}: Props) => {
                                                 </table>
 
                                                 <p className="text-base mt-3">
-                                                    Tổng chi phí <span className="!text-primary">{formartVND(order.total)}</span>
+                                                    Tổng chi phí <span className="text-primary">${order.total}</span>
+                                                    {order.status === Status.COMPLETE ? (
+                                                        <div className="flex space-x-4 mt-4">
+                                                            <div className="flex space-x-4 mt-4">
+                                                                <div className="px-1 md:ml-0 ml-20">
+                                                                    <Link to={`/orders/${order._id}/return`}>
+                                                                        <Button type="dashed" className='bg-gree text-layer' onClick={onShow}>
+                                                                            Hoàn đơn
+                                                                        </Button>
+                                                                    </Link>
+                                                                    <Modal
+                                                                        title="Update User"
+                                                                        centered
+                                                                        open={open}
+                                                                        onOk={() => setOpen(false)}
+                                                                        onCancel={() => setOpen(false)}
+                                                                        width={1000}
+                                                                        footer={null}
+                                                                    >
+                                                                        <Hoandon />
+                                                                    </Modal>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex space-x-4 mt-4">
+                                                           
+                                                            <Button type="dashed" className='bg-gray-300 text-layer' disabled>
+                                                                            Hoàn đơn
+                                                                        </Button>
+                                                          
+                                                        </div>
+                                                    )}
                                                 </p>
 
                                                 <Steps
