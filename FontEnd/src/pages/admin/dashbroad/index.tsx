@@ -216,7 +216,7 @@ const Dashbroad = () => {
                 <BarChart width={600} height={300} data={revenueByMonthData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="monthYear" />
-                        <YAxis reversed={true} />
+                        {/* <YAxis reversed={true} /> */}
                         <YAxis />
                         <Tooltip />
                         <Legend />
@@ -227,7 +227,7 @@ const Dashbroad = () => {
                 <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
                 <BarChart width={600} height={300} data={chartData}>
                         <XAxis dataKey="name" stroke="#8884d8" />
-                        <YAxis reversed={true} />
+                        {/* <YAxis reversed={true} /> */}
                         <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} />
                         <Legend
                             width={100}
@@ -248,7 +248,7 @@ const Dashbroad = () => {
                 <BarChart width={600} height={300} data={revenueByYearData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="year" />
-                        <YAxis reversed={true} />
+                        {/* <YAxis reversed={true} /> */}
                         <YAxis />
                         <Tooltip />
                         <Legend />
