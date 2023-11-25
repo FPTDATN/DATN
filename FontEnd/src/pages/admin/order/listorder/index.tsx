@@ -306,7 +306,7 @@ const ListOrder: React.FC = () => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='bg-gree text-layer'>
+                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='border p-2 rounded'>
                             Lưu
                         </Typography.Link>
                         <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">

@@ -13,8 +13,8 @@ const CategoryTest = () => {
                         </div>
                         
                         <div className="danhmuc_st">
-                            <h3>Test demo img</h3>
-                            <span> + 0 sản phẩm</span>
+                            <h3>Áo sơ mi cottong</h3>
+                            <span> + 10 sản phẩm</span>
                         </div>
                     </div>
                     <div className="dm_swiper-slider" style={{width: '160px', margin:'25px'}}>
@@ -24,8 +24,8 @@ const CategoryTest = () => {
                             <span className='image_shadow'></span>
                         </div>
                         <div className="danhmuc_st">
-                            <h3>Test demo img</h3>
-                            <span> + 0 sản phẩm</span>
+                            <h3>Áo sơ mi lụa dài tay</h3>
+                            <span> + 5 sản phẩm</span>
                         </div>
                     </div>
                     <div className="dm_swiper-slider" style={{width: '160px', margin:'25px'}}>
@@ -35,8 +35,8 @@ const CategoryTest = () => {
                             <span className='image_shadow'></span>
                         </div>
                         <div className="danhmuc_st">
-                            <h3>Test demo img</h3>
-                            <span> + 0 sản phẩm</span>
+                            <h3>Áo sơ mi lụa tay lỡ</h3>
+                            <span> + 7 sản phẩm</span>
                         </div>
                     </div>
                     <div className="dm_swiper-slider" style={{width: '160px', margin:'25px'}}>
@@ -46,8 +46,8 @@ const CategoryTest = () => {
                             <span className='image_shadow'></span>
                         </div>
                         <div className="danhmuc_st">
-                            <h3>Test demo img</h3>
-                            <span> + 0 sản phẩm</span>
+                            <h3>Áo sơ mi lụa cộc tay</h3>
+                            <span> + 2 sản phẩm</span>
                         </div>
                     </div>
                     <div className="dm_swiper-slider" style={{width: '160px', margin:'25px'}}>
@@ -57,8 +57,8 @@ const CategoryTest = () => {
                             <span className='image_shadow'></span>
                         </div>
                         <div className="danhmuc_st">
-                            <h3>Test demo img</h3>
-                            <span> + 0 sản phẩm</span>
+                            <h3>Áo sơ mi lụa dài tay</h3>
+                            <span> + 9 sản phẩm</span>
                         </div>
                     </div>
                     <div className="dm_swiper-slider" style={{width: '160px', margin:'25px'}}>
@@ -68,8 +68,8 @@ const CategoryTest = () => {
                             <span className='image_shadow'></span>
                         </div>
                         <div className="danhmuc_st">
-                            <h3>Test demo img</h3>
-                            <span> + 0 sản phẩm</span>
+                            <h3>Áo sơ mi lụa tay lỡ</h3>
+                            <span> + 6 sản phẩm</span>
                         </div>
                     </div>
                 </div>

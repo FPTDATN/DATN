@@ -17,6 +17,10 @@ const Home: FunctionComponent<HomeProps> = () => {
         <SliderTestDemo />
 
         <div className="my-10 ">
+            <CategoryTest/>
+        </div>
+
+        <div className="my-10 ">
             <ListProductItems heading="Sản phẩm Mới" />
         </div>
 
