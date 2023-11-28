@@ -81,6 +81,8 @@ const ListProduct: React.FC = () => {
     const handlePageChange = (selectedPage: any) => {
         setCurrentPage(selectedPage.selected);
     };
+
+    
     return (
         <>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

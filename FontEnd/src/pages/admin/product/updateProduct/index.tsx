@@ -105,7 +105,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
         setImages(currentProduct?.images!)
     },[currentProduct?.images])
 
-    //
+    
     return (
         <>
             {currentProduct ? (
@@ -197,7 +197,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                         ))}
                         <Checkbox.Group style={{ width: '100%' }}>
                             <Row>
-                                {colors?.map((color) => (
+                                {colors?.docs.map((color) => (
                                     <Col key={color._id} span={8}>
                                         <Checkbox onChange={(e) => handleChangeColor(e)} value={color._id}>
                                             {color.name}

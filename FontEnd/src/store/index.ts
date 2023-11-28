@@ -1,5 +1,6 @@
 import authApi from '@/services/auth';
 import categoryApi from '@/services/category';
+import colorApi from '@/services/color';
 import commentApi from '@/services/comment';
 import { favouriteapi } from '@/services/favourite';
 import optionApi from '@/services/option';
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
     [optionApi.reducerPath]: optionApi.reducer,
     [favouriteapi.reducerPath]: favouriteapi.reducer,
+    [colorApi.reducerPath]:colorApi.reducer
 
 
 
@@ -41,7 +43,8 @@ const middleware: any[] = [
     commentApi.middleware,
     userApi.middleware,
     optionApi.middleware,
-    favouriteapi.middleware
+    favouriteapi.middleware,
+    colorApi.middleware
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
