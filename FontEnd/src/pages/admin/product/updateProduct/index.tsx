@@ -216,7 +216,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                         ))}
                         <Checkbox.Group style={{ width: '100%' }}>
                             <Row>
-                                {sizes?.map((size) => (
+                                {sizes?.docs.map((size) => (
                                     <Col key={size._id} span={8}>
                                         <Checkbox onChange={(e) => hanldeChangeSizes(e)} value={size._id}>
                                             {size.name}
