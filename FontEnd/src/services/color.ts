@@ -11,7 +11,6 @@ export type IColor = {
 export interface ColorType {
     _id: string;
     name: string;
-    thumbnail: string;
 }
 
 export interface PaginatedColor {
@@ -47,10 +46,10 @@ const colorApi = createApi({
             providesTags: ['Color'],
         }),
         createColor: builder.mutation<IColor, string>({
-            query: (colors) => ({
+            query: (color) => ({
                 url: `color`,
                 method: 'POST',
-                body: colors,
+                body: color,
             }),
             invalidatesTags: ['Color'],
         }),
@@ -61,11 +60,11 @@ const colorApi = createApi({
             }),
             invalidatesTags: ['Color'],
         }),
-        updateColor: builder.mutation<IColor, { id: string; colors: Partial<IColor> }>({
-            query: ({ id, colors }) => ({
+        updateColor: builder.mutation<IColor, { id: string; color: Partial<IColor> }>({
+            query: ({ id, color }) => ({
                 url: `color/${id}`,
                 method: 'PUT',
-                body: { ...colors, updateAt: new Date().toISOString() }
+                body: { ...color, updateAt: new Date().toISOString() }
             }),
             invalidatesTags: ['Color'],
         })

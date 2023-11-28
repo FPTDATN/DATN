@@ -2,27 +2,27 @@ import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useCreateColorMutation } from '@/services/color';
+import { useCreateSizeMutation } from '@/services/size';
 
-interface AddColorProps {
+interface AddSizeProps {
   handleModalClose: () => void;
 }
 
-const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
+const AddSize: React.FC<AddSizeProps> = ({ handleModalClose }) => {
   const [form] = Form.useForm();
-  const [mutateCreateColor] = useCreateColorMutation();
+  const [mutateCreateSize] = useCreateSizeMutation();
   const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: any) => {
     try {
       setIsLoading(true); 
-      await mutateCreateColor(values).unwrap();
+      await mutateCreateSize(values).unwrap();
 
       form.resetFields();
-      toast.success('Tạo Color thành công');
+      toast.success('Tạo Size thành công');
       handleModalClose();
     } catch (error) {
-      toast.error('Tạo Color không thành công');
+      toast.error('Tạo Size không thành công');
     } finally {
       setIsLoading(false); 
     }
@@ -42,16 +42,15 @@ const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
           label="Tên"
           name="name"
           rules={[
-            { required: true, message: 'Vui lòng nhập tên màu' },
-            { min: 2, message: 'Ít nhất 2 ký tự' },
+            { required: true, message: 'Vui lòng nhập tên size' },
           ]}
         >
-          <Input placeholder="Tên Color" />
+          <Input placeholder="Tên Size" />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
           <Button type="primary" className='bg-primary' htmlType="submit" loading={isLoading}>
-            Tạo Color
+            Tạo Size
           </Button>
         </Form.Item>
       </Form>
@@ -60,4 +59,4 @@ const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
   );
 };
 
-export default AddColor;
+export default AddSize;

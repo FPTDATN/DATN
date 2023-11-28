@@ -6,18 +6,19 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
-import { useGetAllColorQuery, useRemoveColorMutation } from '@/services/color';
-import AddColor from '../addColor';
-import UpdateColor from '../updateColor';
+import { useGetAllSizeQuery, useRemoveSizeMutation } from '@/services/size';
+import AddSize from '../addSize';
+import UpdateSize from '../updateSize';
 
-const ListColor = () => {
+
+const ListSize = () => {
   const { Search } = Input;
-  const { data, isLoading } = useGetAllColorQuery();
+  const { data, isLoading } = useGetAllSizeQuery();
   const [searchValue, setSearchValue] = useState('');
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const [selectedColorId, setSelectedColorId] = useState('');
-  const [mutate] = useRemoveColorMutation();
+  const [selectedSizeId, setSelectedSizeId] = useState('');
+  const [mutate] = useRemoveSizeMutation();
 
   const handleSearch: SearchProps['onSearch'] = (value) => {
     setSearchValue(value);
@@ -32,7 +33,7 @@ const ListColor = () => {
     }
   };
 
-  const handleAddColor = () => {
+  const handleAddSize = () => {
     setOpenAddModal(true);
   };
 
@@ -41,26 +42,26 @@ const ListColor = () => {
     setOpenUpdateModal(false);
   };
 
-  const handleUpdateColor = (id: string) => {
-    setSelectedColorId(id);
+  const handleUpdateSize = (sizeId: string) => {
+    setSelectedSizeId(sizeId);
     setOpenUpdateModal(true);
   };
 
   const handleUpdateComplete = () => {
-    setSelectedColorId('');
+    setSelectedSizeId('');
     setOpenUpdateModal(false);
   };
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
   const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
-  const colorList = data?.docs.filter(color => color.name.includes(searchValue)) || [];
+  const sizeList = data?.docs.filter(size => size.name.includes(searchValue)) || [];
 
   const paginationOptions = {
     currentPage,
     perPage,
-    totalCount: colorList.length,
-    data: colorList,
+    totalCount: sizeList.length,
+    data: sizeList,
   };
 
   const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
@@ -78,8 +79,8 @@ const ListColor = () => {
             </Space>
           </div>
           <div className="bg-gray-400 ml-[20px] rounded-md">
-            <Button type="primary" className='bg-primary' onClick={handleAddColor}>
-              Thêm Color
+            <Button type="primary" className='bg-primary' onClick={handleAddSize}>
+              Thêm Size
             </Button>
           </div>
         </div>
@@ -88,7 +89,7 @@ const ListColor = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Tên Color
+                Tên Size
               </th>
               <th scope="col" className="text-center text-xs font-medium py-3">
                 Thời Gian
@@ -107,20 +108,20 @@ const ListColor = () => {
               </tr>
             ) : (
               <>
-                {currentPageItems?.map((color) => (
+                {currentPageItems?.map((size) => (
                   <tr
-                    key={color._id}
+                    key={size._id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
-                      {color.name}
+                      {size.name}
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
-                      {new Date(color.createdAt).toLocaleString()}
+                      {new Date(size.createdAt).toLocaleString()}
                     </td>
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">
-                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateColor(color._id)}>
+                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateSize(size._id)}>
                           Update
                         </Button>
                         <Popconfirm
@@ -129,7 +130,7 @@ const ListColor = () => {
                           okText="OK"
                           cancelText="Cancel"
                           okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                          onConfirm={() => handleDelete(color._id)}
+                          onConfirm={() => handleDelete(size._id)}
                         >
                           <Button type="link" className='bg-reds text-layer'>Delete</Button>
                         </Popconfirm>
@@ -162,18 +163,18 @@ const ListColor = () => {
 
         </table>
 
-        <Modal title="Thêm Color" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
-          <AddColor handleModalClose={handleModalClose} />
+        <Modal title="Thêm Size" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
+          <AddSize handleModalClose={handleModalClose} />
         </Modal>
         {/* Update */}
         <Modal
           title="Cập nhật danh mục"
           centered
-          open={openUpdateModal && !!selectedColorId}
+          open={openUpdateModal && !!selectedSizeId}
           onCancel={handleModalClose}
           footer={null}
         >
-          {selectedColorId && <UpdateColor id={selectedColorId} handleUpdateComplete={handleUpdateComplete} />}
+          {selectedSizeId && <UpdateSize sizeId={selectedSizeId} handleUpdateComplete={handleUpdateComplete} />}
         </Modal>
         
       </div>
@@ -182,4 +183,4 @@ const ListColor = () => {
   );
 };
 
-export default ListColor;
+export default ListSize;
