@@ -134,17 +134,16 @@ const ListProduct: React.FC = () => {
                                 >
                                     <td className="pl-6">
                                         <Avatar.Group maxCount={3}>
-                                            {product.images?.map((url: string) => (
-                                                <div key={url} style={{ borderRadius: '50%', overflow: 'hidden' }}>
+                                            {product.images && product.images[0] && (
+                                                <div style={{ borderRadius: '50%' }}>
                                                     <Image
-                                                        src={url}
+                                                        src={product.images[0]}
                                                         alt="image"
-                                                        width={50}
-                                                        height={50}
-                                                        style={{ objectFit: 'cover' }}
+                                                        width={80}
+                                                        height={80}
                                                     />
                                                 </div>
-                                            ))}
+                                            )}
                                         </Avatar.Group>
                                     </td>
                                     <td className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
