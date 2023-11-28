@@ -2,43 +2,43 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useGetByIdColorQuery, useUpdateColorMutation } from '@/services/color';
+import { useGetByIdSizeQuery, useUpdataSizeMutation } from '@/services/size';
 
-const UpdateColor: React.FC<{ id: string; handleUpdateComplete: () => void }> = ({
-  id,
+const UpdateSize: React.FC<{ sizeId: string; handleUpdateComplete: () => void }> = ({
+    sizeId,
   handleUpdateComplete,
 }) => {
   const [form] = Form.useForm();
-  const [mutate] = useUpdateColorMutation();
+  const [mutate] = useUpdataSizeMutation();
   const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: { name: string}) => {
     try {
       setIsLoading(true);
-      await mutate({ id, color: { name: values.name } }).unwrap();
-      console.log(id);
+      await mutate({ sizeId, size: { name: values.name } }).unwrap();
+      console.log(sizeId);
       
       handleUpdateComplete();
       toast.success('Cập nhật thành công');
     } catch (error) {
-      console.error('Update Color failed:', error);
+      console.error('Update size failed:', error);
       toast.error('Cập nhật thất bại');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const { data: color, isLoading: isColorLoading } = useGetByIdColorQuery(id);
+  const { data: size, isLoading: isSizeLoading } = useGetByIdSizeQuery(sizeId);
 
   useEffect(() => {
-    if (color) {
-      form.setFieldsValue({ name: color.name });
+    if (size) {
+      form.setFieldsValue({ name: size.name });
     }
-  }, [color]);
+  }, [size]);
 
   return (
     <>
-      {isColorLoading ? (
+      {isSizeLoading ? (
         <div>Loading...</div>
       ) : (
         <Form
@@ -48,7 +48,7 @@ const UpdateColor: React.FC<{ id: string; handleUpdateComplete: () => void }> = 
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
         >
-          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên Color' }]}>
+          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên Size' }]}>
             <Input />
           </Form.Item>
           
@@ -63,4 +63,4 @@ const UpdateColor: React.FC<{ id: string; handleUpdateComplete: () => void }> = 
   );
 };
 
-export default UpdateColor;
+export default UpdateSize;

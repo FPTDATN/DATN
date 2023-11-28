@@ -31,6 +31,7 @@ import EditorLayout from '@/components/layout/EditorLayout';
 import Hoandon from '@/pages/user/orders/Hoandon';
 import Hoan from '@/pages/admin/order/listorder/hoan';
 import ListColor from '@/pages/admin/color/listColor';
+import ListSize from '@/pages/admin/size/listSize';
 
 const router = createBrowserRouter([
     // Main layout
@@ -134,7 +135,8 @@ const router = createBrowserRouter([
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
             { path: 'product/:id/comments', element: <ListComment /> },
-            {path: 'color',element:<ListColor/>}
+            {path: 'color',element:<ListColor/>},
+            {path:'size', element: <ListSize/>}
         ],
     },
     // Editer
