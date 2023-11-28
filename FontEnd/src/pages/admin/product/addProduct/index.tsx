@@ -120,7 +120,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             <Form.Item label="Chọn sizes" name={'sizeId'}>
                 <Checkbox.Group style={{ width: '100%' }}>
                     <Row>
-                        {sizes?.map((size) => (
+                        {sizes?.docs.map((size) => (
                             <Col key={size._id} span={8}>
                                 <Checkbox value={size._id}>{size.name}</Checkbox>
                             </Col>
