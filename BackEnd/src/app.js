@@ -10,7 +10,9 @@ import favourite from "../src/routers/favourite.js";
 import sizeRouter from "./routers/size.js";
 import brandRouter from "./routers/brand.js";
 import colorRouter from "./routers/color.js";
-import payMethod from './routers/pay.js'
+import payMethod from './routers/pay.js';
+import discount from './routers/discount.js';
+
 
 import orderroute from "./routers/order.js";
 import vnpay from './routers/vnpay.js'
@@ -60,6 +62,8 @@ app.use("/api", sizeRouter);
 app.use("/api", brandRouter);
 app.use("/api", colorRouter);
 app.use("/api", payMethod);
+app.use("/api", discount);
+
 
 app.use("/api", orderroute);
 

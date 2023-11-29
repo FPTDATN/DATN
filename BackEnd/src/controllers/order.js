@@ -1,19 +1,62 @@
 import { orderSchema } from "../Schemas/order.js";
 import Order from "../models/order.js";
-import shortid from 'shortid'
+import shortid from 'shortid';
+import Discount from "../models/discount.js";
+
 export const createOrder = async (req, res) => {
   try {
     const { error } = orderSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
+
     // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
 
-    const { status, fullName, shipping, products, userId, phone, payMethod, total, email,isPaid } = req.body;
-    // Tính tổng tiền từ danh sách sản phẩm
+    const { status, fullName, shipping, products, userId, phone, payMethod, total, email, isPaid, discountCode } = req.body;
 
-    const newOrder = new Order({ orderNumber,isPaid, status, fullName, shipping, products, total, phone, payMethod, email, userId });
+    // Tính tổng tiền từ danh sách sản phẩm
+    let discountAmount = 0;
+
+    if (discountCode) {
+      const now = new Date();
+      const appliedDiscount = await Discount.findOne({ code: discountCode });
+
+      // Kiểm tra xem mã giảm giá có còn trong thời gian hiệu lực không
+      if (
+        appliedDiscount &&
+        !appliedDiscount.isUsed &&
+        appliedDiscount.count > 0 &&
+        now >= appliedDiscount.startDate &&
+        now <= appliedDiscount.endDate
+      ) {
+        // Giảm giá theo tỷ lệ nếu số lượng mã giảm giá còn > 0 và trong thời gian hiệu lực
+        discountAmount = total * (appliedDiscount.discount / 100);
+
+        // Đánh dấu mã giảm giá đã được sử dụng và giảm số lượng
+        appliedDiscount.isUsed = true;
+        appliedDiscount.count -= 1;
+
+        await appliedDiscount.save();
+      }
+    }
+
+    const newOrder = new Order({
+      orderNumber,
+      isPaid,
+      status,
+      fullName,
+      shipping,
+      products,
+      total: total - discountAmount,
+      phone,
+      payMethod,
+      email,
+      userId,
+      discountCode,
+      discountAmount,
+    });
+
     const savedOrder = await newOrder.save();
     return res.status(201).json(savedOrder);
   } catch (error) {
@@ -59,7 +102,7 @@ export const getOrders = async (req, res) => {
 export const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status,isPaid } = req.body;
+    const { status, isPaid } = req.body;
 
     // Tìm đơn hàng dựa trên orderId
     const order = await Order.findById(orderId);
@@ -74,7 +117,7 @@ export const cancelOrder = async (req, res) => {
     // }
 
     // Cập nhật trạng thái của đơn hàng thành trạng thái mới
-    const newSatus = await Order.updateOne({ _id: orderId }, { status,isPaid }, { new: true })
+    const newSatus = await Order.updateOne({ _id: orderId }, { status, isPaid }, { new: true })
 
     // Lưu thay đổi vào cơ sở dữ liệu
 
@@ -104,7 +147,7 @@ export const returnOrder = async (req, res) => {
     const { orderId } = req.params;
     const { status, isPaid, LydoHoandon, Motahoandon, Emaill, products } = req.body;
 
- 
+
     const order = await Order.findById(orderId);
 
     if (!order) {

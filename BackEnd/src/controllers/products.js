@@ -8,7 +8,7 @@ import Order from "../models/order.js";
 export const getAll = async (req, res) => {
   const {
     _limit = 155,
-    _sort = "createAt",
+    _sort = "createdAt",
     _order = "desc",
     _page = 1,
   } = req.query;
@@ -17,7 +17,7 @@ export const getAll = async (req, res) => {
     limit: _limit,
     page: _page,
     sort: {
-      [_sort]: _order === "asc" ? -1 : 1,
+      [_sort]: _order === "desc" ? -1 : 1,
     },
     populate: ['categoryId', 'colorId', 'sizeId', 'brandId']
   };
