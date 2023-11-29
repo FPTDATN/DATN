@@ -23,6 +23,8 @@ const orderSchema = new mongoose.Schema(
     LydoHoandon: { type: String },
     Motahoandon: { type: String },
     Emaill: { type: String },
+    discountCode: { type: String },
+    discountAmount: { type: Number, default: 0 },
   }, {
   timestamps: true
 }

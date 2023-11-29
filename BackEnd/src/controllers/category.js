@@ -5,7 +5,7 @@ import Products from "../models/products.js";
 export const getAllCategory = async (req, res) => {
   const {
     _limit = 999,
-    _sort = "createAt",
+    _sort = "createdAt",
     _order = "asc",
     _page = 1,
   } = req.query;

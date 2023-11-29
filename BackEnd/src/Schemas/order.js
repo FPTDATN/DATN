@@ -11,5 +11,6 @@ export const orderSchema = Joi.object({
   total: Joi.number(),
   userId: Joi.string(),
   payMethod: Joi.number(),
-  isPaid: Joi.boolean()
+  isPaid: Joi.boolean(),
+  discountCode: Joi.string(),
 });
