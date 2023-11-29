@@ -152,6 +152,8 @@ const router = createBrowserRouter([
             { path: 'category', element: <ListCaegory /> },
             { path: 'test', element: <AppTest /> },
             { path: 'product/:id/comments', element: <ListComment /> },
+            {path: 'color',element:<ListColor/>},
+            {path:'size', element: <ListSize/>}
         ],
     },
 ]);
