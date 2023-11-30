@@ -10,32 +10,38 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    // Tạo mã đơn hàng mới với độ dài 5 ký tự
     const orderNumber = shortid.generate();
 
     const { status, fullName, shipping, products, userId, phone, payMethod, total, email, isPaid, discountCode } = req.body;
 
-    // Tính tổng tiền từ danh sách sản phẩm
     let discountAmount = 0;
 
-    if (discountCode) {
+    // Kiểm tra xem người dùng đã nhập mã giảm giá hay không
+    if (discountCode !== undefined) {
       const now = new Date();
       const appliedDiscount = await Discount.findOne({ code: discountCode });
 
-      // Kiểm tra xem mã giảm giá có còn trong thời gian hiệu lực không
       if (
         appliedDiscount &&
-        !appliedDiscount.isUsed &&
         appliedDiscount.count > 0 &&
         now >= appliedDiscount.startDate &&
-        now <= appliedDiscount.endDate
+        now <= appliedDiscount.endDate &&
+        total >= appliedDiscount.maxAmount
       ) {
-        // Giảm giá theo tỷ lệ nếu số lượng mã giảm giá còn > 0 và trong thời gian hiệu lực
-        discountAmount = total * (appliedDiscount.discount / 100);
+        const userUsedDiscount = appliedDiscount.usedBy.find((user) => user.userId.toString() === userId);
 
-        // Đánh dấu mã giảm giá đã được sử dụng và giảm số lượng
-        appliedDiscount.isUsed = true;
+        if (userUsedDiscount && userUsedDiscount.used) {
+          return res.status(400).json({ error: 'Bạn đã sử dụng mã giảm giá này trước đó' });
+        }
+
+        discountAmount = total * (appliedDiscount.discount / 100);
         appliedDiscount.count -= 1;
+
+        if (userUsedDiscount) {
+          userUsedDiscount.used = true;
+        } else {
+          appliedDiscount.usedBy.push({ userId, used: true });
+        }
 
         await appliedDiscount.save();
       }
@@ -64,6 +70,7 @@ export const createOrder = async (req, res) => {
     return res.status(500).json({ error: 'Không thể tạo đơn hàng' });
   }
 };
+
 
 
 // Controller để lấy danh sách đơn hàng
