@@ -29,7 +29,7 @@ const View_account =()=>{
                 <Loading />
             ) : (
                 <div>
-                    <div className="">
+                    <div className="pt-4">
                         <Modal
                             title="Cập nhật tài khoản "
                             centered
@@ -39,16 +39,16 @@ const View_account =()=>{
                         >
                             <UpdateAccount setOpenAddModal={setOpenAddModal} />
                         </Modal>
-                        <div className="row d-flex relative z-10 justify-center flex-1 max-w-5xl  py-2 mx-auto lg:py-0 ">
+                        <div className="row d-flex relative z-10 justify-center flex-1 max-w-4xl  py-2 mx-auto lg:py-0">
                             {/* thong tin trang ca nhan  */}
-                            <div className="col-lg-4 pb-5">
+                            <div className="col-lg-5 pb-5 ">
                                 {/* <!-- Account Sidebar--> */}
                                 <div className="list-group-item" ><div className="d-flex justify-content-between align-items-center">
 
                                     <div className="d-inline-block font-weight-medium text-uppercase">Trang cá nhân</div>
                                 </div>
                                 </div>
-                                <div className="author-card d-flex flex-column align-items-center text-center">
+                                <div className="author-card d-flex flex-column align-items-center text-center mx-1 px-4">
                                     <div className="author-card-cover" ><a className="btn btn-style-1 btn-white btn-sm" href="#" data-toggle="tooltip" title="" data-original-title="You currently have 290 Reward points to spend"><i className="fa fa-award text-md"></i>&nbsp;</a></div>
                                     <div className="author-card-profile ">
                                         <div className="author-card-avatar">
@@ -75,7 +75,7 @@ const View_account =()=>{
                                 </div>
                             </div>
                             {/* <!-- Orders Table--> */}
-                            <div className="col-lg-8">
+                            <div className="col-lg-7">
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-3">

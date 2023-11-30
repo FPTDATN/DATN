@@ -36,7 +36,7 @@ const AccountDetail: React.FC = () => {
                     <aside className=''>
                             <Breadcrumbs />
                     </aside>
-                    <div className=" px-5">
+                    <div className="">
                         {/* <Modal
                             title="Cập nhật tài khoản "
                             centered
