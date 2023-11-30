@@ -33,6 +33,8 @@ import Hoan from '@/pages/admin/order/listorder/hoan';
 import ListSale from '@/pages/admin/sale/listSale/listSale';
 import View_account from '@/pages/user/view_account';
 import Discount_code from '@/pages/user/discount';
+import ListColor from '@/pages/admin/color/listColor';
+import ListSize from '@/pages/admin/size/listSize';
 
 
 const router = createBrowserRouter([
@@ -156,6 +158,8 @@ const router = createBrowserRouter([
             { path: 'order', element: <ListOrder /> },
             { path: 'sale', element: <ListSale /> },
             { path: 'product/:id/comments', element: <ListComment /> },
+            { path: 'color', element: <ListColor /> },
+            { path: 'size', element: <ListSize /> }
         ],
     },
     // Editer
@@ -171,6 +175,8 @@ const router = createBrowserRouter([
             { path: 'category', element: <ListCaegory /> },
             { path: 'test', element: <AppTest /> },
             { path: 'product/:id/comments', element: <ListComment /> },
+            { path: 'color', element: <ListColor /> },
+            { path: 'size', element: <ListSize /> }
         ],
     },
 ]);
