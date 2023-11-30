@@ -2,12 +2,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { waiting } from '@/utils/waiting';
 import { PaginatedDiscount } from '@/types/discount';
 export type IDiscount = {
-      _id : number | string,
-      code: string;
-      discount: number;
-      count: number;
-      startDate: Date;
-      endDate: Date;
+    _id: number | string,
+    code: string;
+    discount: number;
+    count: number;
+    maxAmount: number;
+    startDate: Date;
+    endDate: Date;
 };
 const discountApi = createApi({
     reducerPath: 'Discount',
@@ -20,7 +21,7 @@ const discountApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-      //lay tat ca
+        //lay tat ca
         getDiscounts: builder.query<PaginatedDiscount, void>({
             query: () => '/discounts',
             providesTags: ['Discount'],
@@ -52,17 +53,17 @@ const discountApi = createApi({
             query: ({ categoryId, category }) => ({
                 url: `/discounts/${categoryId}`,
                 method: 'PUT',
-                body: { ...category},
+                body: { ...category },
             }),
             invalidatesTags: ['Discount'],
         }),
     }),
 });
-export const { 
-      useCreateDiscountsMutation,
-      useDeleteDiscountsMutation,
-      useGetDiscountsByIdQuery,
-      useUpdateDiscountsMutation,
-      useGetDiscountsQuery
- } = discountApi;
+export const {
+    useCreateDiscountsMutation,
+    useDeleteDiscountsMutation,
+    useGetDiscountsByIdQuery,
+    useUpdateDiscountsMutation,
+    useGetDiscountsQuery
+} = discountApi;
 export default discountApi;
