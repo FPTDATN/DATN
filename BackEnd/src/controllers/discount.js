@@ -78,3 +78,26 @@ export const getByIdDiscount = async (req, res) => {
         });
     }
 };
+
+
+export const updateDiscount = async (req, res) => {
+    try {
+        const data = await Discount.findOneAndUpdate(
+            { _id: req.params.id },
+            req.body,
+            {
+                new: true,
+            }
+        );
+        if (data.length === 0) {
+            return res.status(200).json({
+                message: "Cập nhật mã giảm giá không thành công",
+            });
+        }
+        return res.json(data);
+    } catch (error) {
+        return res.status(404).json({
+            message: error.message,
+        });
+    }
+};

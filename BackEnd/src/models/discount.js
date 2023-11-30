@@ -21,10 +21,26 @@ const discountSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
+
         endDate: {
             type: Date,
             required: true,
-        }
+        },
+        maxAmount: {
+            type: Number,
+        },
+        usedBy: [
+            {
+                userId: {
+                    type: mongoose.Types.ObjectId,
+                    ref: 'Auth', // Thay thế 'Auth' bằng tên mô hình người dùng của bạn nếu khác
+                },
+                used: {
+                    type: Boolean,
+                    default: false,
+                },
+            },
+        ],
     },
     {
         timestamps: true,
