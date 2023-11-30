@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 
-const Dashbroad = () => {
+const DashBoard = () => {
     const { data: DataComment } = useGetAccountCommentsQuery();
     const { data: DataUser } = useGetAccountQuery()
     const { data: revenueData } = useGetRevenueStatisticsQuery()
@@ -290,4 +290,4 @@ const Dashbroad = () => {
     )
 }
 
-export default Dashbroad
+export default DashBoard
