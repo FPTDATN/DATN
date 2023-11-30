@@ -30,8 +30,10 @@ import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
 import EditorLayout from '@/components/layout/EditorLayout';
 import Hoandon from '@/pages/user/orders/Hoandon';
 import Hoan from '@/pages/admin/order/listorder/hoan';
-import ListColor from '@/pages/admin/color/listColor';
-import ListSize from '@/pages/admin/size/listSize';
+import ListSale from '@/pages/admin/sale/listSale/listSale';
+import View_account from '@/pages/user/view_account';
+import Discount_code from '@/pages/user/discount';
+
 
 const router = createBrowserRouter([
     // Main layout
@@ -71,8 +73,26 @@ const router = createBrowserRouter([
                 element: <OrderSumeries/>
             },
             {
-                path: 'details',
+                path: '/details',
                 element: <AccountDetail />,
+                children :[
+                    {
+                        index: true,
+                        element: <Navigate to="view_account" />,
+                    },
+                    {
+                        path : 'view_account', element: <View_account/>
+                    },
+                    {
+                        path : 'orders/:userId', element: <OrderSumeries/>
+                    },
+                    {
+                        path : 'favourite', element: <YourFavourite/>
+                    },
+                    {
+                        path : 'sale', element: <Discount_code/>
+                    }
+                ]
             },
             {
                 path: '/orders/:id/return',
@@ -134,9 +154,8 @@ const router = createBrowserRouter([
             { path: 'user/update/:id', element: <UpdateUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
+            { path: 'sale', element: <ListSale /> },
             { path: 'product/:id/comments', element: <ListComment /> },
-            {path: 'color',element:<ListColor/>},
-            {path:'size', element: <ListSize/>}
         ],
     },
     // Editer
@@ -152,8 +171,6 @@ const router = createBrowserRouter([
             { path: 'category', element: <ListCaegory /> },
             { path: 'test', element: <AppTest /> },
             { path: 'product/:id/comments', element: <ListComment /> },
-            {path: 'color',element:<ListColor/>},
-            {path:'size', element: <ListSize/>}
         ],
     },
 ]);
