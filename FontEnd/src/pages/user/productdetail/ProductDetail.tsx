@@ -104,6 +104,8 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
+                                                    <div><button className=' bg-layer text-center h-7 w-36'>Mã giảm giá </button>
+                                                    </div>
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
                                                     ${hasSale}

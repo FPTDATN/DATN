@@ -56,15 +56,15 @@ const AccountIcon: React.FC = () => {
             }
             : null,
         // Các phần tử menu khác
-        {
-            label: (
-                <Link className="text-base" to={`/orders/${authData?._id}`}>
-                    Hàng đã đặt
-                </Link>
-            ),
-            key: '2',
-            icon: <AiOutlineDropbox style={{ fontSize: '18px' }} />,
-        },
+        // {
+        //     label: (
+        //         <Link className="text-base" to={`/orders/${authData?._id}`}>
+        //             Hàng đã đặt
+        //         </Link>
+        //     ),
+        //     key: '2',
+        //     icon: <AiOutlineDropbox style={{ fontSize: '18px' }} />,
+        // },
         {
             type: 'divider',
         },

@@ -1,10 +1,13 @@
 import authApi from '@/services/auth';
 import categoryApi from '@/services/category';
+import colorApi from '@/services/color';
 import commentApi from '@/services/comment';
+import discountApi from '@/services/discount';
 import { favouriteapi } from '@/services/favourite';
 import optionApi from '@/services/option';
 import orderApi from '@/services/order';
 import productApi from '@/services/product';
+import sizeApi from '@/services/size';
 import userApi from '@/services/user';
 import { cartReducer } from '@/slices/cart';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
@@ -27,9 +30,9 @@ const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
     [optionApi.reducerPath]: optionApi.reducer,
     [favouriteapi.reducerPath]: favouriteapi.reducer,
-
-
-
+    [colorApi.reducerPath]:colorApi.reducer,
+    [sizeApi.reducerPath]:sizeApi.reducer,
+    [discountApi.reducerPath]:discountApi.reducer
 });
 
 // Middleware
@@ -41,7 +44,10 @@ const middleware: any[] = [
     commentApi.middleware,
     userApi.middleware,
     optionApi.middleware,
-    favouriteapi.middleware
+    favouriteapi.middleware,
+    colorApi.middleware,
+    sizeApi.middleware,
+    discountApi.middleware
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

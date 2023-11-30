@@ -46,7 +46,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             setIsLoading(false);
         }
     };
-
+    
     return (
         <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} layout="horizontal" onFinish={onFinish}>
             <Form.Item label="Form Size" name="size">
@@ -108,7 +108,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             <Form.Item label="Chọn màu" name={'colorId'}>
                 <Checkbox.Group style={{ width: '100%' }}>
                     <Row>
-                        {colors?.map((color) => (
+                        {colors?.docs.map((color) => (
                             <Col key={color._id} span={8}>
                                 <Checkbox value={color._id}>{color.name}</Checkbox>
                             </Col>
@@ -120,7 +120,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             <Form.Item label="Chọn sizes" name={'sizeId'}>
                 <Checkbox.Group style={{ width: '100%' }}>
                     <Row>
-                        {sizes?.map((size) => (
+                        {sizes?.docs.map((size) => (
                             <Col key={size._id} span={8}>
                                 <Checkbox value={size._id}>{size.name}</Checkbox>
                             </Col>
