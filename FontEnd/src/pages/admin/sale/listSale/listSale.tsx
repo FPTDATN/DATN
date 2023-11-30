@@ -1,32 +1,28 @@
 import { useState } from 'react';
 import { Button, Input, Modal, Popconfirm, Space } from 'antd';
 import { SearchProps } from 'antd/es/input';
-import { useDeleteCategoryMutation, useGetCategoriesQuery } from '@/services/category';
+import {useGetDiscountsQuery,useDeleteDiscountsMutation}from '@/services/discount'
 import Skeleton from 'react-loading-skeleton';
-import UpdateCategory from '../../category/updateCategory';
+// import UpdateCategory from '../../category/updateCategory';
 import AddCategory from '../../category/addCategory';
-import updateSale from '../updateSale';
-import addSale from '../addSale';
+import UpdateSale  from '../updateSale/updateSale';
+import AddSale from '../addSale/index';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 
-
-
 const ListSale = ()=>{
       const { Search } = Input;
-      const { data, isLoading } = useGetCategoriesQuery();
+      const { data, isLoading } = useGetDiscountsQuery();
       const [searchValue, setSearchValue] = useState('');
       const [openAddModal, setOpenAddModal] = useState(false);
       const [openUpdateModal, setOpenUpdateModal] = useState(false);
       const [selectedCategoryId, setSelectedCategoryId] = useState('');
-      const [mutate] = useDeleteCategoryMutation();
-    
+      const [mutate] = useDeleteDiscountsMutation();
       const handleSearch: SearchProps['onSearch'] = (value) => {
         setSearchValue(value);
       };
-    
       const handleDelete = async (id: string) => {
         try {
           await mutate(id);
@@ -58,8 +54,7 @@ const ListSale = ()=>{
       // limit
       const [currentPage, setCurrentPage] = useState(0);
       const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
-      const categoryList = data?.docs.filter(category => category.name.includes(searchValue)) || [];
-    
+      const categoryList =data?.docs.filter(category => category.code.includes(searchValue)) || [];
       const paginationOptions = {
         currentPage,
         perPage,
@@ -68,6 +63,7 @@ const ListSale = ()=>{
       };
     
       const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
+      console.log(currentPageItems)
     
       const handlePageChange = (selectedPage: any) => {
         setCurrentPage(selectedPage.selected);
@@ -92,10 +88,19 @@ const ListSale = ()=>{
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="pl-6 text-xs font-medium py-3">
-                    Tên Mã giảm giá 
+                    code Mã
+                  </th>
+                  <th scope="col" className="pl-6 text-xs font-medium py-3">
+                    Giá trị giảm giá 
+                  </th>
+                  <th scope="col" className="pl-6 text-xs font-medium py-3">
+                    Số lượng
                   </th>
                   <th scope="col" className="text-center text-xs font-medium py-3">
-                    Thời Gian
+                    Thời Gian tạo
+                  </th>
+                  <th scope="col" className="text-center text-xs font-medium py-3">
+                    Thời Gian kết thúc 
                   </th>
                   <th scope="col" className="text-center text-xs font-medium py-3">
                     Thao tác
@@ -116,11 +121,20 @@ const ListSale = ()=>{
                         key={category._id}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
-                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
-                          {category.name}
+                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                          {category.code}
                         </td>
-                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
-                          {new Date(category.createdAt).toLocaleString()}
+                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                          {category.discount}
+                        </td>
+                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                          {category.count}
+                        </td>
+                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                        {new Date(category.startDate).toLocaleString()}
+                        </td>
+                        <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                          {new Date(category.endDate).toLocaleString()}
                         </td>
                         <td className="py-4 flex items-center justify-center">
                           <Space size="small">
@@ -168,7 +182,7 @@ const ListSale = ()=>{
     
     
             <Modal title="Thêm danh mục" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
-              <AddCategory handleModalClose={handleModalClose} />
+              <AddSale handleModalClose={handleModalClose} />
             </Modal>
             {/* Update */}
             <Modal
@@ -178,7 +192,7 @@ const ListSale = ()=>{
               onCancel={handleModalClose}
               footer={null}
             >
-              {selectedCategoryId && <UpdateCategory categoryId={selectedCategoryId} handleUpdateComplete={handleUpdateComplete} />}
+              {selectedCategoryId && <UpdateSale categoryId={selectedCategoryId} handleUpdateComplete={handleUpdateComplete} />}
             </Modal>
           </div>
           <ToastContainer />

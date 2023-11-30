@@ -78,3 +78,28 @@ export const getByIdDiscount = async (req, res) => {
         });
     }
 };
+export const updateDiscount = async (req, res) => {
+    try {
+        const { error } = discountSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
+        const updatedDiscount = await Discount.findByIdAndUpdate(
+            req.params.id, // ID của đối tượng cần cập nhật
+            req.body, // Dữ liệu mới cần cập nhật
+            { new: true } // Trả về đối tượng đã được cập nhật
+        );
+        if (!updatedDiscount) {
+            return res.status(404).json({
+                message: "Không tìm thấy mã giảm giá để cập nhật",
+            });
+        }
+        return res.json(updatedDiscount);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Có lỗi xảy ra khi cập nhật mã giảm giá",
+            error: error.message,
+        });
+    }
+};
