@@ -4,6 +4,7 @@ import Loading from '../ui/Loading';
 import { Dropdown, MenuProps } from 'antd';
 import { useLogoutMutation } from '@/services/auth';
 import { useState } from 'react';
+import { BiSolidDiscount } from 'react-icons/bi';
 
 
 const AdminLayout = () => {
@@ -201,7 +202,7 @@ const AdminLayout = () => {
                                             <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
                                         </svg>
                                         <span className="flex-1 ml-3 whitespace-nowrap">Danh mục</span>
-                                        
+
                                     </Link>
                                 </li>
 
@@ -230,7 +231,7 @@ const AdminLayout = () => {
                                         data-collapse-toggle="dropdown-example"
                                         onClick={toggleMenu}
                                     >
-                                         <svg
+                                        <svg
                                             className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                             aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -265,38 +266,38 @@ const AdminLayout = () => {
                                             </li>
                                             <li>
                                                 <Link to="color" className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                                                
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path d="M2,12a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" fill="#f4f4f4" stroke="#4b4b4d" stroke-width="2"/>
-                                                    <circle cx="7" cy="7" r="1.5" fill="#ff0000"/>
-                                                    <circle cx="11" cy="5" r="1.5" fill="#00ff00"/>
-                                                    <circle cx="15" cy="7" r="1.5" fill="#0000ff"/>
-                                                    <circle cx="16" cy="11" r="1.5" fill="#ffff00"/>
-                                                    <circle cx="11" cy="14" r="1.5" fill="#00ffff"/>
-                                                    <circle cx="6" cy="11" r="1.5" fill="#ff00ff"/>
-                                                </svg>
+
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <path d="M2,12a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" fill="#f4f4f4" stroke="#4b4b4d" stroke-width="2" />
+                                                        <circle cx="7" cy="7" r="1.5" fill="#ff0000" />
+                                                        <circle cx="11" cy="5" r="1.5" fill="#00ff00" />
+                                                        <circle cx="15" cy="7" r="1.5" fill="#0000ff" />
+                                                        <circle cx="16" cy="11" r="1.5" fill="#ffff00" />
+                                                        <circle cx="11" cy="14" r="1.5" fill="#00ffff" />
+                                                        <circle cx="6" cy="11" r="1.5" fill="#ff00ff" />
+                                                    </svg>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Quản lý màu sắc</span>
                                                 </Link>
                                             </li>
                                             <li>
                                                 <Link to="size" className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                                    aria-hidden="true"
-                                                >
-                                                    <rect x="3" y="5" width="18" height="2" fill="#000000"/>
-                                                    <rect x="3" y="11" width="12" height="2" fill="#000000"/>
-                                                    <rect x="3" y="17" width="6" height="2" fill="#000000"/>
-                                                </svg>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <rect x="3" y="5" width="18" height="2" fill="#000000" />
+                                                        <rect x="3" y="11" width="12" height="2" fill="#000000" />
+                                                        <rect x="3" y="17" width="6" height="2" fill="#000000" />
+                                                    </svg>
 
 
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Quản lý kích cỡ</span>
@@ -320,6 +321,18 @@ const AdminLayout = () => {
                                             <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
                                         </svg>
                                         <span className="flex-1 ml-3 whitespace-nowrap">Đơn hàng</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="sale"
+                                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    >
+                                        <svg className="w-[20px] h-[20px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 13 6-6m-5-.5h.01m2.98 7H11m1.007-11.313a2.75 2.75 0 0 0 2.1.87 2.745 2.745 0 0 1 2.837 2.837 2.749 2.749 0 0 0 .87 2.1 2.747 2.747 0 0 1 0 4.014 2.748 2.748 0 0 0-.87 2.1 2.746 2.746 0 0 1-2.837 2.837 2.75 2.75 0 0 0-2.1.87 2.748 2.748 0 0 1-4.014 0 2.75 2.75 0 0 0-2.1-.87 2.744 2.744 0 0 1-2.837-2.837 2.749 2.749 0 0 0-.87-2.1 2.747 2.747 0 0 1 0-4.014 2.75 2.75 0 0 0 .87-2.1 2.745 2.745 0 0 1 2.838-2.837 2.749 2.749 0 0 0 2.1-.87 2.748 2.748 0 0 1 4.013 0Z" />
+                                        </svg>
+
+                                        <span className="flex-1 ml-3 whitespace-nowrap">Sale</span>
                                     </Link>
                                 </li>
                             </ul>
