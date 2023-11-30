@@ -1,6 +1,9 @@
+import CategoryTest from "@/components/category/CategoryTest";
 import Gallery from "@/components/gallery/Gallery";
+import SliderTestDemo from "@/components/gallery/SliderTestDemo";
 import ListProductItems from "@/components/products/ListItems";
-import CarouselSlide from "@/components/ui/Carousel";
+import ListProductHot from "@/components/products/ListProductTest";
+// import CarouselSlide from "@/components/ui/Carousel";
 import { FunctionComponent } from "react";
 
 interface HomeProps {
@@ -8,18 +11,26 @@ interface HomeProps {
 }
 
 const Home: FunctionComponent<HomeProps> = () => {
+
     return <div>
-        <CarouselSlide />
+        {/* <CarouselSlide /> */}
+        <SliderTestDemo />
 
-        <div className="mt-6 px-4">
-            <ListProductItems heading="Sản phẩm HOT" />
+        <div className="my-10 ">
+            <CategoryTest/>
         </div>
 
-        <div className="p-6">
+        <div className="my-10 ">
+            <ListProductItems heading="Sản phẩm Mới" />
+        </div>
+
+        {/* <div className="p-6">
             <Gallery />
+        </div> */}
+        <div className="my-10">
+            <ListProductHot />
         </div>
-
-        <div className="px-4">
+        <div className="my-8">
             <ListProductItems heading="New Products" />
         </div>
     </div>

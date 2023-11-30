@@ -91,7 +91,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                 name: currentProduct.name,
                 price: currentProduct.price,
                 sale_off: currentProduct.sale_off,
-                quantity: currentProduct.quantity,
+                inStock: currentProduct.inStock,
                 description: currentProduct.description,
                 categoryId: currentProduct.categoryId?._id,
                 brandId: currentProduct.brandId?._id,
@@ -105,7 +105,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
         setImages(currentProduct?.images!)
     },[currentProduct?.images])
 
-    //
+    
     return (
         <>
             {currentProduct ? (
@@ -143,7 +143,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                     </Form.Item>
                     <Form.Item
                         name="price"
-                        label="Price"
+                        label="Giá (VNĐ * 1000)"
                         rules={[
                             {
                                 required: true,
@@ -158,8 +158,8 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                     </Form.Item>
 
                     <Form.Item
-                        label="Số lượng"
-                        name="quantity"
+                        label="Số lượng trong kho"
+                        name="inStock"
                         rules={[
                             {
                                 required: true,
@@ -197,7 +197,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                         ))}
                         <Checkbox.Group style={{ width: '100%' }}>
                             <Row>
-                                {colors?.map((color) => (
+                                {colors?.docs.map((color) => (
                                     <Col key={color._id} span={8}>
                                         <Checkbox onChange={(e) => handleChangeColor(e)} value={color._id}>
                                             {color.name}
@@ -216,7 +216,7 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                         ))}
                         <Checkbox.Group style={{ width: '100%' }}>
                             <Row>
-                                {sizes?.map((size) => (
+                                {sizes?.docs.map((size) => (
                                     <Col key={size._id} span={8}>
                                         <Checkbox onChange={(e) => hanldeChangeSizes(e)} value={size._id}>
                                             {size.name}

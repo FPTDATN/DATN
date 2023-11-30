@@ -1,8 +1,7 @@
 import AdminLayout from '@/components/layout/AdminLayout';
 import MainLayout from '@/components/layout/MainLayout';
 
-import Dashbroad from '@/pages/admin/dashbroad';
-import ListCaegory from '@/pages/admin/category/listCategory';
+import DashBoard from '@/pages/admin/dashboard';
 
 import AccountDetail from '@/pages/user/account-detail/AccountDetail';
 
@@ -27,6 +26,16 @@ import YourFavourite from '@/pages/user/your-favourite';
 import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
 import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
+import EditorLayout from '@/components/layout/EditorLayout';
+import Hoandon from '@/pages/user/orders/Hoandon';
+import Hoan from '@/pages/admin/order/listorder/hoan';
+import ListSale from '@/pages/admin/sale/listSale/listSale';
+import View_account from '@/pages/user/view_account';
+import Discount_code from '@/pages/user/discount';
+import ListColor from '@/pages/admin/color/listColor';
+import ListSize from '@/pages/admin/size/listSize';
+import ListCategory from '@/pages/admin/category/listCategory';
+
 
 const router = createBrowserRouter([
     // Main layout
@@ -64,7 +73,39 @@ const router = createBrowserRouter([
             }, {
                 path: 'orders/:userId',
                 element: <OrderSumeries/>
-            }
+            },
+            {
+                path: '/details',
+                element: <AccountDetail />,
+                children :[
+                    {
+                        index: true,
+                        element: <Navigate to="view_account" />,
+                    },
+                    {
+                        path : 'view_account', element: <View_account/>
+                    },
+                    {
+                        path : 'orders/:userId', element: <OrderSumeries/>
+                    },
+                    {
+                        path : 'favourite', element: <YourFavourite/>
+                    },
+                    {
+                        path : 'sale', element: <Discount_code/>
+                    }
+                ]
+            },
+            {
+                path: '/orders/:id/return',
+                element: <Hoandon />,
+                
+            }, 
+            {
+                path: '/hoan/:id/',
+                element: <Hoan />,
+                
+            }, 
         ],
     },
     {
@@ -78,10 +119,7 @@ const router = createBrowserRouter([
                 path: 'signin',
                 element: <Signin />,
             },
-            {
-                path: 'details',
-                element: <AccountDetail />,
-            },
+            
             {
                 path: 'forgot-password',
                 element: <ForgotPassword/>
@@ -111,16 +149,35 @@ const router = createBrowserRouter([
                 index: true,
                 element: <Navigate to="dashboard" />,
             },
-            { path: 'dashboard', element: <Dashbroad /> },
+            { path: 'dashboard', element: <DashBoard /> },
             { path: 'product', element: <ListProduct /> },
-            { path: 'category', element: <ListCaegory /> },
+            { path: 'category', element: <ListCategory /> },
             { path: 'user', element: <ListUser /> },
             { path: 'user/update/:id', element: <UpdateUser /> },
             { path: 'test', element: <AppTest /> },
             { path: 'order', element: <ListOrder /> },
+            { path: 'sale', element: <ListSale /> },
             { path: 'product/:id/comments', element: <ListComment /> },
+            { path: 'color', element: <ListColor /> },
+            { path: 'size', element: <ListSize /> }
+        ],
+    },
+    // Editer
+    {
+        path: '/editor',
+        element: <EditorLayout/>,
+        children: [
+            {
+                index: true,
+                element: <Navigate to="category" />,
+            },
+            { path: 'product', element: <ListProduct /> },
+            { path: 'category', element: <ListCategory /> },
+            { path: 'test', element: <AppTest /> },
+            { path: 'product/:id/comments', element: <ListComment /> },
+            { path: 'color', element: <ListColor /> },
+            { path: 'size', element: <ListSize /> }
         ],
     },
 ]);
-
 export default router;

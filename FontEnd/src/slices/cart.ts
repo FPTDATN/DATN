@@ -1,5 +1,5 @@
-import { ExtendProduct, ProductType } from '@/types/Product';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { toast } from 'react-toastify';
 
 type CartProps = {
@@ -14,47 +14,67 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        addToCart: (state, action: PayloadAction<ExtendProduct>) => {
-            const newProduct = action.payload;
+        addToCart: (state, action: PayloadAction<any>) => {
+            let newProduct = action.payload;
 
-            const existingProduct = state.cartItems.findIndex((item) => item._id === newProduct._id);
+            const itemIndex = state.cartItems.findIndex((item) => item?.size === newProduct.sizeId || item?.color === newProduct.color);
 
-            if (existingProduct === -1) {
-                state.cartItems.push(newProduct);
+            // const itemId = state.cartItems.findIndex(item => item._id === newProduct._id)
 
-                toast.success(`Đã thêm ${newProduct.name} vào giỏ hàng`, {
-                    position: 'bottom-right',
+            const existingProduct = state.cartItems.find((item) => item._id === newProduct._id);
+
+            if (itemIndex < 0) {
+                
+                state.cartItems.push({
+                    ...newProduct,
+                    color: newProduct.color,
+                    size: newProduct.size,
+                    quantity: newProduct.quantity || 1,
                 });
+                message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
             } else {
 
-                toast.info(`${newProduct.name} đã có trong giỏ hàng`, {
-                    position: 'bottom-right',
-                });
-                // state.cartItems[existingProduct].quantity = newProduct.quantity++ || newProduct.quantity;
-                // state.cartItems[existingProduct].colorId = newProduct.colorId?.name!;
-                // state.cartItems[existingProduct].sizeid = newProduct.sizeId?.name!;
+                if (existingProduct.color === newProduct.color || existingProduct.size !== newProduct.size) {
+                    state.cartItems.push({
+                        ...newProduct,
+                        color: newProduct.color,
+                        size: newProduct.size,
+                        quantity: newProduct.quantity || 1,
+                    });
+                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
+                } else if (existingProduct.color !== newProduct.color || existingProduct.size === newProduct.size) {
+                    state.cartItems.push({
+                        ...newProduct,
+                        color: newProduct.color,
+                        size: newProduct.size,
+                        quantity: newProduct.quantity || 1,
+                    });
+                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
+                } else {
+                    state.cartItems[itemIndex].quantity++;
+                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
+                }
             }
 
-           
         },
-        increase: (state, action: PayloadAction<ProductType>) => {
-            const currentProduct = state.cartItems.find((item) => item._id === action.payload);
+        increase: (state, action: PayloadAction<number>) => {
+            const currentProduct = state.cartItems.find((_item, index) => index === action.payload);
             currentProduct.quantity++;
         },
-        decrease: (state, action: PayloadAction<ProductType>) => {
-            const currentProduct = state.cartItems.find((item) => item._id === action.payload);
+        decrease: (state, action: PayloadAction<number>) => {
+            const currentProduct = state.cartItems.find((_item, index) => index === action.payload);
             currentProduct.quantity--;
 
             if (currentProduct.quantity < 1) {
-                state.cartItems = state.cartItems.filter((item) => item._id !== action.payload);
+                state.cartItems = state.cartItems.filter((_item, index) => index !== action.payload);
                 currentProduct.quantity = 1;
                 toast.info(`Đã xóa khỏi giỏ hàng`, {
                     position: 'bottom-right',
                 });
             }
         },
-        remove: (state, action: PayloadAction<ProductType>) => {
-            state.cartItems = state.cartItems.filter((item) => item._id !== action.payload);
+        remove: (state, action: PayloadAction<number>) => {
+            state.cartItems = state.cartItems.filter((_item, index) => index !== action.payload);
 
             toast.info(`Đã xóa khỏi giỏ hàng`, {
                 position: 'bottom-right',

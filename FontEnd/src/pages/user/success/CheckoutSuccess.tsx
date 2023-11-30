@@ -1,36 +1,87 @@
 import { useMeQuery } from '@/services/auth';
 import { useUpdateOrderStatusMutation } from '@/services/order';
 import { clear } from '@/slices/cart';
-import { useAppDispatch } from '@/store/hook';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { Status } from '@/types/status';
-import { runFireworks } from '@/utils/success';
-import { useEffect } from 'react';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CheckoutSuccess = () => {
     const { id } = useParams();
     const router = useNavigate();
     const dispatch = useAppDispatch();
+    const { cartItems } = useAppSelector((state) => state.cart);
+    const shouldLog = useRef(true);
 
     const [update] = useUpdateOrderStatusMutation();
+    const [timerCount, setTimer] = useState(5);
+    const [disable, setDisable] = useState(true);
     const { data } = useMeQuery();
+
+    function timeout(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    const makeRequestInStock = async () => {
+        let holder: any = {};
+
+        cartItems.forEach((d) => {
+            if (holder.hasOwnProperty(d._id)) {
+                holder[d._id] = holder[d._id] + d.quantity;
+            } else {
+                holder[d._id] = d.quantity;
+            }
+        });
+
+        let obj2 = [];
+
+        for (const prop in holder) {
+            obj2.push({ key: prop, value: holder[prop] });
+        }
+
+        await timeout(1000);
+
+        obj2.map(async (obj) => {
+            await axios.patch(`http://localhost:8080/api/products/instock/${obj.key}`, {
+                value: obj.value,
+            });
+        });
+    };
 
     const makeRequest = () => {
         update({
             orderId: id!,
             status: Status.ORDER_CONFIRM,
+            isPaid: true,
         });
     };
 
     useEffect(() => {
-        makeRequest();
-        runFireworks();
-        dispatch(clear());
+        if (shouldLog.current) {
+            shouldLog.current = false;
+            makeRequest();
+            makeRequestInStock();
+            dispatch(clear());
 
-        setTimeout(() => {
-            router('/');
-        }, 3000);
+            setTimeout(() => {
+                router('/');
+            }, 5000);
+        }
     }, []);
+
+    useEffect(() => {
+        let interval = setInterval(() => {
+            setTimer((lastTimerCount) => {
+                lastTimerCount <= 1 && clearInterval(interval);
+                if (lastTimerCount <= 1) setDisable(false);
+                if (lastTimerCount <= 0) return lastTimerCount;
+                return lastTimerCount - 1;
+            });
+        }, 1000); //each count lasts for a second
+        //cleanup the interval on complete
+        return () => clearInterval(interval);
+    }, [disable]);
 
     return (
         <div className="bg-gray-100 h-screen flex items-center">
@@ -49,11 +100,12 @@ const CheckoutSuccess = () => {
                             {data ? data?.username : ''} đã ủng hộ
                         </span>
                     </p>
-                    <p> Chúc bạn 1 ngày vui vẻ 🥰! </p>
-                    <div className="py-10 text-center">
-                        <a href="/" className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">
-                            GO BACK
-                        </a>
+                    <p> Chúc bạn 1 ngày vui vẻ 🥰! </p>{' '}
+                    <a href="/" className="text-primary mt-2 block">
+                        Trở lại
+                    </a>
+                    <div className="flex mt-4 flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+                        {disable && `Trở lại sau ${timerCount}s`}
                     </div>
                 </div>
             </div>

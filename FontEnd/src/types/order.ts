@@ -10,13 +10,16 @@ export interface PaginatedOrder {
       totalDocs: number;
       totalPages: number;
 }
-interface IProductorder {
+export interface IProductorder {
       _id?: number | string,
       quantity: number;
       name: string;
       price:number;
       colorId:string;
       sizeId:string;
+      images: string[];
+      sale_off: number;
+      
 }
 export interface Iuser {
       _id: string;
@@ -25,6 +28,7 @@ export interface Iuser {
 }
 export interface IOrder {
       _id: string;
+      isPaid:boolean,
       orderNumber: string;
       status: number;
       phone: number;
@@ -36,5 +40,15 @@ export interface IOrder {
       total: number;
       createdAt: Date;
       updatedAt: Date;
-
+      completed: boolean
+      LydoHoandon:string;
+      Motahoandon:string,
+      Emaill:string,
 }  
+export interface Hoandon{
+      LydoHoandon:string;
+      Motahoandon:string,
+      Emaill:string,
+      order:IOrder[],
+      products: IProductorder[];
+}

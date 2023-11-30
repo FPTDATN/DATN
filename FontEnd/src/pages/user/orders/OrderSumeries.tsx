@@ -8,6 +8,12 @@ import { BsPersonVcardFill, BsDropbox, BsCheckCircleFill } from 'react-icons/bs'
 import { checkAuth } from '@/utils/checkAuth';
 import { formatTimeToNow } from '@/utils/formartDate';
 
+import { useState } from 'react';
+import { Button } from 'antd/es/radio';
+import { Link } from 'react-router-dom';
+import Modal from 'antd/es/modal/Modal';
+import Hoandon from './Hoandon';
+
 const { Panel } = Collapse;
 
 type Props = {};
@@ -17,8 +23,13 @@ const OrderSumeries = ({}: Props) => {
     const { data: authdata } = checkAuth();
 
     const { token } = theme.useToken();
+    const [open, setOpen] = useState(false);
 
-    const renderPayMethod = (method: number, status?: number) => {
+    const onShow = () => {
+        setOpen(true);
+    };
+
+    const renderPayMethod = (method: number, status?: number, isPaid?: boolean) => {
         if (status === Status.CANCELLED) {
             return (
                 <Tag color="red-inverse" style={{ padding: 4 }}>
@@ -26,6 +37,14 @@ const OrderSumeries = ({}: Props) => {
                 </Tag>
             );
         } else {
+            if (isPaid === false) {
+                return (
+                    <Tag color="red-inverse" style={{ padding: 4 }}>
+                        Thanh toán thất bại
+                    </Tag>
+                );
+            }
+
             if (method === 0)
                 return (
                     <Tag color="orange-inverse" style={{ padding: 4 }}>
@@ -41,7 +60,7 @@ const OrderSumeries = ({}: Props) => {
         }
     };
 
-    const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id);
+    const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true);
 
     return (
         <div className="min-h-screen">
@@ -86,7 +105,11 @@ const OrderSumeries = ({}: Props) => {
                                                         Đơn hàng của {order.fullName} - Đặt hàng vào lúc :
                                                         {formatTimeToNow(new Date(order?.createdAt))}
                                                         <span className="ml-4">
-                                                            {renderPayMethod(order.payMethod, order.status)}
+                                                            {renderPayMethod(
+                                                                order.payMethod,
+                                                                order.status,
+                                                                order.isPaid,
+                                                            )}
                                                         </span>
                                                     </div>
                                                 }
@@ -97,6 +120,8 @@ const OrderSumeries = ({}: Props) => {
                                                         <tr className="border">
                                                             <td className="boder p-3">Mã đơn hàng</td>
                                                             <td className="boder p-3">Tên sản phẩm</td>
+                                                            <td className="boder p-3">Size</td>
+                                                            <td className="boder p-3">Color</td>
                                                             <td className="boder p-3">Số lượng</td>
                                                         </tr>
                                                     </thead>
@@ -105,6 +130,8 @@ const OrderSumeries = ({}: Props) => {
                                                             <tr className="border" key={product._id}>
                                                                 <td className="border p-3">{order.orderNumber}</td>
                                                                 <td className="border p-3">{product.name}</td>
+                                                                <td className="border p-3">{product.size}</td>
+                                                                <td className="border p-3">{product.color}</td>
                                                                 <td className="border p-3 text-center">
                                                                     {product.quantity}
                                                                 </td>
@@ -115,6 +142,41 @@ const OrderSumeries = ({}: Props) => {
 
                                                 <p className="text-base mt-3">
                                                     Tổng chi phí <span className="text-primary">${order.total}</span>
+                                                    {order.status === Status.COMPLETE ? (
+                                                        <div className="flex space-x-4 mt-4">
+                                                            <div className="flex space-x-4 mt-4">
+                                                                <div className="px-1 md:ml-0 ml-20">
+                                                                    <Link to={`/orders/${order._id}/return`}>
+                                                                        <Button type="dashed" className='bg-gree text-layer' onClick={onShow}>
+                                                                            Hoàn đơn
+                                                                        </Button>
+                                                                    </Link>
+                                                                    <Modal
+                                                                        title="Update User"
+                                                                        centered
+                                                                        open={open}
+                                                                        onOk={() => setOpen(false)}
+                                                                        onCancel={() => setOpen(false)}
+                                                                        width={1000}
+                                                                        footer={null}
+                                                                    >
+                                                                        <Hoandon />
+                                                                    </Modal>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex space-x-4 mt-4">
+                                                           
+                                                            <Button type="dashed" className='bg-gray-300 text-layer' disabled>
+                                                                            Hoàn đơn
+                                                                        </Button>
+                                                          
+                                                        </div>
+                                                    )}
                                                 </p>
 
                                                 <Steps
@@ -124,7 +186,7 @@ const OrderSumeries = ({}: Props) => {
                                                             title: 'Thông tin khách hàng',
                                                             status:
                                                                 order.status >= Status.INFORMATION ? 'finish' : 'wait',
-                                                            icon: <BsPersonVcardFill />,
+                                                            icon: <BsPersonVcardFill className="!text-primary"/>,
                                                         },
                                                         {
                                                             title: 'Xác nhận đơn hàng',
@@ -132,12 +194,12 @@ const OrderSumeries = ({}: Props) => {
                                                                 order.status >= Status.ORDER_CONFIRM
                                                                     ? 'finish'
                                                                     : 'wait',
-                                                            icon: <BsDropbox />,
+                                                            icon: <BsDropbox className="!text-primary"/>,
                                                         },
                                                         {
                                                             title: 'Đang giao hàng',
                                                             status: order.status >= Status.SHIPPING ? 'finish' : 'wait',
-                                                            icon: <FaShippingFast />,
+                                                            icon: <FaShippingFast className="!text-primary"/>,
                                                         },
                                                         {
                                                             title: order.status === 0 ? 'Đã hủy' : 'Hoàn thành',
@@ -149,11 +211,11 @@ const OrderSumeries = ({}: Props) => {
                                                                     : 'wait',
                                                             icon:
                                                                 order.status === Status.COMPLETE ? (
-                                                                    <BsCheckCircleFill />
+                                                                    <BsCheckCircleFill className="!text-green-500"/>
                                                                 ) : Status.CANCELLED ? (
                                                                     <MdSmsFailed />
                                                                 ) : (
-                                                                    <BsCheckCircleFill />
+                                                                    <BsCheckCircleFill/>
                                                                 ),
                                                         },
                                                     ]}

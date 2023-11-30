@@ -3,6 +3,7 @@ import {
   createCategory,
   getAllCategory,
   getByIdCategory,
+  getProductsByCategories,
   removeCategory,
   updateCategory,
 } from "./../controllers/category.js";
@@ -11,7 +12,9 @@ const router = express.Router();
 
 router.get("/categories", getAllCategory);
 router.get("/categories/:id", getByIdCategory);
-router.post("/categories" , createCategory);
+router.post("/categories", createCategory);
+router.post("/products/categories", getProductsByCategories);
+
 router.put("/categories/:id", updateCategory);
 router.delete("/categories/:id", removeCategory);
 

@@ -32,9 +32,9 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
         try {
             setIsLoading(true);
 
-            const { size, ...restValues } = values;
+            const { size, price, ...restValues } = values;
 
-            await mutateCreateProduct({ ...restValues, images }).unwrap();
+            await mutateCreateProduct({ ...restValues, images, price: price }).unwrap();
             const newProduct = { ...restValues };
             setProducts((prevProducts) => [...prevProducts, newProduct]);
             form.resetFields();
@@ -46,15 +46,9 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             setIsLoading(false);
         }
     };
-
+    
     return (
-        <Form
-            form={form}
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            layout="horizontal"
-            onFinish={onFinish}
-        >
+        <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} layout="horizontal" onFinish={onFinish}>
             <Form.Item label="Form Size" name="size">
                 <Radio.Group>
                     <Radio.Button value="small">Small</Radio.Button>
@@ -71,17 +65,21 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
                 <Input placeholder="Tên sản phẩm" type="text" />
             </Form.Item>
 
-            <Form.Item label="Giá gốc" name="price" rules={[{ required: true, message: 'Vui lòng nhập Giá' }]}>
+            <Form.Item
+                label="Giá gốc"
+                name="price"
+                rules={[{ required: true, message: 'Vui lòng nhập Giá' }]}
+            >
                 <Input placeholder="Giá gốc sản phẩm" type="number" />
             </Form.Item>
 
-            <Form.Item label="Giá sale" name="sale_off">
+            <Form.Item label="Giá sale (%)" name="sale_off">
                 <Input placeholder="Giá sale sản phẩm" type="number" />
             </Form.Item>
 
             <Form.Item
-                label="Số lượng"
-                name="quantity"
+                label="Số lượng trong kho"
+                name="inStock"
                 rules={[{ required: true, message: 'Vui lòng nhập số lượng sản phẩm ' }]}
             >
                 <Space>
@@ -110,7 +108,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             <Form.Item label="Chọn màu" name={'colorId'}>
                 <Checkbox.Group style={{ width: '100%' }}>
                     <Row>
-                        {colors?.map((color) => (
+                        {colors?.docs.map((color) => (
                             <Col key={color._id} span={8}>
                                 <Checkbox value={color._id}>{color.name}</Checkbox>
                             </Col>
@@ -122,7 +120,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             <Form.Item label="Chọn sizes" name={'sizeId'}>
                 <Checkbox.Group style={{ width: '100%' }}>
                     <Row>
-                        {sizes?.map((size) => (
+                        {sizes?.docs.map((size) => (
                             <Col key={size._id} span={8}>
                                 <Checkbox value={size._id}>{size.name}</Checkbox>
                             </Col>

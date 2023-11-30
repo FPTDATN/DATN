@@ -1,11 +1,14 @@
 import Products from "../models/products.js";
 import { productSchema } from "../Schemas/products.js";
 import Category from "../models/category.js";
+import Brand from "../models/brand.js";
+import mongoose, { ObjectId } from "mongoose";
+import Order from "../models/order.js";
 
 export const getAll = async (req, res) => {
   const {
     _limit = 155,
-    _sort = "createAt",
+    _sort = "createdAt",
     _order = "desc",
     _page = 1,
   } = req.query;
@@ -43,10 +46,13 @@ export const create = async (req, res) => {
       });
     }
     const products = await Products.create(req.body);
-    //
-    // Thêm ObjectId vào thuộc tính products trong model Category
-    //
+
     await Category.findByIdAndUpdate(products.categoryId, {
+      $addToSet: {
+        products: products._id,
+      },
+    });
+    await Brand.findByIdAndUpdate(products.brandId, {
       $addToSet: {
         products: products._id,
       },
@@ -161,5 +167,45 @@ export const getQuanlityProduct = async (req, res) => {
     return res.status(404).json({
       message: error.message,
     });
+  }
+};
+
+export const updateInStock = async (req, res) => {
+
+  try {
+    const { value } = req.body;
+
+    const newValue = await Products.findByIdAndUpdate({ _id: req.params.id }, { $inc: { inStock: -value } })
+
+    return res.status(201).json(newValue)
+  } catch (error) {
+    return res.status(400).json({ message: error.message })
+  }
+}
+
+export const getTopProducts = async (req, res) => {
+
+  try {
+    const result = await Order.aggregate([
+      { $unwind: '$products' },
+      {
+        $group: {
+          _id: '$products._id', // Sử dụng _id của sản phẩm thay vì _id của đơn hàng
+          name: { $first: '$products.name' }, // Lấy tên sản phẩm
+          quantity: { $sum: '$products.quantity' }, // Tổng số lượng của từng sản phẩm
+          price: { $first: '$products.price' }, // Lấy giá của sản phẩm (nếu cần)
+        },
+      },
+      { $sort: { quantity: -1 } },
+      { $limit: 10 }
+    ]);
+
+
+    const topProducts = await Products.populate(result, { path: '_id' });
+
+    res.json({ success: true, data: topProducts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 };

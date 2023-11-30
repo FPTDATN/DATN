@@ -7,7 +7,6 @@ const slides = [
     {
         id: 1,
         bannerUrl: 'https://file.hstatic.net/1000369857/collection/1919_730_polo_3da01ded33614497a1884a3b99489661.jpg',
-
         title: '',
         link: '',
     },

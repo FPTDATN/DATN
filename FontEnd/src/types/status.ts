@@ -5,4 +5,5 @@ export enum Status {
     ORDER_CONFIRM = 2,
     SHIPPING = 3,
     COMPLETE = 4,
+    HOAN = 5,
 }

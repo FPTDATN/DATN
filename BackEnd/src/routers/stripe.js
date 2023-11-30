@@ -11,7 +11,7 @@ const YOUR_DOMAIN = 'http://localhost:5173'
 
 router.post('/create-checkout-session', async (req, res) => {
 
-    const { shipping, total, payMethod, status, userId, cartItems, fullName, phone, email } = req.body
+    const { shipping, total, payMethod, status, userId, cartItems, fullName, phone, email, isPaid } = req.body
 
     const customer = await stripe.customers.create({
         metadata: {
@@ -50,16 +50,9 @@ router.post('/create-checkout-session', async (req, res) => {
         total,
         fullName,
         phone,
-        email
+        email,
+        isPaid
     });
-
-    await newOrder.save();
-
-    if(newOrder.status === 1) {
-        setTimeout(() => {
-            newOrder.deleteOne({_id:newOrder._id})
-        },2*60*1000)
-    }
 
     await newOrder.save();
 

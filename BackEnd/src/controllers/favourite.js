@@ -96,7 +96,6 @@ export const checkFavourite = async (req, res) => {
 
         // Tìm kiếm wishlist của id_user
         const wishlist = await Favourite.findOne({ user_id });
-        console.log(wishlist);
         // Kiểm tra sự tồn tại của id_product trong wishlist_items của id_user
         const productExists = wishlist.wishlist_items.some(
             (item) => item.product_id.toString() === product_id

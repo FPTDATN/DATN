@@ -15,6 +15,11 @@ const productSchema = new mongoose.Schema({
   },
   quantity: {
     type: Number,
+    default: 1
+  },
+  inStock: {
+    type: Number,
+    default: 0
   },
   images: [
     {

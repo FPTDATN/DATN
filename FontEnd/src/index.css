@@ -185,13 +185,6 @@ html *::-webkit-scrollbar-track {
 Natural box-sizing for all elements
 ------------------------------------------
 */
-*,
-*:before,
-*:after {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
 
 /* 
 ------------------------------------------
@@ -210,6 +203,8 @@ Buttons & links
 Helper classes
 ------------------------------------------
 */
+
+/*
 .highlight-color {
     color: #6e6e6e;
 }
@@ -270,6 +265,8 @@ Helper classes
     clear: both;
 }
 
+*/
+
 /* 
 ------------------------------------------
 Headings
@@ -280,20 +277,6 @@ Headings
 Blockquotes
 ------------------------------------------
 */
-blockquote {
-    font-size: 24px;
-    font-weight: 300;
-    line-height: 36px;
-    margin: 1em 0;
-}
-blockquote p {
-    font-size: 100%;
-    margin: 0 0 15px 0;
-}
-blockquote cite {
-    font-style: normal;
-    font-size: 16px;
-}
 
 /* 
 ------------------------------------------
@@ -315,6 +298,9 @@ code
  * Give yourself some credit here
  *
  */
+
+
+ 
 .dk_mytheme {
     /* Container */
     /* Toggle */
@@ -324,6 +310,8 @@ code
     /* Inner Options */
     /* Set a width property here */
 }
+
+/*
 
 .dk_container {
     display: none;
@@ -391,11 +379,15 @@ code
     -webkit-appearance: none;
 }
 
+*/
+
 /* 
 ------------------------------------------
 Forms and inputs
 ------------------------------------------
 */
+
+/*
 
 .inline-label {
     font-family: 'novecento_sans_widemedium';
@@ -526,6 +518,9 @@ form input[type='submit'] {
     padding-left: 45px;
 }
 
+*/
+
+
 .cc-icon:before {
     content: '\f09d';
     /* font awesome: fa-credit-card */
@@ -546,6 +541,9 @@ form input[type='submit'] {
 Styled dropdown (w/dropkick)
 ------------------------------------------
 */
+
+/*
+
 .select-label {
     display: block;
     outline: none;
@@ -608,11 +606,15 @@ Styled dropdown (w/dropkick)
     z-index: 10;
 }
 
+*/
+
 /* 
 ------------------------------------------
 A simple 12 column grid
 ------------------------------------------
 */
+
+/*
 .row {
     display: table;
     position: relative;
@@ -667,11 +669,16 @@ A simple 12 column grid
     margin: auto;
 }
 
+*/
+
 /* 
 ------------------------------------------
 Structure
 ------------------------------------------
 */
+
+/*
+
 html,
 body {
     font-size: 100%;
@@ -687,11 +694,15 @@ body {
     position: relative;
 }
 
+*/
+
 /* 
 ------------------------------------------
 Header
 ------------------------------------------
 */
+
+/*
 .header > .max-inner {
     padding: 55px 0;
 }
@@ -807,11 +818,15 @@ Header
     color: #fff;
 }
 
+*/
+
 /* 
 ------------------------------------------
 Content Slider
 ------------------------------------------
 */
+
+/*
 .content-slider {
     color: #fff;
     padding: 0 0 100px 0;
@@ -861,11 +876,15 @@ Content Slider
     color: #fff;
 }
 
+8/
+
 /* 
 ------------------------------------------
 Product Grid
 ------------------------------------------
 */
+
+/*
 .product-grid {
     padding: 0 0 85px 0;
 }
@@ -965,11 +984,15 @@ Product Grid
     transform: scale(1.1, 1.1);
 }
 
+*/
+
 /* 
 ------------------------------------------
 Collections section
 ------------------------------------------
 */
+
+/*
 .collections-section {
     padding: 0 0 85px 0;
 }
@@ -1023,11 +1046,14 @@ Collections section
     font-size: 18px;
 }
 
+*/
 /* 
 ------------------------------------------
 Blog Section
 ------------------------------------------
 */
+
+/*
 .blog-section {
     padding: 0 0 85px 0;
 }
@@ -1083,11 +1109,15 @@ Blog Section
     line-height: 21px;
 }
 
+*/
+
 /* 
 ------------------------------------------
 Footer
 ------------------------------------------
 */
+
+/*
 .footer > .row.max-inner {
     padding: 100px 0;
 }
@@ -1170,6 +1200,8 @@ Footer
 Breadcrumbs
 ------------------------------------------
 */
+
+/*
 .breadcrumbs {
     font-size: 12px;
     font-family: 'novecento_sans_widedemibold';
@@ -1234,6 +1266,8 @@ Breadcrumbs
 Filter + Sort
 ------------------------------------------
 */
+
+/*
 .filter-sort {
     text-transform: uppercase;
     padding-bottom: 50px;
@@ -1328,6 +1362,9 @@ Filter + Sort
 shop grid
 ------------------------------------------
 */
+
+/*
+
 .shop-grid .grid-item {
     padding-bottom: 50px;
 }
@@ -1337,6 +1374,8 @@ shop grid
 product page
 ------------------------------------------
 */
+
+/*
 .main-content {
     padding: 0 0 100px;
 }
@@ -1438,6 +1477,8 @@ product page
 Shopping cart (table)
 ------------------------------------------
 */
+
+/*
 .cart-table {
     color: #9d9c9c;
     font-size: 15px;
@@ -1549,6 +1590,8 @@ Shopping cart (table)
 Overwrite some FlexSlider styles
 ------------------------------------------
 */
+
+/*
 .flexslider {
     background: none;
     border: none;
@@ -1596,6 +1639,8 @@ Overwrite some FlexSlider styles
 Site-wide media queries
 ------------------------------------------
 */
+
+/*
 @media screen and (max-width: 1170px) {
     .max-inner {
         max-width: 960px;
@@ -1693,6 +1738,9 @@ Site-wide media queries
         padding-left: 20px;
     }
 }
+
+/*
+
 @media screen and (max-width: 800px) {
     .max-inner,
     .main-content .max-inner {
@@ -1880,3 +1928,5 @@ Site-wide media queries
         border-left: 1px solid #dfdfdf !important;
     }
 }
+
+*/
