@@ -40,10 +40,10 @@ const CartComponent = () => {
                                 <th className="px-4 w-full py-8 text-left">
                                     {item?.size?.length || item?.color?.length > 0 ? (
                                         <Link to={`/detail/${item._id}`}>
-                                            {item.name.slice(0,10)}... - {item.size} - {item.color}
+                                            {item.name.slice(0, 10)}... - {item.size} - {item.color}
                                         </Link>
                                     ) : (
-                                        <Link to={`/detail/${item._id}`}>{item.name.slice(0,10)}...</Link>
+                                        <Link to={`/detail/${item._id}`}>{item.name.slice(0, 10)}...</Link>
                                     )}
                                 </th>
                                 <th className="px-2 py-8">{formartVND(item.price)}</th>

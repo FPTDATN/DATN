@@ -7,7 +7,7 @@ import { Alert } from 'antd';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-interface CartProps {}
+interface CartProps { }
 
 const Cart: FunctionComponent<CartProps> = () => {
     const { cartItems } = useAppSelector((state) => state.cart);
