@@ -195,7 +195,7 @@ const AdminLayout = () => {
                                         </span>
                                     </Link>
                                 </li>
-                                <ul className="">
+                                <ul className="w-64">
                                     <Menu
                                         mode="inline"
                                         defaultSelectedKeys={['dashboard']}
@@ -203,8 +203,9 @@ const AdminLayout = () => {
                                         style={{ fontSize: '22px', marginLeft: '-20px' }}
                                     >
                                         <SubMenu
-                                            className=' text-base'
+                                            className=' text-base '
                                             key="sub1"
+
                                             title={
                                                 <span className='flex items-center'>
 
@@ -212,20 +213,20 @@ const AdminLayout = () => {
 
 
 
-                                                    <span className='pl-2'>Danh mục</span>
+                                                    <span className=''>Danh mục & Thương .</span>
                                                 </span>
                                             }
                                             onTitleClick={handleSubMenuOpen}
                                         >
-                                            <Menu.Item key="category">
-                                            <AppstoreAddOutlined style={{ fontSize: '18px',  }}/>
-                                                <Link to="category"  className='px-2'>Category </Link>
+                                            <Menu.Item key="category" style={{fontSize: '17px',  marginLeft: '-19px' }}>
+                                                <AppstoreAddOutlined style={{ fontSize: '18px', }} />
+                                                <Link to="category" className='px-4'>Danh mục  </Link>
                                             </Menu.Item>
-                                            <Menu.Item key="category2">
-                                            <FireOutlined style={{ fontSize: '18px',  }}/>
-                                                <Link to="brand" className='px-2'>Brand</Link>
+                                            <Menu.Item key="category2" style={{fontSize: '16px',  marginLeft: '-19px' }}>
+                                                <FireOutlined style={{ fontSize: '18px', }} />
+                                                <Link to="brand" className='px-4'>Thương Hiệu</Link>
                                             </Menu.Item>
-                                           
+
                                         </SubMenu>
                                     </Menu>
                                 </ul>
