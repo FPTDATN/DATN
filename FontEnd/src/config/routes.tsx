@@ -178,7 +178,8 @@ const router = createBrowserRouter([
             { path: 'test', element: <AppTest /> },
             { path: 'product/:id/comments', element: <ListComment /> },
             { path: 'color', element: <ListColor /> },
-            { path: 'size', element: <ListSize /> }
+            { path: 'size', element: <ListSize /> },
+            {path:'brand', element: <Listbrand/>}
         ],
     },
 ]);
