@@ -3,9 +3,10 @@ import { Button, Checkbox, Col, Form, Input, InputNumber, Radio, Row, Select, Ta
 import { useGetProductByIdQuery, useUpdateProductMutation } from '@/services/product';
 import { useGetCategoriesQuery } from '@/services/category';
 import { toast } from 'react-toastify';
-import { useGetBrandsQuery, useGetColorsQuery, useGetSizesQuery } from '@/services/option';
+import { useGetColorsQuery, useGetSizesQuery } from '@/services/option';
 import UploadFileServer from '@/components/uploads/UploadFile';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useGetBrandsQuery } from '@/services/brand';
 
 type SizeType = Parameters<typeof Form>[0]['size'];
 
@@ -22,8 +23,8 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
     const { data: categoryData } = useGetCategoriesQuery();
     const { data: colors } = useGetColorsQuery();
     const { data: sizes } = useGetSizesQuery();
-    const { data: brands } = useGetBrandsQuery();
-
+    const { data: branddata } = useGetBrandsQuery();
+    const brands = branddata?.docs || [];
     const categories = categoryData?.docs || [];
     const [isLoading, setIsLoading] = useState(false);
     const [update] = useUpdateProductMutation();
@@ -98,14 +99,12 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                 colorId: [],
                 sizeId: [],
             });
+            setImages(currentProduct?.images!)
         }
     }, [currentProduct, form]);
 
-    useEffect(() => {
-        setImages(currentProduct?.images!)
-    },[currentProduct?.images])
 
-    
+
     return (
         <>
             {currentProduct ? (
@@ -227,14 +226,25 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
                         </Checkbox.Group>
                     </Form.Item>
 
-                    <Form.Item label="Thương hiệu" name={'brandId'}>
-                        <Select placeholder="Thương hiệu">
-                            {brands?.map((brand) => (
-                                <Select.Option key={brand._id}>{brand.name}</Select.Option>
+                   
+                    <Form.Item
+                        name="brandId"
+                        label="brand"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'brand is required!',
+                            },
+                        ]}
+                    >
+                        <Select placeholder="Select a brand" optionFilterProp="children">
+                            {brands.map((brand) => (
+                                <Select.Option key={brand._id} value={brand._id}>
+                                    {brand.name}
+                                </Select.Option>
                             ))}
                         </Select>
                     </Form.Item>
-
                     {/* Option end */}
                     <Form.Item
                         name="categoryId"

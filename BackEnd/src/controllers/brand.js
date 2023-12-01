@@ -28,10 +28,23 @@ export const create = async(req,res)=>{
     }
 }
 
-
 export const getAll = async (req, res) => {
+    const {
+        _limit = 999,
+        _sort = "createAt",
+        _order = "asc",
+        _page = 1,
+      } = req.query;
+    
+      const options = {
+        limit: _limit,
+        page: _page,
+        sort: {
+          [_sort]: _order === "desc" ? -1 : 1,
+        },
+      };
     try {
-        const data = await Brand.find()
+        const data = await Brand.paginate({}, options)
         if (data.length === 0) {
             return res.status(201).json({
                 message: "Không có dữ liệu"
@@ -44,8 +57,6 @@ export const getAll = async (req, res) => {
         })
     }
 }
-
-
 export const getById = async(req, res) =>{
     try {
         const data = await Brand.findById(req.params.id).populate("products");

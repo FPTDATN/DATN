@@ -7,6 +7,7 @@ import { ProductType } from '@/types/Product';
 export type TCategory = {
     _id: string;
     name: string;
+    img:string;
     createdAt: string;
     updateAt: string;
     products: ProductType[];

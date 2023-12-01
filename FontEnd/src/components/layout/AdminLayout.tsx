@@ -1,10 +1,14 @@
 import { checkAdmin } from '@/utils/checkAdmin';
 import { Outlet, Link } from 'react-router-dom';
 import Loading from '../ui/Loading';
-import { Dropdown, MenuProps } from 'antd';
+import { Dropdown, MenuProps, Menu } from 'antd';
 import { useLogoutMutation } from '@/services/auth';
 import { useState } from 'react';
-import { BiSolidDiscount } from 'react-icons/bi';
+
+
+import { AppstoreAddOutlined, AppstoreOutlined, FireOutlined } from '@ant-design/icons';
+
+const { SubMenu } = Menu;
 
 
 const AdminLayout = () => {
@@ -28,7 +32,11 @@ const AdminLayout = () => {
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+    const [openSubMenu, setOpenSubMenu] = useState(false);
 
+    const handleSubMenuOpen = () => {
+        setOpenSubMenu(!openSubMenu);
+    };
     return (
         <>
             {isLoading || (!isLoading && authData?.role !== 'admin') ? (
@@ -187,24 +195,41 @@ const AdminLayout = () => {
                                         </span>
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link
-                                        to="category"
-                                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                <ul className="">
+                                    <Menu
+                                        mode="inline"
+                                        defaultSelectedKeys={['dashboard']}
+                                        defaultOpenKeys={['sub1']}
+                                        style={{ fontSize: '22px', marginLeft: '-20px' }}
                                     >
-                                        <svg
-                                            className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor"
-                                            viewBox="0 0 18 18"
-                                        >
-                                            <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
-                                        </svg>
-                                        <span className="flex-1 ml-3 whitespace-nowrap">Danh mục</span>
+                                        <SubMenu
+                                            className=' text-base'
+                                            key="sub1"
+                                            title={
+                                                <span className='flex items-center'>
 
-                                    </Link>
-                                </li>
+                                                    <AppstoreOutlined style={{ fontSize: '22px', }} />
+
+
+
+                                                    <span className='pl-2'>Danh mục</span>
+                                                </span>
+                                            }
+                                            onTitleClick={handleSubMenuOpen}
+                                        >
+                                            <Menu.Item key="category">
+                                            <AppstoreAddOutlined style={{ fontSize: '18px',  }}/>
+                                                <Link to="category"  className='px-2'>Category </Link>
+                                            </Menu.Item>
+                                            <Menu.Item key="category2">
+                                            <FireOutlined style={{ fontSize: '18px',  }}/>
+                                                <Link to="brand" className='px-2'>Brand</Link>
+                                            </Menu.Item>
+                                           
+                                        </SubMenu>
+                                    </Menu>
+                                </ul>
+
 
                                 <li>
                                     <Link
@@ -337,14 +362,14 @@ const AdminLayout = () => {
                                 </li>
                             </ul>
                         </div>
-                    </aside>
+                    </aside >
 
                     <div className="p-4 sm:ml-64">
                         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
                             <Outlet />
                         </div>
                     </div>
-                </div>
+                </div >
             )}
         </>
     );

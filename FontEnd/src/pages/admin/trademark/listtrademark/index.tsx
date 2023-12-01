@@ -1,23 +1,27 @@
+
 import { useState } from 'react';
-import { Avatar, Button, Image, Input, Modal, Popconfirm, Space } from 'antd';
+import { Button, Input, Modal, Popconfirm, Space } from 'antd';
 import { SearchProps } from 'antd/es/input';
-import { useDeleteCategoryMutation, useGetCategoriesQuery } from '@/services/category';
 import Skeleton from 'react-loading-skeleton';
-import UpdateCategory from '../updateCategory';
-import AddCategory from '../addCategory';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
+import { useDeleteBrandMutation, useGetBrandsQuery } from '@/services/brand';
+import AddBrand from '../addtrademark';
+import UpdateBrand from '../updatetrademark';
 
-const ListCategory = () => {
+
+
+
+const Listbrand = () => {
   const { Search } = Input;
-  const { data, isLoading } = useGetCategoriesQuery();
+  const { data, isLoading } = useGetBrandsQuery();
   const [searchValue, setSearchValue] = useState('');
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
-  const [mutate] = useDeleteCategoryMutation();
+  const [selectedBrandId, setSelectedBrandId] = useState('');
+  const [mutate] = useDeleteBrandMutation();
 
   const handleSearch: SearchProps['onSearch'] = (value) => {
     setSearchValue(value);
@@ -32,7 +36,7 @@ const ListCategory = () => {
     }
   };
 
-  const handleAddCategory = () => {
+  const handleAddSize = () => {
     setOpenAddModal(true);
   };
 
@@ -41,26 +45,26 @@ const ListCategory = () => {
     setOpenUpdateModal(false);
   };
 
-  const handleUpdateCategory = (categoryId: string) => {
-    setSelectedCategoryId(categoryId);
+  const handleUpdateSize = (brandId: string) => {
+    setSelectedBrandId(brandId);
     setOpenUpdateModal(true);
   };
 
   const handleUpdateComplete = () => {
-    setSelectedCategoryId('');
+    setSelectedBrandId('');
     setOpenUpdateModal(false);
   };
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
   const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
-  const categoryList = data?.docs.filter(category => category.name.includes(searchValue)) || [];
+  const brandList = data?.docs.filter(brand => brand.name && brand.name.toLowerCase().includes(searchValue.toLowerCase())) || [];
 
   const paginationOptions = {
     currentPage,
     perPage,
-    totalCount: categoryList.length,
-    data: categoryList,
+    totalCount: brandList.length,
+    data: brandList,
   };
 
   const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
@@ -78,8 +82,8 @@ const ListCategory = () => {
             </Space>
           </div>
           <div className="bg-gray-400 ml-[20px] rounded-md">
-            <Button type="primary" className='bg-primary' onClick={handleAddCategory}>
-              Thêm danh mục
+            <Button type="primary" className='bg-primary' onClick={handleAddSize}>
+              Thêm Brand
             </Button>
           </div>
         </div>
@@ -88,14 +92,9 @@ const ListCategory = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Tên danh mục
+                Tên brand
               </th>
-              <th scope="col" className="text-center text-xs font-medium ">
-                Ảnh
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Thời Gian
-              </th>
+             
               <th scope="col" className="text-center text-xs font-medium py-3">
                 Thao tác
               </th>
@@ -110,34 +109,18 @@ const ListCategory = () => {
               </tr>
             ) : (
               <>
-                {currentPageItems?.map((category) => (
+                {currentPageItems?.map((brand) => (
                   <tr
-                    key={category._id}
+                    key={brand._id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
-                      {category.name}
+                      {brand.name}
                     </td>
-                    <td className="text-center">
-                      <Avatar.Group maxCount={3}>
-                        {category.img && category.img[0] && (
-                          <div style={{ borderRadius: '50%' }}>
-                            <Image
-                              src={category.img[0]}
-                              alt="image"
-                              width={80}
-                              height={80}
-                            />
-                          </div>
-                        )}
-                      </Avatar.Group>
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
-                      {new Date(category.createdAt).toLocaleString()}
-                    </td>
+                    
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">
-                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateCategory(category._id)}>
+                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateSize(brand._id)}>
                           Update
                         </Button>
                         <Popconfirm
@@ -146,7 +129,7 @@ const ListCategory = () => {
                           okText="OK"
                           cancelText="Cancel"
                           okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                          onConfirm={() => handleDelete(category._id)}
+                          onConfirm={() => handleDelete(brand._id)}
                         >
                           <Button type="link" className='bg-reds text-layer'>Delete</Button>
                         </Popconfirm>
@@ -179,24 +162,24 @@ const ListCategory = () => {
 
         </table>
 
-
-        <Modal title="Thêm danh mục" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
-          <AddCategory handleModalClose={handleModalClose} />
+        <Modal title="Thêm Size" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
+          <AddBrand handleModalClose={handleModalClose} />
         </Modal>
         {/* Update */}
         <Modal
-          title="Cập nhật danh mục"
+          title="Cập nhật thương hiệu"
           centered
-          open={openUpdateModal && !!selectedCategoryId}
+          open={openUpdateModal && !!selectedBrandId}
           onCancel={handleModalClose}
           footer={null}
         >
-          {selectedCategoryId && <UpdateCategory categoryId={selectedCategoryId} handleUpdateComplete={handleUpdateComplete} />}
+          {selectedBrandId && <UpdateBrand brandId={selectedBrandId} handleUpdateComplete={handleUpdateComplete} />}
         </Modal>
+
       </div>
       <ToastContainer />
     </>
   );
 };
 
-export default ListCategory;
+export default Listbrand;

@@ -1,3 +1,5 @@
+import { ProductType } from "@/seeds";
+
 export interface PaginatedCategory {
     docs: CategoryType[];
     hasNextPage: boolean;
@@ -9,10 +11,13 @@ export interface PaginatedCategory {
     prevPage: null;
     totalDocs: number;
     totalPages: number;
+    img:string;
 }
 
 export interface CategoryType {
     _id: string;
     name: string;
     thumbnail: string;
+    img:string;
+    products: ProductType[];
 }

@@ -8,6 +8,7 @@ export const categorySchema = joi.object({
     "string.max": `Tên danh mục không được vượt quá {#limit} ký tự`,
     "any.required": `Tên danh mục là trường bắt buộc`,
   }),
+  img: joi.array().items(joi.string()).min(1).required("images không được bỏ trống"),
   thumbnail: joi.string(),
   products: joi.array().items(),
 });
