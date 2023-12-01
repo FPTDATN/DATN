@@ -161,6 +161,7 @@ const ProductDetail = () => {
                                                     <input
                                                         onChange={(e) => setQuantity(Number(e.target.value))}
                                                         type="number"
+                                                        min="1"
                                                         value={quantity}
                                                         className="flex items-center w-full border font-semibold text-center text-gray-700 placeholder-gray-700 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
                                                     />
