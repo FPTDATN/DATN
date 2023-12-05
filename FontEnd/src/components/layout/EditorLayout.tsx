@@ -230,7 +230,7 @@ const EditorLayout = () => {
                                                     className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                                     aria-hidden="true"
                                                 >
-                                                    <path d="M2,12a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" fill="#f4f4f4" stroke="#000000" stroke-width="2"/>
+                                                    <path d="M2,12a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" fill="#f4f4f4" stroke="#000000" strokeWidth="2"/>
                                                     <circle cx="7" cy="7" r="1.5" fill="#ff0000"/>
                                                     <circle cx="11" cy="5" r="1.5" fill="#00ff00"/>
                                                     <circle cx="15" cy="7" r="1.5" fill="#0000ff"/>

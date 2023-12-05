@@ -4,9 +4,10 @@ import { clear } from '@/slices/cart';
 import { useAppDispatch } from '@/store/hook';
 import { Status } from '@/types/status';
 import { reduceTotal } from '@/utils/reduce';
-import { Button, Form, FormInstance, Input, InputNumber, message } from 'antd';
+import { Form, FormInstance, Input, InputNumber, message } from 'antd';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ButtonComponent from '../ui/ButtonComponent';
 
 interface Props {
     cartItems: any[];
@@ -15,10 +16,9 @@ interface Props {
 }
 
 const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
+    const { data: authData } = useMeQuery();
 
-    const {data:authData} = useMeQuery()
-
-    const router = useNavigate()
+    const router = useNavigate();
     const dispatch = useAppDispatch();
 
     const [orders, { data: order, isSuccess: orderSuccess, isError: orderError, isLoading: orderLoading }] =
@@ -53,7 +53,7 @@ const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
     useEffect(() => {
         if (orderSuccess) {
             message.success('Thanh toán thành công');
-            router(`/success/${order?._id}`)
+            router(`/success/${order?._id}`);
             dispatch(clear());
         }
 
@@ -97,9 +97,13 @@ const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
                     <InputNumber className="w-full" type="number" />
                 </Form.Item>
 
-                <Button loading={orderLoading} htmlType="submit">
+                <ButtonComponent
+                    className="flex justify-center items-center text-base w-full py-2"
+                    loading={orderLoading}
+                    htmlType="submit"
+                >
                     Gửi biểu mẫu
-                </Button>
+                </ButtonComponent>
             </Form>
         </div>
     );

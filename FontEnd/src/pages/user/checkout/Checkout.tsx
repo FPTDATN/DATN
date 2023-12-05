@@ -2,12 +2,13 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useAppSelector } from '@/store/hook';
 import { checkAuth } from '@/utils/checkAuth';
 import Loading from '@/components/ui/Loading';
-import { Form, Radio, RadioChangeEvent } from 'antd';
+import { Divider, Form, Radio, RadioChangeEvent } from 'antd';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import CheckoutNormal from '@/components/checkout/CheckoutNormal';
-import CartComponent from '@/components/cart/CartComponent';
 import { formartVND } from '@/utils/formartVND';
 import { reduceTotal } from '@/utils/reduce';
+import { Link } from 'react-router-dom';
+
 
 const LocationList: React.FC = () => {
     const { data: authData, isLoading: authLoading } = checkAuth();
@@ -20,23 +21,21 @@ const LocationList: React.FC = () => {
 
     const { cartItems } = useAppSelector((state) => state.cart);
 
-    let holder:any = {};
+    let holder: any = {};
 
     cartItems.forEach((d) => {
-      if (holder.hasOwnProperty(d._id)) {
-        holder[d._id] = holder[d._id] + d.quantity;
-      } else {
-        holder[d._id] = d.quantity;
-      }
+        if (holder.hasOwnProperty(d._id)) {
+            holder[d._id] = holder[d._id] + d.quantity;
+        } else {
+            holder[d._id] = d.quantity;
+        }
     });
 
     let obj2 = [];
 
     for (const prop in holder) {
-      obj2.push({ key: prop, value: holder[prop] });
+        obj2.push({ key: prop, value: holder[prop] });
     }
-
-    console.log(obj2);
 
     const onChange = (e: RadioChangeEvent) => {
         setPayMethod(e.target.value);
@@ -105,17 +104,49 @@ const LocationList: React.FC = () => {
                                 ) : (
                                     <div className="grid sm:px-10 lg:grid-cols-2 gap-x-6 lg:px-20 xl:px-32 py-10">
                                         <div>
-                                            <CartComponent />
-                                            <div className="mt-3 text-xl">
-                                                <p>
-                                                    Tổng:{' '}
-                                                    <span className="!text-primary font-semibold">
-                                                        {formartVND(reduceTotal(cartItems))}
-                                                    </span>
-                                                </p>
+                                            <div className=" bg-white px-7 py-7">
+                                                <div className="flex justify-between">
+                                                    <span>SẢN PHẨM</span>
+                                                    <span>TỔNG</span>
+                                                </div>
+                                                <Divider />
+
+                                                <div>
+                                                    {cartItems.map((item, index) => (
+                                                        <div key={index}>
+                                                            <div className="flex justify-between py-1">
+                                                                <span className="break-words text-sm">
+                                                                    {item?.size?.length || item?.color?.length > 0 ? (
+                                                                        <Link to={`/detail/${item._id}`}>
+                                                                            {item.name.slice(0, 10)}... - {item.size} -{' '}
+                                                                            {item.color}
+                                                                        </Link>
+                                                                    ) : (
+                                                                        <Link to={`/detail/${item._id}`}>
+                                                                            {item.name.slice(0, 10)}...
+                                                                        </Link>
+                                                                    )}
+                                                                    <strong className="ml-2">× {item.quantity}</strong>
+                                                                </span>
+                                                    
+                                                                <span className="text-gray-500">
+                                                                    {formartVND(item.price * item.quantity)}
+                                                                </span>
+                                                            </div>
+                                                            <Divider />
+                                                            
+                                                        </div>
+                                                    ))}
+
+                                                    <div className="flex justify-between py-1">
+                                                        <span>Tổng</span>
+                                                        <span className='!text-primary font-semibold text-xl'>{formartVND(reduceTotal(cartItems))}</span>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            
                                         </div>
-                                        <div className='border p-4 shadow-lg rounded'>
+                                        <div className="border p-4 shadow-lg rounded">
                                             <Radio.Group onChange={onChange} value={payMethod}>
                                                 <Radio className="w-full mt-2" value={0}>
                                                     Thanh toán khi nhận hàng

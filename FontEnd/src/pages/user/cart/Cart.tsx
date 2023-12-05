@@ -29,7 +29,7 @@ const Cart: FunctionComponent<CartProps> = () => {
             ) : (
                 <div className="max-w-full w-layout mx-auto">
                     <div className="grid lg:grid-cols-3 grid-cols-1 py-10 lg:px-0 lg:pr-2">
-                        {!cartItems || cartItems.length === 0 ? (
+                        {!cartItems || cartItems?.length === 0 ? (
                             <div className="items-center flex-col w-full justify-center col-span-3 flex">
                                 <div>
                                     <img src="/nahida.webp" className="w-layout max-w-full mx-auto" alt="" />
@@ -57,9 +57,6 @@ const Cart: FunctionComponent<CartProps> = () => {
                                     {/* Apply Coupon */}
                                     <br />
                                     <div className="lg:flex md:flex space-y-4 lg:space-y-0 block flex-row-reverse justify-between items-center">
-                                        <button className="bg-gray-200 opacity-80 hover:opacity-100 transition-all shadow text-sub px-3 py-2 uppercase">
-                                            Cập nhật giỏ hàng
-                                        </button>
                                         <div className="border-dashed border lg:border-0 md:border-0 p-6 flex border-gray-300">
                                             <input
                                                 type="text"
@@ -84,9 +81,7 @@ const Cart: FunctionComponent<CartProps> = () => {
 
                                             <div className="flex justify-between items-center text-xl py-2">
                                                 <p>Tổng</p>
-                                                <p className="!text-primary">
-                                                    {formartVND(reduceTotal(cartItems))}
-                                                </p>
+                                                <p className="!text-primary">{formartVND(reduceTotal(cartItems))}</p>
                                             </div>
 
                                             <a

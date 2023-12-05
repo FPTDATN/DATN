@@ -13,7 +13,8 @@ import { PrinterOutlined } from '@ant-design/icons';
 import { Image } from 'antd';
 import Hoadon from './print';
 import { Link } from 'react-router-dom';
-import Hoan from './hoan';
+import Hoan from './Hoan';
+import { FaAngleDoubleDown } from 'react-icons/fa';
 type DataIndex = keyof IOrder;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -128,7 +129,7 @@ const ListOrder: React.FC = () => {
 
     const handleFilterByStatus = (status: number) => {
         const filteredData = data?.docs.filter((order) => order.status === status);
-        setOrders(filteredData);
+        setOrders(filteredData!);
         setFilterStatus(status);
     };
 
@@ -183,9 +184,7 @@ const ListOrder: React.FC = () => {
 
     const onShow = () => {
         setOpen(true);
-
     };
-
 
     //
     const handleSearch = (
@@ -286,17 +285,12 @@ const ListOrder: React.FC = () => {
             ...getColumnSearchProps('fullName'),
         },
         {
-            title: 'Số điện thoại',
-            dataIndex: 'phone',
-            width: '15%',
-            ...getColumnSearchProps('phone'),
-            render: (value: number) => `0${value}`,
-        },
-        {
-            title: 'Tổng',
+            title: 'Tổng tiền',
             dataIndex: 'total',
-            render: (value: number) => `${formartVND(value)}`,
             width: '15%',
+            render: (record:number) => {
+                return formartVND(record)
+            }
         },
         {
             title: 'Trạng thái',
@@ -319,7 +313,11 @@ const ListOrder: React.FC = () => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link style={{ marginRight: 8 }} onClick={() => save(record._id)} className='border p-2 rounded'>
+                        <Typography.Link
+                            style={{ marginRight: 8 }}
+                            onClick={() => save(record._id)}
+                            className="border p-2 rounded"
+                        >
                             Lưu
                         </Typography.Link>
                         <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okType="default">
@@ -330,16 +328,14 @@ const ListOrder: React.FC = () => {
                     <Space className="flex flex-col">
                         <div className="">
                             <div className="flex">
-                            <Button type="dashed" className='bg-reds px-2.5 text-layer' >
-                                  xác nhận
+                                <Button type="dashed" className="bg-reds px-2.5 text-layer">
+                                    xác nhận
                                 </Button>
                             </div>
                         </div>
                         <div className=" md:ml-0 ml-20">
-                            <Link to={`/hoan/${record._id}`} >
-
-
-                                <Button type="dashed" className='bg-gree text-layer' onClick={onShow}>
+                            <Link to={`/hoan/${record._id}`}>
+                                <Button type="dashed" className="bg-gree text-layer" onClick={onShow}>
                                     chi tiết
                                 </Button>
                             </Link>
@@ -351,12 +347,9 @@ const ListOrder: React.FC = () => {
                                 onCancel={() => setOpen(false)}
                                 width={1000}
                                 footer={null}
-
                             >
                                 <Hoan />
                             </Modal>
-
-
                         </div>
                     </Space>
                 ) : (
@@ -410,9 +403,8 @@ const ListOrder: React.FC = () => {
                     </Space>
                 );
             },
-            width: '12%',
+            width: '10%',
         },
-
     ];
 
     const showDeleteConfirm = (record: IOrder) => {
@@ -516,30 +508,30 @@ const ListOrder: React.FC = () => {
                                     cell: EditableCell,
                                 },
                             }}
-                            className="overflow-x-scroll"
+                            className="overflow-x-scroll cursor-pointer"
                             scroll={{ x: 1300 }}
                             columns={mergedColumns as any}
                             dataSource={orders}
                             rowKey={'_id'}
                             expandable={{
+                                columnWidth: '3%',
+                                expandIcon: () => <FaAngleDoubleDown />,
+                                expandRowByClick: true,
                                 expandedRowRender: (record) => (
-                                    <table className="w-full border text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
                                                 <th></th>
-                                                <th scope="col" className="border px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="px-6 text-xs font-medium py-3">
                                                     Tên đơn hàng
                                                 </th>
-                                                <th scope="col" className="border px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="px-6 text-xs font-medium py-3">
                                                     Màu
                                                 </th>
-                                                <th scope="col" className="border px-6 text-xs font-medium py-3">
+                                                <th scope="col" className="px-6 text-xs font-medium py-3">
                                                     Size
                                                 </th>
-                                                <th
-                                                    scope="col"
-                                                    className="border text-left px-6 text-xs font-medium py-3"
-                                                >
+                                                <th scope="col" className="text-left px-6 text-xs font-medium py-3">
                                                     Số lượng
                                                 </th>
                                             </tr>
@@ -556,11 +548,8 @@ const ListOrder: React.FC = () => {
                                         ) : (
                                             <tbody>
                                                 {record?.products.map((product: any, index) => (
-                                                    <tr
-                                                        key={index}
-                                                        className="border bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                                    >
-                                                        <td className="text-center border">
+                                                    <tr key={index}>
+                                                        <td className="text-center bg-gray-100 shadow-sm">
                                                             <Image
                                                                 width={55}
                                                                 height={55}
@@ -568,10 +557,16 @@ const ListOrder: React.FC = () => {
                                                                 preview
                                                             />
                                                         </td>
-                                                        <td className="px-6 py-4 text-left border">{product?.name}</td>
-                                                        <td className="px-6 py-4 text-left border">{product?.color}</td>
-                                                        <td className="px-6 py-4 text-left border">{product?.size}</td>
-                                                        <td className="px-6 py-4 text-left border">
+                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                            {product?.name}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                            {product?.color}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                            {product?.size}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
                                                             {product?.quantity}
                                                         </td>
                                                     </tr>
