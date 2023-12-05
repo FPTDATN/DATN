@@ -4,7 +4,7 @@ import Loading from '../ui/Loading';
 import { Dropdown, MenuProps } from 'antd';
 import { useLogoutMutation } from '@/services/auth';
 import { useState } from 'react';
-import { BiSolidDiscount } from 'react-icons/bi';
+import { AppstoreAddOutlined, AppstoreOutlined, FireOutlined } from '@ant-design/icons';
 
 
 const AdminLayout = () => {
