@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Modal, Popconfirm, Space } from 'antd';
+import { Avatar, Button, Image, Input, Modal, Popconfirm, Space } from 'antd';
 import { SearchProps } from 'antd/es/input';
 import { useDeleteCategoryMutation, useGetCategoriesQuery } from '@/services/category';
 import Skeleton from 'react-loading-skeleton';
@@ -90,6 +90,9 @@ const ListCategory = () => {
               <th scope="col" className="pl-6 text-xs font-medium py-3">
                 Tên danh mục
               </th>
+              <th scope="col" className="text-center text-xs font-medium ">
+                Ảnh
+              </th>
               <th scope="col" className="text-center text-xs font-medium py-3">
                 Thời Gian
               </th>
@@ -114,6 +117,20 @@ const ListCategory = () => {
                   >
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
                       {category.name}
+                    </td>
+                    <td className="text-center">
+                      <Avatar.Group maxCount={3}>
+                        {category.img && category.img[0] && (
+                          <div style={{ borderRadius: '50%' }}>
+                            <Image
+                              src={category.img[0]}
+                              alt="image"
+                              width={80}
+                              height={80}
+                            />
+                          </div>
+                        )}
+                      </Avatar.Group>
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                       {new Date(category.createdAt).toLocaleString()}

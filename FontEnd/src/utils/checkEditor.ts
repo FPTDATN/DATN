@@ -1,5 +1,5 @@
 import { useMeQuery } from '@/services/auth';
-import { useMeQuery } from '@/services/auth';
+
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

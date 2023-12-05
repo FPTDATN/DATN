@@ -9,6 +9,4 @@ router.delete('/discounts/:id', removeDiscount)
 router.get('/discounts/:id', getByIdDiscount)
 router.put('/discounts/:id', updateDiscount)
 
-
-
 export default router;

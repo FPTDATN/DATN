@@ -78,6 +78,7 @@ export const getByIdDiscount = async (req, res) => {
         });
     }
 };
+
 export const updateDiscount = async (req, res) => {
     try {
         const { error } = discountSchema.validate(req.body);

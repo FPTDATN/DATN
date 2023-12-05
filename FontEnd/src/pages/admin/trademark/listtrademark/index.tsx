@@ -1,26 +1,32 @@
+
 import { useState } from 'react';
 import { Button, Input, Modal, Popconfirm, Space } from 'antd';
 import { SearchProps } from 'antd/es/input';
-import { useGetDiscountsQuery, useDeleteDiscountsMutation } from '@/services/discount'
 import Skeleton from 'react-loading-skeleton';
-import UpdateSale from '../updateSale/updateSale';
-import AddSale from '../addSale/index';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
+import { useDeleteBrandMutation, useGetBrandsQuery } from '@/services/brand';
+import AddBrand from '../addtrademark';
+import UpdateBrand from '../updatetrademark';
 
-const ListSale = () => {
+
+
+
+const Listbrand = () => {
   const { Search } = Input;
-  const { data, isLoading } = useGetDiscountsQuery();
+  const { data, isLoading } = useGetBrandsQuery();
   const [searchValue, setSearchValue] = useState('');
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const [selectedDiscount, setSelectedDiscountId] = useState('');
-  const [mutate] = useDeleteDiscountsMutation();
+  const [selectedBrandId, setSelectedBrandId] = useState('');
+  const [mutate] = useDeleteBrandMutation();
+
   const handleSearch: SearchProps['onSearch'] = (value) => {
     setSearchValue(value);
   };
+
   const handleDelete = async (id: string) => {
     try {
       await mutate(id);
@@ -30,7 +36,7 @@ const ListSale = () => {
     }
   };
 
-  const handleAddDiscount = () => {
+  const handleAddSize = () => {
     setOpenAddModal(true);
   };
 
@@ -39,25 +45,26 @@ const ListSale = () => {
     setOpenUpdateModal(false);
   };
 
-  const handleUpdatediscount = (categoryId: string) => {
-    setSelectedDiscountId(categoryId);
+  const handleUpdateSize = (brandId: string) => {
+    setSelectedBrandId(brandId);
     setOpenUpdateModal(true);
   };
 
   const handleUpdateComplete = () => {
-    setSelectedDiscountId('');
+    setSelectedBrandId('');
     setOpenUpdateModal(false);
   };
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 5; // Số sản phẩm hiển thị trên mỗi trang
-  const DiscountList = data?.docs.filter(category => category.code.includes(searchValue)) || [];
+  const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
+  const brandList = data?.docs.filter(brand => brand.name && brand.name.toLowerCase().includes(searchValue.toLowerCase())) || [];
+
   const paginationOptions = {
     currentPage,
     perPage,
-    totalCount: DiscountList.length,
-    data: DiscountList,
+    totalCount: brandList.length,
+    data: brandList,
   };
 
   const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
@@ -75,8 +82,8 @@ const ListSale = () => {
             </Space>
           </div>
           <div className="bg-gray-400 ml-[20px] rounded-md">
-            <Button type="primary" className='bg-primary' onClick={handleAddDiscount}>
-              Thêm mã giảm giá
+            <Button type="primary" className='bg-primary' onClick={handleAddSize}>
+              Thêm Brand
             </Button>
           </div>
         </div>
@@ -85,20 +92,9 @@ const ListSale = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
-                code Mã
+                Tên brand
               </th>
-              <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Giá trị giảm giá
-              </th>
-              <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Số lượng
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Thời Gian tạo
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Thời Gian kết thúc
-              </th>
+             
               <th scope="col" className="text-center text-xs font-medium py-3">
                 Thao tác
               </th>
@@ -113,29 +109,18 @@ const ListSale = () => {
               </tr>
             ) : (
               <>
-                {currentPageItems?.map((discount) => (
+                {currentPageItems?.map((brand) => (
                   <tr
-                    key={discount._id}
+                    key={brand._id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.code}
+                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
+                      {brand.name}
                     </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.discount}%
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.count}
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {new Date(discount.startDate).toLocaleString()}
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {new Date(discount.endDate).toLocaleString()}
-                    </td>
+                    
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">
-                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdatediscount(discount._id)}>
+                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateSize(brand._id)}>
                           Update
                         </Button>
                         <Popconfirm
@@ -144,7 +129,7 @@ const ListSale = () => {
                           okText="OK"
                           cancelText="Cancel"
                           okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                          onConfirm={() => handleDelete(discount._id)}
+                          onConfirm={() => handleDelete(brand._id)}
                         >
                           <Button type="link" className='bg-reds text-layer'>Delete</Button>
                         </Popconfirm>
@@ -177,23 +162,24 @@ const ListSale = () => {
 
         </table>
 
-
-        <Modal title="Thêm mã giảm giá" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
-          <AddSale handleModalClose={handleModalClose} />
+        <Modal title="Thêm Size" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
+          <AddBrand handleModalClose={handleModalClose} />
         </Modal>
         {/* Update */}
         <Modal
-          title="Cập nhật mã giảm giá"
+          title="Cập nhật thương hiệu"
           centered
-          open={openUpdateModal && !!selectedDiscount}
+          open={openUpdateModal && !!selectedBrandId}
           onCancel={handleModalClose}
           footer={null}
         >
-          {selectedDiscount && <UpdateSale categoryId={selectedDiscount} handleUpdateComplete={handleUpdateComplete} />}
+          {selectedBrandId && <UpdateBrand brandId={selectedBrandId} handleUpdateComplete={handleUpdateComplete} />}
         </Modal>
+
       </div>
       <ToastContainer />
     </>
   );
-}
-export default ListSale
+};
+
+export default Listbrand;

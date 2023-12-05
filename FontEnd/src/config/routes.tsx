@@ -35,6 +35,7 @@ import Discount_code from '@/pages/user/discount';
 import ListColor from '@/pages/admin/color/listColor';
 import ListSize from '@/pages/admin/size/listSize';
 import ListCategory from '@/pages/admin/category/listCategory';
+import Listbrand from '@/pages/admin/trademark/listtrademark';
 
 
 const router = createBrowserRouter([
@@ -159,7 +160,8 @@ const router = createBrowserRouter([
             { path: 'sale', element: <ListSale /> },
             { path: 'product/:id/comments', element: <ListComment /> },
             { path: 'color', element: <ListColor /> },
-            { path: 'size', element: <ListSize /> }
+            { path: 'size', element: <ListSize /> },
+            {path:'brand', element: <Listbrand/>}
         ],
     },
     // Editer
@@ -176,7 +178,8 @@ const router = createBrowserRouter([
             { path: 'test', element: <AppTest /> },
             { path: 'product/:id/comments', element: <ListComment /> },
             { path: 'color', element: <ListColor /> },
-            { path: 'size', element: <ListSize /> }
+            { path: 'size', element: <ListSize /> },
+            {path:'brand', element: <Listbrand/>}
         ],
     },
 ]);

@@ -154,12 +154,14 @@ const ProductDetail = () => {
                                                     <button
                                                         onClick={() => setQuantity(quantity - 1)}
                                                         className="w-20 h-full text-gray-600 border rounded-l outline-none cursor-pointer dark:hover:bg-gray-700 dark:text-gray-400 hover:text-gray-700 dark:bg-gray-900 hover:bg-gray-400"
+                                                        disabled={quantity === 1}
                                                     >
                                                         <span className="m-auto text-2xl font-thin">-</span>
                                                     </button>
                                                     <input
                                                         onChange={(e) => setQuantity(Number(e.target.value))}
                                                         type="number"
+                                                        min="1"
                                                         value={quantity}
                                                         className="flex items-center w-full border font-semibold text-center text-gray-700 placeholder-gray-700 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black"
                                                     />

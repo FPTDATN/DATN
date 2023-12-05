@@ -1,41 +1,38 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Upload } from 'antd';
-import { useCreateCategoryMutation } from '@/services/category';
+import { Form, Input, Button } from 'antd';
+
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { useCreateBrandMutation } from '@/services/brand';
 
-import UploadFile from '@/components/uploads/upload';
-
-
-
-interface AddCategoryProps {
+interface AddbrandProps {
   handleModalClose: () => void;
 }
 
-const AddCategory: React.FC<AddCategoryProps> = ({ handleModalClose }) => {
+const AddBrand: React.FC<AddbrandProps> = ({ handleModalClose }) => {
   const [form] = Form.useForm();
-  const [mutateCreateCategory] = useCreateCategoryMutation();
+  const [mutateCreateBrand] = useCreateBrandMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const [img, setImages] = useState<string[]>([]);
+
   const onFinish = async (values: any) => {
     try {
       setIsLoading(true);
-
-      values.img = img;
-
-      await mutateCreateCategory(values).unwrap();
-
+  
+   
+  
+      await mutateCreateBrand(values).unwrap();
+  
       form.resetFields();
-      toast.success('Tạo danh mục thành công');
+      toast.success('Tạo Thương Hiệu thành công');
       handleModalClose();
     } catch (error) {
-      toast.error('Tạo danh mục không thành công');
+      toast.error('Tạo Thương Hiệu không thành công');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <>
       <Form
@@ -50,25 +47,22 @@ const AddCategory: React.FC<AddCategoryProps> = ({ handleModalClose }) => {
           label="Tên"
           name="name"
           rules={[
-            { required: true, message: 'Vui lòng nhập tên danh mục' },
+            { required: true, message: 'Vui lòng nhập tên Thương Hiệu' },
             { min: 2, message: 'Ít nhất 2 ký tự' },
           ]}
         >
-          <Input placeholder="Tên danh mục" />
+          <Input placeholder="Tên Thương Hiệu" />
         </Form.Item>
-        <Form.Item label="Thêm ảnh">
-          <UploadFile setImages={setImages} />
-        </Form.Item>
-
        
         <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
           <Button type="primary" className='bg-primary' htmlType="submit" loading={isLoading}>
-            Tạo danh mục
+            Tạo thương Hiệu
           </Button>
         </Form.Item>
       </Form>
+     
     </>
   );
 };
 
-export default AddCategory;
+export default AddBrand;

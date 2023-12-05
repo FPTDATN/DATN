@@ -4,6 +4,9 @@ import { Form, Input, Button } from 'antd';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useGetCatgoryByIdQuery, useUpdateCategoryMutation } from '@/services/category';
+import UploadFileServer from '@/components/uploads/UploadFile';
+
+
 
 const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () => void }> = ({
   categoryId,
@@ -12,13 +15,17 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
   const [form] = Form.useForm();
   const [mutate] = useUpdateCategoryMutation();
   const [isLoading, setIsLoading] = useState(false);
+  const { data: category,isLoading: isCategoryLoading } = useGetCatgoryByIdQuery(categoryId);
+  const [img, setImages] = useState<string[]>([]);
 
-  const onFinish = async (values: { name: string}) => {
+  const onFinish = async (values: any) => {
     try {
+
+  
       setIsLoading(true);
-      await mutate({ categoryId, category: { name: values.name } }).unwrap();
+      await mutate({ categoryId, category: { ...values, img } }).unwrap();
       console.log(categoryId);
-      
+
       handleUpdateComplete();
       toast.success('Cập nhật thành công');
     } catch (error) {
@@ -29,14 +36,15 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
     }
   };
 
-  const { data: category, isLoading: isCategoryLoading } = useGetCatgoryByIdQuery(categoryId);
 
   useEffect(() => {
     if (category) {
-      form.setFieldsValue({ name: category.name });
+      form.setFieldsValue({ name: category.name, img: category.img });
+      
+      setImages(category.img || []); 
     }
-  }, [category]);
-
+  }, [category, form]);
+  
   return (
     <>
       {isCategoryLoading ? (
@@ -52,6 +60,10 @@ const UpdateCategory: React.FC<{ categoryId: string; handleUpdateComplete: () =>
           <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên danh mục' }]}>
             <Input />
           </Form.Item>
+          <Form.Item label="Thêm ảnh">
+                <UploadFileServer images={img} setImages={setImages} />
+            </Form.Item>
+
           
           <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
             <Button type="primary" className='bg-primary' htmlType="submit" loading={isLoading}>

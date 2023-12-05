@@ -1,4 +1,5 @@
 import authApi from '@/services/auth';
+import brandApi from '@/services/brand';
 import categoryApi from '@/services/category';
 import colorApi from '@/services/color';
 import commentApi from '@/services/comment';
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
     [favouriteapi.reducerPath]: favouriteapi.reducer,
     [colorApi.reducerPath]:colorApi.reducer,
     [sizeApi.reducerPath]:sizeApi.reducer,
-    [discountApi.reducerPath]:discountApi.reducer
+    [discountApi.reducerPath]:discountApi.reducer,
+    [brandApi.reducerPath]:brandApi.reducer
 });
 
 // Middleware
@@ -47,7 +49,8 @@ const middleware: any[] = [
     favouriteapi.middleware,
     colorApi.middleware,
     sizeApi.middleware,
-    discountApi.middleware
+    discountApi.middleware,
+    brandApi.middleware
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
