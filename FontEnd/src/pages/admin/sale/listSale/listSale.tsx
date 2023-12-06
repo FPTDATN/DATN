@@ -88,7 +88,10 @@ const ListSale = () => {
                 code Mã
               </th>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Giá trị giảm giá
+                Giá trị giảm giá(%)
+              </th>
+              <th scope="col" className="pl-6 text-xs font-medium py-3">
+                Giá tối thiểu(VND)
               </th>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
                 Số lượng
@@ -123,6 +126,9 @@ const ListSale = () => {
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
                       {discount.discount}%
+                    </td>
+                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                      {discount.maxAmount}
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
                       {discount.count}

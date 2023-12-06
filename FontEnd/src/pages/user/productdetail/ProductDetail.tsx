@@ -14,6 +14,7 @@ import { addToCart } from '@/slices/cart';
 import { useMeQuery } from '@/services/auth';
 import Loading from '@/components/ui/Loading';
 import { da } from 'date-fns/locale';
+import List_discount from '@/components/ui/List_discount';
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
@@ -104,7 +105,9 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
-                                                    <div><button className=' bg-layer text-center h-7 w-36'>Mã giảm giá </button>
+                                                    <div className=''>
+                                                        {/* <button className=' bg-layer text-center h-7 w-36'>Mã giảm giá </button> */}
+                                                        <List_discount/>
                                                     </div>
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">

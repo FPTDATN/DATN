@@ -12,10 +12,11 @@ interface Props {
     cartItems: any[];
     payMethod: number;
     form: FormInstance<any>;
+    discountedTotal: number;
 }
 
-const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
-
+const CheckoutNormal = ({ cartItems, payMethod, form ,discountedTotal}: Props) => {
+    console.log(discountedTotal)
     const {data:authData} = useMeQuery()
 
     const router = useNavigate()
@@ -29,7 +30,7 @@ const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
             const { username, ...customer } = values;
             orders({
                 ...customer,
-                total: reduceTotal(cartItems),
+                total: discountedTotal,
                 status: Status.INFORMATION,
                 payMethod,
                 products: cartItems,
@@ -40,6 +41,9 @@ const CheckoutNormal = ({ cartItems, payMethod, form }: Props) => {
             return;
         }
     };
+    useEffect(()=>{
+
+    },[]);
 
     useEffect(() => {
         if (authData) {
