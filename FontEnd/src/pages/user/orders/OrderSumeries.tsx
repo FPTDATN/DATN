@@ -59,8 +59,6 @@ const OrderSumeries = ({}: Props) => {
                 );
         }
     };
-    
-    
 
     const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true);
 
@@ -122,8 +120,8 @@ const OrderSumeries = ({}: Props) => {
                                                         <tr className="border">
                                                             <td className="boder p-3">Mã đơn hàng</td>
                                                             <td className="boder p-3">Tên sản phẩm</td>
-                                                            <td className="boder p-3">Size</td>
-                                                            <td className="boder p-3">Color</td>
+                                                            <td className="boder p-3">Kích thước</td>
+                                                            <td className="boder p-3">Màu sắc</td>
                                                             <td className="boder p-3">Số lượng</td>
                                                         </tr>
                                                     </thead>
@@ -132,8 +130,8 @@ const OrderSumeries = ({}: Props) => {
                                                             <tr className="border" key={product._id}>
                                                                 <td className="border p-3">{order.orderNumber}</td>
                                                                 <td className="border p-3">{product.name}</td>
-                                                                <td className="border p-3">{product.colorId}</td>
-                                                                <td className="border p-3">{product.sizeId}</td>
+                                                                <td className="border p-3">{product.size}</td>
+                                                                <td className="border p-3">{product.color}</td>
                                                                 <td className="border p-3 text-center">
                                                                     {product.quantity}
                                                                 </td>
