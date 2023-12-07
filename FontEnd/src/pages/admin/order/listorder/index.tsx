@@ -491,7 +491,7 @@ const ListOrder: React.FC = () => {
                         <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
                         <Button onClick={handleFilterIsPaidFalse}>Hàng trả sau</Button>
                         <Select onChange={handleFilterByStatus} placeholder="Hàng theo trạng thái">
-                            <Option value={Status.INFORMATION}>Xác thực thông tin</Option>
+                            {/* <Option value={Status.INFORMATION}>Xác thực thông tin</Option> */}
                             <Option value={Status.ORDER_CONFIRM}>Xác nhận đơn hàng</Option>
                             <Option value={Status.SHIPPING}>Đang giao hàng</Option>
                             <Option value={Status.COMPLETE}>Hoàn thành</Option>
