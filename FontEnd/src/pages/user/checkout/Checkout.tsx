@@ -167,8 +167,6 @@ const LocationList: React.FC = () => {
         obj2.push({ key: prop, value: holder[prop] });
     }
 
-    // console.log(obj2);
-
     useEffect(() => {
         if (authData) {
             form.setFieldsValue({
