@@ -45,18 +45,7 @@ const RelatedProducts: React.FC<{ categoryId: RelatedProductsProps }> = ({ categ
     };
 
     return (
-        // <div className="py-10 mx-auto px-4">
-        //     <h2 className="pb-6 px-4 font-bold">Sản phẩm cùng loại</h2>
-        //     <Slider {...settings}>
-        //         {productData?.products.map((item) => (
-        //             <Link to={`/detail/${item?._id}`}>
-        //                 <img key={item._id} src={item.images[0]} className="w-[300px] object-cover h-[350px] px-2 py-2" />
-        //                 <p>{item.name}</p>
-        //             </Link>
-        //         ))}
 
-        //     </Slider>
-        // </div>
         <div className="bg-white">
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">Sản phẩm cùng loại</h2>
