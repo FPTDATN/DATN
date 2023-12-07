@@ -120,8 +120,8 @@ const OrderSumeries = ({}: Props) => {
                                                         <tr className="border">
                                                             <td className="boder p-3">Mã đơn hàng</td>
                                                             <td className="boder p-3">Tên sản phẩm</td>
-                                                            <td className="boder p-3">Size</td>
-                                                            <td className="boder p-3">Color</td>
+                                                            <td className="boder p-3">Kích thước</td>
+                                                            <td className="boder p-3">Màu sắc</td>
                                                             <td className="boder p-3">Số lượng</td>
                                                         </tr>
                                                     </thead>

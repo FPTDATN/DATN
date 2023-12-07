@@ -1,14 +1,14 @@
 import { checkAdmin } from '@/utils/checkAdmin';
 import { Outlet, Link } from 'react-router-dom';
 import Loading from '../ui/Loading';
-import { Dropdown, MenuProps, Menu } from 'antd';
+import { Dropdown, MenuProps } from 'antd';
 import { useLogoutMutation } from '@/services/auth';
 import { useState } from 'react';
 
 
 import { AppstoreAddOutlined, AppstoreOutlined, FireOutlined } from '@ant-design/icons';
 
-const { SubMenu } = Menu;
+
 
 
 const AdminLayout = () => {
@@ -32,11 +32,15 @@ const AdminLayout = () => {
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-    const [openSubMenu, setOpenSubMenu] = useState(false);
 
-    const handleSubMenuOpen = () => {
-        setOpenSubMenu(!openSubMenu);
+    const [isOpenOne, setIsOpenOne] = useState(false);
+
+    const toggleMenuOne = () => {
+        setIsOpenOne(!isOpenOne);
     };
+
+
+ 
     return (
         <>
             {isLoading || (!isLoading && authData?.role !== 'admin') ? (
@@ -195,41 +199,43 @@ const AdminLayout = () => {
                                         </span>
                                     </Link>
                                 </li>
-                                <ul className="">
-                                    <Menu
-                                        mode="inline"
-                                        defaultSelectedKeys={['dashboard']}
-                                        defaultOpenKeys={['sub1']}
-                                        style={{ fontSize: '22px', marginLeft: '-20px' }}
+                                
+                                <li>
+                                    <button
+                                        type="button"
+                                        className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                        aria-controls="dropdown-example"
+                                        data-collapse-toggle="dropdown-example"
+                                        onClick={toggleMenuOne}
                                     >
-                                        <SubMenu
-                                            className=' text-base'
-                                            key="sub1"
-                                            title={
-                                                <span className='flex items-center'>
+                                         <AppstoreOutlined style={{ fontSize: '22px', }} />
+                                        <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Danh mục</span>
+                                        <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+                                        </svg>
+                                    </button>
+                                    {isOpenOne && (
+                                        <ul id="dropdown-example" className="py-2 space-y-2">
+                                            <li>
+                                                <Link
+                                                    to="category"
+                                                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                                >
+                                                    <AppstoreAddOutlined style={{ fontSize: '18px', }} />
+                                                    <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Danh mục</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="brand" className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
 
-                                                    <AppstoreOutlined style={{ fontSize: '22px', }} />
-
-
-
-                                                    <span className='pl-2'>Danh mục</span>
-                                                </span>
-                                            }
-                                            onTitleClick={handleSubMenuOpen}
-                                        >
-                                            <Menu.Item key="category">
-                                            <AppstoreAddOutlined style={{ fontSize: '18px',  }}/>
-                                                <Link to="category"  className='px-2'>Category </Link>
-                                            </Menu.Item>
-                                            <Menu.Item key="category2">
-                                            <FireOutlined style={{ fontSize: '18px',  }}/>
-                                                <Link to="brand" className='px-2'>Brand</Link>
-                                            </Menu.Item>
+                                                <FireOutlined style={{ fontSize: '18px', }} />
+                                                    <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Thương hiệu</span>
+                                                </Link>
+                                            </li>
                                            
-                                        </SubMenu>
-                                    </Menu>
-                                </ul>
-
+                                        </ul>
+                                    )}
+                                </li>
 
                                 <li>
                                     <Link

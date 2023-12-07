@@ -5,8 +5,9 @@ import { useGetCategoriesQuery } from '@/services/category';
 import { toast } from 'react-toastify';
 import { useCreateProductMutation } from '@/services/product';
 import { ProductType } from '@/types/Product';
-import { useGetBrandsQuery, useGetColorsQuery, useGetSizesQuery } from '@/services/option';
+import {  useGetColorsQuery, useGetSizesQuery } from '@/services/option';
 import UploadFileServer from '@/components/uploads/UploadFile';
+import { useGetBrandsQuery } from '@/services/brand';
 
 const { TextArea } = Input;
 
@@ -129,14 +130,18 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
                 </Checkbox.Group>
             </Form.Item>
 
-            <Form.Item label="Thương hiệu" name={'brandId'}>
+     
+            <Form.Item
+                label="Thương hiệu"
+                name="brandId"
+                rules={[{ required: true, message: 'Vui lòng nhập Thương hiệu' }]}
+            >
                 <Select placeholder="Thương hiệu">
-                    {brands?.map((brand) => (
+                    {brands?.docs.map((brand) => (
                         <Select.Option key={brand._id}>{brand.name}</Select.Option>
                     ))}
                 </Select>
             </Form.Item>
-
             <Form.Item
                 label="Danh mục"
                 name="categoryId"
