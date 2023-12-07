@@ -78,29 +78,53 @@ export const getByIdDiscount = async (req, res) => {
         });
     }
 };
-
 export const updateDiscount = async (req, res) => {
     try {
+        // Validate dữ liệu đầu vào trước khi cập nhật
         const { error } = discountSchema.validate(req.body);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
 
+        // Sử dụng ID được truyền qua params để tìm mã giảm giá cần cập nhật
         const updatedDiscount = await Discount.findByIdAndUpdate(
             req.params.id, // ID của đối tượng cần cập nhật
             req.body, // Dữ liệu mới cần cập nhật
             { new: true } // Trả về đối tượng đã được cập nhật
         );
+
+        // Kiểm tra xem mã giảm giá đã được cập nhật thành công chưa
         if (!updatedDiscount) {
             return res.status(404).json({
                 message: "Không tìm thấy mã giảm giá để cập nhật",
             });
         }
+
+        // Trả về đối tượng đã được cập nhật nếu thành công
         return res.json(updatedDiscount);
     } catch (error) {
+        // Xử lý lỗi nếu có
         return res.status(500).json({
             message: "Có lỗi xảy ra khi cập nhật mã giảm giá",
             error: error.message,
         });
+    }
+};
+export const applyDiscount = async (req, res) => {
+    try {
+        const discountId = req.params.id;
+        const discount = await Discount.findById(discountId);
+        if (!discount) {
+            return res.status(404).json({ message: "Mã giảm giá không tồn tại" });
+        }
+        if (discount.count > 0) {
+            discount.count -= 1;
+            await discount.save();
+            return res.json({ message: "Áp dụng mã giảm giá thành công" });
+        } else {
+            return res.status(400).json({ message: "Mã giảm giá đã hết lượt sử dụng" });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
 };

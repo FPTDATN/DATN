@@ -6,12 +6,66 @@ import { reduceTotal } from '@/utils/reduce';
 import { Alert } from 'antd';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-interface CartProps { }
-
+import axios from 'axios';
+interface Discount {
+    _id: number | string;
+    code: string;
+    discount: number;
+    maxAmount: number;
+    count: number;
+    startDate: Date;
+    endDate: Date;
+}
+interface CartProps {}
 const Cart: FunctionComponent<CartProps> = () => {
     const { cartItems } = useAppSelector((state) => state.cart);
     const [loading, setLoading] = useState(false);
+    const [discountCode, setDiscountCode] = useState('');
+    const [appliedDiscount, setAppliedDiscount] = useState(false);
+    const [discounts, setDiscounts] = useState<Discount[]>([]);
+    const [discountAmount, setDiscountAmount] = useState(0); // Thêm state cho số tiền giảm giá
+    // Hàm xử lý thay đổi mã giảm giá từ input
+    const handleDiscountCodeChange = (value: string) => {
+        setDiscountCode(value);
+    };
+    // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
+    const applyDiscount = () => {
+        if (discountCode.trim() === '') {
+            alert('Vui lòng nhập mã giảm giá.');
+            return;
+        }
+
+        const foundDiscount = discounts.find((discount) => discount.code === discountCode);
+
+        if (foundDiscount) {
+            const currentDate = new Date();
+
+            if (currentDate >= new Date(foundDiscount.startDate) && currentDate <= new Date(foundDiscount.endDate)) {
+                // Mã giảm giá hợp lệ, áp dụng giảm giá
+                setAppliedDiscount(true);
+                setDiscountAmount(foundDiscount.discount); // Cập nhật state discountAmount với số tiền giảm giá
+                alert('Mã giảm giá đã được áp dụng!');
+            } else {
+                // Mã giảm giá hết hạn
+                alert('Mã giảm giá đã hết hạn.');
+            }
+        } else {
+            // Mã giảm giá không hợp lệ
+            alert('Mã giảm giá không hợp lệ.');
+        }
+    };
+    useEffect(() => {
+        // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
+        axios
+            .get('http://localhost:8080/api/discounts')
+            .then((response) => {
+                // Lưu danh sách mã giảm giá vào state discounts
+                setDiscounts(response.data.docs);
+            })
+            .catch((error) => {
+                console.error('Error fetching discounts:', error);
+            });
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -19,7 +73,11 @@ const Cart: FunctionComponent<CartProps> = () => {
             setLoading(false);
         }, 1000);
     }, [cartItems]);
-
+    // Tính số tiền giảm giá từ phần trăm giảm trên tổng đơn hàng
+    const totalCartPrice = reduceTotal(cartItems); // Tổng giá trị đơn hàng
+    const discountAmountInMoney = (discountAmount / 100) * totalCartPrice;
+    // Áp dụng số tiền giảm giá vào tổng giá trị đơn hàng
+    const discountedPrice = totalCartPrice - discountAmountInMoney;
     return (
         <>
             {loading ? (
@@ -60,16 +118,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                         <button className="bg-gray-200 opacity-80 hover:opacity-100 transition-all shadow text-sub px-3 py-2 uppercase">
                                             Cập nhật giỏ hàng
                                         </button>
-                                        <div className="border-dashed border lg:border-0 md:border-0 p-6 flex border-gray-300">
-                                            <input
-                                                type="text"
-                                                className="border w-2/3 lg:w-auto md:w-auto outline-none px-2 py-2"
-                                                placeholder="Mã giảm giá"
-                                            />
-                                            <button className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 py-2 text-white">
-                                                ÁP MÃ GIẢM GIÁ
-                                            </button>
-                                        </div>
+                                        {/* làm mã giảm giá  */}
                                     </div>
                                 </div>
                                 <div className="col-span-1 px-4 lg:px-0">
@@ -81,14 +130,15 @@ const Cart: FunctionComponent<CartProps> = () => {
                                                 <span>Tổng phụ</span>
                                                 <span>{formartVND(reduceTotal(cartItems))}</span>
                                             </div>
-
+                                            {/* hiển thị thổng số tiềng trong trang  */}
                                             <div className="flex justify-between items-center text-xl py-2">
                                                 <p>Tổng</p>
                                                 <p className="!text-primary">
-                                                    {formartVND(reduceTotal(cartItems))}
+                                                    {appliedDiscount
+                                                        ? formartVND(discountedPrice)
+                                                        : formartVND(totalCartPrice)}
                                                 </p>
                                             </div>
-
                                             <a
                                                 href="/checkout"
                                                 className="block text-white text-center !bg-primary py-2"
