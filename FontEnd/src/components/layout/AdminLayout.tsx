@@ -4,11 +4,7 @@ import Loading from '../ui/Loading';
 import { Dropdown, MenuProps } from 'antd';
 import { useLogoutMutation } from '@/services/auth';
 import { useState } from 'react';
-
-
 import { AppstoreAddOutlined, AppstoreOutlined, FireOutlined } from '@ant-design/icons';
-
-
 
 
 const AdminLayout = () => {
@@ -305,7 +301,7 @@ const AdminLayout = () => {
                                                         className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                                         aria-hidden="true"
                                                     >
-                                                        <path d="M2,12a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" fill="#f4f4f4" stroke="#4b4b4d" stroke-width="2" />
+                                                        <path d="M2,12a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" fill="#f4f4f4" stroke="#4b4b4d" strokeWidth="2" />
                                                         <circle cx="7" cy="7" r="1.5" fill="#ff0000" />
                                                         <circle cx="11" cy="5" r="1.5" fill="#00ff00" />
                                                         <circle cx="15" cy="7" r="1.5" fill="#0000ff" />
@@ -360,7 +356,7 @@ const AdminLayout = () => {
                                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
                                         <svg className="w-[20px] h-[20px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 13 6-6m-5-.5h.01m2.98 7H11m1.007-11.313a2.75 2.75 0 0 0 2.1.87 2.745 2.745 0 0 1 2.837 2.837 2.749 2.749 0 0 0 .87 2.1 2.747 2.747 0 0 1 0 4.014 2.748 2.748 0 0 0-.87 2.1 2.746 2.746 0 0 1-2.837 2.837 2.75 2.75 0 0 0-2.1.87 2.748 2.748 0 0 1-4.014 0 2.75 2.75 0 0 0-2.1-.87 2.744 2.744 0 0 1-2.837-2.837 2.749 2.749 0 0 0-.87-2.1 2.747 2.747 0 0 1 0-4.014 2.75 2.75 0 0 0 .87-2.1 2.745 2.745 0 0 1 2.838-2.837 2.749 2.749 0 0 0 2.1-.87 2.748 2.748 0 0 1 4.013 0Z" />
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m7 13 6-6m-5-.5h.01m2.98 7H11m1.007-11.313a2.75 2.75 0 0 0 2.1.87 2.745 2.745 0 0 1 2.837 2.837 2.749 2.749 0 0 0 .87 2.1 2.747 2.747 0 0 1 0 4.014 2.748 2.748 0 0 0-.87 2.1 2.746 2.746 0 0 1-2.837 2.837 2.75 2.75 0 0 0-2.1.87 2.748 2.748 0 0 1-4.014 0 2.75 2.75 0 0 0-2.1-.87 2.744 2.744 0 0 1-2.837-2.837 2.749 2.749 0 0 0-.87-2.1 2.747 2.747 0 0 1 0-4.014 2.75 2.75 0 0 0 .87-2.1 2.745 2.745 0 0 1 2.838-2.837 2.749 2.749 0 0 0 2.1-.87 2.748 2.748 0 0 1 4.013 0Z" />
                                         </svg>
 
                                         <span className="flex-1 ml-3 whitespace-nowrap">Sale</span>

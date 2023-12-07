@@ -86,9 +86,16 @@ const cartSlice = createSlice({
                 position: 'bottom-right',
             });
         },
+        update: (state,action) => {
+            let exist = state.cartItems.findIndex((_item,index)  => index === action.payload.index);
+
+            state.cartItems[exist].color = action?.payload?.color;
+            state.cartItems[exist].size = action?.payload?.size;
+
+        }
     },
 });
 
-export const { addToCart, increase, decrease, clear, remove } = cartSlice.actions;
+export const { addToCart, increase, decrease, clear, remove,update } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;
