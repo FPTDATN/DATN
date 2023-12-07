@@ -3,7 +3,6 @@ import { useCreateOrderMutation } from '@/services/order';
 import { clear } from '@/slices/cart';
 import { useAppDispatch } from '@/store/hook';
 import { Status } from '@/types/status';
-import { reduceTotal } from '@/utils/reduce';
 import { Button, Form, FormInstance, Input, InputNumber, message } from 'antd';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +15,8 @@ interface Props {
 }
 
 const CheckoutNormal = ({ cartItems, payMethod, form ,discountedTotal}: Props) => {
-    console.log(discountedTotal)
+    console.log(discountedTotal);
+    
     const {data:authData} = useMeQuery()
 
     const router = useNavigate()
@@ -41,9 +41,6 @@ const CheckoutNormal = ({ cartItems, payMethod, form ,discountedTotal}: Props) =
             return;
         }
     };
-    useEffect(()=>{
-
-    },[]);
 
     useEffect(() => {
         if (authData) {
@@ -58,7 +55,6 @@ const CheckoutNormal = ({ cartItems, payMethod, form ,discountedTotal}: Props) =
         if (orderSuccess) {
             message.success('Thanh toán thành công');
             router(`/success/${order?._id}`)
-            dispatch(clear());
         }
 
         if (orderError) {
@@ -68,7 +64,7 @@ const CheckoutNormal = ({ cartItems, payMethod, form ,discountedTotal}: Props) =
 
     return (
         <div>
-            <Form onFinish={handleSubmitCheckout} layout="vertical" form={form}>
+            <Form layout={'vertical'} onFinish={handleSubmitCheckout} form={form}>
                 <Form.Item label={'Tên đăng nhập'} name={'username'}>
                     <Input disabled />
                 </Form.Item>

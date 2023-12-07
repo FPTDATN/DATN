@@ -16,7 +16,7 @@ interface Discount {
     startDate: Date;
     endDate: Date;
 }
-interface CartProps { }
+interface CartProps {}
 const Cart: FunctionComponent<CartProps> = () => {
     const { cartItems } = useAppSelector((state) => state.cart);
     const [loading, setLoading] = useState(false);
@@ -56,7 +56,8 @@ const Cart: FunctionComponent<CartProps> = () => {
     };
     useEffect(() => {
         // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
-        axios.get('http://localhost:8080/api/discounts')
+        axios
+            .get('http://localhost:8080/api/discounts')
             .then((response) => {
                 // Lưu danh sách mã giảm giá vào state discounts
                 setDiscounts(response.data.docs);
@@ -118,20 +119,6 @@ const Cart: FunctionComponent<CartProps> = () => {
                                             Cập nhật giỏ hàng
                                         </button>
                                         {/* làm mã giảm giá  */}
-                                        <div className="border-dashed border lg:border-0 md:border-0 p-6 flex border-gray-300">
-                                            <input
-                                                type="text"
-                                                className="border w-2/3 lg:w-auto md:w-auto outline-none px-2 py-2"
-                                                placeholder="Mã giảm giá"
-                                                onChange={(e) => handleDiscountCodeChange(e.target.value)}
-                                            />
-                                            <button
-                                                className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 py-2 text-white"
-                                                onClick={applyDiscount}
-                                            >
-                                                ÁP MÃ GIẢM GIÁ
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-span-1 px-4 lg:px-0">
