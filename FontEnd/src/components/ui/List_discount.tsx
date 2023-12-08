@@ -5,6 +5,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { toast } from 'react-toastify';
 import { formartVND } from '@/utils/formartVND';
+import "./List_discount.css"
+import { Link } from 'react-router-dom';
 
 const List_discount = () => {
     const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
@@ -55,14 +57,31 @@ const List_discount = () => {
             {discountsData ? (
                 <div className='max-w-5xl px-2 lg:px-4 w-full mx-auto '>
                     <div className=' flex justify-between'>
-                    <h2 className='text-2xl my-3'>Các mã giảm giá có trong của hàng </h2>
-                    <button className='bg-primary my-3 px-3 rounded-md'><a href="/">Sản phẩn </a></button>
+                        <h2 className='text-2xl my-3'>Các mã giảm giá có trong của hàng </h2>
+                        {/* <button className='btn__background--liner'><a href="/">Sản phẩn </a></button> */}
+                        <Link to='/'>
+                            <button className="btn__background--liner mt-5 mb-5" type="button">
+
+                                <strong>Sản phẩm</strong>
+                                <div id="container-stars">
+                                    <div id="stars"></div>
+                                </div>
+
+                                <div id="glow">
+                                    <div className="circle"></div>
+                                    <div className="circle"></div>
+                                </div>
+                                
+                            </button>
+                        </Link>
+                        
+                    
                     </div>
                     
                     {discountsData.docs.length > 0 ? (
                         <div className='grid grid-cols-4 gap-4 rounded-md'>
                         {discountsData.docs.map((discount) => (
-                            <div className='bg-green-400 rounded-md text-base outline outline-offset-2 text-reds outline-blue-500 ' key={discount._id}>
+                            <div className='back__box--test' key={discount._id}>
                                 <button className='' onClick={() => addSale(discount)}>
                                     <p className=''>Giá trị giảm giá: {discount.discount}%</p>
                                     <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
