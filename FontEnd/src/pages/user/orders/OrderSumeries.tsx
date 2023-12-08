@@ -1,4 +1,4 @@
-import { Collapse, Steps, Tag, theme } from 'antd';
+import { Collapse, Spin, Steps, Tag, theme } from 'antd';
 import { MdKeyboardArrowRight, MdSmsFailed } from 'react-icons/md';
 import { useGetsOrderQuery } from '@/services/order';
 import { Status } from '@/types/status';
@@ -13,6 +13,9 @@ import { Button } from 'antd/es/radio';
 import { Link } from 'react-router-dom';
 import Modal from 'antd/es/modal/Modal';
 import Hoandon from './Hoandon';
+import TextArea from 'antd/es/input/TextArea';
+import { useAddOrderCommentMutation   } from '@/services/ordercomments';
+import { toast } from 'react-toastify';
 
 const { Panel } = Collapse;
 
@@ -21,7 +24,9 @@ type Props = {};
 const OrderSumeries = ({}: Props) => {
     const { data: orders, isLoading } = useGetsOrderQuery();
     const { data: authdata } = checkAuth();
-
+    const [createOrderComment, { isError, isLoading: isCreatingComment }] = useAddOrderCommentMutation();
+    const [text, setText] = useState('');
+    const [loading, setLoading] = useState(false);
     const { token } = theme.useToken();
     const [open, setOpen] = useState(false);
 
@@ -60,7 +65,33 @@ const OrderSumeries = ({}: Props) => {
         }
     };
 
-    const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true);
+    const handleCommentSubmit = async (event: any) => {
+        event.preventDefault();
+        if (text.trim() === '') {
+            console.error('Comment text is required');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await createOrderComment({
+                text,
+                userId:authdata?._id,
+                orderId:filterOrders![0]._id,
+                productId: filterOrders![0].products[0]._id,
+            });
+            toast.success('Đánh giá đơn hàng thành công')
+            setText('')
+        } catch (error) {
+            console.error('Error creating comment:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    
+
+    const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true  );
 
     return (
         <div className="min-h-screen">
@@ -120,8 +151,8 @@ const OrderSumeries = ({}: Props) => {
                                                         <tr className="border">
                                                             <td className="boder p-3">Mã đơn hàng</td>
                                                             <td className="boder p-3">Tên sản phẩm</td>
-                                                            <td className="boder p-3">Size</td>
-                                                            <td className="boder p-3">Color</td>
+                                                            <td className="boder p-3">Kích thước</td>
+                                                            <td className="boder p-3">Màu sắc</td>
                                                             <td className="boder p-3">Số lượng</td>
                                                         </tr>
                                                     </thead>
@@ -163,7 +194,22 @@ const OrderSumeries = ({}: Props) => {
                                                                         <Hoandon />
                                                                     </Modal>
 
-
+                                                                    <form className="mb-6 mt-1" onSubmit={handleCommentSubmit}>
+                                                                        <TextArea
+                                                                            className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+                                                                            rows={4}
+                                                                            value={text}
+                                                                            onChange={(e) => setText(e.target.value)}
+                                                                            size="large"
+                                                                            status={isError || text.trim() === 'bạn phải ghi bình luận' ? 'error' : ''}
+                                                                        />
+                                                                        <button
+                                                                            className="inline-flex items-center  mr-4 py-2 px-4 bg-blue-600 text-white rounded-md focus:ring-4 focus:ring-blue-200"
+                                                                            disabled={isCreatingComment || text.trim() === ''}
+                                                                        >
+                                                                           {isCreatingComment ? 'Đang đăng...' : 'Đánh giá sản phẩm'} <Spin spinning={loading} ></Spin>
+                                                                        </button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
 

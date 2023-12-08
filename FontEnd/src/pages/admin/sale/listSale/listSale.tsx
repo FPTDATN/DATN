@@ -65,6 +65,10 @@ const ListSale = () => {
   const handlePageChange = (selectedPage: any) => {
     setCurrentPage(selectedPage.selected);
   };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Chuyển đổi thành chuỗi ngày/tháng/năm
+  };
   return (
     <>
       <div className="relative overflow-x-auto">
@@ -88,7 +92,10 @@ const ListSale = () => {
                 code Mã
               </th>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Giá trị giảm giá
+                Giá trị giảm giá(%)
+              </th>
+              <th scope="col" className="pl-6 text-xs font-medium py-3">
+                Giá tối thiểu(VND)
               </th>
               <th scope="col" className="pl-6 text-xs font-medium py-3">
                 Số lượng
@@ -125,13 +132,16 @@ const ListSale = () => {
                       {discount.discount}%
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
+                      {discount.maxAmount}
+                    </td>
+                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
                       {discount.count}
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {new Date(discount.startDate).toLocaleString()}
+                    {formatDate(discount.startDate)}
                     </td>
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {new Date(discount.endDate).toLocaleString()}
+                    {formatDate(discount.endDate)}
                     </td>
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">

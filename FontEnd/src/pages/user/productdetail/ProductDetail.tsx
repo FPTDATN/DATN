@@ -14,6 +14,7 @@ import { addToCart } from '@/slices/cart';
 import { useMeQuery } from '@/services/auth';
 import Loading from '@/components/ui/Loading';
 import { da } from 'date-fns/locale';
+import List_discount from '@/components/ui/List_discount';
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
@@ -95,7 +96,7 @@ const ProductDetail = () => {
                                                         </span>
                                                     )}
                                                 </h2>
-                                                <div className="flex flex-wrap items-center mb-6">
+                                                <div className="flex flex-wrap items-center mb-6 justify-between">
                                                     <span>
                                                         <Rate tooltips={desc} onChange={setValue} value={value} />
                                                         {value ? (
@@ -104,7 +105,9 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
-                                                    <div><button className=' bg-layer text-center h-7 w-36'>Mã giảm giá </button>
+                                                    <div className=''>
+                                                        <button className=' bg-gree text-center h-8 w-32 rounded-sm hover:bg-primary'><a href="/code_ma">Mã giảm giá</a></button>
+                                                        {/* <List_discount/> */}
                                                     </div>
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">

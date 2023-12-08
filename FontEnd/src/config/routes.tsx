@@ -40,10 +40,14 @@ import { useMeQuery } from '@/services/auth';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
+import List_discount from '@/components/ui/List_discount';
+
+
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { data } = useMeQuery();
+
 
 
     useEffect(() => {
@@ -79,6 +83,7 @@ const router = createBrowserRouter([
                     {
                         path: 'cart',
                         element: <Cart />,
+
                     },
                     {
                         path: 'filter',
@@ -98,6 +103,9 @@ const router = createBrowserRouter([
                     }, {
                         path: 'orders/:userId',
                         element: <OrderSumeries />
+                    }, {
+                        path: 'code_ma',
+                        element: <List_discount />
                     },
                     {
                         path: '/details',

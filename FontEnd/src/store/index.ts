@@ -7,6 +7,7 @@ import discountApi from '@/services/discount';
 import { favouriteapi } from '@/services/favourite';
 import optionApi from '@/services/option';
 import orderApi from '@/services/order';
+import ordercommentApi from '@/services/ordercomments';
 import productApi from '@/services/product';
 import sizeApi from '@/services/size';
 import userApi from '@/services/user';
@@ -34,7 +35,8 @@ const rootReducer = combineReducers({
     [colorApi.reducerPath]:colorApi.reducer,
     [sizeApi.reducerPath]:sizeApi.reducer,
     [discountApi.reducerPath]:discountApi.reducer,
-    [brandApi.reducerPath]:brandApi.reducer
+    [brandApi.reducerPath]:brandApi.reducer,
+    [ordercommentApi.reducerPath]:ordercommentApi.reducer
 });
 
 // Middleware
@@ -50,7 +52,8 @@ const middleware: any[] = [
     colorApi.middleware,
     sizeApi.middleware,
     discountApi.middleware,
-    brandApi.middleware
+    brandApi.middleware,
+    ordercommentApi.middleware,
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

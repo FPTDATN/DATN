@@ -1,13 +1,18 @@
-import { decrease, increase, remove } from '@/slices/cart';
+import { decrease, increase, remove, update } from '@/slices/cart';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { formartVND } from '@/utils/formartVND';
 import { CloseOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const CartComponent = () => {
     const { cartItems } = useAppSelector((state) => state.cart);
     const dispatch = useAppDispatch();
+
+    const [color, setColor] = useState<string>('');
+    const [size, setSize] = useState<string>('');
+
     return (
         <div>
             <table className="font-medium lg:block md:block hidden table-auto">
@@ -19,6 +24,7 @@ const CartComponent = () => {
                         <th className="px-2 uppercase font-semibold text-nav py-4">Giá</th>
                         <th className="px-2 uppercase font-semibold text-nav py-4">Số</th>
                         <th className="uppercase font-semibold text-nav py-4">Tổng</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody className="border-b-2 border-gray-300">
@@ -45,7 +51,39 @@ const CartComponent = () => {
                                     ) : (
                                         <Link to={`/detail/${item._id}`}>{item.name.slice(0, 10)}...</Link>
                                     )}
+
+                                    <div className="mt-2 space-x-2 space-y-2 font-semibold">
+                                        <label className="border px-2 ">
+                                            <span className="mr-1">Màu :</span>
+                                            <select
+                                                className="outline-none px-2"
+                                                onChange={(e) => setColor(e.target.value)}
+                                                defaultValue={item?.color || ''}
+                                            >
+                                                {item?.colorId?.map((color: any) => (
+                                                    <option key={color?._id} value={color?.name}>
+                                                        {color?.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                        <label className="border px-2">
+                                            <span className="mr-1">Size :</span>
+                                            <select
+                                                className="outline-none px-2"
+                                                onChange={(e) => setSize(e.target.value)}
+                                                defaultValue={item?.size || ''}
+                                            >
+                                                {item?.sizeId?.map((size: any) => (
+                                                    <option key={size?._id} value={size?.name}>
+                                                        {size?.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                    </div>
                                 </th>
+
                                 <th className="px-2 py-8">{formartVND(item.price)}</th>
                                 <th className="px-2 py-8">
                                     <div className="min-w-[80px] max-w-[80px] flex">
@@ -66,6 +104,22 @@ const CartComponent = () => {
                                 <th className="px-2 py-8">
                                     <p className="!text-primary text-base">{formartVND(item.price * item.quantity)}</p>
                                 </th>
+                                <th>
+                                    <button
+                                        className="font-semibold min-w-[100px] line-clamp-1 border px-2 py-2 hover:bg-primary hover:text-white"
+                                        onClick={() =>
+                                            dispatch(
+                                                update({
+                                                    index,
+                                                    color: color! || item?.color,
+                                                    size: size! || item?.size,
+                                                }),
+                                            )
+                                        }
+                                    >
+                                        Cập nhật
+                                    </button>
+                                </th>
                             </tr>
                         );
                     })}
@@ -80,9 +134,40 @@ const CartComponent = () => {
                             <span>
                                 {item.name} {item?.size && `- ${item?.size}`} {item?.color && `- ${item?.color}`}
                             </span>
+
                             <button className="p-3" onClick={() => dispatch(remove(index))}>
                                 <CloseOutlined />
                             </button>
+                        </div>
+                        <div className="mt-2 space-x-2 space-y-2 font-semibold">
+                            <label className="border px-2 ">
+                                <span className="mr-1">Màu :</span>
+                                <select
+                                    className="outline-none px-2"
+                                    onChange={(e) => setColor(e.target.value)}
+                                    defaultValue={item?.color || ''}
+                                >
+                                    {item?.colorId?.map((color: any) => (
+                                        <option key={color?._id} value={color?.name}>
+                                            {color?.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label className="border px-2">
+                                <span className="mr-1">Size :</span>
+                                <select
+                                    className="outline-none px-2"
+                                    onChange={(e) => setSize(e.target.value)}
+                                    defaultValue={item?.size || ''}
+                                >
+                                    {item?.sizeId?.map((size: any) => (
+                                        <option key={size?._id} value={size?.name}>
+                                            {size?.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
                         </div>
                         <div className="flex items-center justify-between border-b border-gray-100 py-2">
                             <span>Giá</span>
@@ -108,6 +193,22 @@ const CartComponent = () => {
                         <div className="flex items-center justify-between py-2">
                             <span>Tổng giá</span>
                             <span className="!text-primary">{formartVND(item.quantity * item.price)}</span>
+                        </div>
+                        <div className='float-right'>
+                            <button
+                                className="font-semibold text-center max-w-[100px] mt-2 float-right min-w-[100px] line-clamp-1 border px-2 py-2 hover:bg-primary hover:text-white"
+                                onClick={() =>
+                                    dispatch(
+                                        update({
+                                            index,
+                                            color: color! || item?.color,
+                                            size: size! || item?.size,
+                                        }),
+                                    )
+                                }
+                            >
+                                Cập nhật
+                            </button>
                         </div>
                         <Divider />
                     </div>

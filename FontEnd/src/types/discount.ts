@@ -1,13 +1,14 @@
- export interface Discount {
-      _id : number | string,
+ export interface IDiscount {
+      _id? : number | string,
       code: string;
       discount: number;
+      maxAmount: number;
       count: number;
       startDate: Date;
       endDate: Date;
     }
     export interface PaginatedDiscount {
-      docs: Discount[];
+      docs: IDiscount[];
       hasNextPage: boolean;
       hasPrevPage: boolean;
       limit: number;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { isValid, parseISO, isBefore } from 'date-fns';
+import { isValid, parseISO, isBefore,format  } from 'date-fns';
 import { useGetDiscountsByIdQuery, useUpdateDiscountsMutation } from '@/services/discount';
 
 const UpdateSale: React.FC<{ categoryId: string; handleUpdateComplete: () => void }> = ({
@@ -12,7 +12,6 @@ const UpdateSale: React.FC<{ categoryId: string; handleUpdateComplete: () => voi
       const [form] = Form.useForm();
       const [mutate] = useUpdateDiscountsMutation();
       const [isLoading, setIsLoading] = useState(false);
-
       const onFinish = async (values: { name: string, discount: number, count: number, maxAmount: number }) => {
             try {
                   setIsLoading(true);
@@ -61,16 +60,17 @@ const UpdateSale: React.FC<{ categoryId: string; handleUpdateComplete: () => voi
 
       useEffect(() => {
             if (category) {
-                  form.setFieldsValue({
-                        name: category.code,
-                        discount: category.discount,
-                        count: category.count,
-                        maxAmount: category.maxAmount,
-                        createdDate: category.startDate,
-                        endDate: category.endDate,
-                  });
+              form.setFieldsValue({
+                name: category.code,
+                discount: category.discount,
+                count: category.count,
+                maxAmount: category.maxAmount,
+                createdDate: format(parseISO(category.startDate), 'yyyy-MM-dd'), // Chuyển ngày về định dạng mong muốn
+                endDate: format(parseISO(category.endDate), 'yyyy-MM-dd'), // Chuyển ngày về định dạng mong muốn
+              });
             }
-      }, [category]);
+          }, [category, form]);
+          
       return (
             <>
                   {isCategoryLoading ? (
