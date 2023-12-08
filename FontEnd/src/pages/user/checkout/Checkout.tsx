@@ -93,6 +93,7 @@ const LocationList: React.FC = () => {
     };
     // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
     const applyDiscount = () => {
+        
         if (discountCode.trim() === '') {
             alert('Vui lòng nhập mã giảm giá.');
             return;
@@ -103,10 +104,13 @@ const LocationList: React.FC = () => {
             return;
         }
         const foundDiscount = discounts.find((discount) => discount.code === discountCode);
-
+        
         if (foundDiscount) {
+            if (discountedTotal < foundDiscount.maxAmount) {
+                alert(`Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`);
+                return;
+            }
             const currentDate = new Date();
-
             if (currentDate >= new Date(foundDiscount.startDate) && currentDate <= new Date(foundDiscount.endDate)) {
                 // Mã giảm giá hợp lệ, áp dụng giảm giá
                 setAppliedDiscountCode(discountCode); // Lưu mã giảm giá đã áp dụng

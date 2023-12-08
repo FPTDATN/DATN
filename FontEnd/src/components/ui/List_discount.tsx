@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { toast } from 'react-toastify';
+import { formartVND } from '@/utils/formartVND';
 
 const List_discount = () => {
     const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
@@ -45,30 +46,39 @@ const List_discount = () => {
     if (isError) {
         return <div>Error fetching discounts</div>;
     }
-
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString(); 
+      };
     return (
         <div>
             {discountsData ? (
-                <div>
+                <div className='max-w-5xl px-2 lg:px-4 w-full mx-auto '>
+                    <div className=' flex justify-between'>
+                    <h2 className='text-2xl my-3'>Các mã giảm giá có trong của hàng </h2>
+                    <button className='bg-primary my-3 px-3 rounded-md'><a href="/">Sản phẩn </a></button>
+                    </div>
+                    
                     {discountsData.docs.length > 0 ? (
-                        <Slider className='w-48'>
-                            {discountsData.docs.map((discount) => (
-                                <div key={discount._id}>
-                                    <button className='text-layer' onClick={() => addSale(discount)}>
-                                        <p>Discount: {discount.discount}</p>
-                                    </button>
-                                </div>
-                            ))}
-                        </Slider>
+                        <div className='grid grid-cols-4 gap-4 rounded-md'>
+                        {discountsData.docs.map((discount) => (
+                            <div className='bg-green-400 rounded-md text-base outline outline-offset-2 text-reds outline-blue-500 ' key={discount._id}>
+                                <button className='' onClick={() => addSale(discount)}>
+                                    <p className=''>Giá trị giảm giá: {discount.discount}%</p>
+                                    <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
+                                    <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                     ) : (
-                        <div>No discounts available</div>
+                        <div>  Không có mã giảm giá </div>
                     )}
                 </div>
             ) : (
-                <div>No discounts available</div>
+                <div>404</div>
             )}
         </div>
     );
 };
-
 export default List_discount;

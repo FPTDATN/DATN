@@ -39,6 +39,7 @@ import Listbrand from '@/pages/admin/trademark/listtrademark';
 import { useMeQuery } from '@/services/auth';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import List_discount from '@/components/ui/List_discount';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -55,9 +56,7 @@ const PrivateRoute = ({ isAuth }: any) => {
             navigate("/admin");
         }
     }, [isAuth, data, location]);
-
     return <Outlet />;
-
 };
 const router = createBrowserRouter([
     // Main layout
@@ -99,6 +98,9 @@ const router = createBrowserRouter([
                     }, {
                         path: 'orders/:userId',
                         element: <OrderSumeries />
+                    }, {
+                        path: 'code_ma',
+                        element: <List_discount />
                     },
                     {
                         path: '/details',
