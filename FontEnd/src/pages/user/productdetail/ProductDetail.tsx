@@ -96,7 +96,7 @@ const ProductDetail = () => {
                                                         </span>
                                                     )}
                                                 </h2>
-                                                <div className="flex flex-wrap items-center mb-6">
+                                                <div className="flex flex-wrap items-center mb-6 justify-between">
                                                     <span>
                                                         <Rate tooltips={desc} onChange={setValue} value={value} />
                                                         {value ? (
@@ -106,7 +106,7 @@ const ProductDetail = () => {
                                                         )}
                                                     </span>
                                                     <div className=''>
-                                                        <button className=' bg-layer text-center h-7 w-36'><a href="/code_ma">Mã giảm giá</a></button>
+                                                        <button className=' bg-gree text-center h-8 w-32 rounded-sm hover:bg-primary'><a href="/code_ma">Mã giảm giá</a></button>
                                                         {/* <List_discount/> */}
                                                     </div>
                                                 </div>

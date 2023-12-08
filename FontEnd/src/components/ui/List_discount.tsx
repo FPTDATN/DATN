@@ -48,7 +48,7 @@ const List_discount = () => {
     }
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString(); // Chuyển đổi thành chuỗi ngày/tháng/năm
+        return date.toLocaleDateString(); 
       };
     return (
         <div>
@@ -56,16 +56,16 @@ const List_discount = () => {
                 <div className='max-w-5xl px-2 lg:px-4 w-full mx-auto '>
                     <div className=' flex justify-between'>
                     <h2 className='text-2xl my-3'>Các mã giảm giá có trong của hàng </h2>
-                    <button className='bg-primary my-3'><a href="/">Sản phẩn </a></button>
+                    <button className='bg-primary my-3 px-3 rounded-md'><a href="/">Sản phẩn </a></button>
                     </div>
                     
                     {discountsData.docs.length > 0 ? (
-                        <div className='grid grid-cols-4 gap-5 rounded-md'>
+                        <div className='grid grid-cols-4 gap-4 rounded-md'>
                         {discountsData.docs.map((discount) => (
-                            <div className='bg-green-500 rounded-md' key={discount._id}>
+                            <div className='bg-green-400 rounded-md text-base outline outline-offset-2 text-reds outline-blue-500 ' key={discount._id}>
                                 <button className='' onClick={() => addSale(discount)}>
-                                    <p className='text-reds p-1'>Giá trị giảm giá: {discount.discount}%</p>
-                                    <p className='text-xl'>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
+                                    <p className=''>Giá trị giảm giá: {discount.discount}%</p>
+                                    <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
                                     <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>
                                 </button>
                             </div>
