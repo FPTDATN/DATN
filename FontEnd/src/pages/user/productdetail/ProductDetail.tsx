@@ -106,8 +106,8 @@ const ProductDetail = () => {
                                                         )}
                                                     </span>
                                                     <div className=''>
-                                                        {/* <button className=' bg-layer text-center h-7 w-36'>Mã giảm giá </button> */}
-                                                        <List_discount/>
+                                                        <button className=' bg-layer text-center h-7 w-36'><a href="/code_ma">Mã giảm giá</a></button>
+                                                        {/* <List_discount/> */}
                                                     </div>
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">

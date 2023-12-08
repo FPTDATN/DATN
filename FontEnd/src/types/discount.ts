@@ -1,5 +1,5 @@
  export interface IDiscount {
-      _id : number | string,
+      _id? : number | string,
       code: string;
       discount: number;
       maxAmount: number;
