@@ -119,7 +119,11 @@ const Discount_code = () => {
                dataIndex: 'action',
                key: 'action',
                render: (_, record, index) => (
-                   <Button onClick={() => handleRemoveAddSale(index)}>Xóa</Button>
+                   <div>
+                       <Button> <a href={`/checkout`}> Dùng Mã </a></Button>
+                       <Button onClick={() => handleRemoveAddSale(index)}>Xóa</Button>
+                      
+                   </div>
                ),
            }
            
