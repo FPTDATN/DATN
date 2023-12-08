@@ -6,7 +6,8 @@ import UpdateComment from '../updateComment/UpdateComment';
 import { useMeQuery } from '@/services/auth';
 import { CommentType } from '@/services/product';
 import { formatTimeToNow } from '@/utils/formartDate';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useGetAllOrderCommentsQuery, useRemoveOrderCommentMutation } from '@/services/ordercomments';
 
 interface comment {
     userId?: string;
@@ -19,9 +20,12 @@ const Comment = ({ userId, productId, comments }: comment) => {
     const { data: commentData } = useGetAllCommentsQuery();
     const [createComment, { isError, isLoading: isCreatingComment }] = useAddCommentMutation();
     const [mutate] = useRemoveCommentMutation();
+    const [removeId] = useRemoveOrderCommentMutation()
+    const { data: orderCommentsData } = useGetAllOrderCommentsQuery()
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState<string>('');
     const [selectedCommentId, setSelectedCommentId] = useState('');
+    const [selectedOrderCommentId, setSelectedOrCommentId] = useState('');
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
     const { TextArea } = Input;
     const [openAbsolute, setOpenAbsolute] = useState(false);
@@ -49,7 +53,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
             return;
         }
 
-        if(!authData) {
+        if (!authData) {
             return router('/account/signin')
         }
 
@@ -72,6 +76,15 @@ const Comment = ({ userId, productId, comments }: comment) => {
     const handleDeleteComment = async (id: string) => {
         try {
             await mutate(id);
+            toast.success('Xóa thành công');
+        } catch (error) {
+            toast.error('Xóa không thành công');
+        }
+    };
+
+    const handleDeleteOrderComment = async (id: string) => {
+        try {
+            await removeId(id);
             toast.success('Xóa thành công');
         } catch (error) {
             toast.error('Xóa không thành công');
@@ -122,7 +135,10 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                 <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
                                                     <img
                                                         className="mr-2 w-6 h-6 rounded-full"
-                                                        src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                                                        src={
+                                                            authData?.avatar ||
+                                                            'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp'
+                                                        }
                                                         alt="Michael Gough"
                                                     />
                                                     {item?.userId?.username}
@@ -143,9 +159,8 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                                         onClick={() => setOpenAbsolute(!openAbsolute)}
                                                     >
                                                         <svg
-                                                            className={`w-4 h-4 ${
-                                                                openAbsolute ? 'rotate-180' : ''
-                                                            } transition-all`}
+                                                            className={`w-4 h-4 ${openAbsolute ? 'rotate-180' : ''
+                                                                } transition-all`}
                                                             aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             fill="currentColor"
@@ -239,6 +254,130 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                     </article>
                                 ))
                         )}
+
+                        <div>
+                            <div className="list-group-item" >
+                                <div className="d-inline-block font-weight-medium text-uppercase">Đánh giá đơn hàng</div>
+                            </div>
+                            {(
+                                orderCommentsData
+                                    ?.filter((ordercomment) => ordercomment.productId === productId)
+                                    .map((item) => (
+                                        <article
+                                            key={item?._id}
+                                            className="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
+                                        >
+                                            <footer className="flex justify-between items-center mb-2">
+                                                <div className="flex items-center">
+                                                    <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
+                                                        <img
+                                                            className="mr-2 w-6 h-6 rounded-full"
+                                                            src={
+                                                                authData?.avatar ||
+                                                                'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp'
+                                                            }
+                                                            alt="Michael Gough"
+                                                        />
+                                                        {item?.userId?.username}
+                                                    </p>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                        <time title="February 8th, 2022">
+                                                            {formatTimeToNow(new Date(item?.createdAt))}
+                                                        </time>
+                                                    </p>
+                                                </div>
+                                                {!authData || authData?._id !== item.userId?._id ? undefined : (
+                                                    <div className="relative inline-block">
+                                                        <button
+                                                            id="dropdownComment1Button"
+                                                            data-dropdown-toggle="dropdownComment1"
+                                                            className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                                            type="button"
+                                                            onClick={() => setOpenAbsolute(!openAbsolute)}
+                                                        >
+                                                            <svg
+                                                                className={`w-4 h-4 ${openAbsolute ? 'rotate-180' : ''
+                                                                    } transition-all`}
+                                                                aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor"
+                                                                viewBox="0 0 16 3"
+                                                            >
+                                                                <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                                                            </svg>
+                                                            <span className="sr-only">Comment settings</span>
+                                                        </button>
+                                                        {openAbsolute && (
+                                                            <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                                                <div
+                                                                    className="py-1"
+                                                                    role="menu"
+                                                                    aria-orientation="vertical"
+                                                                    aria-labelledby="dropdownComment1Button"
+                                                                >
+                                                                    <Popconfirm
+                                                                        id="dropdownComment1Button"
+                                                                        placement="topRight"
+                                                                        title="Bạn Muốn Xóa ?"
+                                                                        okText="OK"
+                                                                        cancelText="Cancel"
+                                                                        okButtonProps={{
+                                                                            style: {
+                                                                                backgroundColor: 'red',
+                                                                                color: 'white',
+                                                                            },
+                                                                        }}
+                                                                        onConfirm={() => handleDeleteOrderComment(item?._id!)}
+                                                                    >
+                                                                        <Button type="link">Xóa</Button>
+                                                                    </Popconfirm>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                <div
+                                                    id="dropdownComment1"
+                                                    className="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+                                                >
+                                                    <ul
+                                                        className="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                        aria-labelledby="dropdownMenuIconHorizontalButton"
+                                                    >
+                                                        <li>
+                                                            <a
+                                                                href="#"
+                                                                className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                            >
+                                                                Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="#"
+                                                                className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                            >
+                                                                Remove
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="#"
+                                                                className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                            >
+                                                                Report
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </footer>
+                                            <div>
+                                                <p className="text-gray-800 dark:text-white">{item.text}</p>
+                                            </div>
+                                        </article>
+                                    ))
+                            )}
+                        </div>
                     </div>
                 </section>
             </Spin>
@@ -262,3 +401,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
     );
 };
 export default Comment;
+
+
+
+

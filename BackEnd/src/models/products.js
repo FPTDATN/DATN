@@ -48,6 +48,12 @@ const productSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
+  ordercomments: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'Ordercomments',
+    },
+  ],
   categoryId: {
     type: mongoose.Types.ObjectId,
     ref: "Category",
