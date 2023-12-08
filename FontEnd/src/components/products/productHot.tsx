@@ -46,7 +46,6 @@ const ProductHot: FunctionComponent<ProductItemProps> = ({ product }) => {
         setColor('');
         setSize('');
     };
-    console.log('product', product);
 
     const handleAddToWishlist = async (productId: string, _userId: any) => {
         if (authData) {
