@@ -7,6 +7,7 @@ import { useGetBrandsQuery, useGetColorsQuery } from '@/services/option';
 import ReactPaginate from 'react-paginate';
 import { calculatePagination } from '@/components/modal/pagination';
 import ProductByid from '@/components/products/productBycategory';
+import { log } from 'console';
 
 interface FilterProductsProps { }
 
@@ -14,6 +15,8 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
     const { data: productsData, isLoading } = useGetProductsQuery();
     const { data: categoriesData } = useGetCategoriesQuery();
     const { data: brands } = useGetBrandsQuery();
+    console.log(brands);
+
     const { data: colors } = useGetColorsQuery();
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedBrandId, setSelectedBrandId] = useState<string[]>([]);
@@ -87,7 +90,7 @@ const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
                                 <div className="mt-3 overflow-y-auto max-h-[280px]">
                                     <h1 className='sticky bg-white h-[30px] z-50 top-0 left-0'>Thương hiệu</h1>
                                     <List>
-                                        {brands?.map((brand) => (
+                                        {brands?.docs?.map((brand) => (
                                             <List.Item key={brand._id}>
                                                 <Checkbox onChange={() => handleBrandChange(brand._id)}>{brand.name}</Checkbox>
                                             </List.Item>
