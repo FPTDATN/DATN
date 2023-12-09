@@ -45,11 +45,11 @@ const Discount_code = () => {
      };
      // hàm xóa 
      const columns = [
-          {
-               title: 'Mã code',
-               dataIndex: 'code',
-               key: 'code',
-          },
+          // {
+          //      title: 'Mã code',
+          //      dataIndex: 'code',
+          //      key: 'code',
+          // },
           {
                title: 'Phần trăm giảm giá (%)',
                dataIndex: 'discount',
