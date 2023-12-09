@@ -54,7 +54,7 @@ const ListProductHot: FunctionComponent<ListProductTestProps> = () => {
 
     return (
 
-        <section className="container mx-auto max-w-2xl py-5 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 background__product ">
+        <section className="container mx-auto w-full py-5 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 background__product p-6">
             <h2 className="pb-2 uppercase text-xl font-semibold text-left text-gray-800 md:text-3xl dark:text-gray-400">
                 Top sản phẩm bán chạy
             </h2>
