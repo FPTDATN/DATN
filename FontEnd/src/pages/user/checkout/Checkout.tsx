@@ -104,6 +104,7 @@ const LocationList: React.FC = () => {
             return;
         }
         const foundDiscount = discounts.find((discount) => discount.code === discountCode);
+
         if (foundDiscount) {
             if (discountedTotal < foundDiscount.maxAmount) {
                 alert(`Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`);
@@ -135,8 +136,9 @@ const LocationList: React.FC = () => {
             alert('Mã giảm giá không hợp lệ.');
         }
     };
-    useEffect(() => 
-        {
+    useEffect(() => {
+        if (shouldLog.current) {
+            shouldLog.current = false;
             axios
                 .get('http://localhost:8080/api/discounts')
                 .then((response) => {
@@ -147,16 +149,16 @@ const LocationList: React.FC = () => {
                     if (selectedDiscounts) {
                         // Nếu có danh sách đã lưu, cập nhật state appliedDiscountCode và appliedDiscount
                         const selectedCodes = JSON.parse(selectedDiscounts);
-                        setAppliedDiscountCode(selectedCodes);
+                        setAppliedDiscountCode(selectedCodes.code);
                         setAppliedDiscount(true);
                     }
                 })
                 .catch((error) => {
                     console.error('Error fetching discounts:', error);
                 });
-            // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
-        },[]);
-        console.log(appliedDiscountCode)
+        }
+        // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
+    }, []);
     // Pay method
     const [payMethod, setPayMethod] = useState(0);
     // const [loading, setLoading] = useState(false);
@@ -342,7 +344,7 @@ const LocationList: React.FC = () => {
                                                     <Select.Option key="select" value="" disabled>
                                                         Mời bạn chọn
                                                     </Select.Option>
-                                                    {appliedDiscountCode.map((discount) => (
+                                                    {discounts.map((discount) => (
                                                         <Select.Option key={discount._id} value={discount.code}>
                                                             {`Giảm giá ${discount.discount}%`}
                                                         </Select.Option>
