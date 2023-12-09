@@ -15,6 +15,7 @@ import Hoadon from './print';
 import { Link } from 'react-router-dom';
 import Hoan from './Hoan';
 import { FaAngleDoubleDown } from 'react-icons/fa';
+import axios from 'axios';
 type DataIndex = keyof IOrder;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -94,6 +95,7 @@ const ListOrder: React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [editingKey, setEditingKey] = useState('');
+    const [products, setProducts] = useState<any[]>([]);
 
     //print
     const [showModal, setShowModal] = useState(false);
@@ -125,6 +127,7 @@ const ListOrder: React.FC = () => {
         const filterIsPaidFalse = data?.docs?.filter((order) => order.payMethod === 0 && order.isPaid === true);
         setOrders(filterIsPaidFalse!);
     };
+    
     const [filterStatus, setFilterStatus] = useState<number | null>(null);
 
     const handleFilterByStatus = (status: number) => {
@@ -140,10 +143,43 @@ const ListOrder: React.FC = () => {
     const edit = (record: Partial<IOrder> & { key: string }) => {
         form.setFieldsValue({ status: 0, ...record });
         setEditingKey(record._id!);
+        setProducts(record?.products!);
     };
 
     const cancel = () => {
         setEditingKey('');
+    };
+
+    // Save inStock
+
+    function timeout(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    const makeRequestInStock = async () => {
+        let holder: any = {};
+
+        products?.forEach((d) => {
+            if (holder.hasOwnProperty(d._id)) {
+                holder[d._id] = holder[d._id] + d.quantity;
+            } else {
+                holder[d._id] = d.quantity;
+            }
+        });
+
+        let obj2 = [];
+
+        for (const prop in holder) {
+            obj2.push({ key: prop, value: holder[prop] });
+        }
+
+        await timeout(1000);
+
+        obj2.map(async (obj) => {
+            await axios.patch(`http://localhost:8080/api/products/instock/${obj.key}`, {
+                value: obj.value,
+            });
+        });
     };
 
     const save = async (id: string) => {
@@ -155,6 +191,10 @@ const ListOrder: React.FC = () => {
             await changeOrderStatus({
                 orderId: editingKey,
                 status: Number(row.status) as number,
+            }).then(() => {
+                if (Number(row.status) === Status.SHIPPING) {
+                    return makeRequestInStock();
+                }
             });
 
             message.success('Cập nhật trạng thái đơn hàng thành công');
@@ -288,9 +328,9 @@ const ListOrder: React.FC = () => {
             title: 'Tổng tiền',
             dataIndex: 'total',
             width: '15%',
-            render: (record:number) => {
-                return formartVND(record)
-            }
+            render: (record: number) => {
+                return formartVND(record);
+            },
         },
         {
             title: 'Trạng thái',
