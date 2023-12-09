@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '@/store/hook';
 import { checkAuth } from '@/utils/checkAuth';
 import Loading from '@/components/ui/Loading';
-import { Button, Divider, Form, Input, message } from 'antd';
+import { Button, Divider, Form, Input, Select, message } from 'antd';
 import { formartVND } from '@/utils/formartVND';
 import { reduceTotal } from '@/utils/reduce';
 import axios from 'axios';
@@ -87,13 +87,13 @@ const LocationList: React.FC = () => {
     const shouldLog = useRef(true);
 
     // áp mã giảm giá
-    // Hàm xử lý thay đổi mã giảm giá từ input
+    // Hàm xử lý thay đổi mã giảm giá từ select
     const handleDiscountCodeChange = (value: string) => {
         setDiscountCode(value);
     };
     // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
     const applyDiscount = () => {
-        
+
         if (discountCode.trim() === '') {
             alert('Vui lòng nhập mã giảm giá.');
             return;
@@ -104,7 +104,6 @@ const LocationList: React.FC = () => {
             return;
         }
         const foundDiscount = discounts.find((discount) => discount.code === discountCode);
-        
         if (foundDiscount) {
             if (discountedTotal < foundDiscount.maxAmount) {
                 alert(`Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`);
@@ -136,22 +135,28 @@ const LocationList: React.FC = () => {
             alert('Mã giảm giá không hợp lệ.');
         }
     };
-    useEffect(() => {
-        if (shouldLog.current) {
-            shouldLog.current = false;
+    useEffect(() => 
+        {
             axios
                 .get('http://localhost:8080/api/discounts')
                 .then((response) => {
                     // Lưu danh sách mã giảm giá vào state discounts
                     setDiscounts(response.data.docs);
+                    // Lấy danh sách đã chọn từ localStorage
+                    const selectedDiscounts = localStorage.getItem('selectedDiscounts');
+                    if (selectedDiscounts) {
+                        // Nếu có danh sách đã lưu, cập nhật state appliedDiscountCode và appliedDiscount
+                        const selectedCodes = JSON.parse(selectedDiscounts);
+                        setAppliedDiscountCode(selectedCodes);
+                        setAppliedDiscount(true);
+                    }
                 })
                 .catch((error) => {
                     console.error('Error fetching discounts:', error);
                 });
-        }
-        // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
-    }, []);
-
+            // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
+        },[]);
+        console.log(appliedDiscountCode)
     // Pay method
     const [payMethod, setPayMethod] = useState(0);
     // const [loading, setLoading] = useState(false);
@@ -316,7 +321,7 @@ const LocationList: React.FC = () => {
                                         <Divider />
                                     </div>
                                 ))}
-                                {/* áp mã giảm giá  */}
+
                                 <div className="border-dashed lg:border-0 md:border-0">
                                     <div className="mt-3 text-xl">
                                         <p>
@@ -325,13 +330,26 @@ const LocationList: React.FC = () => {
                                                 : `Tổng: ${formartVND(reduceTotal(cartItems))}`}
                                         </p>
                                     </div>
+                                    {/* áp mã giảm giá  */}
                                     <div className="flex mt-2">
-                                        <input
-                                            type="text"
-                                            className="border w-2/3 lg:w-auto md:w-auto outline-none px-2 py-2"
-                                            placeholder="Mã giảm giá"
-                                            onChange={(e) => handleDiscountCodeChange(e.target.value)}
-                                        />
+                                        <Select className='' onChange={handleDiscountCodeChange} value={discountCode}>
+                                            {discounts.length === 0 ? (
+                                                <Select.Option key="empty" value="">
+                                                    Không có
+                                                </Select.Option>
+                                            ) : (
+                                                <>
+                                                    <Select.Option key="select" value="" disabled>
+                                                        Mời bạn chọn
+                                                    </Select.Option>
+                                                    {appliedDiscountCode.map((discount) => (
+                                                        <Select.Option key={discount._id} value={discount.code}>
+                                                            {`Giảm giá ${discount.discount}%`}
+                                                        </Select.Option>
+                                                    ))}
+                                                </>
+                                            )}
+                                        </Select>
                                         <button
                                             type='button'
                                             className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
@@ -447,3 +465,5 @@ const LocationList: React.FC = () => {
     );
 };
 export default LocationList;
+
+
