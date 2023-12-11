@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import type { RadioChangeEvent } from 'antd';
-import { Radio, Rate, Tabs, message } from 'antd';
+import { Radio, Rate, Tabs } from 'antd';
 import { TabsPosition } from 'antd/es/tabs';
 import RelatedProducts from '@/components/ui/RelatedProduct';
 import Breadcrumbs1 from '@/components/breadcrumbs/index1';
@@ -13,9 +13,10 @@ import { useAppDispatch } from '@/store/hook';
 import { addToCart } from '@/slices/cart';
 import { useMeQuery } from '@/services/auth';
 import Loading from '@/components/ui/Loading';
-import { da } from 'date-fns/locale';
+// import { da } from 'date-fns/locale';
 // import List_discount from '@/components/ui/List_discount';
-import './ProductDetail.css'
+import './ProductDetail.css';
+import { formartVND } from '@/utils/formartVND';
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
@@ -79,23 +80,11 @@ const ProductDetail = () => {
                                     <div className="w-full px-4 md:w-1/2">
                                         <div className="lg:pl-20">
                                             <div className="mb-6 ">
-                                                <span className="px-2.5 py-0.5 text-xs text-blue-600 bg-blue-100 dark:bg-gray-700 rounded-xl dark:text-gray-200">
+                                                <span className="px-2.5 py-0.5 text-xs text-white !bg-primary rounded-xl">
                                                     {data?.categoryId?.name}
                                                 </span>
                                                 <h2 className="max-w-xl mt-6 mb-6 text-xl font-semibold leading-loose tracking-wide text-gray-700 md:text-2xl dark:text-gray-300">
-                                                    {data?.name}{' '}
-                                                    {data?.inStock === 0 ? (
-                                                        <span className="!text-primary"> - (Hết hàng)</span>
-                                                    ) : (
-                                                        <span className="mb-2 text-base font-normal">
-                                                            <span className="">
-                                                                - Hiện còn:{' '}
-                                                                <span className="!text-primary font-semibold">
-                                                                    ({data.inStock})
-                                                                </span>
-                                                            </span>
-                                                        </span>
-                                                    )}
+                                                    {data?.name}
                                                 </h2>
                                                 <div className="flex flex-row items-center mb-6 justify-between">
                                                     <span>
@@ -106,11 +95,10 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
-                                                    <div className=''>
-                                                        <Link to='/code_ma'>
+                                                    <div className="">
+                                                        <Link to="/code_ma">
                                                             <button className="btn__background--one" type="button">
-
-                                                                <dda>Mã giảm giá</dda>
+                                                                <div>Mã giảm giá</div>
                                                                 <div id="container-stars_one">
                                                                     <div id="stars"></div>
                                                                 </div>
@@ -119,17 +107,16 @@ const ProductDetail = () => {
                                                                     <div className="circle"></div>
                                                                     <div className="circle"></div>
                                                                 </div>
-
                                                             </button>
                                                         </Link>
-                                                        
+
                                                         {/* <List_discount/> */}
                                                     </div>
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
-                                                    ${hasSale}
+                                                    {formartVND(hasSale)}
                                                     <span className="ml-3 text-base font-normal text-gray-500 line-through dark:text-gray-400">
-                                                        <span>$.{data?.price}</span>
+                                                        <span>{formartVND(data?.price)}</span>
                                                     </span>
                                                 </p>
                                             </div>
@@ -194,24 +181,18 @@ const ProductDetail = () => {
                                             </div>
                                             <div className="flex gap-4 mb-6">
                                                 <button
-                                                    onClick={() => {
-                                                        if (data.inStock === 0) {
-                                                            message.warning('Sản phẩm đã hết hàng');
-                                                        } else if (data.inStock < quantity) {
-                                                            message.error('Hàng trong kho không đủ');
-                                                        } else {
-                                                            dispatch(
-                                                                addToCart({
-                                                                    ...(data! as any),
-                                                                    price: hasSale,
-                                                                    quantity: quantity,
-                                                                    color: color,
-                                                                    size: size,
-                                                                }),
-                                                            );
-                                                        }
-                                                    }}
-                                                    className="w-full px-4 py-3 text-center text-gray-100 bg-primary/90 border border-transparent dark:border-gray-700 hover:border-primary/95 hover:text-blue-700 hover:bg-blue-100 dark:text-gray-400 dark:bg-gray-700 dark:hover:bg-gray-900 rounded-xl"
+                                                    onClick={() =>
+                                                        dispatch(
+                                                            addToCart({
+                                                                ...(data! as any),
+                                                                price: hasSale,
+                                                                quantity: quantity,
+                                                                color: color,
+                                                                size: size,
+                                                            }),
+                                                        )
+                                                    }
+                                                    className="w-full px-4 py-3 text-center text-gray-100 bg-primary/95 hover:opacity-80 rounded-sm"
                                                 >
                                                     Thêm Vào Giỏ Hàng
                                                 </button>
