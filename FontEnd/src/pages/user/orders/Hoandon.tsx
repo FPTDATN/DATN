@@ -203,8 +203,8 @@ const Hoandon: React.FC = () => {
 
             <div className="flex justify-between mt-20">
               <div className="ml-auto">
-                <div className="mr-10">Số tiền hoàn nhận được: ₫ {orderDetail.total}</div>
-                <div className="">
+                {/* <div className="mr-10">Số tiền hoàn nhận được: ₫ {orderDetail.total}</div> */}
+                <div className="pr-36 mb-11">
 
                   
                     <Button type="primary" className='mt-12'  onClick={handleRefund}>
