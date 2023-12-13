@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Modal, Popconfirm, Space } from 'antd';
+import { Button, Input, Modal, Popconfirm, Space, Table } from 'antd';
 import { SearchProps } from 'antd/es/input';
 import { useGetDiscountsQuery, useDeleteDiscountsMutation } from '@/services/discount'
 import Skeleton from 'react-loading-skeleton';
@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 import { DatePicker } from 'antd';
+
+import { formartVND } from '@/utils/formartVND';
 
 const ListSale = () => {
   const { Search } = Input;
@@ -30,7 +32,7 @@ const ListSale = () => {
   const [selectedDiscount, setSelectedDiscountId] = useState('');
   const [mutate] = useDeleteDiscountsMutation();
   const handleSearch: SearchProps['onSearch'] = (value) => {
-    setSearchValue(value);
+    setSearchValue(value.toLowerCase()); // Chuyển đổi giá trị tìm kiếm về chữ thường
   };
   const handleDelete = async (id: string) => {
     try {
@@ -60,26 +62,69 @@ const ListSale = () => {
     setOpenUpdateModal(false);
   };
 
-  // limit
-  const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 5; // Số sản phẩm hiển thị trên mỗi trang
-  const DiscountList = data?.docs.filter(category => category.code.includes(searchValue)) || [];
-  const paginationOptions = {
-    currentPage,
-    perPage,
-    totalCount: DiscountList.length,
-    data: DiscountList,
-  };
+  const DiscountList = data?.docs.filter(category => category.code.toLowerCase().includes(searchValue)) || [];
+  // Định nghĩa cấu trúc cột của bảng và cho phép sắp xếp
+  const columns = [
+    {
+      title: 'Code Mã',
+      dataIndex: 'code',
+      key: 'code',
+      sorter: (a, b) => a.code.localeCompare(b.code),
+    },
+    
+    {
+      title: 'Giá trị giảm giá(%)',
+      dataIndex: 'discount',
+      key: 'discount',
+      sorter: (a, b) => a.discount - b.discount,
+    },
+    {
+      title: 'Số lượng ',
+      dataIndex: 'count',
+      key: 'count',
+    },
+    {
+      title: ' Đơn hàng >= số tiền (VND)  ',
+      dataIndex: 'maxAmount',
+      key: 'maxAmount',
+      render: (text) => formartVND(text), // Use the formartVND function here
+    },
+    {
+      title: 'Thời Gian tạo',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+      render: (text) => new Date(text).toLocaleDateString(),
+    },
+    {
+      title: 'Thời Gian kết thúc',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      sorter: (a, b) => new Date(a.endDate) - new Date(b.endDate),
+      render: (text) => new Date(text).toLocaleDateString(),
+    },
+    {
+      title: 'Thao tác',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="small">
+          <Button  className='bg-gree' type="dashed" onClick={() => handleUpdatediscount(record._id)}>
+            Update
+          </Button>
+          <Popconfirm
+            placement="topRight"
+            title="Bạn Muốn Xóa ?"
+            okText="OK"
+            cancelText="Cancel"
+            onConfirm={() => handleDelete(record._id)}
+          >
+            <Button className='bg-reds ' type="link">Delete</Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
 
-  const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
-
-  const handlePageChange = (selectedPage: any) => {
-    setCurrentPage(selectedPage.selected);
-  };
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(); // Chuyển đổi thành chuỗi ngày/tháng/năm
-  };
   return (
     <>
       <div className="relative overflow-x-auto">
@@ -99,109 +144,17 @@ const ListSale = () => {
           </div>
         </div>
 
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="pl-6 text-xs font-medium py-3">
-                code Mã
-              </th>
-              <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Giá trị giảm giá(%)
-              </th>
-              <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Giá tối thiểu(VND)
-              </th>
-              <th scope="col" className="pl-6 text-xs font-medium py-3">
-                Số lượng
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Thời Gian tạo
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Thời Gian kết thúc
-              </th>
-              <th scope="col" className="text-center text-xs font-medium py-3">
-                Thao tác
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={7}>
-                  <Skeleton count={3} className="h-[98px]" />
-                </td>
-              </tr>
-            ) : (
-              <>
-                {currentPageItems?.map((discount) => (
-                  <tr
-                    key={discount._id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  >
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.code}
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.discount}%
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.maxAmount}
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {discount.count}
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {formatDate(discount.startDate)}
-                    </td>
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-primary pl-6 text-reds">
-                      {formatDate(discount.endDate)}
-                    </td>
-                    <td className="py-4 flex items-center justify-center">
-                      <Space size="small">
-                        <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdatediscount(discount._id)}>
-                          Update
-                        </Button>
-                        <Popconfirm
-                          placement="topRight"
-                          title="Bạn Muốn Xóa ?"
-                          okText="OK"
-                          cancelText="Cancel"
-                          okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
-                          onConfirm={() => handleDelete(discount._id)}
-                        >
-                          <Button type="link" className='bg-reds text-layer'>Delete</Button>
-                        </Popconfirm>
-                      </Space>
-                    </td>
-                  </tr>
-                ))}
-              </>
-            )}
-          </tbody>
-          <div className='mt-4 d-flex justify-content-start align-items-start'>
-            <ReactPaginate
-              previousLabel={'Quay lại'}
-              nextLabel={'Tiếp theo'}
-              breakLabel={'...'}
-              pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageChange}
-              containerClassName={'pagination flex justify-center gap-1 text-xs font-medium'}
-              activeClassName={'block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-blue-500'}
-              pageClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
-              previousClassName={'inline-flex  w-[60px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
-              nextClassName={'inline-flex  w-[70px] h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180'}
-              previousLinkClassName={'h-8 p-1 leading-6 '}
-              nextLinkClassName={'h-8 p-1 leading-6 '}
-              breakClassName={'block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900'}
-            />
-          </div>
-
-        </table>
-
-
+        <Table
+          dataSource={DiscountList}
+          columns={columns}
+          loading={isLoading}
+          rowKey="_id"
+          pagination={{ pageSize: 5 }}
+          onChange={(pagination, filters, sorter) => {
+            // Xử lý sự kiện sắp xếp ở đây
+            console.log(sorter);
+          }}
+        />
         <Modal title="Thêm mã giảm giá" centered open={openAddModal} onCancel={handleModalClose} footer={null}>
           <AddSale handleModalClose={handleModalClose} />
         </Modal>
@@ -220,4 +173,5 @@ const ListSale = () => {
     </>
   );
 }
-export default ListSale
+
+export default ListSale;

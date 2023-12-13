@@ -15,6 +15,7 @@ import Hoadon from './print';
 import { Link } from 'react-router-dom';
 import Hoan from './Hoan';
 import { FaAngleDoubleDown } from 'react-icons/fa';
+import axios from 'axios';
 type DataIndex = keyof IOrder;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -105,6 +106,7 @@ const ListOrder: React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [editingKey, setEditingKey] = useState('');
+    const [products, setProducts] = useState<any[]>([]);
 
     //print
     const [showModal, setShowModal] = useState(false);
@@ -136,6 +138,7 @@ const ListOrder: React.FC = () => {
         const filterIsPaidFalse = data?.docs?.filter((order) => order.payMethod === 0 && order.isPaid === true);
         setOrders(filterIsPaidFalse!);
     };
+
     const [filterStatus, setFilterStatus] = useState<number | null>(null);
 
     const handleFilterByStatus = (status: number) => {
@@ -151,10 +154,43 @@ const ListOrder: React.FC = () => {
     const edit = (record: Partial<IOrder> & { key: string }) => {
         form.setFieldsValue({ status: 0, ...record });
         setEditingKey(record._id!);
+        setProducts(record?.products!);
     };
 
     const cancel = () => {
         setEditingKey('');
+    };
+
+    // Save inStock
+
+    function timeout(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    const makeRequestInStock = async () => {
+        let holder: any = {};
+
+        products?.forEach((d) => {
+            if (holder.hasOwnProperty(d._id)) {
+                holder[d._id] = holder[d._id] + d.quantity;
+            } else {
+                holder[d._id] = d.quantity;
+            }
+        });
+
+        let obj2 = [];
+
+        for (const prop in holder) {
+            obj2.push({ key: prop, value: holder[prop] });
+        }
+
+        await timeout(1000);
+
+        obj2.map(async (obj) => {
+            await axios.patch(`http://localhost:8080/api/products/instock/${obj.key}`, {
+                value: obj.value,
+            });
+        });
     };
 
     const save = async (id: string) => {
@@ -166,6 +202,10 @@ const ListOrder: React.FC = () => {
             await changeOrderStatus({
                 orderId: editingKey,
                 status: Number(row.status) as number,
+            }).then(() => {
+                if (Number(row.status) === Status.SHIPPING) {
+                    return makeRequestInStock();
+                }
             });
 
             message.success('Cập nhật trạng thái đơn hàng thành công');
@@ -264,7 +304,9 @@ const ListOrder: React.FC = () => {
                 </Space>
             </div>
         ),
-        filterIcon: (filtered: boolean) => <AiOutlineSearch style={{ color: filtered ? '#1677ff' : undefined }} />,
+        filterIcon: (filtered: boolean) => (
+            <AiOutlineSearch style={{ fontSize: 20, color: filtered ? '#1677ff' : undefined }} />
+        ),
         onFilter: (value, record) =>
             record[dataIndex]
                 .toString()
@@ -296,12 +338,14 @@ const ListOrder: React.FC = () => {
             ...getColumnSearchProps('fullName'),
         },
         {
-            title: 'Tổng tiền',
-            dataIndex: 'total',
+            title: 'Số điện thoại',
+            dataIndex: 'phone',
             width: '15%',
-            render: (record: number) => {
-                return formartVND(record)
-            }
+
+            render: (phone: number) => {
+                return <span>0{phone}</span>;
+            },
+            ...getColumnSearchProps('phone'),
         },
         {
             title: 'Trạng thái',
@@ -530,66 +574,113 @@ const ListOrder: React.FC = () => {
                             rowKey={'_id'}
                             expandable={{
                                 columnWidth: '3%',
-                                expandIcon: () => <FaAngleDoubleDown />,
-                                expandRowByClick: true,
-                                expandedRowRender: (record) => (
-                                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th></th>
-                                                <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                    Tên đơn hàng
-                                                </th>
-                                                <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                    Màu
-                                                </th>
-                                                <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                    Size
-                                                </th>
-                                                <th scope="col" className="text-left px-6 text-xs font-medium py-3">
-                                                    Số lượng
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        {isLoading ? (
-                                            <tbody>
-                                                <tr>
-                                                    <td colSpan={7}>
-                                                        <Skeleton count={3} className="h-[98px]" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        ) : (
-                                            <tbody>
-                                                {record?.products.map((product: any, index) => (
-                                                    <tr key={index}>
-                                                        <td className="text-center bg-gray-100 shadow-sm">
-                                                            <Image
-                                                                width={55}
-                                                                height={55}
-                                                                src={product.images![index]}
-                                                                preview
-                                                            />
-                                                        </td>
-                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                            {product?.name}
-                                                        </td>
-                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                            {product?.color}
-                                                        </td>
-                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                            {product?.size}
-                                                        </td>
-                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                            {product?.quantity}
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        )}
-                                    </table>
+                                expandIcon: ({ onExpand, record }) => (
+                                    <button onClick={(e:any) => onExpand(record, e)} ><FaAngleDoubleDown /></button>
                                 ),
+                                expandedRowRender: (record) => {
+                                    return (
+                                        <div>
+                                            <div className="space-y-2">
+                                                <h1>
+                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                        Tên khách hàng:
+                                                    </span>{' '}
+                                                    <span className="text-base font-semibold">{record.fullName}</span>
+                                                </h1>
+                                                <p>
+                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                        Số điện thoại:
+                                                    </span>{' '}
+                                                    <span className="text-base font-semibold">0{record.phone}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                        Địa chỉ:
+                                                    </span>{' '}
+                                                    <span className="text-base font-semibold">{record.shipping}</span>
+                                                </p>
+                                                <p>
+                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                        Trạng thái đơn hàng:
+                                                    </span>{' '}
+                                                    <span className="text-base font-semibold">
+                                                        {renderState(record.status)}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                        Tổng số tiền:
+                                                    </span>{' '}
+                                                    <span className="text-base font-semibold !text-primary">
+                                                        {formartVND(record.total)}
+                                                    </span>
+                                                </p>
+                                            </div>
+
+                                            <h1 className="mt-4 text-base font-semibold">Đơn hàng: </h1>
+
+                                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                            Tên đơn hàng
+                                                        </th>
+                                                        <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                            Màu
+                                                        </th>
+                                                        <th scope="col" className="px-6 text-xs font-medium py-3">
+                                                            Size
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            className="text-left px-6 text-xs font-medium py-3"
+                                                        >
+                                                            Số lượng
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                                {isLoading ? (
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colSpan={7}>
+                                                                <Skeleton count={3} className="h-[98px]" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                ) : (
+                                                    <tbody>
+                                                        {record?.products.map((product: any, index) => (
+                                                            <tr key={index}>
+                                                                <td className="text-center bg-gray-100 shadow-sm">
+                                                                    <Image
+                                                                        width={55}
+                                                                        height={55}
+                                                                        src={product.images![index]}
+                                                                        preview
+                                                                    />
+                                                                </td>
+                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                    {product?.name}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                    {product?.color}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                    {product?.size}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                    {product?.quantity}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                )}
+                                            </table>
+                                        </div>
+                                    );
+                                },
                             }}
                         />
                     </Form>

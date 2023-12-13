@@ -96,7 +96,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
                 });
                 const { exists } = (response as any)?.data;
                 setIsInWishlist(exists);
-            } catch (error) { }
+            } catch (error) {}
         };
 
         if (authData) {
@@ -185,16 +185,12 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
 
                                     <button
                                         onClick={() => {
-                                            if (color.length > 0 && size.length > 0) {
+                                            if (color?.length > 0 && size?.length > 0) {
                                                 setColor('');
                                                 setSize('');
                                                 handleClose();
 
-                                                if (product?.inStock === 0) {
-                                                    message.warning('Sản phẩm đã hết hàng');
-                                                } else {
-                                                    dispatch(addToCart({ ...product, quantity: 1, color, size }));
-                                                }
+                                                dispatch(addToCart({ ...product, quantity: 1, color, size }));
                                             } else {
                                                 message.info('Hãy hoàn tất lựa chọn của bạn');
                                             }
@@ -209,20 +205,23 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
                     </div>
 
                     <div className="py-6 text-left">
-                        <h3 className="text-left mt-0 h-[50px] text-sm lg:text-base line-clamp-2 font-normal">
+                        <h3 className="text-left mt-0 text-sm lg:text-base line-clamp-2 font-normal">
                             <Link to={`/detail/${product?._id!}`}>{product?.name}</Link>
                         </h3>
-                        <p className="my-3 text-lg font-medium text-left text-gray-600">
-                            <span className="text-red-500 dark:text-gray-300 text-xs lg:text-xl">
-                                {formartVND(hasSale)}
-                            </span>
-                            {product?.sale_off! > 0 && (
-                                <span className="ml-2 text-gray-400 line-through ttext-xs lg:text-xl">
+                        <p className="my-3 flex justify-center flex-wrap text-lg font-medium">
+                            {product?.sale_off! > 0 ? (
+                                <>
+                                    <span className="!text-primary">{formartVND(hasSale)}</span>
+                                    <span className="ml-2 text-gray-400 line-through text-sm lg:text-xl">
+                                        {formartVND(product?.price!)}
+                                    </span>
+                                </>
+                            ) : (
+                                <span className="ml-2 !text-primary text-sm lg:text-xl">
                                     {formartVND(product?.price!)}
                                 </span>
                             )}
                         </p>
-
                     </div>
                 </div>
             )}

@@ -55,6 +55,7 @@ const UpdateUser: React.FC = () => {
                         name="username"
                         initialValue={userData?.data.username}
                         rules={[{ required: true, message: 'Please input your username!' }]}
+                        hidden
                     >
                         <Input />
                     </Form.Item>
@@ -63,6 +64,7 @@ const UpdateUser: React.FC = () => {
                         name="email"
                         initialValue={userData?.data.email}
                         rules={[{ required: true, message: 'Please input your Email!' }]}
+                        hidden
                     >
                         <Input />
                     </Form.Item>
@@ -71,6 +73,7 @@ const UpdateUser: React.FC = () => {
                         name="password"
                         initialValue={userData?.data.password}
                         rules={[{ required: true, message: 'Please input your password!' }]}
+                        hidden
                     >
                         <Input.Password />
                     </Form.Item>

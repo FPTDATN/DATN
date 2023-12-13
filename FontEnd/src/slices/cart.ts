@@ -27,26 +27,26 @@ const cartSlice = createSlice({
                 
                 state.cartItems.push({
                     ...newProduct,
-                    color: newProduct.color,
-                    size: newProduct.size,
+                    color: newProduct?.color,
+                    size: newProduct?.size,
                     quantity: newProduct.quantity || 1,
                 });
                 message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
             } else {
 
-                if (existingProduct.color === newProduct.color || existingProduct.size !== newProduct.size) {
+                if (existingProduct.color === newProduct?.color || existingProduct?.size !== newProduct?.size) {
                     state.cartItems.push({
                         ...newProduct,
-                        color: newProduct.color,
-                        size: newProduct.size,
+                        color: newProduct?.color,
+                        size: newProduct?.size,
                         quantity: newProduct.quantity || 1,
                     });
                     message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
-                } else if (existingProduct.color !== newProduct.color || existingProduct.size === newProduct.size) {
+                } else if (existingProduct?.color !== newProduct?.color || existingProduct?.size === newProduct?.size) {
                     state.cartItems.push({
                         ...newProduct,
-                        color: newProduct.color,
-                        size: newProduct.size,
+                        color: newProduct?.color,
+                        size: newProduct?.size,
                         quantity: newProduct.quantity || 1,
                     });
                     message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
