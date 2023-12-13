@@ -2,7 +2,14 @@ import Color from "../models/color.js";
 import joi from "joi";
 
 const colordSchema = joi.object({
-  name: joi.string().required("name là trương dữ liệu bắt buộc"),
+  name: joi.string()
+    .required("name là trường dữ liệu bắt buộc")
+    .custom((value, helpers) => {
+      if (!/^[\p{Lu}Đ][\p{L}\s]*$/u.test(value)) {
+        return helpers.message('Tên phải bắt đầu bằng chữ cái viết hoa');
+      }
+      return value;
+    }),
 });
 
 export const create = async (req, res) => {

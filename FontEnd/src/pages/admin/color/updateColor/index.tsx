@@ -36,6 +36,15 @@ const UpdateColor: React.FC<{ id: string; handleUpdateComplete: () => void }> = 
     }
   }, [color]);
 
+
+  const validateName = (_: any, value: string) => {
+    const firstCharacter = value.charAt(0);
+    if (!/^[A-ZĐ]/.test(firstCharacter)) {
+      return Promise.reject('Tên phải bắt đầu bằng chữ cái viết hoa');
+    }
+    return Promise.resolve();
+  };
+
   return (
     <>
       {isColorLoading ? (
@@ -48,7 +57,7 @@ const UpdateColor: React.FC<{ id: string; handleUpdateComplete: () => void }> = 
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
         >
-          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên Color' }]}>
+          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên Color' },{ validator: validateName },]}>
             <Input />
           </Form.Item>
           

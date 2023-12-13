@@ -28,6 +28,14 @@ const AddSize: React.FC<AddSizeProps> = ({ handleModalClose }) => {
     }
   };
 
+  const validateName = (_: any, value: string) => {
+    const uppercaseValue = value.toUpperCase();
+    if (value !== uppercaseValue) {
+      return Promise.reject('Size phải viết hoa');
+    }
+    return Promise.resolve();
+  };
+
   return (
     <>
       <Form
@@ -43,6 +51,7 @@ const AddSize: React.FC<AddSizeProps> = ({ handleModalClose }) => {
           name="name"
           rules={[
             { required: true, message: 'Vui lòng nhập tên size' },
+            { validator: validateName },
           ]}
         >
           <Input placeholder="Tên Size" />

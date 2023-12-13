@@ -36,6 +36,14 @@ const UpdateSize: React.FC<{ sizeId: string; handleUpdateComplete: () => void }>
     }
   }, [size]);
 
+  const validateName = (_: any, value: string) => {
+    const uppercaseValue = value.toUpperCase();
+    if (value !== uppercaseValue) {
+      return Promise.reject('Size phải viết hoa');
+    }
+    return Promise.resolve();
+  };
+
   return (
     <>
       {isSizeLoading ? (
@@ -48,7 +56,7 @@ const UpdateSize: React.FC<{ sizeId: string; handleUpdateComplete: () => void }>
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
         >
-          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên Size' }]}>
+          <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên Size' },{ validator: validateName },]}>
             <Input />
           </Form.Item>
           
