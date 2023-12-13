@@ -15,8 +15,8 @@ const ListUser: React.FC = () => {
     const { RangePicker } = DatePicker;
 
     const { data: userData, isLoading: userLoading } = useGetAllUserQuery({
-        startDate: '',
-        endDate: '',
+        startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+        endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
 
     })
     const [searchValue, setSearchValue] = useState('');
@@ -41,11 +41,6 @@ const ListUser: React.FC = () => {
             auth.email?.toLowerCase().includes(searchValue.toLowerCase())) &&
         (filterRole ? auth.role?.toLowerCase() === filterRole.toLowerCase() : true)
     ) || [];
-
-
-
-
-
 
     const paginationOptions = {
         currentPage,
