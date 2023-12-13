@@ -10,13 +10,24 @@ import ReactPaginate from 'react-paginate';
 import { useDeleteBrandMutation, useGetBrandsQuery } from '@/services/brand';
 import AddBrand from '../addtrademark';
 import UpdateBrand from '../updatetrademark';
-
+import { DatePicker } from 'antd';
 
 
 
 const Listbrand = () => {
+  const [dateRange, setDateRange] = useState([null, null]);
+
   const { Search } = Input;
-  const { data, isLoading } = useGetBrandsQuery();
+  const { data, isLoading } = useGetBrandsQuery({
+    startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+    endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+  });
+  const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+    setDateRange(dates);
+  };
+  const { RangePicker } = DatePicker;
+
   const [searchValue, setSearchValue] = useState('');
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -57,7 +68,7 @@ const Listbrand = () => {
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
+  const perPage = 5; // Số sản phẩm hiển thị trên mỗi trang
   const brandList = data?.docs.filter(brand => brand.name && brand.name.toLowerCase().includes(searchValue.toLowerCase())) || [];
 
   const paginationOptions = {
@@ -72,10 +83,11 @@ const Listbrand = () => {
   const handlePageChange = (selectedPage: any) => {
     setCurrentPage(selectedPage.selected);
   };
+
   return (
     <>
       <div className="relative overflow-x-auto">
-        <div className="pb-4 bg-white dark:bg-gray-900 flex">
+        <div className="pb-4 bg-white dark:bg-gray-900 flex p-3">
           <div>
             <Space direction="vertical">
               <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
@@ -86,7 +98,11 @@ const Listbrand = () => {
               Thêm Brand
             </Button>
           </div>
+          <div className="flex-grow text-right">
+            <RangePicker onChange={handleDateRangeChange} />
+          </div>
         </div>
+
 
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -94,7 +110,7 @@ const Listbrand = () => {
               <th scope="col" className="pl-6 text-xs font-medium py-3">
                 Tên brand
               </th>
-             
+
               <th scope="col" className="text-center text-xs font-medium py-3">
                 Thao tác
               </th>
@@ -117,7 +133,7 @@ const Listbrand = () => {
                     <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
                       {brand.name}
                     </td>
-                    
+
                     <td className="py-4 flex items-center justify-center">
                       <Space size="small">
                         <Button type="dashed" className='bg-gree text-layer' onClick={() => handleUpdateSize(brand._id)}>

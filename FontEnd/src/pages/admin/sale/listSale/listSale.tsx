@@ -7,11 +7,25 @@ import UpdateSale from '../updateSale/updateSale';
 import AddSale from '../addSale/index';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { calculatePagination } from '@/components/modal/pagination';
+import ReactPaginate from 'react-paginate';
+import { DatePicker } from 'antd';
+
 import { formartVND } from '@/utils/formartVND';
 
 const ListSale = () => {
   const { Search } = Input;
-  const { data, isLoading } = useGetDiscountsQuery();
+  const [dateRange, setDateRange] = useState([null, null]);
+
+  const { data, isLoading } = useGetDiscountsQuery({
+    startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+    endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+  });
+  const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+    setDateRange(dates);
+  };
+  const { RangePicker } = DatePicker;
   const [searchValue, setSearchValue] = useState('');
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -114,7 +128,7 @@ const ListSale = () => {
   return (
     <>
       <div className="relative overflow-x-auto">
-        <div className="pb-4 bg-white dark:bg-gray-900 flex">
+        <div className="pb-4 bg-white dark:bg-gray-900 flex p-3">
           <div>
             <Space direction="vertical">
               <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
@@ -125,7 +139,11 @@ const ListSale = () => {
               Thêm mã giảm giá
             </Button>
           </div>
+          <div className="flex-grow text-right">
+            <RangePicker onChange={handleDateRangeChange} />
+          </div>
         </div>
+
         <Table
           dataSource={DiscountList}
           columns={columns}

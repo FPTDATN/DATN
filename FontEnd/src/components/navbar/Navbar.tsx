@@ -8,10 +8,10 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useGetCategoriesQuery } from '@/services/category';
 import WishlistItemsLength from '../modal/wishlistItemsLength ';
 
-interface NavbarProps {}
+interface NavbarProps { }
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
-    const { data } = useGetCategoriesQuery();
+    const { data } = useGetCategoriesQuery({ startDate: '', endDate: '' });
     const [openAbsolute, setOpenAbsolute] = useState(false);
     const [open, setOpen] = useState(false);
     const showDrawer = () => {

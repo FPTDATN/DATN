@@ -9,11 +9,23 @@ import ReactPaginate from 'react-paginate';
 import { useGetAllSizeQuery, useRemoveSizeMutation } from '@/services/size';
 import AddSize from '../addSize';
 import UpdateSize from '../updateSize';
+import { DatePicker } from 'antd';
 
 
 const ListSize = () => {
   const { Search } = Input;
-  const { data, isLoading } = useGetAllSizeQuery();
+  const [dateRange, setDateRange] = useState([null, null]);
+
+  const { data, isLoading } = useGetAllSizeQuery({
+    startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+    endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+  });
+  const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+    setDateRange(dates);
+  };
+  const { RangePicker } = DatePicker;
+
   const [searchValue, setSearchValue] = useState('');
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -54,7 +66,7 @@ const ListSize = () => {
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 2; // Số sản phẩm hiển thị trên mỗi trang
+  const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang
   const sizeList = data?.docs.filter(size => size.name.includes(searchValue)) || [];
 
   const paginationOptions = {
@@ -72,7 +84,7 @@ const ListSize = () => {
   return (
     <>
       <div className="relative overflow-x-auto">
-        <div className="pb-4 bg-white dark:bg-gray-900 flex">
+        <div className="pb-4 bg-white dark:bg-gray-900 flex p-3">
           <div>
             <Space direction="vertical">
               <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
@@ -82,6 +94,9 @@ const ListSize = () => {
             <Button type="primary" className='bg-primary' onClick={handleAddSize}>
               Thêm Size
             </Button>
+          </div>
+          <div className="flex-grow text-right">
+            <RangePicker onChange={handleDateRangeChange} />
           </div>
         </div>
 
@@ -176,7 +191,7 @@ const ListSize = () => {
         >
           {selectedSizeId && <UpdateSize sizeId={selectedSizeId} handleUpdateComplete={handleUpdateComplete} />}
         </Modal>
-        
+
       </div>
       <ToastContainer />
     </>

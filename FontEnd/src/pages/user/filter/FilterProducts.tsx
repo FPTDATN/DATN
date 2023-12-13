@@ -12,8 +12,8 @@ import { log } from 'console';
 interface FilterProductsProps { }
 
 const FilterProducts: FunctionComponent<FilterProductsProps> = () => {
-    const { data: productsData, isLoading } = useGetProductsQuery();
-    const { data: categoriesData } = useGetCategoriesQuery();
+    const { data: productsData, isLoading } = useGetProductsQuery({ startDate: '', endDate: '' });
+    const { data: categoriesData } = useGetCategoriesQuery({ startDate: '', endDate: '' });
     const { data: brands } = useGetBrandsQuery();
     console.log(brands);
 

@@ -23,13 +23,13 @@ export interface PaginatedBrand {
     prevPage: null;
     totalDocs: number;
     totalPages: number;
-   
+
 }
 
 export interface BrandType {
     _id: string;
     name: string;
-   
+
 }
 const brandApi = createApi({
     reducerPath: 'brand',
@@ -42,8 +42,15 @@ const brandApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getBrands: builder.query<PaginatedBrand, void>({
-            query: () => '/brand',
+        getBrands: builder.query<PaginatedBrand, { startDate?: string; endDate?: string }>({
+            query: ({ startDate, endDate }) => ({
+                url: '/brand',
+                method: 'GET',
+                params: {
+                    startDate,
+                    endDate,
+                },
+            }),
             providesTags: ['Brand'],
         }),
         getBrandId: builder.query<TBrand, string>({
@@ -85,5 +92,5 @@ const brandApi = createApi({
     }),
 });
 
-export const {useCreateBrandMutation, useDeleteBrandMutation ,useUpdateBrandMutation, useGetBrandIdQuery, useGetBrandsQuery, useGetProductsByCategoryAndBrandQuery } = brandApi;
+export const { useCreateBrandMutation, useDeleteBrandMutation, useUpdateBrandMutation, useGetBrandIdQuery, useGetBrandsQuery, useGetProductsByCategoryAndBrandQuery } = brandApi;
 export default brandApi;

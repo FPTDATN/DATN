@@ -22,8 +22,15 @@ const discountApi = createApi({
     }),
     endpoints: (builder) => ({
         //lay tat ca
-        getDiscounts: builder.query<PaginatedDiscount, void>({
-            query: () => '/discounts',
+        getDiscounts: builder.query<PaginatedDiscount, { startDate?: string; endDate?: string }>({
+            query: ({ startDate, endDate }) => ({
+                url: '/discounts',
+                method: 'GET',
+                params: {
+                    startDate,
+                    endDate,
+                },
+            }),
             providesTags: ['Discount'],
         }),
         // lay ra 1
@@ -60,12 +67,12 @@ const discountApi = createApi({
         //
         applyDiscount: builder.mutation<IDiscount, string>({
             query: (discountId) => ({
-              url: `/discounts/count/${discountId}`, // Đường dẫn mới cho việc áp dụng mã giảm giá
-              method: 'POST', // Sử dụng phương thức POST để áp dụng mã
+                url: `/discounts/count/${discountId}`, // Đường dẫn mới cho việc áp dụng mã giảm giá
+                method: 'POST', // Sử dụng phương thức POST để áp dụng mã
             }),
             invalidatesTags: ['Discount'], // Cập nhật lại cache khi có thay đổi
-          }),
-        
+        }),
+
     }),
 });
 export const {

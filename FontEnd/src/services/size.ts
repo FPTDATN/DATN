@@ -37,8 +37,15 @@ const sizeApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getAllSize: builder.query<PaginatedSize, void>({
-            query: () => 'size',
+        getAllSize: builder.query<PaginatedSize, { startDate?: string; endDate?: string }>({
+            query: ({ startDate, endDate }) => ({
+                url: '/size',
+                method: 'GET',
+                params: {
+                    startDate,
+                    endDate,
+                },
+            }),
             providesTags: ['Size'],
         }),
         getByIdSize: builder.query<ISize, string>({

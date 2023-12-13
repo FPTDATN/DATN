@@ -40,6 +40,8 @@ export const getAll = async (req, res) => {
     _sort = "createAt",
     _order = "asc",
     _page = 1,
+    startDate,
+    endDate,
   } = req.query;
 
   const options = {
@@ -49,8 +51,15 @@ export const getAll = async (req, res) => {
       [_sort]: _order === "desc" ? -1 : 1,
     },
   };
+  const filter = {};
+  if (startDate && endDate) {
+    filter.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  }
   try {
-    const data = await Color.paginate({}, options);
+    const data = await Color.paginate(filter, options);
     if (data.length === 0) {
       return res.status(201).json({
         message: "Không có dữ liệu",

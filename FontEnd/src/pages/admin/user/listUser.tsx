@@ -7,11 +7,23 @@ import Loading from '@/components/ui/Loading';
 import { useState } from 'react';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
+import { DatePicker } from 'antd';
 
 const { Option } = Select;
 const ListUser: React.FC = () => {
+    const [dateRange, setDateRange] = useState([null, null]);
 
-    const { data: userData, isLoading: userLoading } = useGetAllUserQuery()
+    const { data: userData, isLoading: userLoading } = useGetAllUserQuery({
+        startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+        endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+    });
+    const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+        setDateRange(dates);
+    };
+    const { RangePicker } = DatePicker;
+    const [deleteUser] = useRemoveUserMutation();
+
     const [searchValue, setSearchValue] = useState('');
 
     const { Search } = Input;
@@ -58,6 +70,13 @@ const ListUser: React.FC = () => {
                 <Loading />
             ) : (
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900 p-3">
+                        <div>
+                            <div className="flex-grow text-right">
+                                <RangePicker onChange={handleDateRangeChange} />
+                            </div>
+
+                        </div>
                     <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900">
                         <Select
                             placeholder="Chọn chức vụ"
@@ -71,23 +90,7 @@ const ListUser: React.FC = () => {
                         </Select>
                         <label className="sr-only">Search</label>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg
-                                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                    />
-                                </svg>
-                            </div>
+
                             <Space direction="vertical">
                                 <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
                             </Space>

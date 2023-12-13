@@ -86,9 +86,20 @@ const EditableCell: React.FC<EditableCellProps> = ({
         </td>
     );
 };
+import { DatePicker } from 'antd';
 
 const ListOrder: React.FC = () => {
-    const { data, isLoading } = useGetsOrderQuery();
+    const [dateRange, setDateRange] = useState([null, null]);
+
+    const { data, isLoading } = useGetsOrderQuery({
+        startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+        endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+    });
+    const { RangePicker } = DatePicker;
+    const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+        setDateRange(dates);
+    };
     const [changeOrderStatus] = useUpdateOrderStatusMutation();
     const [form] = Form.useForm();
 
@@ -330,6 +341,7 @@ const ListOrder: React.FC = () => {
             title: 'Số điện thoại',
             dataIndex: 'phone',
             width: '15%',
+
             render: (phone: number) => {
                 return <span>0{phone}</span>;
             },
@@ -523,7 +535,7 @@ const ListOrder: React.FC = () => {
                 <Loading />
             ) : (
                 <>
-                    <div className="flex gap-x-2 mb-4">
+                    <div className="flex gap-x-2 mb-4 p-3">
                         <Button
                             type="primary"
                             ghost
@@ -541,6 +553,10 @@ const ListOrder: React.FC = () => {
                             <Option value={Status.CANCELLED}>Đã hủy</Option>
                             <Option value={Status.HOAN}>Hàng Hoàn</Option>
                         </Select>
+
+                        <div className="flex-grow text-right">
+                            <RangePicker onChange={handleDateRangeChange} />
+                        </div>
                     </div>
 
                     <Form form={form} component={false}>

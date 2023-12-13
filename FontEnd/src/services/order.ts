@@ -20,10 +20,10 @@ export type IdType = {
   updatedAt: Date;
   email: string;
   Iuser: Iuser[]
-  order:IOrder[],
-  LydoHoandon:string;
-  Motahoandon:string,
-  Emaill:string,
+  order: IOrder[],
+  LydoHoandon: string;
+  Motahoandon: string,
+  Emaill: string,
 }
 
 
@@ -69,8 +69,15 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
-    getsOrder: builder.query<PaginatedOrder, void>({
-      query: () => '/order',
+    getsOrder: builder.query<PaginatedOrder, { startDate?: string; endDate?: string }>({
+      query: ({ startDate, endDate }) => ({
+        url: '/order',
+        method: 'GET',
+        params: {
+          startDate,
+          endDate,
+        },
+      }),
       providesTags: ['Order'],
     }),
     getProductById: builder.query<IOrder, string>({
@@ -107,7 +114,7 @@ const orderApi = createApi({
     }),
   }),
 })
-export const {useReturnOrderMutation,  useGetOrderByIdQuery, useGetsOrderQuery,
+export const { useReturnOrderMutation, useGetOrderByIdQuery, useGetsOrderQuery,
   useGetProductByIdQuery,
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,

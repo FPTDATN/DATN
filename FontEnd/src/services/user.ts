@@ -26,8 +26,15 @@ const userApi = createApi({
             }),
             providesTags: ['User'],
         }),
-        getAllUser: builder.query<PaginatedUser, void>({
-            query: () => '/User',
+        getAllUser: builder.query<PaginatedUser, { startDate?: string; endDate?: string }>({
+            query: ({ startDate, endDate }) => ({
+                url: '/User',
+                method: 'GET',
+                params: {
+                    startDate,
+                    endDate,
+                },
+            }),
             providesTags: ['User'],
         }),
         getUserById: builder.query<ExtendUser, string>({
@@ -42,7 +49,7 @@ const userApi = createApi({
             }),
             invalidatesTags: ['User']
         }),
-        avatar: builder.mutation<ExtendUser, {_id:string,avatar:string}>({
+        avatar: builder.mutation<ExtendUser, { _id: string, avatar: string }>({
             query: (user) => ({
                 method: 'PUT',
                 url: `/user/${user._id}`,
@@ -60,5 +67,5 @@ const userApi = createApi({
     }),
 });
 
-export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation, useGetAccountQuery,useAvatarMutation } = userApi;
+export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation, useGetAccountQuery, useAvatarMutation } = userApi;
 export default userApi;

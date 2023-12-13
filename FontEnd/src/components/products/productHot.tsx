@@ -46,7 +46,6 @@ const ProductHot: FunctionComponent<ProductItemProps> = ({ product }) => {
         setColor('');
         setSize('');
     };
-    console.log('product', product);
 
     const handleAddToWishlist = async (productId: string, _userId: any) => {
         if (authData) {
@@ -138,7 +137,7 @@ const ProductHot: FunctionComponent<ProductItemProps> = ({ product }) => {
                                     <AiOutlineHeart />
                                 </div>
                             )}
-                            
+
                         </div>
                         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                             <Link to={`/detail/${product?._id}`} className="">

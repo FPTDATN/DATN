@@ -3,6 +3,8 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
+
   },
   price: {
     type: Number,

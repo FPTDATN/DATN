@@ -80,6 +80,8 @@ export const getOrders = async (req, res) => {
     _sort = "createdAt",
     _order = "asc",
     _page = 1,
+    startDate,
+    endDate,
   } = req.query;
 
   const options = {
@@ -89,8 +91,15 @@ export const getOrders = async (req, res) => {
       [_sort]: _order === "desc" ? -1 : 1,
     },
   };
+  const filter = {};
+  if (startDate && endDate) {
+    filter.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  }
   try {
-    const data = await Order.paginate({}, options);
+    const data = await Order.paginate(filter, options);
 
     if (data.docs.length === 0) {
       return res.status(200).json({

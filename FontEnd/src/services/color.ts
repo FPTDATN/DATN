@@ -37,8 +37,15 @@ const colorApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getAllColor: builder.query<PaginatedColor, void>({
-            query: () => '/color',
+        getAllColor: builder.query<PaginatedColor, { startDate?: string; endDate?: string }>({
+            query: ({ startDate, endDate }) => ({
+                url: '/color',
+                method: 'GET',
+                params: {
+                    startDate,
+                    endDate,
+                },
+            }),
             providesTags: ['Color'],
         }),
         getByIdColor: builder.query<IColor, string>({
