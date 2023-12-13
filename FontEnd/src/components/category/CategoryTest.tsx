@@ -3,7 +3,12 @@ import { useGetCategoriesQuery } from "@/services/category";
 import "./CategoryTest.css"
 
 const CategoryTest = () => {
-    const { data: categories, isLoading } = useGetCategoriesQuery();
+    const { data: categories, isLoading } = useGetCategoriesQuery(
+        {
+            startDate: '',
+            endDate: '',
+        }
+    );
     const [displayedItems, setDisplayedItems] = useState(4);
     const [isExpanded, setIsExpanded] = useState(false);
 
