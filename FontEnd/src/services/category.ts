@@ -7,7 +7,7 @@ import { ProductType } from '@/types/Product';
 export type TCategory = {
     _id: string;
     name: string;
-    img:string;
+    img: string;
     createdAt: string;
     updateAt: string;
     products: ProductType[];
@@ -24,8 +24,15 @@ const categoryApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getCategories: builder.query<PaginatedCategory, void>({
-            query: () => '/categories',
+        getCategories: builder.query<PaginatedCategory, { startDate?: string; endDate?: string }>({
+            query: ({ startDate, endDate }) => ({
+                url: '/categories',
+                method: 'GET',
+                params: {
+                    startDate,
+                    endDate,
+                },
+            }),
             providesTags: ['Category'],
         }),
         getCatgoryById: builder.query<TCategory, string>({

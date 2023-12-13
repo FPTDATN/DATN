@@ -35,4 +35,5 @@ export const signinSchema = joi.object({
         "string.min": "Mật khẩu phải có ít nhất {#limit} ký tự",
         "any.require": "Trường mật khẩu là bắt buộc",
     }),
+
 });

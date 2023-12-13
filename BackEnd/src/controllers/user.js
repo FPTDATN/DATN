@@ -5,7 +5,7 @@ export const update = async (req, res) => {
 
     try {
 
-        const { password, username, email, avatar,role } = req.body;
+        const { password, username, email, avatar, role } = req.body;
 
         const user = await Auth.findOne({ _id: req.params.id })
 
@@ -14,7 +14,7 @@ export const update = async (req, res) => {
         }
 
         if (password === '') {
-            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, avatar,role }, {
+            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, avatar, role }, {
                 new: true,
             });
 
@@ -22,14 +22,14 @@ export const update = async (req, res) => {
         } else if (password.length > 0) {
             const hashPassword = await bcryptjs.hash(password, 10)
 
-            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, password: hashPassword, avatar,role }, {
+            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, password: hashPassword, avatar, role }, {
                 new: true,
             });
 
             return res.status(200).json({ success: true })
         }
 
-        const newUser = await user.save({ username, password, avatar,role })
+        const newUser = await user.save({ username, password, avatar, role })
 
         return res.status(200).json(newUser)
 
@@ -109,6 +109,8 @@ export const getAll = async (req, res) => {
         _sort = "createAt",
         _order = "asc",
         _page = 1,
+        startDate,
+        endDate,
     } = req.query;
 
     const options = {
@@ -118,8 +120,15 @@ export const getAll = async (req, res) => {
             [_sort]: _order === "desc" ? -1 : 1,
         },
     };
+    const filter = {};
+    if (startDate && endDate) {
+        filter.createdAt = {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate),
+        };
+    }
     try {
-        const data = await Auth.paginate({}, options);
+        const data = await Auth.paginate(filter, options);
         if (data.length === 0) {
             return res.status(200).json({
                 message: "Không có dữ liệu",

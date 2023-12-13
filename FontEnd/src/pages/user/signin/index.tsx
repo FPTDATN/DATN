@@ -10,6 +10,7 @@ import { checkAuth } from '@/utils/checkAuth';
 import { toast } from 'react-toastify';
 import { checkEditor } from '@/utils/checkEditor';
 import { checkAdmin } from '@/utils/checkAdmin';
+import { log } from 'console';
 
 
 const { Text } = Typography;
@@ -17,10 +18,11 @@ const Signin = () => {
     const router = useNavigate();
 
     const { data: authData, isLoading: authLoading } = checkAuth();
-    const { data: authAdmin} = checkAdmin();
+    const { data: authAdmin } = checkAdmin();
     const { data: authEditor } = checkEditor();
 
     const [signin, { isLoading, isError, error, isSuccess }] = useSigninMutation();
+
 
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>('');
 
@@ -41,31 +43,18 @@ const Signin = () => {
                 toast.success('Đăng nhập thành công', { position: 'top-right' });
                 if (authEditor?.role === "editor") {
                     setTimeout(() => router('/editor'), 2000)
-                } else  if (authAdmin?.role === "admin") {
+                } else if (authAdmin?.role === "admin") {
                     setTimeout(() => router('/admin'), 2000)
                 } else {
                     setTimeout(() => router('/'), 2000)
                 }
+            } else {
+
             }
         }
 
-    }, [authData, isSuccess, authEditor ,authAdmin]);
+    }, [authData, isSuccess, authEditor, authAdmin]);
 
-
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         toast.success('Đăng nhập thành công', { position: 'top-right' });
-    //         setTimeout(() => router('/'), 4000);
-    //     } else {
-    //         return;
-    //     }
-    // }, [isSuccess]);
-
-    // useEffect(() => {
-    //     if (authData) {
-    //         return router('/');
-    //     }
-    // }, [authData]);
 
     return (
         <>

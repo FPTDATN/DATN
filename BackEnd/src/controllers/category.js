@@ -8,6 +8,8 @@ export const getAllCategory = async (req, res) => {
     _sort = "createdAt",
     _order = "asc",
     _page = 1,
+    startDate,
+    endDate,
   } = req.query;
 
   const options = {
@@ -17,9 +19,15 @@ export const getAllCategory = async (req, res) => {
       [_sort]: _order === "desc" ? -1 : 1,
     },
   };
-
+  const filter = {};
+  if (startDate && endDate) {
+    filter.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  }
   try {
-    const data = await Category.paginate({}, options);
+    const data = await Category.paginate(filter, options);
     if (data.length === 0) {
       return res.status(200).json({
         message: "Không có dữ liệu",
@@ -98,12 +106,30 @@ export const updateCategory = async (req, res) => {
 
 export const removeCategory = async (req, res) => {
   try {
-    const cate = await Category.findOneAndDelete({ _id: req.params.id });
+    const categoryId = req.params.id;
+
+    const isCategoryEmpty = await Category.findOne({ _id: categoryId, products: { $exists: true, $ne: [] } });
+
+    if (isCategoryEmpty) {
+      return res.status(400).json({
+        message: "Không thể xóa danh mục vì nó chưa sản phẩm.",
+      });
+    }
+
+    const deletedCategory = await Category.findOneAndDelete({ _id: categoryId });
+
+    if (!deletedCategory) {
+      return res.status(404).json({
+        message: "Không tìm thấy danh mục để xóa",
+      });
+    }
+
     return res.json({
       message: "Xóa danh mục thành công",
     });
+
   } catch (error) {
-    return res.status(404).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

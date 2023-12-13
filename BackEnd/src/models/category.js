@@ -5,6 +5,8 @@ const categorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
+
     },
     img: [
       {
@@ -12,7 +14,7 @@ const categorySchema = new mongoose.Schema(
       }
     ],
     thumbnail: {
-      type:String
+      type: String
     },
     products: [
       {

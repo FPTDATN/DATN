@@ -5,7 +5,7 @@ import { useGetCategoriesQuery } from '@/services/category';
 import { toast } from 'react-toastify';
 import { useCreateProductMutation } from '@/services/product';
 import { ProductType } from '@/types/Product';
-import {  useGetColorsQuery, useGetSizesQuery } from '@/services/option';
+import { useGetColorsQuery, useGetSizesQuery } from '@/services/option';
 import UploadFileServer from '@/components/uploads/UploadFile';
 import { useGetBrandsQuery } from '@/services/brand';
 
@@ -22,12 +22,12 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
 
     const [mutateCreateProduct] = useCreateProductMutation();
     const [form] = Form.useForm();
-    const { data: categories } = useGetCategoriesQuery();
+    const { data: categories } = useGetCategoriesQuery({ startDate: '', endDate: '' });
     const [isLoading, setIsLoading] = useState(false);
 
     const { data: colors } = useGetColorsQuery();
     const { data: sizes } = useGetSizesQuery();
-    const { data: brands } = useGetBrandsQuery();
+    const { data: brands } = useGetBrandsQuery({ startDate: '', endDate: '' });
 
     const onFinish = async (values: any) => {
         try {
@@ -47,7 +47,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
             setIsLoading(false);
         }
     };
-    
+
     return (
         <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} layout="horizontal" onFinish={onFinish}>
             <Form.Item label="Form Size" name="size">
@@ -130,7 +130,7 @@ const AddProduct = ({ handleModalClose }: AddProductProps) => {
                 </Checkbox.Group>
             </Form.Item>
 
-     
+
             <Form.Item
                 label="Thương hiệu"
                 name="brandId"

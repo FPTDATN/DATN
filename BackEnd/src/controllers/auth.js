@@ -59,11 +59,16 @@ export const signup = async (req, res) => {
         });
     }
 };
+const maxLoginAttempts = 3;
+// const baseLockoutDuration = 5 *60* 1000; // 5 phút
+
+const baseLockoutDuration = 5 * 1000; // 5 s để test cho nhanh
 
 export const signin = async (req, res) => {
     try {
         const { usernameOrEmail, password } = req.body;
         const { error } = signinSchema.validate(req.body, { abortEarly: false });
+
         if (error) {
             return res.status(400).json({
                 message: error.details.map((err) => err.message),
@@ -84,12 +89,53 @@ export const signin = async (req, res) => {
             });
         }
 
-        const isMatch = await bcrypt.compare(password, auth.password);
-        if (!isMatch) {
-            return res.status(400).json({
-                message: "Mật khẩu không đúng",
+        const attemptsLeft = maxLoginAttempts - (auth.loginAttempts || 0);
+
+        // Kiểm tra thời gian khóa
+        if (auth.lockedUntil && auth.lockedUntil > new Date()) {
+            const remainingTime = Math.ceil((auth.lockedUntil - new Date()) / 1000);
+
+            return res.status(403).json({
+                message: `Tài khoản đã bị khóa do bạn đã nhập sai nhiều lần. Vui lòng thử lại sau ${remainingTime} giây.`,
+                attemptsLeft: 0,
+                lockedUntil: auth.lockedUntil,
             });
         }
+
+        const isMatch = await bcrypt.compare(password, auth.password);
+
+        if (!isMatch) {
+            auth.loginAttempts = (auth.loginAttempts || 0) + 1;
+
+            if (auth.loginAttempts >= maxLoginAttempts) {
+                const timeSinceLastAttempt = new Date() - auth.lastFailedAttempt;
+
+                // Nếu đã nhập sai 5 lần và vẫn nhập sai sau thời gian khóa
+                if (timeSinceLastAttempt >= baseLockoutDuration) {
+                    auth.lockedUntil = new Date(Date.now() + baseLockoutDuration);
+                } else {
+                    const lockoutDuration = baseLockoutDuration * Math.pow(2, auth.loginAttempts - maxLoginAttempts);
+                    auth.lockedUntil = new Date(Date.now() + lockoutDuration);
+                }
+            }
+
+            auth.lastFailedAttempt = new Date();
+
+            await auth.save();
+
+            const attemptsLeft = maxLoginAttempts - auth.loginAttempts;
+
+            return res.status(400).json({
+                message: "Mật khẩu không đúng",
+                attemptsLeft,
+            });
+        }
+
+        // Đăng nhập thành công, reset số lần thử đăng nhập
+        auth.loginAttempts = 0;
+        auth.lastFailedAttempt = null;
+
+        await auth.save();
 
         const token = jwt.sign({ id: auth._id }, "123456", { expiresIn: "1d" });
 
@@ -97,8 +143,6 @@ export const signin = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
             httpOnly: true,
         });
-
-        auth.password = undefined;
 
         req.session.userId = auth.id;
         req.session.accessToken = token;
@@ -114,6 +158,8 @@ export const signin = async (req, res) => {
         });
     }
 };
+
+
 
 export const logout = (req, res) => {
     return new Promise((resolve, _reject) => {
@@ -177,6 +223,6 @@ export const changePassword = async (req, res) => {
         return res.status(201).json({ success: true });
 
     } catch (error) {
-        return res.status(400).json({message: error.message})
+        return res.status(400).json({ message: error.message })
     }
 }

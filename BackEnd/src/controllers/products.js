@@ -7,10 +7,12 @@ import Order from "../models/order.js";
 
 export const getAll = async (req, res) => {
   const {
-    _limit = 155,
+    _limit = 999,
     _sort = "createdAt",
     _order = "desc",
     _page = 1,
+    startDate,
+    endDate,
   } = req.query;
 
   const options = {
@@ -21,8 +23,15 @@ export const getAll = async (req, res) => {
     },
     populate: ['categoryId', 'colorId', 'sizeId', 'brandId']
   };
+  const filter = {};
+  if (startDate && endDate) {
+    filter.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  }
   try {
-    const data = await Products.paginate({}, options);
+    const data = await Products.paginate(filter, options);
     if (data.length === 0) {
       return res.status(200).json({
         message: "Không có dữ liệu",
@@ -70,19 +79,61 @@ export const create = async (req, res) => {
   }
 };
 
+const isProductInAnyOrder = async (product) => {
+
+  const orderCount = await Order.countDocuments({ "products._id": product });
+  return orderCount > 0;
+};
 export const remove = async (req, res) => {
   try {
-    const products = await Products.findByIdAndDelete({ _id: req.params.id });
+    // Bước 1: Lấy thông tin sản phẩm
+    const product = await Products.findById(req.params.id);
+
+    // Kiểm tra xem sản phẩm có trong đơn hàng hay không
+
+    const isProductInOrder = await isProductInAnyOrder(req.params.id);
+
+    // Nếu sản phẩm có trong đơn hàng, không cho phép xóa
+    if (isProductInOrder) {
+      return res.status(403).json({
+        message: "Không thể xóa sản phẩm vì nó có trong đơn hàng",
+      });
+    }
+
+    // Bước 2: Xóa sản phẩm từ danh mục
+    if (product && product.categoryId) {
+      await Category.updateOne(
+        { _id: product.categoryId },
+        { $pull: { products: product._id } }
+      );
+    }
+    if (product && product.brandId) {
+      await Brand.updateOne(
+        { _id: product.brandId },
+        { $pull: { products: product._id } }
+      );
+    }
+    // Bước 3: Xóa sản phẩm từ bảng sản phẩm
+    const deletedProduct = await Products.findByIdAndDelete(req.params.id);
+
+    // Kiểm tra xem sản phẩm có tồn tại hay không
+    if (!deletedProduct) {
+      return res.status(404).json({
+        message: "Không tìm thấy sản phẩm để xóa",
+      });
+    }
+
+    // Bước 4: Trả về kết quả thành công
     return res.status(200).json({
-      message: "Xóa sản phẩm thành công",
+      message: "Xóa sản phẩm và cập nhật ở các mục thành công",
     });
-  } catch (errors) {
+  } catch (error) {
+    console.error("Error deleting product:", error);
     return res.status(500).json({
-      message: errors,
+      message: "Có lỗi xảy ra khi xóa sản phẩm",
     });
   }
 };
-
 export const getById = async (req, res) => {
   try {
     const products = await Products.findById(req.params.id).populate(['categoryId', 'comments', 'colorId', 'brandId', 'sizeId']);

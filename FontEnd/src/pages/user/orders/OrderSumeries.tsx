@@ -14,15 +14,15 @@ import { Link } from 'react-router-dom';
 import Modal from 'antd/es/modal/Modal';
 import Hoandon from './Hoandon';
 import TextArea from 'antd/es/input/TextArea';
-import { useAddOrderCommentMutation   } from '@/services/ordercomments';
+import { useAddOrderCommentMutation } from '@/services/ordercomments';
 import { toast } from 'react-toastify';
 
 const { Panel } = Collapse;
 
 type Props = {};
 
-const OrderSumeries = ({}: Props) => {
-    const { data: orders, isLoading } = useGetsOrderQuery();
+const OrderSumeries = ({ }: Props) => {
+    const { data: orders, isLoading } = useGetsOrderQuery({ startDate: '', endDate: '' });
     const { data: authdata } = checkAuth();
     const [createOrderComment, { isError, isLoading: isCreatingComment }] = useAddOrderCommentMutation();
     const [text, setText] = useState('');
@@ -76,8 +76,8 @@ const OrderSumeries = ({}: Props) => {
             setLoading(true);
             await createOrderComment({
                 text,
-                userId:authdata?._id,
-                orderId:filterOrders![0]._id,
+                userId: authdata?._id,
+                orderId: filterOrders![0]._id,
                 productId: filterOrders![0].products[0]._id,
             });
             toast.success('Đánh giá đơn hàng thành công')
@@ -89,9 +89,9 @@ const OrderSumeries = ({}: Props) => {
         }
     };
 
-    
 
-    const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true  );
+
+    const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true);
 
     return (
         <div className="min-h-screen">
@@ -207,7 +207,7 @@ const OrderSumeries = ({}: Props) => {
                                                                             className="inline-flex items-center  mr-4 py-2 px-4 bg-blue-600 text-white rounded-md focus:ring-4 focus:ring-blue-200"
                                                                             disabled={isCreatingComment || text.trim() === ''}
                                                                         >
-                                                                           {isCreatingComment ? 'Đang đăng...' : 'Đánh giá sản phẩm'} <Spin spinning={loading} ></Spin>
+                                                                            {isCreatingComment ? 'Đang đăng...' : 'Đánh giá sản phẩm'} <Spin spinning={loading} ></Spin>
                                                                         </button>
                                                                     </form>
                                                                 </div>
@@ -216,11 +216,11 @@ const OrderSumeries = ({}: Props) => {
                                                         </div>
                                                     ) : (
                                                         <div className="flex space-x-4 mt-4">
-                                                           
+
                                                             <Button type="dashed" className='bg-gray-300 text-layer' disabled>
-                                                                            Hoàn đơn
-                                                                        </Button>
-                                                          
+                                                                Hoàn đơn
+                                                            </Button>
+
                                                         </div>
                                                     )}
                                                 </p>
@@ -232,7 +232,7 @@ const OrderSumeries = ({}: Props) => {
                                                             title: 'Thông tin khách hàng',
                                                             status:
                                                                 order.status >= Status.INFORMATION ? 'finish' : 'wait',
-                                                            icon: <BsPersonVcardFill className="!text-primary"/>,
+                                                            icon: <BsPersonVcardFill className="!text-primary" />,
                                                         },
                                                         {
                                                             title: 'Xác nhận đơn hàng',
@@ -240,12 +240,12 @@ const OrderSumeries = ({}: Props) => {
                                                                 order.status >= Status.ORDER_CONFIRM
                                                                     ? 'finish'
                                                                     : 'wait',
-                                                            icon: <BsDropbox className="!text-primary"/>,
+                                                            icon: <BsDropbox className="!text-primary" />,
                                                         },
                                                         {
                                                             title: 'Đang giao hàng',
                                                             status: order.status >= Status.SHIPPING ? 'finish' : 'wait',
-                                                            icon: <FaShippingFast className="!text-primary"/>,
+                                                            icon: <FaShippingFast className="!text-primary" />,
                                                         },
                                                         {
                                                             title: order.status === 0 ? 'Đã hủy' : 'Hoàn thành',
@@ -253,15 +253,15 @@ const OrderSumeries = ({}: Props) => {
                                                                 order.status === Status.COMPLETE
                                                                     ? 'finish'
                                                                     : order.status === Status.CANCELLED
-                                                                    ? 'error'
-                                                                    : 'wait',
+                                                                        ? 'error'
+                                                                        : 'wait',
                                                             icon:
                                                                 order.status === Status.COMPLETE ? (
-                                                                    <BsCheckCircleFill className="!text-green-500"/>
+                                                                    <BsCheckCircleFill className="!text-green-500" />
                                                                 ) : Status.CANCELLED ? (
                                                                     <MdSmsFailed />
                                                                 ) : (
-                                                                    <BsCheckCircleFill/>
+                                                                    <BsCheckCircleFill />
                                                                 ),
                                                         },
                                                     ]}

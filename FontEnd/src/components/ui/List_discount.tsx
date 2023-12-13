@@ -9,7 +9,7 @@ import "./List_discount.css"
 import { Link } from 'react-router-dom';
 
 const List_discount = () => {
-    const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
+    const { data: discountsData, isLoading, isError } = useGetDiscountsQuery({ startDate: '', endDate: '' });
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
 
     const [applyDiscountMutation] = useApplyDiscountMutation();
@@ -50,8 +50,8 @@ const List_discount = () => {
     }
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString(); 
-      };
+        return date.toLocaleDateString();
+    };
     return (
         <div>
             {discountsData ? (
@@ -71,25 +71,25 @@ const List_discount = () => {
                                     <div className="circle"></div>
                                     <div className="circle"></div>
                                 </div>
-                                
+
                             </button>
                         </Link>
-                        
-                    
+
+
                     </div>
-                    
+
                     {discountsData.docs.length > 0 ? (
                         <div className='grid grid-cols-4 gap-4 rounded-md'>
-                        {discountsData.docs.map((discount) => (
-                            <div className='back__box--test' key={discount._id}>
-                                <button className='' onClick={() => addSale(discount)}>
-                                    <p className=''>Giá trị giảm giá: {discount.discount}%</p>
-                                    <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
-                                    <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                            {discountsData.docs.map((discount) => (
+                                <div className='back__box--test' key={discount._id}>
+                                    <button className='' onClick={() => addSale(discount)}>
+                                        <p className=''>Giá trị giảm giá: {discount.discount}%</p>
+                                        <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
+                                        <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     ) : (
                         <div>  Không có mã giảm giá </div>
                     )}

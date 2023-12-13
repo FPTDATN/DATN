@@ -63,8 +63,6 @@ const ListProductHot: FunctionComponent<ListProductTestProps> = () => {
                 <Slider ref={sliderRef} {...settings} initialSlide={currentSlide}>
                     {products?.data.map((product) => (
                         <ProductHot key={product._id} product={product._id} />
-
-
                     ))}
                 </Slider>
                 <div className="absolute top-0 right-0 flex justify-between items-center mt-4 mr-4">

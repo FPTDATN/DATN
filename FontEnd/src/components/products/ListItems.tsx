@@ -11,7 +11,10 @@ interface ListProductItemsProps {
 }
 
 const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading }) => {
-    const { data: dataProduct, isLoading } = useGetProductsQuery();
+    const { data: dataProduct, isLoading } = useGetProductsQuery({
+        startDate: '',
+        endDate: '',
+    });
     //limit
     const [currentPage, setCurrentPage] = useState(0);
     const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang

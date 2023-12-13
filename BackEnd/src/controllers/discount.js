@@ -26,6 +26,8 @@ export const getAllDiscount = async (req, res) => {
         _sort = "createAt",
         _order = "asc",
         _page = 1,
+        startDate,
+        endDate,
     } = req.query;
 
     const options = {
@@ -35,9 +37,16 @@ export const getAllDiscount = async (req, res) => {
             [_sort]: _order === 1,
         },
     };
+    const filter = {};
+    if (startDate && endDate) {
+        filter.createdAt = {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate),
+        };
+    }
 
     try {
-        const data = await Discount.paginate({}, options);
+        const data = await Discount.paginate(filter, options);
         if (data.length === 0) {
             return res.status(200).json({
                 message: "Không có dữ liệu",

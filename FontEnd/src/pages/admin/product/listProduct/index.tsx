@@ -11,9 +11,19 @@ import { Link } from 'react-router-dom';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 import { formartVND } from '@/utils/formartVND';
+import { DatePicker } from 'antd';
+import { log } from 'console';
 
 const ListProduct: React.FC = () => {
-    const { data, isLoading } = useGetProductsQuery();
+    const [dateRange, setDateRange] = useState([null, null]);
+    const { RangePicker } = DatePicker;
+
+    const { data, isLoading } = useGetProductsQuery({
+        startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+        endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+
+    }
+    );
     const { Search } = Input;
 
     const [openAdd, setOpenAdd] = useState(false);
@@ -48,12 +58,21 @@ const ListProduct: React.FC = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await mutate(id);
-            toast.success('Xóa thành công');
+            const result = await mutate(id);
+
+            // Kiểm tra dữ liệu trả về từ server
+            if (result) {
+                // Xử lý lỗi khi xóa dữ liệu
+                toast.warning(result.error.data.message);
+            } else {
+                toast.success('Xóa không thành công');
+            }
         } catch (error) {
-            toast.error('Xóa không thành công');
+            toast.success('Xóa thành công');
         }
     };
+
+
     useEffect(() => {
         if (searchValue) {
             const filtered = data?.docs.filter((product) =>
@@ -82,11 +101,14 @@ const ListProduct: React.FC = () => {
         setCurrentPage(selectedPage.selected);
     };
 
-    
+    const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+        setDateRange(dates);
+    };
     return (
         <>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <div className="pb-4 bg-white dark:bg-gray-900 flex">
+                <div className="pb-4 bg-white dark:bg-gray-900 flex p-3">
                     <div className="pr-4">
                         <Space direction="vertical">
                             <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
@@ -95,6 +117,9 @@ const ListProduct: React.FC = () => {
                     <Button type="primary" className="bg-primary" onClick={handleAddModalOpen}>
                         Add Product
                     </Button>
+                    <div className="flex-grow text-right">
+                        <RangePicker onChange={handleDateRangeChange} />
+                    </div>
                 </div>
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
