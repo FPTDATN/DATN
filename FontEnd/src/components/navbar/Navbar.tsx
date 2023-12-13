@@ -104,12 +104,12 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                 className="h-[75px]"
                                 style={{ lineHeight: '75px', display: 'flex', alignItems: 'center' }}
                             >
-                                <a
-                                    href=""
+                                <Link
+                                    to={'/code_ma'}
                                     className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400 block"
                                 >
-                                    About
-                                </a>
+                                    Giảm giá
+                                </Link>
                             </li>
                         </ul>
                         <div className="items-center justify-end hidden lg:flex">

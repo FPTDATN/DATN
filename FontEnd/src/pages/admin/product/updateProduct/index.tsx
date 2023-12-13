@@ -20,10 +20,20 @@ const UpdateProduct: React.FC<{ productId: string; handleUpdateProduct: () => vo
     const { TextArea } = Input;
     const [form] = Form.useForm();
 
-    const { data: categoryData } = useGetCategoriesQuery();
+    const { data: categoryData } = useGetCategoriesQuery(
+        {
+            startDate: '',
+            endDate: '',
+        }
+    );
     const { data: colors } = useGetColorsQuery();
     const { data: sizes } = useGetSizesQuery();
-    const { data: branddata } = useGetBrandsQuery();
+    const { data: branddata } = useGetBrandsQuery(
+        {
+            startDate: '',
+            endDate: '',
+        }
+    );
     const brands = branddata?.docs || [];
     const categories = categoryData?.docs || [];
     const [isLoading, setIsLoading] = useState(false);

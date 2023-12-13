@@ -7,7 +7,7 @@ import { useGetProductsQuery, useDeleteProductMutation } from '@/services/produc
 import Skeleton from 'react-loading-skeleton';
 import { SearchProps } from 'antd/es/input';
 import { ProductType } from '@/types/Product';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 import { formartVND } from '@/utils/formartVND';
@@ -206,11 +206,11 @@ const ListProduct: React.FC = () => {
                                                 </Button>
                                             </Popconfirm>
 
-                                            <Button type="primary" className="bg-primary">
+                                            {/* <Button type="primary" className="bg-primary">
                                                 <Link to={`${product._id}/comments`} className="bg-primary">
                                                     Comment
                                                 </Link>
-                                            </Button>
+                                            </Button> */}
                                         </Space>
                                     </td>
                                 </tr>

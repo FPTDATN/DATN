@@ -277,13 +277,13 @@ const LocationList: React.FC = () => {
                             <StyleInput />
                         </Form.Item>
 
-                        <Form.Item
+                        {/* <Form.Item
                             rules={[{ required: true, message: 'Bắt buộc' }]}
                             label={'Địa chỉ 2'}
                             name={'address2'}
                         >
                             <StyleInput />
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item rules={[{ required: true, message: 'Bắt buộc' }]} label={'Thành phố'} name={'city'}>
                             <StyleInput />

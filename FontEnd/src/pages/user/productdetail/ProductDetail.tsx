@@ -233,8 +233,11 @@ const ProductDetail = () => {
             <div className="p-4 mx-auto">
                 <RelatedProducts categoryId={myCategoryId} />
             </div>
-            <div className="p-4 mx-auto">
-                <Comment comments={data?.comments!} userId={authData?._id} productId={data?._id} />
+            <div className="mx-auto p-4">
+                {/* <Comment comments={data?.comments!} userId={authData?._id} productId={data?._id} /> */}
+                <div className="list-group-item">
+                    <div className="d-inline-block font-weight-medium text-uppercase">Đánh giá đơn hàng</div>
+                </div>
             </div>
         </section>
     );
