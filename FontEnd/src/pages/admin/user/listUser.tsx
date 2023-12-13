@@ -1,46 +1,44 @@
-import { Button, Input, Modal, Space } from 'antd';
+import { Button, Input, Modal, Select, Space } from 'antd';
 import { SearchProps } from 'antd/es/input';
 import UpdateUser from './updateUser';
-import { useGetAllUserQuery, useRemoveUserMutation } from '@/services/user';
+import { useGetAllUserQuery } from '@/services/user';
 import { Link, } from 'react-router-dom';
 import Loading from '@/components/ui/Loading';
 import { useState } from 'react';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 
+const { Option } = Select;
 const ListUser: React.FC = () => {
 
-    const { data: userData, isLoading: userLoading } = useGetAllUserQuery();
-    const [deleteUser] = useRemoveUserMutation();
+    const { data: userData, isLoading: userLoading } = useGetAllUserQuery()
+    const [searchValue, setSearchValue] = useState('');
 
     const { Search } = Input;
-    const { confirm } = Modal;
     const [open, setOpen] = useState(false);
 
     const onShow = () => {
         setOpen(true);
     };
 
-    const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
-    const showDeleteConfirm = (id: string) => {
-        confirm({
-            title: 'Bạn có chắc muốn xóa tài khoản này không?',
-            content: 'Tài khoản se xóa vĩnh viễn nếu bạn tiếp tục .',
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk: async () => {
-                await deleteUser(id);
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-        });
+    const handleSearch: SearchProps['onSearch'] = (value) => {
+        setSearchValue(value);
     };
+    const [filterRole, setFilterRole] = useState('');
     // limit
     const [currentPage, setCurrentPage] = useState(0);
     const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
-    const categoryList = userData?.docs || [];
+
+    const categoryList = userData?.docs.filter(auth =>
+        (auth.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+            auth.email?.toLowerCase().includes(searchValue.toLowerCase())) &&
+        (filterRole ? auth.role?.toLowerCase() === filterRole.toLowerCase() : true)
+    ) || [];
+
+
+
+
+
 
     const paginationOptions = {
         currentPage,
@@ -61,74 +59,16 @@ const ListUser: React.FC = () => {
             ) : (
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900">
-                        <div>
-                            <button
-                                id="dropdownActionButton"
-                                data-dropdown-toggle="dropdownAction"
-                                className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                                type="button"
-                            >
-                                <span className="sr-only">Action button</span>
-                                Action
-                                <svg
-                                    className="w-2.5 h-2.5 ml-2.5"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 10 6"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m1 1 4 4 4-4"
-                                    />
-                                </svg>
-                            </button>
-                            <div
-                                id="dropdownAction"
-                                className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-                            >
-                                <ul
-                                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="dropdownActionButton"
-                                >
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >
-                                            Reward
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >
-                                            Promote
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >
-                                            Activate account
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div className="py-1">
-                                    <a
-                                        href="#"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                    >
-                                        Delete User
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <Select
+                            placeholder="Chọn chức vụ"
+                            onChange={value => setFilterRole(value)}
+                            style={{ width: 200 }}
+                        >
+                            <Option value="">Tất cả</Option>
+                            <Option value="admin">Admin</Option>
+                            <Option value="member">Member</Option>
+                            <Option value="editor">Edittor</Option>
+                        </Select>
                         <label className="sr-only">Search</label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -149,8 +89,8 @@ const ListUser: React.FC = () => {
                                 </svg>
                             </div>
                             <Space direction="vertical">
-                                <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
-                            </Space>{' '}
+                                <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
+                            </Space>
                         </div>
                     </div>
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -202,12 +142,6 @@ const ListUser: React.FC = () => {
                                                 Cập nhật
                                             </Button>
                                         </Link>
-
-                                        <Space wrap className="ml-2 rounded-md">
-                                            <Button onClick={() => showDeleteConfirm(user._id)} type="dashed" className='bg-reds text-layer'>
-                                                Delete
-                                            </Button>
-                                        </Space>
                                     </td>
                                 </tr>
                             ))}

@@ -1,8 +1,17 @@
 import Size from "../models/size.js";
 import joi from "joi";
 const sizeSchema = joi.object({
-    name: joi.string().required("name là trương dữ liệu bắt buộc"),
-})
+    name: joi.string()
+    .required("name là trường dữ liệu bắt buộc")
+    .custom((value, helpers) => {
+      const uppercaseValue = value.toUpperCase();
+      if (value !== uppercaseValue) {
+        return helpers.message('Tên phải viết hoa hết');
+      }
+      return value;
+    }),
+
+  });
 
 export const create = async(req,res)=>{
     try {

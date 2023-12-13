@@ -15,7 +15,7 @@ const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
 
   const onFinish = async (values: any) => {
     try {
-      setIsLoading(true); 
+      setIsLoading(true);
       await mutateCreateColor(values).unwrap();
 
       form.resetFields();
@@ -24,8 +24,16 @@ const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
     } catch (error) {
       toast.error('Tạo Color không thành công');
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
+  };
+
+  const validateName = (_: any, value: string) => {
+    const firstCharacter = value.charAt(0);
+    if (!/^[A-ZĐ]/.test(firstCharacter)) {
+      return Promise.reject('Tên phải bắt đầu bằng chữ cái viết hoa');
+    }
+    return Promise.resolve();
   };
 
   return (
@@ -44,6 +52,7 @@ const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
           rules={[
             { required: true, message: 'Vui lòng nhập tên màu' },
             { min: 2, message: 'Ít nhất 2 ký tự' },
+            { validator: validateName },
           ]}
         >
           <Input placeholder="Tên Color" />
@@ -55,7 +64,6 @@ const AddColor: React.FC<AddColorProps> = ({ handleModalClose }) => {
           </Button>
         </Form.Item>
       </Form>
-     
     </>
   );
 };
