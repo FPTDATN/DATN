@@ -108,7 +108,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                     to={'/code_ma'}
                                     className="text-sm text-gray-900 hover:text-primary dark:hover:text-blue-400 block"
                                 >
-                                    Giảm giá
+                                    Mã giảm giá
                                 </Link>
                             </li>
                         </ul>

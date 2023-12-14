@@ -37,7 +37,9 @@ const ProductDetail = () => {
         setColor(data?.colorId![0]?.name);
         setSize(data?.sizeId![0]?.name);
     }, [data]);
-
+    useEffect(() => {
+        window.scroll(0,0);
+    }, [data]);
     const onChange3 = ({ target: { value } }: RadioChangeEvent) => {
         setColor(value);
     };
@@ -95,23 +97,7 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
-                                                    <div className="">
-                                                        <Link to="/code_ma">
-                                                            <button className="btn__background--one" type="button">
-                                                                <div>Mã giảm giá</div>
-                                                                <div id="container-stars_one">
-                                                                    <div id="stars"></div>
-                                                                </div>
-
-                                                                <div id="glow">
-                                                                    <div className="circle"></div>
-                                                                    <div className="circle"></div>
-                                                                </div>
-                                                            </button>
-                                                        </Link>
-
-                                                        {/* <List_discount/> */}
-                                                    </div>
+                                                   
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
                                                     {formartVND(hasSale)}
@@ -195,6 +181,27 @@ const ProductDetail = () => {
                                                     className="w-full px-4 py-3 text-center text-gray-100 bg-primary/95 hover:opacity-80 rounded-sm"
                                                 >
                                                     Thêm Vào Giỏ Hàng
+                                                </button>
+                                            </div>
+                                            <div className="flex gap-4 mb-6">
+                                                <button
+                                                    onClick={() =>
+                                                        dispatch(
+                                                            addToCart({
+                                                                ...(data! as any),
+                                                                price: hasSale,
+                                                                quantity: quantity,
+                                                                color: color,
+                                                                size: size,
+                                                            }),
+                                                        )
+                                                    }
+                                                    className="w-full px-4 py-3 text-center text-gray-100 bg-primary/95 hover:opacity-80 rounded-sm"
+                                                >
+                                                    <Link to="/checkout">
+                                                        Mua ngay
+                                                    </Link>
+                                                    
                                                 </button>
                                             </div>
                                         </div>
