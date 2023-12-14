@@ -71,9 +71,6 @@ const LocationList: React.FC = () => {
 
     const [orders, { data: order, isSuccess: orderSuccess, isError: orderError, isLoading: orderLoading }] =
         useCreateOrderMutation();
-
-    // State
-
     const { data: authData, isLoading: authLoading } = checkAuth();
     const [form] = Form.useForm();
     const [discountCode, setDiscountCode] = useState('');
@@ -82,7 +79,8 @@ const LocationList: React.FC = () => {
     const [_discountAmount, setDiscountAmount] = useState(0);
     const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>('');
     const [discountedTotal, setDiscountedTotal] = useState<number>(reduceTotal(cartItems));
-
+    const [savedAddSales, setSavedAddSales] = useState([]);
+    const [selectedDiscount, setSelectedDiscount] = useState('');
     // Mount
     const shouldLog = useRef(true);
 
@@ -90,21 +88,19 @@ const LocationList: React.FC = () => {
     // Hàm xử lý thay đổi mã giảm giá từ select
     const handleDiscountCodeChange = (value: string) => {
         setDiscountCode(value);
+        setSelectedDiscount(value); // Update selectedDiscount state with the selected value
     };
     // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
     const applyDiscount = () => {
-
         if (discountCode.trim() === '') {
             alert('Vui lòng nhập mã giảm giá.');
             return;
         }
-
         if (appliedDiscountCode) {
             alert('Bạn đã áp dụng một mã giảm giá rồi.');
             return;
         }
         const foundDiscount = discounts.find((discount) => discount.code === discountCode);
-
         if (foundDiscount) {
             if (discountedTotal < foundDiscount.maxAmount) {
                 alert(`Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`);
@@ -137,27 +133,21 @@ const LocationList: React.FC = () => {
         }
     };
     useEffect(() => {
-        if (shouldLog.current) {
-            shouldLog.current = false;
-            axios
-                .get('http://localhost:8080/api/discounts')
-                .then((response) => {
-                    // Lưu danh sách mã giảm giá vào state discounts
-                    setDiscounts(response.data.docs);
-                    // Lấy danh sách đã chọn từ localStorage
-                    const selectedDiscounts = localStorage.getItem('selectedDiscounts');
-                    if (selectedDiscounts) {
-                        // Nếu có danh sách đã lưu, cập nhật state appliedDiscountCode và appliedDiscount
-                        const selectedCodes = JSON.parse(selectedDiscounts);
-                        setAppliedDiscountCode(selectedCodes.code);
-                        setAppliedDiscount(true);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching discounts:', error);
-                });
+        const storedSales = JSON.parse(localStorage.getItem('persist:root'));
+        const salesData = JSON.parse(storedSales.sales);
+        if (salesData && salesData.saleItems) {
+            const updatedDiscounts = salesData.saleItems.map((sale :any) => ({
+                _id: sale._id, // Đảm bảo rằng mỗi mã giảm giá có một _id hoặc ID duy nhất
+                code: sale.code, // Lấy mã giảm giá từ dữ liệu lấy được
+                discount: sale.discount, // Lấy phần trăm giảm giá từ dữ liệu
+                maxAmount: sale.maxAmount, // Lấy mức tiền tối thiểu từ dữ liệu
+                startDate: sale.startDate, // Lấy ngày bắt đầu áp dụng mã giảm giá từ dữ liệu
+                endDate: sale.endDate, // Lấy ngày kết thúc áp dụng mã giảm giá từ dữ liệu
+            }));
+
+            // Cập nhật state discounts với danh sách mã giảm giá từ salesData
+            setDiscounts(updatedDiscounts);
         }
-        // Gửi yêu cầu API để lấy danh sách mã giảm giá từ locaso
     }, []);
     // Pay method
     const [payMethod, setPayMethod] = useState(0);
@@ -277,13 +267,13 @@ const LocationList: React.FC = () => {
                             <StyleInput />
                         </Form.Item>
 
-                        {/* <Form.Item
+                        <Form.Item
                             rules={[{ required: true, message: 'Bắt buộc' }]}
                             label={'Địa chỉ 2'}
                             name={'address2'}
                         >
                             <StyleInput />
-                        </Form.Item> */}
+                        </Form.Item>
 
                         <Form.Item rules={[{ required: true, message: 'Bắt buộc' }]} label={'Thành phố'} name={'city'}>
                             <StyleInput />
@@ -334,7 +324,7 @@ const LocationList: React.FC = () => {
                                     </div>
                                     {/* áp mã giảm giá  */}
                                     <div className="flex mt-2">
-                                        <Select className='' onChange={handleDiscountCodeChange} value={discountCode}>
+                                        <Select onChange={handleDiscountCodeChange} value={selectedDiscount}>
                                             {discounts.length === 0 ? (
                                                 <Select.Option key="empty" value="">
                                                     Không có
