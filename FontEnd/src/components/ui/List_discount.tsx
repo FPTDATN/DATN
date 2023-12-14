@@ -1,47 +1,49 @@
 import { useEffect, useState } from 'react';
-import { useGetDiscountsQuery, useApplyDiscountMutation } from '@/services/discount';
+import { useApplyDiscountMutation, useGetDiscountsQuery } from '@/services/discount';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { toast } from 'react-toastify';
 import { formartVND } from '@/utils/formartVND';
 import "./List_discount.css"
+import { addSaleItem } from '@/slices/sale';
 import { Link } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
 const List_discount = () => {
-    const { data: discountsData, isLoading, isError } = useGetDiscountsQuery({ startDate: '', endDate: '' });
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-
+    const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
+    console.log(discountsData)
+    const dispatch = useDispatch();
+    const saleItems = useSelector((state) => state.sales.saleItems);
     const [applyDiscountMutation] = useApplyDiscountMutation();
-    const addSale = async (discount) => {
-        const confirmAdd = window.confirm('Bạn có muốn thêm  mã ưu đãi này vào danh sách đã chọn không?');
-        if (confirmAdd) {
-            try {
-                const result = await applyDiscountMutation(discount._id);
-                setSelectedDiscounts([...selectedDiscounts, discount]);
-                toast.success(`Đã thêm ưu đãi: ${discount.discount}`, {
-                    position: 'bottom-right',
-                });
-                return result
-            } catch (error) {
-                console.error('Lỗi khi áp dụng mã giảm giá:', error);
-                toast.error('Có lỗi xảy ra khi thêm ưu đãi!', {
-                    position: 'bottom-right',
-                });
-            }
+    const handleAddSale = async (discount) => {
+        try {
+          const existingDiscount = saleItems.find((item) => item._id === discount._id);
+          if (!existingDiscount) {
+            const result = await applyDiscountMutation(discount._id);
+            setSelectedDiscounts([...selectedDiscounts, discount]);
+            dispatch(addSaleItem(discount));
+            const updatedDiscounts = discountsData?.docs.filter(
+                (item) => item._id !== discount._id
+              );
+              console.log(updatedDiscounts)
+            toast.success(`Đã thêm mã giảm giá: ${discount.discount}%`, {
+              position: 'bottom-right',
+            });
+            
+            return result;
+          } else {
+            toast.error(`Bạn đã lưu mã giảm giá này rồi !`, {
+              position: 'bottom-right',
+            });
+          }
+        } catch (error) {
+          console.error('Lỗi khi áp dụng mã giảm giá:', error);
+          toast.error('Có lỗi xảy ra khi thêm ưu đãi!', {
+            position: 'bottom-right',
+          });
         }
-    };
-    useEffect(() => {
-        localStorage.setItem('selectedDiscounts', JSON.stringify(selectedDiscounts));
-    }, [selectedDiscounts]);
-
-    useEffect(() => {
-        const storedSelectedDiscounts = localStorage.getItem('selectedDiscounts');
-        if (storedSelectedDiscounts) {
-            setSelectedDiscounts(JSON.parse(storedSelectedDiscounts));
-        }
-    }, []);
-
+      };
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -74,15 +76,12 @@ const List_discount = () => {
 
                             </button>
                         </Link>
-
-
                     </div>
-
                     {discountsData.docs.length > 0 ? (
                         <div className='grid grid-cols-4 gap-4 rounded-md'>
                             {discountsData.docs.map((discount) => (
                                 <div className='back__box--test' key={discount._id}>
-                                    <button className='' onClick={() => addSale(discount)}>
+                                    <button className='' onClick={() => handleAddSale(discount)}>
                                         <p className=''>Giá trị giảm giá: {discount.discount}%</p>
                                         <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
                                         <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>

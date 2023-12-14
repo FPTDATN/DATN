@@ -45,6 +45,7 @@ const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { data } = useMeQuery();
+    // console.log(data?.role);
     useEffect(() => {
         if (!isAuth) {
             navigate("/account/signin");

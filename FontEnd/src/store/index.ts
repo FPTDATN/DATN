@@ -12,6 +12,7 @@ import productApi from '@/services/product';
 import sizeApi from '@/services/size';
 import userApi from '@/services/user';
 import { cartReducer } from '@/slices/cart';
+import { saleReducer } from '@/slices/sale';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 
@@ -20,7 +21,7 @@ import storage from 'redux-persist/lib/storage';
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['cart'],
+    whitelist: ['cart','sales'],
 };
 const rootReducer = combineReducers({
     cart: cartReducer,
@@ -36,7 +37,8 @@ const rootReducer = combineReducers({
     [sizeApi.reducerPath]:sizeApi.reducer,
     [discountApi.reducerPath]:discountApi.reducer,
     [brandApi.reducerPath]:brandApi.reducer,
-    [ordercommentApi.reducerPath]:ordercommentApi.reducer
+    [ordercommentApi.reducerPath]:ordercommentApi.reducer,
+    sales : saleReducer
 });
 
 // Middleware
