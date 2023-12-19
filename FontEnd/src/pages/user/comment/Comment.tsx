@@ -18,7 +18,7 @@ interface comment {
 const Comment = ({ userId, productId, comments }: comment) => {
     const router = useNavigate()
     const { data: commentData } = useGetAllCommentsQuery();
-    const [createComment, { isError, isLoading: isCreatingComment }] = useAddCommentMutation();
+    // const [createComment, { isError, isLoading: isCreatingComment }] = useAddCommentMutation();
     const [mutate] = useRemoveCommentMutation();
     const [removeId] = useRemoveOrderCommentMutation()
     const { data: orderCommentsData } = useGetAllOrderCommentsQuery()
@@ -46,32 +46,32 @@ const Comment = ({ userId, productId, comments }: comment) => {
         setOpenAbsolute(false);
     };
 
-    const handleCommentSubmit = async (event: any) => {
-        event.preventDefault();
-        if (text.trim() === '') {
-            console.error('Comment text is required');
-            return;
-        }
+    // const handleCommentSubmit = async (event: any) => {
+    //     event.preventDefault();
+    //     if (text.trim() === '') {
+    //         console.error('Comment text is required');
+    //         return;
+    //     }
 
-        if (!authData) {
-            return router('/account/signin')
-        }
+    //     if (!authData) {
+    //         return router('/account/signin')
+    //     }
 
-        try {
-            setLoading(true);
-            await createComment({
-                text,
-                userId,
-                productId,
-            });
+    //     try {
+    //         setLoading(true);
+    //         await createComment({
+    //             text,
+    //             userId,
+    //             productId,
+    //         });
 
-            setText('')
-        } catch (error) {
-            console.error('Error creating comment:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //         setText('')
+    //     } catch (error) {
+    //         console.error('Error creating comment:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const handleDeleteComment = async (id: string) => {
         try {
@@ -96,12 +96,12 @@ const Comment = ({ userId, productId, comments }: comment) => {
             <Spin spinning={loading}>
                 <section className="bg-white dark:bg-gray-900 py-8 antialiased">
                     <div className="max-w-4xl mx-auto px-4">
-                        <div className="flex justify-between items-center mb-6">
+                        {/* <div className="flex justify-between items-center mb-6">
                             <h2 className="text-lg lg:text-2xl font-semibold text-gray-900 dark:text-white">
                                 Bình Luận ({comments?.length}){' '}
                             </h2>
-                        </div>
-                        <form className="mb-6" onSubmit={handleCommentSubmit}>
+                        </div> */}
+                        {/* <form className="mb-6" onSubmit={handleCommentSubmit}>
                             <label htmlFor="comment" className="sr-only">
                                 Bình luận của bạn
                             </label>
@@ -119,8 +119,8 @@ const Comment = ({ userId, productId, comments }: comment) => {
                             >
                                 {isCreatingComment ? 'Đang đăng...' : 'Đăng Bình Luận'}
                             </button>
-                        </form>
-                        {commentData?.length === 0 ? (
+                        </form> */}
+                        {/* {commentData?.length === 0 ? (
                             <h1 className='text-xl'>Chưa có bình luận nào</h1>
                         ) : (
                             commentData
@@ -253,7 +253,7 @@ const Comment = ({ userId, productId, comments }: comment) => {
                                         </div>
                                     </article>
                                 ))
-                        )}
+                        )} */}
 
                         <div>
                             <div className="list-group-item" >
