@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCreateOrderMutation } from '@/services/order';
 import { Status } from '@/types/status';
 import { useNavigate } from 'react-router-dom';
+import { useMeQuery } from '@/services/auth';
 interface Discount {
     _id: number | string;
     code: string;
@@ -71,7 +72,8 @@ const LocationList: React.FC = () => {
 
     const [orders, { data: order, isSuccess: orderSuccess, isError: orderError, isLoading: orderLoading }] =
         useCreateOrderMutation();
-    const { data: authData, isLoading: authLoading } = checkAuth();
+    // const { data: authData, isLoading: authLoading } = checkAuth();
+    const { data: authData, isLoading: authLoading } = useMeQuery();
     const [form] = Form.useForm();
     const [discountCode, setDiscountCode] = useState('');
     const [appliedDiscount, setAppliedDiscount] = useState(false);
@@ -103,7 +105,9 @@ const LocationList: React.FC = () => {
         const foundDiscount = discounts.find((discount) => discount.code === discountCode);
         if (foundDiscount) {
             if (discountedTotal < foundDiscount.maxAmount) {
-                alert(`Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`);
+                alert(
+                    `Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`,
+                );
                 return;
             }
             const currentDate = new Date();
@@ -133,10 +137,10 @@ const LocationList: React.FC = () => {
         }
     };
     useEffect(() => {
-        const storedSales = JSON.parse(localStorage.getItem('persist:root'));
+        const storedSales = JSON.parse(localStorage?.getItem('persist:root')!);
         const salesData = JSON.parse(storedSales.sales);
         if (salesData && salesData.saleItems) {
-            const updatedDiscounts = salesData.saleItems.map((sale :any) => ({
+            const updatedDiscounts = salesData.saleItems.map((sale: any) => ({
                 _id: sale._id, // Đảm bảo rằng mỗi mã giảm giá có một _id hoặc ID duy nhất
                 code: sale.code, // Lấy mã giảm giá từ dữ liệu lấy được
                 discount: sale.discount, // Lấy phần trăm giảm giá từ dữ liệu
@@ -153,26 +157,26 @@ const LocationList: React.FC = () => {
     const [payMethod, setPayMethod] = useState(0);
     // const [loading, setLoading] = useState(false);
 
-    let holder: any = {};
-    cartItems.forEach((d) => {
-        if (holder.hasOwnProperty(d._id)) {
-            holder[d._id] = holder[d._id] + d.quantity;
-        } else {
-            holder[d._id] = d.quantity;
-        }
-    });
+    // let holder: any = {};
+    // cartItems.forEach((d) => {
+    //     if (holder.hasOwnProperty(d._id)) {
+    //         holder[d._id] = holder[d._id] + d.quantity;
+    //     } else {
+    //         holder[d._id] = d.quantity;
+    //     }
+    // });
 
-    let obj2 = [];
+    // let obj2 = [];
 
-    for (const prop in holder) {
-        obj2.push({ key: prop, value: holder[prop] });
-    }
+    // for (const prop in holder) {
+    //     obj2.push({ key: prop, value: holder[prop] });
+    // }
 
     useEffect(() => {
         if (authData) {
             form.setFieldsValue({
-                email: authData.email,
-                username: authData.username,
+                email: authData?.email,
+                username: authData?.username,
             });
         }
     }, [authData, form]);
@@ -188,7 +192,6 @@ const LocationList: React.FC = () => {
                     status: Status.INFORMATION,
                     payMethod,
                     products: cartItems,
-                    userId: authData!._id,
                     isPaid: true,
                     shipping,
                 });
@@ -203,7 +206,6 @@ const LocationList: React.FC = () => {
                         orderType: 2,
                         language: '',
                         orderid: Math.random(),
-                        userId: authData?._id,
                         products: cartItems,
                         shipping,
                         ...customer,
@@ -343,7 +345,7 @@ const LocationList: React.FC = () => {
                                             )}
                                         </Select>
                                         <button
-                                            type='button'
+                                            type="button"
                                             className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
                                             onClick={applyDiscount}
                                         >
@@ -457,5 +459,3 @@ const LocationList: React.FC = () => {
     );
 };
 export default LocationList;
-
-

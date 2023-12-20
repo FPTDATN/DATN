@@ -31,14 +31,13 @@ function sortObject(obj) {
 router.post('/create_payment_url', async (req, res) => {
 
 
-    const { shipping, userId,products, fullName, phone, email } = req.body
+    const { shipping, userId, products, fullName, phone, email } = req.body
 
     var orderNumber = shortid.generate();
 
     var newOrder = new Order({
         orderNumber,
         products,
-        userId,
         payMethod: 1,
         shipping,
         status: 1,

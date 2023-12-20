@@ -9,7 +9,6 @@ export const orderSchema = Joi.object({
   shipping: Joi.string(),
   products: Joi.array(),
   total: Joi.number(),
-  userId: Joi.string(),
   payMethod: Joi.number(),
   isPaid: Joi.boolean(),
   discountCode: Joi.string().allow(''),

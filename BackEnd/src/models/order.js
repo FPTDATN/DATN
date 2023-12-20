@@ -3,10 +3,6 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const orderSchema = new mongoose.Schema(
   {
     orderNumber: { type: String },
-    userId: {
-      type: mongoose.Types.ObjectId,
-      require: true
-    },
     email: { type: String },
     products: [
       {

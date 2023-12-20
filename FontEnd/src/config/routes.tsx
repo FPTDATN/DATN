@@ -28,7 +28,7 @@ import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
 import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
 import EditorLayout from '@/components/layout/EditorLayout';
 import Hoandon from '@/pages/user/orders/Hoandon';
-import Hoan from '@/pages/admin/order/listorder/hoan';
+// import Hoan from '@/pages/admin/order/listorder/hoan';
 import ListSale from '@/pages/admin/sale/listSale/listSale';
 import View_account from '@/pages/user/view_account';
 import Discount_code from '@/pages/user/discount';
@@ -127,11 +127,11 @@ const router = createBrowserRouter([
                         element: <Hoandon />,
 
                     },
-                    {
-                        path: '/hoan/:id/',
-                        element: <Hoan />,
+                    // {
+                    //     path: '/hoan/:id/',
+                    //     element: <Hoan />,
 
-                    },
+                    // },
                 ],
             },
         ],

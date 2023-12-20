@@ -27,39 +27,8 @@ const CheckoutSuccess = () => {
     const [disable, setDisable] = useState(true);
     const { data } = useMeQuery();
 
-    // function timeout(ms: number) {
-    //     return new Promise((resolve) => setTimeout(resolve, ms));
-    // }
-
-    // const makeRequestInStock = async () => {
-    //     let holder: any = {};
-
-    //     cartItems.forEach((d) => {
-    //         if (holder.hasOwnProperty(d._id)) {
-    //             holder[d._id] = holder[d._id] + d.quantity;
-    //         } else {
-    //             holder[d._id] = d.quantity;
-    //         }
-    //     });
-
-    //     let obj2 = [];
-
-    //     for (const prop in holder) {
-    //         obj2.push({ key: prop, value: holder[prop] });
-    //     }
-
-    //     await timeout(1000);
-
-    //     obj2.map(async (obj) => {
-    //         await axios.patch(`http://localhost:8080/api/products/instock/${obj.key}`, {
-    //             value: obj.value,
-    //         });
-    //     });
-    // };
-
     const makeRequest = () => {
         if (code !== successCode) {
-            
             return;
         } else {
             update({
@@ -106,10 +75,8 @@ const CheckoutSuccess = () => {
                         </span>
                         <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
                         <p className="text-gray-600 my-2">
-                            Cảm ơn khách hàng{' '}
-                            <span className="text-red-500 font-semibold text-lg">
-                                {data ? data?.username : ''} đã ủng hộ
-                            </span>
+                            Cảm ơn khách hàng
+                            <span className="text-red-500 font-semibold text-lg">đã ủng hộ</span>
                         </p>
                         <p> Chúc bạn 1 ngày vui vẻ 🥰! </p>{' '}
                         <a href="/" className="!text-primary mt-2 block">
