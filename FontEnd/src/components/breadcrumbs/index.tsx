@@ -1,44 +1,72 @@
-import React from 'react';
 import { useMeQuery } from '@/services/auth';
-import { Breadcrumb } from 'antd';
-import { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
 
-interface BreadCrumbProps {}
+import { FunctionComponent, ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-const BreadCrumb: FunctionComponent<BreadCrumbProps> = () => {
-  const { data: authData, isLoading } = useMeQuery();
-  if (isLoading) {
-    return null;
-  }
-  const orderId = authData?._id || '';
+interface BreadCrumbProps {
+    children:ReactNode
+}
 
-  return (
-    <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-while-800">
-      <ul className="space-y-2 font-medium">
-        <li>
-          <Link to="view_account" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group">
-            <span className="ms-3">Thông tin cá nhân </span>
-          </Link>
-        </li>
-        <li>
-          <Link to={`orders/${orderId}`} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group">
-            <span className="ms-3">Đơn hàng đã đăt</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="favourite" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group">
-            <span className="ms-3">Sản phẩm yêu thích</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="sale" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-700 group">
-            <span className="ms-3">Mã giảm giá</span>
-          </Link>
-        </li>
-      </ul>
-    </div>
-  );
+const BreadCrumb: FunctionComponent<BreadCrumbProps> = ({children}) => {
+    const { data: authData, isLoading } = useMeQuery();
+    if (isLoading) {
+        return null;
+    }
+    const orderId = authData?._id || '';
+
+    const location = useLocation(); 
+
+    const routers = [
+        {
+            to: 'view_account',
+            label: 'Thông tin cá nhân',
+        },
+        {
+            to: `orders/${orderId}`,
+            label: 'Đơn hàng đã đăt',
+        },
+        {
+            to: 'favourite',
+            label: 'Sản phẩm yêu thích',
+        },
+        {
+            to: 'sale',
+            label: 'Mã giảm giá',
+        },
+    ];
+
+    return (
+        <div>
+            <div className="bg-gray-100 text-sm p-4">
+                <h1 className="font-semibold">Lời nhắc nhở thân thiện:</h1>
+                <p>
+                    Vui lòng không nhập địa chỉ PO Box/APO làm địa chỉ giao hàng theo yêu cầu của nhà cung cấp dịch vụ
+                    hậu cần của chúng tôi.
+                </p>
+                <p>Đơn hàng không thể bị hủy sau khi đã thanh toán.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-x-0 lg:gap-x-6 gap-y-4 mt-6 lg:grid-cols-4">
+                <div className="lg:border-r border-gray-200 px-2 col-span-1">
+                    <h1 className="px-2 text-xl border-gray-200 font-semibold border-b py-2">TÀI KHOẢN CỦA TÔI</h1>
+
+                    <ul>
+                        {routers.map((route, index) => (
+                            <li key={index} className={`${
+                                location.pathname === `/details/${route?.to}` ? '!bg-gray-200' : ''
+                            } hover:bg-gray-100`}>
+                                <Link className="block !text-black text-sm font-semibold px-2 py-2" to={route.to}>
+                                    {route.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="col-span-3 lg:px-0 px-2">{children}</div>
+            </div>
+        </div>
+    );
 };
 
 export default BreadCrumb;

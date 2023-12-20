@@ -3,12 +3,12 @@ import Loading from '@/components/ui/Loading';
 import { useMeQuery } from '@/services/auth';
 // import { Modal } from 'antd';
 // import { useState } from 'react';
-import {  Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 // import UpdateAccount from './update-account';
 import { useGetWishlistQuery } from '@/services/favourite';
 import { checkAuth } from '@/utils/checkAuth';
 // import UploadAvatar from './UploadAvatar';
-import './style.css'
+import './style.css';
 // import OrderSumeries from '../orders/OrderSumeries';
 // import ListYourFavourite from '@/components/products/list-favourite';
 
@@ -32,17 +32,10 @@ const AccountDetail: React.FC = () => {
             {!data || isLoading ? (
                 <Loading />
             ) : (
-                <div className='flex top-0 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 '>
-                    <aside className=''>
-                            <Breadcrumbs />
-                    </aside>
-                    <div className="flex-1 mx-5">
-                        <div className="">
-                            <div className="">
-                                <Outlet />
-                            </div>
-                        </div>
-                    </div>
+                <div>
+                    <Breadcrumbs>
+                        <Outlet />
+                    </Breadcrumbs>
                 </div>
             )}
         </>

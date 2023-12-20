@@ -1,5 +1,5 @@
 import { useGetUserByIdQuery, useUpdateUserMutation } from '@/services/user';
-import { Button, Form, Input, Select, Spin } from 'antd';
+import { Button, Form, Select, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -21,9 +21,8 @@ const UpdateUser: React.FC = () => {
     const [updateUser, { isLoading: userLoading, isSuccess }] = useUpdateUserMutation();
     const [selectedItems, setSelectedItems] = useState<string>(userData?.data.role!);
 
-
     const onFinish = async (values: any) => {
-        await updateUser({ _id: userData?.data._id, ...values, role: selectedItems });
+        await updateUser({ _id: userData?.data._id!, role: selectedItems });
     };
 
     useEffect(() => {
@@ -50,7 +49,7 @@ const UpdateUser: React.FC = () => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <Form.Item<FieldType>
+                    {/* <Form.Item<FieldType>
                         label="Username"
                         name="username"
                         initialValue={userData?.data.username}
@@ -67,8 +66,8 @@ const UpdateUser: React.FC = () => {
                         hidden
                     >
                         <Input />
-                    </Form.Item>
-                    <Form.Item<FieldType>
+                    </Form.Item> */}
+                    {/* <Form.Item<FieldType>
                         label="Password"
                         name="password"
                         initialValue={userData?.data.password}
@@ -76,7 +75,7 @@ const UpdateUser: React.FC = () => {
                         hidden
                     >
                         <Input.Password />
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item<FieldType>
                         label="Chức vụ"
@@ -86,7 +85,7 @@ const UpdateUser: React.FC = () => {
                     >
                         <Select
                             placeholder="Hãy chọn chưc vụ cho tài khoản"
-                            value={userData?.data.role}
+                            value={selectedItems}
                             onChange={setSelectedItems}
                             style={{ width: '100%' }}
                         >

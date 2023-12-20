@@ -11,7 +11,7 @@ export interface PaginatedOrder {
       totalPages: number;
 }
 export interface IProductorder {
-      _id?: number | string,
+      _id?: number | string | any,
       quantity: number;
       name: string;
       price:number;
@@ -19,6 +19,8 @@ export interface IProductorder {
       sizeId:string;
       images: string[];
       sale_off: number;
+      color?:string;
+      size?:string;
       
 }
 export interface Iuser {
