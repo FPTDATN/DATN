@@ -138,7 +138,7 @@ export const cancelOrder = async (req, res) => {
 
     // Lưu thay đổi vào cơ sở dữ liệu
 
-    await senderMail(order.email,order.products)
+    await senderMail(order.email,order)
 
     return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: newSatus });
   } catch (error) {

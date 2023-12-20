@@ -155,22 +155,6 @@ const LocationList: React.FC = () => {
     }, []);
     // Pay method
     const [payMethod, setPayMethod] = useState(0);
-    // const [loading, setLoading] = useState(false);
-
-    // let holder: any = {};
-    // cartItems.forEach((d) => {
-    //     if (holder.hasOwnProperty(d._id)) {
-    //         holder[d._id] = holder[d._id] + d.quantity;
-    //     } else {
-    //         holder[d._id] = d.quantity;
-    //     }
-    // });
-
-    // let obj2 = [];
-
-    // for (const prop in holder) {
-    //     obj2.push({ key: prop, value: holder[prop] });
-    // }
 
     useEffect(() => {
         if (authData) {
