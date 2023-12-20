@@ -3,8 +3,6 @@ import { IOrder } from '@/types/order';
 import { waiting } from '@/utils/waiting';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-
-
 export type IdType = {
   _id: string;
   orderNumber: string;
@@ -19,29 +17,25 @@ export type IdType = {
   createdAt: Date;
   updatedAt: Date;
   email: string;
-  Iuser: Iuser[]
-  order: IOrder[],
+  Iuser: Iuser[];
+  order: IOrder[];
   LydoHoandon: string;
-  Motahoandon: string,
-  Emaill: string,
-}
-
+  Motahoandon: string;
+  Emaill: string;
+};
 
 const orderApi = createApi({
-  reducerPath: "order",
+  reducerPath: 'order',
   tagTypes: ['Order'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:8080/api',
     fetchFn: async (...arg) => {
       await waiting(1000);
-      return fetch(...arg)
-    }
+      return fetch(...arg);
+    },
   }),
 
-
   endpoints: (builder) => ({
-
-
     calculateRevenueByYear: builder.query({
       query: () => '/revenue-by-year',
       providesTags: ['Order'],
@@ -82,17 +76,17 @@ const orderApi = createApi({
     }),
     getProductById: builder.query<IOrder, string>({
       query: (_id) => `/order/${_id}`,
-      providesTags: ['Order']
+      providesTags: ['Order'],
     }),
     createOrder: builder.mutation<IOrder, IOrder>({
       query: (order) => ({
         url: '/order',
         method: 'POST',
-        body: order
+        body: order,
       }),
-      invalidatesTags: ['Order']
+      invalidatesTags: ['Order'],
     }),
-    updateOrderStatus: builder.mutation<IOrder, { orderId: string, status: number, isPaid?: boolean }>({
+    updateOrderStatus: builder.mutation<IOrder, { orderId: string; status: number; isPaid?: boolean }>({
       query: ({ orderId, status, isPaid }) => ({
         url: `/order/${orderId}/status`,
         method: 'PUT',
@@ -100,7 +94,10 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
-    returnOrder: builder.mutation<Hoandon, { orderId: string, LydoHoandon: string, Motahoandon: string, Emaill: string }>({
+    returnOrder: builder.mutation<
+      Hoandon,
+      { orderId: string; LydoHoandon: string; Motahoandon: string; Emaill: string }
+    >({
       query: ({ orderId, LydoHoandon, Motahoandon, Emaill }) => ({
         url: `/order/${orderId}/return`,
         method: 'POST',
@@ -112,9 +109,15 @@ const orderApi = createApi({
       query: (_id) => `/order/${_id}`,
       providesTags: ['Order'],
     }),
+
+    // Change Status and send Email when Status confirm and status cancelled
+
   }),
-})
-export const { useReturnOrderMutation, useGetOrderByIdQuery, useGetsOrderQuery,
+});
+export const {
+  useReturnOrderMutation,
+  useGetOrderByIdQuery,
+  useGetsOrderQuery,
   useGetProductByIdQuery,
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,
@@ -122,5 +125,6 @@ export const { useReturnOrderMutation, useGetOrderByIdQuery, useGetsOrderQuery,
   useGetOrderStatisticsQuery,
   useGetRevenueByDaysQuery,
   useCalculateRevenueByMonthQuery,
-  useCalculateRevenueByYearQuery } = orderApi
-export default orderApi
+  useCalculateRevenueByYearQuery,
+} = orderApi;
+export default orderApi;

@@ -33,7 +33,7 @@ const CheckoutSuccess = () => {
         } else {
             update({
                 orderId: id!,
-                status: Status.ORDER_CONFIRM,
+                status: Status.INFORMATION,
                 isPaid: true,
             });
         }

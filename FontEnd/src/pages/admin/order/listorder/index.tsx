@@ -33,7 +33,7 @@ const { confirm } = Modal;
 
 const renderState = (state: number) => {
     if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
-    if (Status.INFORMATION === state) return <span>Xác thực thông tin</span>;
+    if (Status.INFORMATION === state) return <span>Đang xác nhận</span>;
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
     if (Status.COMPLETE === state) return <span className="text-green-500">Hoàn thành</span>;
@@ -57,11 +57,21 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
     const inputNode = (
         <Select>
-            <Option value={1}>{renderState(1)}</Option>
-            <Option value={2}>{renderState(2)}</Option>
-            <Option value={3}>{renderState(3)}</Option>
-            <Option value={4}>{renderState(4)}</Option>
-            <Option value={5}>{renderState(5)}</Option>
+            <Option disabled={record?.status > Status.INFORMATION} value={1}>
+                {renderState(1)}
+            </Option>
+            <Option disabled={record?.status > Status.ORDER_CONFIRM} value={2}>
+                {renderState(2)}
+            </Option>
+            <Option disabled={record?.status > Status.SHIPPING} value={3}>
+                {renderState(3)}
+            </Option>
+            <Option disabled={record?.status > Status.COMPLETE} value={4}>
+                {renderState(4)}
+            </Option>
+            <Option disabled={record?.status > Status.HOAN} value={5}>
+                {renderState(5)}
+            </Option>
         </Select>
     );
 
@@ -89,7 +99,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 import { DatePicker } from 'antd';
 
 const ListOrder: React.FC = () => {
-    const [dateRange, setDateRange] = useState([null, null]);
+    const [dateRange, setDateRange] = useState<any>([null, null]);
 
     const { data, isLoading } = useGetsOrderQuery({
         startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
@@ -97,7 +107,6 @@ const ListOrder: React.FC = () => {
     });
     const { RangePicker } = DatePicker;
     const handleDateRangeChange = (dates: any, dateStrings: any) => {
-
         setDateRange(dates);
     };
     const [changeOrderStatus] = useUpdateOrderStatusMutation();
@@ -203,7 +212,7 @@ const ListOrder: React.FC = () => {
                 orderId: editingKey,
                 status: Number(row.status) as number,
             }).then(() => {
-                if (Number(row.status) === Status.SHIPPING) {
+                if (Number(row.status) >= Status.SHIPPING) {
                     return makeRequestInStock();
                 }
             });
@@ -575,7 +584,9 @@ const ListOrder: React.FC = () => {
                             expandable={{
                                 columnWidth: '3%',
                                 expandIcon: ({ onExpand, record }) => (
-                                    <button onClick={(e:any) => onExpand(record, e)} ><FaAngleDoubleDown /></button>
+                                    <button onClick={(e: any) => onExpand(record, e)}>
+                                        <FaAngleDoubleDown />
+                                    </button>
                                 ),
                                 expandedRowRender: (record) => {
                                     return (
