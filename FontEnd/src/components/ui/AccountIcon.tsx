@@ -76,9 +76,9 @@ const AccountIcon: React.FC = () => {
         },
         {
             label: (
-                <Button onClick={handleLogout} className="text-base">
+                <button onClick={handleLogout} className="text-base">
                     Đăng xuất
-                </Button>
+                </button>
             ),
             key: '3',
             icon: <CiLogout style={{ fontSize: '18px' }} />,

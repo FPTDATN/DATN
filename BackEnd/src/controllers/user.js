@@ -5,33 +5,17 @@ export const update = async (req, res) => {
 
     try {
 
-        const { password, username, email, avatar, role } = req.body;
+        const { role } = req.body;
 
-        const user = await Auth.findOne({ _id: req.params.id })
+        const user = await Auth.findByIdAndUpdate({ _id: req.params.id }, { role }, { new: true })
 
-        if (!user) {
-            return res.status(401).json({ message: 'Unauthorized' })
-        }
+        // if (!user) {
+        //     return res.status(401).json({ message: 'Unauthorized' })
+        // }
 
-        if (password === '') {
-            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, avatar, role }, {
-                new: true,
-            });
+        // const newUser = await user.save({ role })
 
-            return res.status(200).json({ success: true })
-        } else if (password.length > 0) {
-            const hashPassword = await bcryptjs.hash(password, 10)
-
-            await Auth.findByIdAndUpdate({ _id: user._id }, { username, email, password: hashPassword, avatar, role }, {
-                new: true,
-            });
-
-            return res.status(200).json({ success: true })
-        }
-
-        const newUser = await user.save({ username, password, avatar, role })
-
-        return res.status(200).json(newUser)
+        return res.status(200).json(user)
 
     } catch (error) {
         return res.status(404).json({
