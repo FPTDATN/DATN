@@ -41,6 +41,7 @@ router.post('/create_payment_url', async (req, res) => {
         payMethod: 1,
         shipping,
         status: 1,
+        userId,
         total: req.body.amount,
         fullName,
         phone,

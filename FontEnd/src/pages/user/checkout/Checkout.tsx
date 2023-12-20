@@ -174,6 +174,7 @@ const LocationList: React.FC = () => {
                     ...customer,
                     total: discountedTotal,
                     status: Status.INFORMATION,
+                    userId: authData?._id! || '',
                     payMethod,
                     products: cartItems,
                     isPaid: true,
@@ -192,6 +193,7 @@ const LocationList: React.FC = () => {
                         orderid: Math.random(),
                         products: cartItems,
                         shipping,
+                        userId: authData?._id! || '',
                         ...customer,
                     })
                     .then((res) => {
@@ -288,7 +290,7 @@ const LocationList: React.FC = () => {
                                     <div key={index}>
                                         <div className="flex justify-between px-2 py-1">
                                             <span className="break-words text-sm w-[calc(100%-100px)]">
-                                                [Đặt hàng trước] {item.name}
+                                                [Đặt hàng trước] {item.name} - <b>{item?.color} - {item?.size}</b>
                                                 <strong className="ml-2">× {item.quantity}</strong>
                                             </span>
 

@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 export const orderSchema = Joi.object({
+  userId: Joi.string().allow(''),
   orderNumber: Joi.string(),
   status: Joi.number(),
   fullName: Joi.string().required(),

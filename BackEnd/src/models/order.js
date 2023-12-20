@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 const orderSchema = new mongoose.Schema(
   {
@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema(
         type: Object
       }
     ],
+    userId: { type: String },
     isPaid: { type: Boolean, default: false },
     total: { type: Number, require: true },
     shipping: { type: String, require: true },

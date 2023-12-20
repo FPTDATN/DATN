@@ -9,7 +9,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Highlighter from 'react-highlight-words';
 import Loading from '@/components/ui/Loading';
 import { formartVND } from '@/utils/formartVND';
-import { PrinterOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, LoadingOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Image } from 'antd';
 import Hoadon from './print';
 import { Link } from 'react-router-dom';
@@ -33,10 +33,10 @@ const { confirm } = Modal;
 
 const renderState = (state: number) => {
     if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
-    if (Status.INFORMATION === state) return <span>Đang xác nhận</span>;
+    if (Status.INFORMATION === state) return <span>  Đang xác nhận <LoadingOutlined /></span>;
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
-    if (Status.COMPLETE === state) return <span className="text-green-500">Hoàn thành</span>;
+    if (Status.COMPLETE === state) return <span className="text-green-500"><CheckCircleOutlined /> Hoàn thành</span>;
     if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
 };
 
@@ -212,7 +212,7 @@ const ListOrder: React.FC = () => {
                 orderId: editingKey,
                 status: Number(row.status) as number,
             }).then(() => {
-                if (Number(row.status) >= Status.SHIPPING) {
+                if (Number(row.status) >= Status.ORDER_CONFIRM) {
                     return makeRequestInStock();
                 }
             });
