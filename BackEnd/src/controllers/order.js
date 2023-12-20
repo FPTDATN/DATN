@@ -2,6 +2,7 @@ import { orderSchema } from "../Schemas/order.js";
 import Order from "../models/order.js";
 import shortid from 'shortid';
 import Discount from "../models/discount.js";
+import { senderMail } from "../utils/senderMail.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -136,6 +137,8 @@ export const cancelOrder = async (req, res) => {
     const newSatus = await Order.updateOne({ _id: orderId }, { status, isPaid }, { new: true })
 
     // Lưu thay đổi vào cơ sở dữ liệu
+
+    await senderMail(order.email,order.products)
 
     return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: newSatus });
   } catch (error) {
