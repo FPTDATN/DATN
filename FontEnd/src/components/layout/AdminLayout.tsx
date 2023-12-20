@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { IoIosColorPalette } from "react-icons/io";
 import { GiResize } from "react-icons/gi";
 import {  FireOutlined } from '@ant-design/icons';
-import { AiOutlineMenu } from 'react-icons/ai';
+import { AiOutlineMenu, AiOutlineUser } from 'react-icons/ai';
 import AdminMobileMenu from '../modal/AdminMobileMenu';
 import { BiSolidCategory } from "react-icons/bi";
 import { MdCategory,MdSupervisorAccount,MdOutlineProductionQuantityLimits } from "react-icons/md";
@@ -25,8 +25,18 @@ const AdminLayout = () => {
 
 
     const items: MenuProps['items'] = [
+
         {
-            key: '1',
+            label: (
+                <Link className="text-base" to={'/admin/view_account'}>
+                    Cá nhân
+                </Link>
+            ),
+            key: '0',
+            icon: <AiOutlineUser style={{ fontSize: '18px' }} />,
+        },
+        {
+            key: '2',
             label: <button onClick={handleLogout}>Đăng xuất</button>,
         },
     ];
