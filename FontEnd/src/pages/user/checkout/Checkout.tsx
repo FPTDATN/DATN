@@ -180,7 +180,10 @@ const LocationList: React.FC = () => {
                     isPaid: true,
                     shipping,
                 });
+                console.log(customer);
             }
+
+            
 
             if (payMethod === 1) {
                 axios

@@ -247,11 +247,11 @@ export const cancelOrder = async (req, res) => {
     `
 
     if (status === 1) {
-      await sendEmailWhenChangeStatus(order.email, htmlOrders)
+      await senderMail(order.email, htmlOrders)
     } else if (status === 2) {
-      await sendEmailWhenChangeStatus(order.email, confirm)
+      await senderMail(order.email, confirm)
     } else if (status === 0) {
-      await sendEmailWhenChangeStatus(order.email, cancelled)
+      await senderMail(order.email, cancelled)
     }
 
     return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: newSatus });

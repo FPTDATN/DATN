@@ -6,7 +6,7 @@ export const sendEmailWhenChangeStatus = async (to, html) => {
     try {
         await resend.emails.send({
             from: 'Shop A-shirt <onboarding@resend.dev>',
-            to,
+            to: [to],
             subject: 'Shop A-Shirt thanks you very much',
             html
         });
