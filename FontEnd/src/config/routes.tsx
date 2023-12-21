@@ -48,10 +48,16 @@ const PrivateRoute = ({ isAuth }: any) => {
     // console.log(data?.role);
     useEffect(() => {
         if (!isAuth) {
-            navigate("/account/signin");
-        } else if (data?.role === "admin" && location.pathname === "/home") {
+            navigate('/account/signin');
+        } else if (data?.role === 'admin' && !location.pathname.startsWith('/admin')) {
             toast.warning('Bạn không thể truy cập trang web với tài khoản này !!!', { position: 'top-right' });
-            navigate("/admin");
+            navigate('/admin/dashboard');
+        } else if (data?.role === "member" && location.pathname.includes("/admin")) {
+            toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
+            navigate("/error");
+        }else if (data?.role === "editor" && location.pathname.includes("/admin")) {
+            toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
+            navigate("/error");
         }
     }, [isAuth, data, location]);
     return <Outlet />;
@@ -189,7 +195,8 @@ const router = createBrowserRouter([
                     { path: 'product/:id/comments', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
-                    { path: 'brand', element: <Listbrand /> }
+                    { path: 'brand', element: <Listbrand /> },
+                    { path: 'view_account', element: <View_account/>}
                 ],
             },
         ],
