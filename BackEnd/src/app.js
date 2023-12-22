@@ -13,9 +13,7 @@ import colorRouter from "./routers/color.js";
 import payMethod from './routers/pay.js';
 import discount from './routers/discount.js';
 import ordercommnentsRouter from '../src/routers/orderreview.js'
-
-
-
+import discountuser from '../src/routers/discountuser.js'
 import orderroute from "./routers/order.js";
 import vnpay from './routers/vnpay.js'
 
@@ -65,8 +63,8 @@ app.use("/api", brandRouter);
 app.use("/api", colorRouter);
 app.use("/api", payMethod);
 app.use("/api", discount);
-app.use("/api",ordercommnentsRouter)
-
+app.use("/api",ordercommnentsRouter);
+app.use("/api",discountuser);
 
 
 app.use("/api", orderroute);
