@@ -6,7 +6,7 @@ import Product from '../models/products.js';
 
 export const getOrderComments = async (_req, res) => {
     try {
-        const ordercomment = await Ordercomments.find().populate(['userId', 'parentOrderId']);
+        const ordercomment = await Ordercomments.find().populate(['userId']);
 
         if (ordercomment.length === 0) {
             return res.status(200).json(ordercomment);
@@ -21,7 +21,7 @@ export const getOrderComments = async (_req, res) => {
 };
 
 export const createOrderComment = async (req, res) => {
-    const { userId, productId,orderId, text, parentOrderId } = req.body;
+    const { userId, productId,orderId, text, rating,images,videos } = req.body;
 
     try {
         const existingUser = await Auth.findById(userId);
@@ -41,7 +41,9 @@ export const createOrderComment = async (req, res) => {
             orderId,
             text,
             productId,
-            parentOrderId,
+            rating,
+            images,
+            videos
         });
 
         await Auth.findByIdAndUpdate(userId, {
@@ -68,7 +70,7 @@ export const updateOrderComment = async (req, res) => {
 
     const { id } = req.params;
 
-    const { text, userId, productId, orderId } = req.body;
+    const { text, userId, productId, orderId,rating,images,videos } = req.body;
 
     try {
         const existingComment = await Ordercomments.findOne({ _id: id });
@@ -87,7 +89,7 @@ export const updateOrderComment = async (req, res) => {
 
         if (!existingProduct) return res.status(400).json({ message: 'Không tìm thấy sản phẩm' });
 
-        const newComment = await Ordercomments.findOneAndUpdate({ _id: id }, { userId, orderId, text }, { new: true })
+        const newComment = await Ordercomments.findOneAndUpdate({ _id: id }, { userId, orderId, text ,rating,images,videos}, { new: true })
 
         return res.status(201).json({newComment,message: "Đánh giá sản phẩm thành công",})
 
