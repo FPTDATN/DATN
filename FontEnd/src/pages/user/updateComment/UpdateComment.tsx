@@ -1,24 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Rate } from 'antd';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useGetByIdCommentsQuery, useUpdateCommentMutation } from '@/services/comment';
+import { useGetByIdOrderCommentsQuery, useUpdateOrderCommentMutation } from '@/services/ordercomments';
+import UploadFileServer from '@/components/uploads/UploadFile';
+import UploadVideoServer from '@/components/uploads/video';
 
-const UpdateComment: React.FC<{userId:string, productId:string, commentId: string; handleUpdateComplete: () => void }> = ({
+
+const UpdateComment: React.FC<{ userId: string, productId: string, orderId: string, commentId: string; handleUpdateComplete: () => void }> = ({
     commentId,
     productId,
     userId,
+    orderId,
     handleUpdateComplete,
 }) => {
     const [form] = Form.useForm();
-    const [mutate] = useUpdateCommentMutation();
+    const [mutate] = useUpdateOrderCommentMutation();
     const [isLoading, setIsLoading] = useState(false);
-
-    const onFinish = async (values: { text: string }) => {
+    const { data: comment, isLoading: isCategoryLoading } = useGetByIdOrderCommentsQuery(commentId);
+    const [images, setImages] = useState<string[]>(comment?.images!);
+    const [videos, setVideos] = useState<string[]>(comment?.videos!);
+    const onFinish = async (values: any) => {
         try {
             setIsLoading(true);
-            await mutate({productId, userId, commentId, comment: { text: values.text } }).unwrap();
+
+            await mutate
+                ({
+                    productId,
+                    userId,
+                    orderId,
+                    commentId,
+                    ordercomments: {
+                        ...comment,
+                        ...values,
+                        images,
+                        videos
+
+                    },
+                }).unwrap();
             handleUpdateComplete();
             toast.success('Cập nhật thành công');
         } catch (error) {
@@ -30,20 +50,20 @@ const UpdateComment: React.FC<{userId:string, productId:string, commentId: strin
     };
 
 
-    const { data: comment, isLoading: isCategoryLoading } = useGetByIdCommentsQuery(commentId);
-    // console.log(commentId);
-    // console.log(productId,"productsId");
-    // console.log(userId, "userId");
-    
-    
+   
+
 
 
     useEffect(() => {
         if (!isCategoryLoading && comment) {
-            form.setFieldsValue({ text: comment.text });
-            console.log(form.setFieldsValue);
-            
+            form.setFieldsValue({
+                text: comment.text,
+                rating: comment.rating,
+            });
+            setImages(comment?.images!)
+            setVideos(comment?.videos!)
         }
+        
     }, [comment, isCategoryLoading, form]);
 
     return (
@@ -61,7 +81,15 @@ const UpdateComment: React.FC<{userId:string, productId:string, commentId: strin
                     <Form.Item label="bình luận" name="text" rules={[{ required: true, message: 'Vui lòng nhập bình luận' }]}>
                         <Input />
                     </Form.Item>
-
+                    <Form.Item label="Đánh giá" name="rating">
+                        <Rate allowHalf />
+                    </Form.Item>
+                    <Form.Item label="Thêm ảnh">
+                        <UploadFileServer images={images!} setImages={setImages} />
+                    </Form.Item>
+                    <Form.Item label="Thêm video" >
+                                        <UploadVideoServer videos={videos!} setVideos={setVideos} />
+                                    </Form.Item>
                     <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
                         <Button type="primary" className='bg-primary' htmlType="submit" loading={isLoading}>
                             Cập nhật

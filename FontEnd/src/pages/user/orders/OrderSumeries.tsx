@@ -15,6 +15,7 @@ import Modal from 'antd/es/modal/Modal';
 // import { toast } from 'react-toastify';
 import { formartVND } from '@/utils/formartVND';
 import styled from 'styled-components';
+import OrderBinhluan from './comment';
 
 const { Panel } = Collapse;
 
@@ -46,6 +47,26 @@ const OrderSumeries = ({}: Props) => {
         setOrderId(id);
     };
 
+    const [openAdd, setOpenAdd] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState('');
+    const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
+    const handleAddModalClose = () => {
+        setOpenAdd(false);
+        setOpenUpdateModal(false);
+    };
+
+    const handleUpdateProduct = (orderId: string ) => {
+        setSelectedProduct(orderId );
+        setOpenUpdateModal(true);
+       
+        console.log(orderId)
+    };
+
+    const handleUpdateComplete = () => {
+        setSelectedProduct('');
+        setOpenUpdateModal(false);
+    };
     const handleOk = async () => {
         try {
             setModalText('Đang hủy');
@@ -233,7 +254,53 @@ const OrderSumeries = ({}: Props) => {
                                                                 ))}
                                                             </tbody>
                                                         </table>
+                                                        {order.status === Status.COMPLETE ? (
 
+<div className="flex space-x-4 mt-4">
+    <div className="flex space-x-4 mt-4">
+        <div className="px-1 md:ml-0 ml-20">
+
+
+        <Button
+                type="dashed"
+                className="bg-gree text-layer"
+                onClick={() => handleUpdateProduct(order._id)}
+                
+            >
+                Đánh giá
+            </Button>
+
+
+            <Modal
+                title="Cập nhật sản phẩm"
+                open={openUpdateModal}
+                onCancel={handleUpdateComplete}
+                footer={null}
+                destroyOnClose={true}
+                width={900}
+                style={{ maxWidth: 900 }}
+                centered
+            >
+                {selectedProduct && (
+                 <OrderBinhluan  orderId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />
+
+
+                )}
+            </Modal>
+
+        </div>
+    </div>
+
+</div>
+) : (
+<div className="flex space-x-4 mt-4">
+
+    <Button type="dashed" className='bg-gray-300 text-layer' disabled>
+        Đánh giá
+    </Button>
+
+</div>
+)}
                                                         <Modal
                                                             title="Bạn có muốn hủy đơn hàng này"
                                                             open={open}
