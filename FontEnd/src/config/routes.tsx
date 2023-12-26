@@ -40,6 +40,9 @@ import { useMeQuery } from '@/services/auth';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import List_discount from '@/components/ui/List_discount';
+import Revenue from '@/pages/admin/dashboard/revenue';
+import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
+import RevenueYear from '@/pages/admin/dashboard/revenueYear';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -196,7 +199,10 @@ const router = createBrowserRouter([
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> },
-                    { path: 'view_account', element: <View_account/>}
+                    { path: 'view_account', element: <View_account/>},
+                    { path: 'revenue', element: <Revenue/>},
+                    { path: 'revenueMoth', element: <RevenueMoth/>},
+                    { path: 'revenueYear', element: <RevenueYear/>}
                 ],
             },
         ],
