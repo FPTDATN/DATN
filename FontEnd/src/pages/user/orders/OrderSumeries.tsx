@@ -4,7 +4,9 @@ import { useGetsOrderQuery, useUpdateOrderStatusMutation } from '@/services/orde
 import { Status } from '@/types/status';
 import Loading from '@/components/ui/Loading';
 import { FaShippingFast } from 'react-icons/fa';
-import { BsPersonVcardFill, BsDropbox, BsCheckCircleFill } from 'react-icons/bs';
+import {  BsCheckCircleFill } from 'react-icons/bs';
+import { MdConfirmationNumber } from "react-icons/md";
+import { BiSolidPurchaseTagAlt } from "react-icons/bi";
 import { checkAuth } from '@/utils/checkAuth';
 import { formatTimeToNow } from '@/utils/formartDate';
 
@@ -256,51 +258,51 @@ const OrderSumeries = ({}: Props) => {
                                                         </table>
                                                         {order.status === Status.COMPLETE ? (
 
-<div className="flex space-x-4 mt-4">
-    <div className="flex space-x-4 mt-4">
-        <div className="px-1 md:ml-0 ml-20">
+                                                            <div className="flex space-x-4 mt-4">
+                                                                <div className="flex space-x-4 mt-4">
+                                                                    <div className="px-1 md:ml-0 ml-20">
 
 
-        <Button
-                type="dashed"
-                className="bg-gree text-layer"
-                onClick={() => handleUpdateProduct(order._id)}
-                
-            >
-                Đánh giá
-            </Button>
+                                                                    <Button
+                                                                            type="dashed"
+                                                                            className="bg-gree text-layer"
+                                                                            onClick={() => handleUpdateProduct(order._id)}
+                                                                            
+                                                                        >
+                                                                            Đánh giá
+                                                                        </Button>
 
 
-            <Modal
-                title="Cập nhật sản phẩm"
-                open={openUpdateModal}
-                onCancel={handleUpdateComplete}
-                footer={null}
-                destroyOnClose={true}
-                width={900}
-                style={{ maxWidth: 900 }}
-                centered
-            >
-                {selectedProduct && (
-                 <OrderBinhluan  orderId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />
+                                                                        <Modal
+                                                                            title="Cập nhật sản phẩm"
+                                                                            open={openUpdateModal}
+                                                                            onCancel={handleUpdateComplete}
+                                                                            footer={null}
+                                                                            destroyOnClose={true}
+                                                                            width={900}
+                                                                            style={{ maxWidth: 900 }}
+                                                                            centered
+                                                                        >
+                                                                            {selectedProduct && (
+                                                                            <OrderBinhluan  orderId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />
 
 
-                )}
-            </Modal>
+                                                                            )}
+                                                                        </Modal>
 
-        </div>
-    </div>
+                                                                    </div>
+                                                                </div>
 
-</div>
-) : (
-<div className="flex space-x-4 mt-4">
+                                                            </div>
+                                                            ) : (
+                                                            <div className="flex space-x-4 mt-4">
 
-    <Button type="dashed" className='bg-gray-300 text-layer' disabled>
-        Đánh giá
-    </Button>
+                                                                <Button type="dashed" className='bg-gray-300 text-layer' disabled>
+                                                                    Đánh giá
+                                                                </Button>
 
-</div>
-)}
+                                                            </div>
+                                                            )}
                                                         <Modal
                                                             title="Bạn có muốn hủy đơn hàng này"
                                                             open={open}
@@ -318,20 +320,20 @@ const OrderSumeries = ({}: Props) => {
                                                         className="mt-3"
                                                         items={[
                                                             {
-                                                                title: 'Thông tin khách hàng',
+                                                                title: 'Chờ xác nhận',
                                                                 status:
                                                                     order.status >= Status.INFORMATION
                                                                         ? 'finish'
                                                                         : 'wait',
-                                                                icon: <BsPersonVcardFill className="!text-primary" />,
+                                                                icon: <BiSolidPurchaseTagAlt  className="!text-primary" />,
                                                             },
                                                             {
-                                                                title: 'Xác nhận đơn hàng',
+                                                                title: 'Hàng đã xác nhận',
                                                                 status:
                                                                     order.status >= Status.ORDER_CONFIRM
                                                                         ? 'finish'
                                                                         : 'wait',
-                                                                icon: <BsDropbox className="!text-primary" />,
+                                                                icon: <MdConfirmationNumber className="!text-primary" />,
                                                             },
                                                             {
                                                                 title: 'Đang giao hàng',

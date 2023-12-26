@@ -13,6 +13,7 @@ import { BiSolidCategory } from 'react-icons/bi';
 import { RiShirtFill } from 'react-icons/ri';
 import { IoIosColorPalette } from 'react-icons/io';
 import { GiResize } from 'react-icons/gi';
+import Ashirt from "../../../public/Ashirt.png"
 const EditorLayout = () => {
     const { data: authData, isLoading } = checkEditor();
     const [logout, {}] = useLogoutMutation();
@@ -69,10 +70,10 @@ const EditorLayout = () => {
                                         </button>
                                         
                                     </button>
-                                    <a href="" className="flex ml-2 md:mr-24">
+                                    <a href="" className="flex ml-3 md:mr-24">
                                             <img
-                                                src="../logo.svg"
-                                                className="h-8 mr-3"
+                                                src={Ashirt}
+                                                className="h-[40px] w-[60px] mr-3"
                                                 alt="FlowBite Logo"
                                             />
                                             <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">

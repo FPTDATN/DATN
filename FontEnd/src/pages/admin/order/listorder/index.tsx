@@ -33,8 +33,8 @@ const { confirm } = Modal;
 
 const renderState = (state: number) => {
     if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
-    if (Status.INFORMATION === state) return <span>  Đang xác nhận <LoadingOutlined /></span>;
-    if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
+    if (Status.INFORMATION === state) return <span>  Chờ xác nhận <LoadingOutlined /></span>;
+    if (Status.ORDER_CONFIRM === state) return <span>Đơn hàng đã được xác nhận</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
     if (Status.COMPLETE === state) return <span className="text-green-500"><CheckCircleOutlined /> Hoàn thành</span>;
     if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
@@ -555,8 +555,8 @@ const ListOrder: React.FC = () => {
                         <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
                         <Button onClick={handleFilterIsPaidFalse}>Hàng trả sau</Button>
                         <Select onChange={handleFilterByStatus} placeholder="Hàng theo trạng thái">
-                            {/* <Option value={Status.INFORMATION}>Xác thực thông tin</Option> */}
-                            <Option value={Status.ORDER_CONFIRM}>Xác nhận đơn hàng</Option>
+                            <Option value={Status.INFORMATION}>Chờ xác nhận</Option>
+                            <Option value={Status.ORDER_CONFIRM}>Đơn hàng đã được xác nhận</Option>
                             <Option value={Status.SHIPPING}>Đang giao hàng</Option>
                             <Option value={Status.COMPLETE}>Hoàn thành</Option>
                             <Option value={Status.CANCELLED}>Đã hủy</Option>

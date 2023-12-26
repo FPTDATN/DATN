@@ -52,7 +52,7 @@ const AdminMobileMenu: FunctionComponent<MobileModalProps> = ({ open, onClose })
     const [openKeys, setOpenKeys] = useState(['sub1']);
 
     const items: MenuItem[] = [
-        getItem(<Link onClick={onClose} to={'/'}>Bảng điều khiển</Link>, 'sub4', <RiDashboard3Fill />),
+        getItem(<Link onClick={onClose} to={'/admin'}>Bảng điều khiển</Link>, 'sub4', <RiDashboard3Fill />),
         getItem('Danh mục', 'sub4', <BiSolidCategoryAlt />, danhmuc.map((danhmuc) => (
             getItem(<Link onClick={onClose} to={danhmuc.link}>{danhmuc.title}</Link>, danhmuc._id)
         ))),
