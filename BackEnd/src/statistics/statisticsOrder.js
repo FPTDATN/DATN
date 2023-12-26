@@ -50,11 +50,13 @@ export const getOrderStatistics = async (req, res) => {
 
 export const getRevenueByDay = async (req, res) => {
   try {
-    const orders = await Order.find({ status: 4 }); 
+    const orders = await Order.find({ status: 4 })
+      .sort({ createdAt: -1 }) // Sắp xếp theo ngày tạo giảm dần
+      .limit(6); // Giới hạn kết quả truy vấn chỉ lấy 5 ngày gần nhất
 
     const revenueByDay = {};
     orders.forEach((order) => {
-      const createdAt = order.createdAt.toDateString();
+      const createdAt = order.createdAt.toLocaleString();
       if (!revenueByDay[createdAt]) {
         revenueByDay[createdAt] = order.total;
       } else {
@@ -69,9 +71,9 @@ export const getRevenueByDay = async (req, res) => {
   }
 };
 
+
 export const calculateRevenueByMonth = async (req, res) => {
   try {
-   
     const revenueByMonth = await Order.aggregate([
       { $match: { status: 4 } }, 
       {
@@ -82,12 +84,16 @@ export const calculateRevenueByMonth = async (req, res) => {
       },
       {
         $sort: {
-          _id: 1
+          '_id': 1
         }
+      },
+      {
+        $limit: 4
       }
     ]);
+
     const formattedData = revenueByMonth.map(item => {
-      const month = new Date().toLocaleString('en-US', { month: 'long' });
+      const month = new Date(0, item._id - 1).toLocaleString('VN', { month: 'long' });
       const year = new Date().getFullYear();
       const monthYear = `${month} ${year}`;
 
@@ -107,6 +113,7 @@ export const calculateRevenueByMonth = async (req, res) => {
 
 
 
+
 export const calculateRevenueByYear = async (req, res) => {
   try {
     const revenueByYear = await Order.aggregate([
@@ -121,6 +128,9 @@ export const calculateRevenueByYear = async (req, res) => {
         $sort: {
           _id: 1
         }
+      },
+      {
+        $limit: 4
       }
     ]);
 
