@@ -22,6 +22,7 @@ export type IdType = {
   LydoHoandon: string;
   Motahoandon: string;
   Emaill: string;
+  
 };
 
 const orderApi = createApi({

@@ -37,7 +37,7 @@ const renderState = (state: number) => {
     if (Status.ORDER_CONFIRM === state) return <span>Đơn hàng đã được xác nhận</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
     if (Status.COMPLETE === state) return <span className="text-green-500"><CheckCircleOutlined /> Hoàn thành</span>;
-    if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
+    if (Status.DANHGIA === state) return <span className="text-yellow-400"><CheckCircleOutlined />DANH GIA</span>;
 };
 
 const renderMethod = (method: number) => {
@@ -69,7 +69,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Option disabled={record?.status > Status.COMPLETE} value={4}>
                 {renderState(4)}
             </Option>
-            <Option disabled={record?.status > Status.HOAN} value={5}>
+            <Option disabled={record?.status > Status.DANHGIA} value={5}>
                 {renderState(5)}
             </Option>
         </Select>
@@ -388,15 +388,15 @@ const ListOrder: React.FC = () => {
                             <a>Hủy</a>
                         </Popconfirm>
                     </span>
-                ) : record.status === Status.HOAN ? (
+                ) : record.status === Status.DANHGIA ? (
                     <Space className="flex flex-col">
-                        <div className="">
+                        {/* <div className="">
                             <div className="flex">
                                 <Button type="dashed" className="bg-reds px-2.5 text-layer">
                                     xác nhận
                                 </Button>
                             </div>
-                        </div>
+                        </div> */}
                         <div className=" md:ml-0 ml-20">
                             <Link to={`/hoan/${record._id}`}>
                                 <Button type="dashed" className="bg-gree text-layer" onClick={onShow}>
@@ -560,7 +560,7 @@ const ListOrder: React.FC = () => {
                             <Option value={Status.SHIPPING}>Đang giao hàng</Option>
                             <Option value={Status.COMPLETE}>Hoàn thành</Option>
                             <Option value={Status.CANCELLED}>Đã hủy</Option>
-                            <Option value={Status.HOAN}>Hàng Hoàn</Option>
+                            <Option value={Status.DANHGIA}>DANH GIA</Option>
                         </Select>
 
                         <div className="flex-grow text-right">

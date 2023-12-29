@@ -4,15 +4,16 @@ import { useGetsOrderQuery, useUpdateOrderStatusMutation } from '@/services/orde
 import { Status } from '@/types/status';
 import Loading from '@/components/ui/Loading';
 import { FaShippingFast } from 'react-icons/fa';
-import {  BsCheckCircleFill } from 'react-icons/bs';
+import { BsCheckCircleFill } from 'react-icons/bs';
 import { MdConfirmationNumber } from "react-icons/md";
 import { BiSolidPurchaseTagAlt } from "react-icons/bi";
 import { checkAuth } from '@/utils/checkAuth';
 import { formatTimeToNow } from '@/utils/formartDate';
-
+import { MdDone } from 'react-icons/md';
 import { ReactNode, useState } from 'react';
 import { Button } from 'antd/es/radio';
 import Modal from 'antd/es/modal/Modal';
+
 // import { useAddOrderCommentMutation } from '@/services/ordercomments';
 // import { toast } from 'react-toastify';
 import { formartVND } from '@/utils/formartVND';
@@ -27,44 +28,33 @@ const StyleCollapse = styled(Collapse)`
 
 type Props = {};
 
-const OrderSumeries = ({}: Props) => {
+const OrderSumeries = ({ }: Props) => {
     const { data: orders, isLoading } = useGetsOrderQuery({ startDate: '', endDate: '' });
-    // const [createOrderComment, { isError: _commentError, isLoading: _isCreatingComment }] =
-    //     useAddOrderCommentMutation();
     const [cancelled, { isLoading: cancelledLoading }] = useUpdateOrderStatusMutation();
     const [orderId, setOrderId] = useState<string>('');
-
-    // const [loading, setLoading] = useState(false);
-
     const { data: authdata } = checkAuth();
-    // const [text, setText] = useState('');
-
     const [open, setOpen] = useState(false);
     const [modalText, setModalText] = useState<ReactNode>(
         <span className="text-red-500">Đơn hàng sau khi thanh toán sẽ không được hủy</span>,
     );
-
     const showModal = (id: string) => {
         setOpen(true);
         setOrderId(id);
     };
-
     const [openAdd, setOpenAdd] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState('');
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
-
+    const [updateOrderStatus] = useUpdateOrderStatusMutation(); // Mutation để cập nhật trạng thái đơn hàng
     const handleAddModalClose = () => {
         setOpenAdd(false);
         setOpenUpdateModal(false);
     };
-
-    const handleUpdateProduct = (orderId: string ) => {
-        setSelectedProduct(orderId );
+    const handleUpdateProduct = (orderId: string) => {
+        setSelectedProduct(orderId);
         setOpenUpdateModal(true);
-       
+
         console.log(orderId)
     };
-
     const handleUpdateComplete = () => {
         setSelectedProduct('');
         setOpenUpdateModal(false);
@@ -87,10 +77,6 @@ const OrderSumeries = ({}: Props) => {
         setOpen(false);
         setOrderId('');
     };
-
-    // const onShow = () => {
-    //     setOpen(true);
-    // };
 
     const renderPayMethod = (method: number, status?: number, isPaid?: boolean) => {
         if (status === Status.CANCELLED) {
@@ -122,31 +108,6 @@ const OrderSumeries = ({}: Props) => {
                 );
         }
     };
-
-    // const handleCommentSubmit = async (event: any) => {
-    //     event.preventDefault();
-    //     if (text.trim() === '') {
-    //         console.error('Comment text is required');
-    //         return;
-    //     }
-
-    //     try {
-    //         setLoading(true);
-    //         await createOrderComment({
-    //             text,
-    //             userId: authdata?._id,
-    //             orderId: filterOrders![0]._id,
-    //             productId: filterOrders![0].products[0]._id,
-    //         });
-    //         toast.success('Đánh giá đơn hàng thành công');
-    //         setText('');
-    //     } catch (error) {
-    //         console.error('Error creating comment:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
     const filterOrders = orders?.docs?.filter((order) => order.userId === authdata?._id && order.isPaid === true);
 
     return (
@@ -263,20 +224,20 @@ const OrderSumeries = ({}: Props) => {
                                                                     <div className="px-1 md:ml-0 ml-20">
 
 
-                                                                    <Button
+                                                                        <Button
                                                                             type="dashed"
                                                                             className="bg-gree text-layer"
                                                                             onClick={() => handleUpdateProduct(order._id)}
-                                                                            
+
                                                                         >
                                                                             Đánh giá
                                                                         </Button>
 
 
                                                                         <Modal
-                                                                            title="Cập nhật sản phẩm"
+                                                                            title="Đánh giá sản phẩm"
                                                                             open={openUpdateModal}
-                                                                            onCancel={handleUpdateComplete}
+                                                                            onCancel={handleAddModalClose}
                                                                             footer={null}
                                                                             destroyOnClose={true}
                                                                             width={900}
@@ -284,7 +245,7 @@ const OrderSumeries = ({}: Props) => {
                                                                             centered
                                                                         >
                                                                             {selectedProduct && (
-                                                                            <OrderBinhluan  orderId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />
+                                                                                <OrderBinhluan orderId={selectedProduct} handleUpdateProduct={handleUpdateComplete} />
 
 
                                                                             )}
@@ -294,7 +255,7 @@ const OrderSumeries = ({}: Props) => {
                                                                 </div>
 
                                                             </div>
-                                                            ) : (
+                                                        ) : (
                                                             <div className="flex space-x-4 mt-4">
 
                                                                 <Button type="dashed" className='bg-gray-300 text-layer' disabled>
@@ -302,7 +263,7 @@ const OrderSumeries = ({}: Props) => {
                                                                 </Button>
 
                                                             </div>
-                                                            )}
+                                                        )}
                                                         <Modal
                                                             title="Bạn có muốn hủy đơn hàng này"
                                                             open={open}
@@ -321,34 +282,27 @@ const OrderSumeries = ({}: Props) => {
                                                         items={[
                                                             {
                                                                 title: 'Chờ xác nhận',
-                                                                status:
-                                                                    order.status >= Status.INFORMATION
-                                                                        ? 'finish'
-                                                                        : 'wait',
-                                                                icon: <BiSolidPurchaseTagAlt  className="!text-primary" />,
+                                                                status: order.status >= Status.INFORMATION ? 'finish' : 'wait',
+                                                                icon: <BiSolidPurchaseTagAlt className="!text-primary" />,
                                                             },
                                                             {
                                                                 title: 'Hàng đã xác nhận',
-                                                                status:
-                                                                    order.status >= Status.ORDER_CONFIRM
-                                                                        ? 'finish'
-                                                                        : 'wait',
+                                                                status: order.status >= Status.ORDER_CONFIRM ? 'finish' : 'wait',
                                                                 icon: <MdConfirmationNumber className="!text-primary" />,
                                                             },
                                                             {
                                                                 title: 'Đang giao hàng',
-                                                                status:
-                                                                    order.status >= Status.SHIPPING ? 'finish' : 'wait',
+                                                                status: order.status >= Status.SHIPPING ? 'finish' : 'wait',
                                                                 icon: <FaShippingFast className="!text-primary" />,
                                                             },
                                                             {
                                                                 title: order.status === 0 ? 'Đã hủy' : 'Hoàn thành',
                                                                 status:
-                                                                    order.status === Status.COMPLETE
+                                                                    order.status >= Status.COMPLETE
                                                                         ? 'finish'
                                                                         : order.status === Status.CANCELLED
-                                                                        ? 'error'
-                                                                        : 'wait',
+                                                                            ? 'error'
+                                                                            : 'wait',
                                                                 icon:
                                                                     order.status === Status.COMPLETE ? (
                                                                         <BsCheckCircleFill className="!text-green-500" />
@@ -358,8 +312,14 @@ const OrderSumeries = ({}: Props) => {
                                                                         <BsCheckCircleFill />
                                                                     ),
                                                             },
+                                                            {
+                                                                title: 'Đánh giá',
+                                                                status: order.status >= Status.DANHGIA ? 'finish' : 'wait',
+                                                                icon: <MdDone className="!text-primary" />,
+                                                            },
                                                         ]}
                                                     />
+
                                                 </div>
                                             </Panel>
                                         );

@@ -4,7 +4,7 @@ import { Form, Input, Button, Rate } from 'antd';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useGetByIdOrderCommentsQuery, useUpdateOrderCommentMutation } from '@/services/ordercomments';
-import UploadFileServer from '@/components/uploads/UploadFile';
+import UploadFileServer from '@/components/uploads/up';
 import UploadVideoServer from '@/components/uploads/video';
 
 
