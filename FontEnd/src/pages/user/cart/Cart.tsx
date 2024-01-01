@@ -118,16 +118,7 @@ const Cart: FunctionComponent<CartProps> = () => {
                                         <button className="bg-gray-200 opacity-80 hover:opacity-100 transition-all shadow text-sub px-3 py-2 uppercase">
                                             Cập nhật giỏ hàng
                                         </button>
-                                        <div className="border-dashed border lg:border-0 md:border-0 p-6 flex border-gray-300">
-                                            <input
-                                                type="text"
-                                                className="border w-2/3 lg:w-auto md:w-auto outline-none px-2 py-2"
-                                                placeholder="Mã giảm giá"
-                                            />
-                                            <button className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 py-2 text-white">
-                                                ÁP MÃ GIẢM GIÁ
-                                            </button>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <div className="col-span-1 px-4 lg:px-0">
