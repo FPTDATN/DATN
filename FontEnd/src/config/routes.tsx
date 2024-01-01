@@ -105,7 +105,8 @@ const router = createBrowserRouter([
                     }, {
                         path: 'orders/:userId',
                         element: <OrderSumeries />
-                    }, {
+                    },
+                     {
                         path: 'code_ma',
                         element: <List_discount />
                     },

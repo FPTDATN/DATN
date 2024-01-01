@@ -1,3 +1,5 @@
+import { IDiscount } from "@/services/discountuser";
+
 export interface PaginatedUser {
     docs: UserType[];
     hasNextPage: boolean;
@@ -19,4 +21,5 @@ export interface UserType {
     avatar?:string;
     username?: string;
     password?:string;
+    discountCodes : IDiscount[]
 }
