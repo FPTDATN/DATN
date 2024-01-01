@@ -9,11 +9,13 @@ export interface OrderComment {
   text: string;
   userId?: any;
   orderId?: any;
+  status: number;
   productId?: string[];
   rating?: number;
   images: string[];
   createdAt?: any;
-  videos: string[]
+  videos: string[];
+
 }
 
 const ordercommentApi = createApi({

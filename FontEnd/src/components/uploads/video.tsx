@@ -53,6 +53,13 @@ const UploadVideoServer: FC<Props> = ({ setVideos, videos }) => {
     };
 
     useEffect(() => {
+        // Auto-upload when fileList changes
+        if (fileList.length > 0) {
+            handleUpload();
+        }
+    }, [fileList]); // Trigger effect when fileList changes
+
+    useEffect(() => {
         return () => fileList.forEach((file) => URL.revokeObjectURL(file.preview));
     }, []);
 

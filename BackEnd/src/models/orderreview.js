@@ -5,7 +5,7 @@ const commentSchema = new mongoose.Schema(
         text: {
             type: String,
         },
-        rating:{
+        rating: {
             type: Number,
         },
         userId: {
@@ -18,7 +18,7 @@ const commentSchema = new mongoose.Schema(
             ref: 'Order',
             required: true,
         },
-       
+        status: { type: Number, default: 1 },
         productId: [{
             type: mongoose.Types.ObjectId,
             ref: 'Product',
@@ -26,14 +26,14 @@ const commentSchema = new mongoose.Schema(
         }],
         images: [
             {
-              type: String,
+                type: String,
             }
-          ],
-          videos: [
+        ],
+        videos: [
             {
-              type: String,
+                type: String,
             }
-          ],
+        ],
     },
     {
         timestamps: true,

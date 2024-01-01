@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema(
         type: Object
       }
     ],
+    
     userId: { type: String },
     isPaid: { type: Boolean, default: false },
     total: { type: Number, require: true },

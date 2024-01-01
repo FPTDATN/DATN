@@ -24,8 +24,6 @@ export type IdType = {
   Motahoandon: string;
   Emaill: string;
   discountCode : IDiscount[];
-};
-
 const orderApi = createApi({
   reducerPath: 'order',
   tagTypes: ['Order'],
