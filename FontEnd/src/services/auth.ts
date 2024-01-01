@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { waiting } from '@/utils/waiting';
+import { IDiscount } from './discount';
 interface ApiLoginInput {
     usernameOrEmail: string;
 
@@ -35,6 +36,7 @@ export interface ApiRenponse {
     phone: number;
     address: string;
     avatar:string;
+    discountCode : IDiscount[];
 }
 
 const authApi = createApi({

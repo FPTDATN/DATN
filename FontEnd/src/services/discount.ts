@@ -60,8 +60,8 @@ const discountApi = createApi({
         //
         applyDiscount: builder.mutation<IDiscount, string>({
             query: (discountId) => ({
-              url: `/discounts/count/${discountId}`, // Đường dẫn mới cho việc áp dụng mã giảm giá
-              method: 'POST', // Sử dụng phương thức POST để áp dụng mã
+              url: `/discounts/count/${discountId}`, 
+              method: 'POST', 
             }),
             invalidatesTags: ['Discount'], // Cập nhật lại cache khi có thay đổi
           }),
