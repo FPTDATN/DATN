@@ -23,12 +23,18 @@ const discountApi = createApi({
     endpoints: (builder) => ({
         //lay tat ca
         getDiscounts: builder.query<PaginatedDiscount, void>({
-            query: () => '/discounts',
+            query: () => ({
+                url: `/discounts`,
+                method: 'GET',
+            }),
             providesTags: ['Discount'],
         }),
         // lay ra 1
         getDiscountsById: builder.query<IDiscount, string>({
-            query: (_id) => `/discounts/${_id}`,
+            query: (_id) => ({
+                url: `/discounts/${_id}`,
+                method: 'GET',
+            }),
             providesTags: ['Discount'],
         }),
         // them

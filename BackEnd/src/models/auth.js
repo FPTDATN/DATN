@@ -50,6 +50,12 @@ const authSchema = new mongoose.Schema(
           ref: "Discount",
       }
     ],
+    orders: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   {
     timestamps: true,
