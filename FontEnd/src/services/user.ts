@@ -66,13 +66,14 @@ const userApi = createApi({
               url: `/user/${userId}/macode/${discountId}`,
               method: 'POST',
             }),
-           
+            invalidatesTags: ['User']
           }),
           removeDiscountCodeFromUser: builder.mutation<void, { userId: string; discountId: string }>({
             query: ({ userId, discountId }) => ({
               url: `/user/${userId}/macode/${discountId}`,
               method: 'DELETE',
             }),
+            invalidatesTags: ['User']
           }),
     }),
 });

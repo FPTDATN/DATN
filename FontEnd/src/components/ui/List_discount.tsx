@@ -11,12 +11,11 @@ const List_discount = () => {
   const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
   const [applyDiscountMutation] = useApplyDiscountMutation();
   const [savedDiscounts, setSavedDiscounts] = useState([]);
-  const { data: userData } = useMeQuery();
-  const { data: orderData } = useGetsOrderQuery(); // Fetch order data
+  const { data: userData  } = useMeQuery();
+  const { data: orderData , } = useGetsOrderQuery(); // Fetch order data
   const [hasDiscountInOrder, setHasDiscountInOrder] = useState(false);
   const [discountInOrder, setDiscountInOrder] = useState(false);
   const [addDiscountCodeToUserMutation] = useAddDiscountCodeToUserMutation();
-
   useEffect(() => {
     if (orderData) {
       const hasDiscount = orderData.docs.some(order => order.discountCode && order.discountCode.length > 0);
@@ -41,8 +40,12 @@ const List_discount = () => {
 };
 
 const handleAddSale = async (discount: any) => {
-  console.log(discount);
   try {
+    if (discount.count === 0) {
+      toast.error('Mã giảm giá đã hết!', { position: 'bottom-right' });
+      return;
+    }
+
     if (!userData) {
       toast.error('Đăng nhập mới thêm được mã giảm giá', { position: 'bottom-right' });
       return;

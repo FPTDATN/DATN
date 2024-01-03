@@ -1,18 +1,16 @@
 import React from 'react';
 import { useMeQuery } from '@/services/auth';
-import { useGetUserByIdQuery, useAddDiscountCodeToUserMutation } from '@/services/user';
-import { List, Card, Button, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { useGetUserByIdQuery, useRemoveDiscountCodeFromUserMutation } from '@/services/user';
+import { List, Card, Button, Spin } from 'antd';
 import { formartVND } from '@/utils/formartVND';
-
+import { toast } from 'react-toastify';
 const Discount_code = () => {
-  const { data: userData } = useMeQuery();
+  const { data: userData, isLoading: isUserLoading } = useMeQuery();
   const user_id = userData?._id || '';
-  const { data: userById } = useGetUserByIdQuery(user_id);
+  const { data: userById, isLoading: isUserByIdLoading } = useGetUserByIdQuery(user_id);
 
   const listMyVoucher = userById?.data?.discountCodes;
-
-  const [addDiscountCodeToUser] = useAddDiscountCodeToUserMutation();
+  const [removeDiscountCodeFromUser] = useRemoveDiscountCodeFromUserMutation();
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -22,10 +20,32 @@ const Discount_code = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const isExpired = (endDate) => {
+    return new Date() > new Date(endDate);
+  };
 
-  if (!userData) {
-    return <div>Loading...</div>;
+  const handleApplyCode = async (voucher) => {
+    // Kiểm tra nếu mã giảm giá đã hết hạn thì không áp dụng
+    if (isExpired(voucher.endDate)) {
+      toast.warning('Mã giảm giá đã hết hạn.');
+      return;
+    }
+    toast.success('Áp dụng mã giảm giá thành công.');
+  };
+
+  const handleRemoveCode = async (voucherId) => {
+    try {
+      await removeDiscountCodeFromUser({ userId: user_id, discountId: voucherId });
+      toast.success('Xóa mã giảm giá thành công.');
+    } catch (error) {
+      toast.error('Xóa mã giảm giá không thành công.');
+    }
+  };
+
+  if (isUserLoading || isUserByIdLoading) {
+    return <Spin size="large" />;
   }
+
   return (
     <div>
       <List
@@ -37,9 +57,15 @@ const Discount_code = () => {
               title={
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>{`Mã giảm giá: ${voucher.code}`}</span>
-                  <Button type="primary">
-                    Áp dụng mã
-                  </Button>
+                  {isExpired(voucher.endDate) ? (
+                    <Button type="dashed"  onClick={() => handleRemoveCode(voucher._id)}>
+                      Xóa mã
+                    </Button>
+                  ) : (
+                    <Button type="primary" onClick={() => handleApplyCode(voucher)}>
+                      Áp dụng mã
+                    </Button>
+                  )}
                 </div>
               }
             >
@@ -47,7 +73,6 @@ const Discount_code = () => {
               <p>Đơn hàng: {formartVND(voucher.maxAmount)}</p>
               <p>Ngày bắt đầu: {formatDate(voucher.startDate)}</p>
               <p>Ngày kết thúc : {formatDate(voucher.endDate)}</p>
-              {/* Add more information as needed */}
             </Card>
           </List.Item>
         )}
@@ -57,6 +82,3 @@ const Discount_code = () => {
 };
 
 export default Discount_code;
-
- 
-

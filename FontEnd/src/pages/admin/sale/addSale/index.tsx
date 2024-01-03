@@ -91,14 +91,14 @@ const AddSale: React.FC<AddDiscountProps> = ({ handleModalClose }) => {
                   }),
                ]}
             >
-               <Input placeholder="Mã code " />
+               <Input placeholder="Số lượng  " />
             </Form.Item>
 
             <Form.Item
-               label="Giá tối thiểu để sử dụng"
+               label="Số tiền"
                name="maxAmount"
                rules={[
-                  { required: true, message: 'Vui lòng nhập giá tối thiểu để sử dụng mã giảm giá  ' },
+                  { required: true, message: 'Vui lòng nhập Số tiền tối thiểu để sử dụng mã giảm giá  ' },
                   ({ getFieldValue }) => ({
                      validator(_, value) {
                         const intValue = parseInt(value, 10);
@@ -114,7 +114,7 @@ const AddSale: React.FC<AddDiscountProps> = ({ handleModalClose }) => {
                   }),
                ]}
             >
-               <Input placeholder="Nhập giá tối thiểu để sử dụng mã giảm giá " />
+               <Input placeholder="Nhập số tiền  dùng mã  " />
             </Form.Item>
             <Form.Item
                label="Ngày tạo"
