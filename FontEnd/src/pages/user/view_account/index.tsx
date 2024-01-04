@@ -18,6 +18,7 @@ const View_account = () => {
     };
     const { data, isLoading } = checkAuth();
     const { data: authData } = useMeQuery();
+    console.log('test',authData)
     const user_id = authData?._id || '';
     const { data: wishlist } = useGetWishlistQuery(user_id);
     const wishlistItems = wishlist?.wishlist_items || [];
@@ -93,6 +94,7 @@ const View_account = () => {
                                         <div className="row mb-3">
                                             <div className="col-sm-3">
                                                 <h6 className="mb-0">Phone</h6>
+                                                
                                             </div>
                                             <div className="col-sm-9 text-secondary">
                                                 <input

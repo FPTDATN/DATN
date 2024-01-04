@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '@/store/hook';
 import { checkAuth } from '@/utils/checkAuth';
 import Loading from '@/components/ui/Loading';
-import { Button, Divider, Form, Input, Select, message } from 'antd';
+import { Button, Divider, Form, Input, Menu, message, Tooltip } from 'antd';
 import { formartVND } from '@/utils/formartVND';
 import { reduceTotal } from '@/utils/reduce';
 import axios from 'axios';
@@ -11,9 +11,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCreateOrderMutation } from '@/services/order';
 import { Status } from '@/types/status';
 import { useNavigate } from 'react-router-dom';
-import { useGetAllDiscountUsersQuery, useDeleteDiscountUsersMutation } from '@/services/discountuser';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useGetUserByIdQuery } from '@/services/user';
+import { useMeQuery } from '@/services/auth';
+import { useRemoveDiscountCodeFromUserMutation } from '@/services/user'; 
+import { useApplyDiscountCodeOrderMutation } from '@/services/order';
+
 interface Discount {
-      _id: number | string;
+      _id?: number | string;
       code: string;
       discount: number;
       maxAmount: number;
@@ -62,82 +68,93 @@ const StyleButton = styled(Button)`
 `;
 const LocationList: React.FC = () => {
       // Router
-      const { data: discountData, isLoading: discountLoading, isError: discountError } = useGetAllDiscountUsersQuery();
-      useEffect(() => {
-            if (discountData) {
-                  setDiscounts(discountData.docs);
-            }
-      }, [discountData]);
       const router = useNavigate();
 
       // Slice
       const { cartItems } = useAppSelector((state) => state.cart);
-      // Mutations
-      // hàm xóa mã 
-      const [deleteDiscountUsers] = useDeleteDiscountUsersMutation();
       const [orders, { data: order, isSuccess: orderSuccess, isError: orderError, isLoading: orderLoading }] =
             useCreateOrderMutation();
       const { data: authData, isLoading: authLoading } = checkAuth();
       const [form] = Form.useForm();
-      const [discountCode, setDiscountCode] = useState('');
       const [appliedDiscount, setAppliedDiscount] = useState(false);
       const [discounts, setDiscounts] = useState<Discount[]>([]);
       const [_discountAmount, setDiscountAmount] = useState(0);
       const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>('');
       const [discountedTotal, setDiscountedTotal] = useState<number>(reduceTotal(cartItems));
-      const [savedAddSales, setSavedAddSales] = useState([]);
-      const [selectedDiscount, setSelectedDiscount] = useState('');
+      const [selectedUserDiscount, setSelectedUserDiscount] = useState<string>('');
+      const [deleteDiscount] = useRemoveDiscountCodeFromUserMutation();
+      const [applyDiscountCodeOrder, { isSuccess: applyDiscountSuccess, isError: applyDiscountError }] = useApplyDiscountCodeOrderMutation();
+
       // Mount
+      const { data: userData } = useMeQuery();
+      const user_id = userData?._id || '';
+      const { data: userById } = useGetUserByIdQuery(user_id);
+      // console.log('test',user_id)
+
+      const listMyVoucher = userById?.data?.discountCodes;
+      // console.log('test',listMyVoucher)
+
       const shouldLog = useRef(true);
 
       // áp mã giảm giá 
-      // Hàm xử lý thay đổi mã giảm giá từ select
-      const handleDiscountCodeChange = (value: string) => {
-            setDiscountCode(value);
-            setSelectedDiscount(value); // Update selectedDiscount state with the selected value
+      const handleUserDiscountChange = (value: string) => {
+            setSelectedUserDiscount(value);
       };
       // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
       const applyDiscount = () => {
-            if (discountCode.trim() === '') {
-                  message.error('Vui lòng chọn mã giảm giá.');
-                  return;
+            if (selectedUserDiscount.trim() === '') {
+              toast.error('Vui lòng chọn mã giảm giá.');
+              return;
             }
+          
             if (appliedDiscountCode) {
-                  message.success('Áp mã thanh toán thành công !');
-                  return;
+              toast.success('Áp mã thanh toán thành công !');
+              return;
             }
-            const foundDiscount = discounts.find((discount) => discount.code === discountCode);
+          
+            const foundDiscount = listMyVoucher?.find((discount) => discount.code === selectedUserDiscount);
+          
             if (foundDiscount) {
-                  if (discountedTotal < foundDiscount.maxAmount) {
-                        message.warning(`Tổng giá trị đơn hàng (${discountedTotal}) nhỏ hơn mức tiền tối thiểu (${foundDiscount.maxAmount}).`);
-                        return;
-                  }
-                  const currentDate = new Date();
-                  if (currentDate >= new Date(foundDiscount.startDate) && currentDate <= new Date(foundDiscount.endDate)) {
-                        // Mã giảm giá hợp lệ, áp dụng giảm giá
-                        setAppliedDiscountCode(discountCode); // Lưu mã giảm giá đã áp dụng
-                        setAppliedDiscount(true);
-                        setDiscountAmount(foundDiscount.discount); // Cập nhật state discountAmount với số tiền giảm giá
-
-                        // Tính lại tổng số tiền sau khi áp mã giảm giá
-                        const totalCartPrice = reduceTotal(cartItems); // Tổng giá trị đơn hàng
-                        const discountAmountInMoney = (foundDiscount.discount / 100) * totalCartPrice;
-                        const discountedPrice = totalCartPrice - discountAmountInMoney;
-                        // Đặt lại tổng số tiền sau khi áp mã giảm giá
-                        // Nếu cần lưu giá trị này để hiển thị, bạn có thể lưu vào state khác
-                        setDiscountedTotal(discountedPrice);
-                        console.log('Tổng sau khi áp mã giảm giá:', discountedPrice);
-
-                        message.success('Mã giảm giá đã được áp dụng!');
-                  } else {
-                        // Mã giảm giá hết hạn
-                        message.error('Mã giảm giá đã hết hạn.');
-                  }
+              if (discountedTotal < foundDiscount.maxAmount) {
+                toast.warning(
+                  `Tổng giá trị đơn hàng (${formartVND(discountedTotal)}) đơn hàng phải lớn hơn (${formartVND(
+                    foundDiscount.maxAmount
+                  )}).`
+                );
+                return;
+              }
+          
+              const currentDate = new Date();
+          
+              if (currentDate >= new Date(foundDiscount.startDate) && currentDate <= new Date(foundDiscount.endDate)) {
+                // Mã giảm giá hợp lệ, áp dụng giảm giá
+                // Thêm mã giảm giá vào mảng discounts
+                setDiscounts((prevDiscounts) => [...prevDiscounts, foundDiscount]);
+                setAppliedDiscountCode(foundDiscount._id);
+                setAppliedDiscount(true);
+                setDiscountAmount(foundDiscount.discount);
+                const totalCartPrice = reduceTotal(cartItems);
+                const discountAmountInMoney = (foundDiscount.discount / 100) * totalCartPrice;
+                const discountedPrice = totalCartPrice - discountAmountInMoney;
+                setDiscountedTotal(discountedPrice);
+                toast.success('Mã giảm giá đã được áp dụng!');
+              } else {
+                toast.error('Mã giảm giá đã hết hạn.');
+              }
             } else {
-
-                  message.error('Mã giảm giá không hợp lệ.');
+              toast.error('Mã giảm giá không hợp lệ.');
             }
-      };
+          };
+          
+      // hủy áp dụng mã 
+      const cancelDiscount = () => {
+            setAppliedDiscount(false);
+            setDiscountAmount(0);
+            setAppliedDiscountCode('');
+            setDiscountedTotal(reduceTotal(cartItems));
+            setSelectedUserDiscount(''); // Reset the selected user discount
+            toast.info('Đã hủy áp dụng mã giảm giá.');
+        };        
       // Pay method
       const [payMethod, setPayMethod] = useState(0);
       // const [loading, setLoading] = useState(false);
@@ -156,6 +173,10 @@ const LocationList: React.FC = () => {
       for (const prop in holder) {
             obj2.push({ key: prop, value: holder[prop] });
       }
+      const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            return date.toLocaleDateString();
+      };
 
       useEffect(() => {
             if (authData) {
@@ -182,7 +203,6 @@ const LocationList: React.FC = () => {
                               shipping,
                         });
                   }
-
                   if (payMethod === 1) {
                         axios
                               .post('http://localhost:8080/api/vnpay/create_payment_url', {
@@ -202,44 +222,44 @@ const LocationList: React.FC = () => {
                               });
                   }
             } catch (error) {
-                  return message.error('Đã có lỗi xảy ra');
+                  return toast.error('Đã có lỗi xảy ra');
             }
       };
       useEffect(() => {
-            if (orderSuccess) {
-                  message.success('Thanh toán thành công');
-                  console.log('kiểm tra mã code để xóa ', appliedDiscountCode)
+            const handleSuccessfulOrder = async () => {
+              if (orderSuccess) {
+                try {
+                  toast.success('Thanh toán thành công');
                   if (appliedDiscountCode) {
-                        // Tìm mã giảm giá dựa trên appliedDiscountCode
-                        const foundDiscount = discounts.find(discount => discount.code === appliedDiscountCode);
-                        if (foundDiscount) {
-                              const discountId = foundDiscount._id;
-                              console.log('di',discountId) // Lấy discountId từ kết quả tìm kiếm
-                              deleteDiscountUsers(discountId)
-                                    .unwrap()
-                                    .then((response) => {
-                                          if (response.error) {
-                                                message.error('Xóa mã giảm giá không thành công');
-                                          } else {
-                                                message.success('Đã xóa mã giảm giá sau thanh toán thành công');
-                                                // Thực hiện các bước reset hoặc dọn dẹp dữ liệu khác...
-                                          }
-                                    })
-                                    .catch((error) => {
-                                          message.error('Đã xảy ra lỗi khi xóa mã giảm giá');
-                                          console.error('Lỗi khi xóa mã giảm giá:', error);
-                                    });
-                        } else {
-                              message.error('Không tìm thấy mã giảm giá để xóa');
-                        }
+                    // Áp dụng mã giảm giá vào đơn hàng trước khi xóa khỏi người dùng
+                    const result = await applyDiscountCodeOrder({ orderId: order!._id, discountCode: appliedDiscountCode });
+        
+                    // Log thông tin từ applyDiscountCodeOrder
+                    console.log('applyDiscountCodeOrder result:', result);
+        
+                    // Xóa mã giảm giá khỏi người dùng
+                    await deleteDiscount({ userId: authData!._id, discountId: appliedDiscountCode });
+        
+                    // Lọc mã giảm giá đã áp dụng thành công
+                    const updatedDiscounts = discounts.filter((discount) => discount._id !== appliedDiscountCode);
+        
+                    // Cập nhật mảng discounts
+                    setDiscounts(updatedDiscounts);
+        
+                    toast.success('Thanh toán thành công');
                   }
                   router(`/success/${order?._id}`);
-            }
-            if (orderError) {
-                  message.error('Thanh toán không thành công');
-            }
-      }, [orderSuccess, orderError, appliedDiscountCode, discounts]);
-      // áp mã
+                } catch (error) {
+                  // Log thông tin lỗi từ applyDiscountCodeOrder
+                  console.error('applyDiscountCodeOrder error:', error);
+                  toast.error('Đã xảy ra lỗi khi áp dụng mã giảm giá vào đơn hàng');
+                }
+              }
+            };
+        
+            handleSuccessfulOrder();
+          }, [orderSuccess, appliedDiscountCode, discounts, deleteDiscount, applyDiscountCodeOrder, authData, order, router]);
+        
       return (
             <div className="bg-white max-w-5xl mx-auto mb-10">
                   {authLoading ? (
@@ -334,31 +354,43 @@ const LocationList: React.FC = () => {
                                                             </p>
                                                       </div>
                                                       {/* áp mã giảm giá  */}
-                                                      <div className="flex mt-2">
-                                                            <Select onChange={handleDiscountCodeChange} value={selectedDiscount}>
-                                                                  {discountLoading ? (
-                                                                        <Select.Option value="" disabled>Loading...</Select.Option>
-                                                                  ) : discountError ? (
-                                                                        <Select.Option value="" disabled>Error loading discounts</Select.Option>
-                                                                  ) : (
-                                                                        <>
-                                                                              <Select.Option key="select" value="" disabled>
-                                                                                    Mời bạn chọn
-                                                                              </Select.Option>
-                                                                              {discountData?.docs.map((discount: Discount) => (
-                                                                                    <Select.Option key={discount._id} value={discount.code}>
-                                                                                          {`Giảm giá ${discount.discount}%`}
-                                                                                    </Select.Option>
+                                                      <div className="">
+                                                            <div className=''>
+                                                                  <Menu grid={{ gutter: 16, column: 2 }}>
+                                                                        {listMyVoucher &&
+                                                                              listMyVoucher.map((voucher) => (
+                                                                                    <Menu.Item key={voucher._id} onClick={() => handleUserDiscountChange(voucher.code)}>
+                                                                                          <div>
+                                                                                                <span>{`Giảm giá ${voucher.discount}%`}</span>
+                                                                                                <Tooltip
+                                                                                                      title={
+                                                                                                            <div>
+                                                                                                                  <p>{`Mã giảm giá: ${voucher.code}`}</p>
+                                                                                                                  <p>{`Đơn hàng tối thiểu: ${formartVND(voucher.maxAmount)}`}</p>
+                                                                                                                  <p>{`HSD: ${formatDate(voucher.startDate)} - ${formatDate(voucher.endDate)}`}</p>
+                                                                                                            </div>
+                                                                                                      }
+                                                                                                >
+                                                                                                      <span className="ml-2">ℹ️</span>
+                                                                                                </Tooltip>
+                                                                                          </div>
+                                                                                    </Menu.Item>
                                                                               ))}
-                                                                        </>
-                                                                  )}
-                                                            </Select>
+                                                                  </Menu>
+                                                            </div>
                                                             <button
                                                                   type='button'
                                                                   className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
                                                                   onClick={applyDiscount}
                                                             >
                                                                   ÁP MÃ GIẢM GIÁ
+                                                            </button>
+                                                            <button
+                                                                  type='button'
+                                                                  className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
+                                                                  onClick={cancelDiscount}
+                                                            >
+                                                                  HỦY ÁP DỤNG MÃ
                                                             </button>
                                                       </div>
                                                 </div>
@@ -468,6 +500,13 @@ const LocationList: React.FC = () => {
       );
 };
 export default LocationList;
+
+
+
+
+
+
+
 
 
 

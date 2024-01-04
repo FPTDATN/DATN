@@ -1,6 +1,6 @@
 import express from 'express'
 import { checkPermission } from "../middlewares/checkPermission.js";
-import {  createOrder, getOrders, cancelOrder, getOrderById, returnOrder } from '../controllers/order.js';
+import {  applyDiscountCodeOrder,createOrder, getOrders, cancelOrder, getOrderById, returnOrder,  } from '../controllers/order.js';
 import { calculateRevenueByMonth, calculateRevenueByYear, getOrderStatistics, getRevenue, getRevenueByDay } from '../statistics/statisticsOrder.js';
 import { stripePay } from '../controllers/pay.js';
 const orderroute = express.Router();
@@ -15,4 +15,5 @@ orderroute.post('/create-checkout-session', stripePay)
 orderroute.get('/revenue-by-year', calculateRevenueByYear);
 orderroute.get("/revenue-by-month", calculateRevenueByMonth);
 orderroute.post('/order/:orderId/return', returnOrder);
+orderroute.post('/order/:orderId/:discountCode', applyDiscountCodeOrder);
 export default orderroute

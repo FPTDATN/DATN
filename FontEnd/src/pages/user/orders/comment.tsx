@@ -4,13 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { useAddOrderCommentMutation } from '@/services/ordercomments';
 import { useMeQuery } from '@/services/auth';
 import { useGetOrderByIdQuery } from '@/services/order'; // Import the query to get order details
-import UploadFileServer from '@/components/uploads/UploadFile';
+import UploadFileServer from '@/components/uploads/up';
 import UploadVideoServer from '@/components/uploads/video';
-const OrderBinhluan: React.FC<{ orderId: string; handleUpdateProduct: () => void }> = ({
+
+const OrderBinhluan: React.FC<{ orderId: string;  handleUpdateProduct: () => void }> = ({
     orderId,
 
 }) => {
     const [addComment, { data: commentData, isLoading }] = useAddOrderCommentMutation();
+    const navigate = useNavigate();
     const [comment, setComment] = useState('');
     const [rating, setRating] = useState();
     const router = useNavigate();
@@ -19,7 +21,7 @@ const OrderBinhluan: React.FC<{ orderId: string; handleUpdateProduct: () => void
     const [images, setImages] = useState<string[]>([]);
     const [videos, setVideos] = useState<string[]>([]);
     const [ratingValue] = useState();
-
+ 
     const [feedback, setFeedback] = useState(() => {
         const storedFeedback = localStorage.getItem('feedback');
         return storedFeedback !== null ? storedFeedback : '';
@@ -72,10 +74,12 @@ const OrderBinhluan: React.FC<{ orderId: string; handleUpdateProduct: () => void
                 productId: productIds,
                 images: images,
                 videos:videos,
+                status: 5,
             });
-
+           
             setComment('');
-
+            alert('Bình luận của bạn đã được gửi thành công.');
+            window.location.reload();
         } catch (error) {
             console.error('Error creating comment:', error);
         }
@@ -88,7 +92,7 @@ const OrderBinhluan: React.FC<{ orderId: string; handleUpdateProduct: () => void
                 description: 'Bình luận của bạn đã được gửi thành công.',
             });
             setComment('');
-
+         
         }
     }, [commentData]);
 

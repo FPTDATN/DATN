@@ -1,113 +1,84 @@
-import { useState } from 'react';
-import { useGetAllDiscountUsersQuery } from "@/services/discountuser";
-import { List, Card, Button, Modal } from 'antd';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { useMeQuery } from '@/services/auth';
+import { useGetUserByIdQuery, useRemoveDiscountCodeFromUserMutation } from '@/services/user';
+import { List, Card, Button, Spin } from 'antd';
 import { formartVND } from '@/utils/formartVND';
-
+import { toast } from 'react-toastify';
 const Discount_code = () => {
-      const { data: discounts, isLoading, isError } = useGetAllDiscountUsersQuery();
-      const [modalVisible, setModalVisible] = useState(false);
-      const [selectedDiscount, setSelectedDiscount] = useState(null);
+  const { data: userData, isLoading: isUserLoading } = useMeQuery();
+  const user_id = userData?._id || '';
+  const { data: userById, isLoading: isUserByIdLoading } = useGetUserByIdQuery(user_id);
 
-      if (isLoading) {
-            return <div>Đang tải...</div>;
-      }
+  const listMyVoucher = userById?.data?.discountCodes;
+  const [removeDiscountCodeFromUser] = useRemoveDiscountCodeFromUserMutation();
 
-      if (isError || !discounts) {
-            return <div>Có lỗi xảy ra khi tải dữ liệu</div>;
-      }
-      if (isError) {
-            return <div>Có lỗi xảy ra khi tải dữ liệu</div>;
-        }
-    
-        if (!discounts || discounts.docs.length === 0) {
-            return <div className='text-2xl '>Không có mã giảm giá</div>;
-        }
-      // Hàm chuyển đổi thời gian từ timestamp sang ngày tháng bình thường
-      const formatDate = (timestamp) => {
-            const date = new Date(timestamp);
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-      };
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
-      // Xử lý khi nhấn nút "Dùng mã"
-      const handleUseDiscount = (discount) => {
-            const currentTime = new Date().getTime();
-            const remainingTime = discount.endDate - currentTime;
-            const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
-            const expired = remainingDays < 0;
-            setSelectedDiscount({
-                  ...discount,
-                  remainingTime,
-                  remainingDays,
-                  expired,
-                });
-                setModalVisible(true);
-      };
+  const isExpired = (endDate) => {
+    return new Date() > new Date(endDate);
+  };
 
-      // Đóng Modal
-      const handleCloseModal = () => {
-            setModalVisible(false);
-      };
+  const handleApplyCode = async (voucher) => {
+    // Kiểm tra nếu mã giảm giá đã hết hạn thì không áp dụng
+    if (isExpired(voucher.endDate)) {
+      toast.warning('Mã giảm giá đã hết hạn.');
+      return;
+    }
+    toast.success('Áp dụng mã giảm giá thành công.');
+  };
 
-      return (
-            <div>
-                  <h1>Danh sách mã giảm giá</h1>
-                  <List
-                        style={{ background: '', padding: '20px', borderRadius: '8px' }}
-                        grid={{ gutter: 20, column: 3 }}
-                        dataSource={discounts.docs}
-                        renderItem={(discount) => (
-                              <List.Item>
-                                    <Card
-                                          title={
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                      <span>Mã giảm giá :{discount.discount}%</span>
-                                                      <Button className="text-layer bg-gree">
-                                                            <Link to={`/checkout`}>Dùng mã</Link>
-                                                            
-                                                      </Button>
+  const handleRemoveCode = async (voucherId) => {
+    try {
+      await removeDiscountCodeFromUser({ userId: user_id, discountId: voucherId });
+      toast.success('Xóa mã giảm giá thành công.');
+    } catch (error) {
+      toast.error('Xóa mã giảm giá không thành công.');
+    }
+  };
 
-                                                </div>
-                                          }
-                                    >
-                                          <p>Giảm: {discount.discount}%</p>
-                                          <p>Giá trị tối đa: {formartVND(discount.maxAmount)}</p>
-                                          <p>Ngày bắt đầu: {formatDate(discount.startDate)}</p>
-                                          <p>Ngày kết thúc: {formatDate(discount.endDate)}</p>
-                                          <Button className="text-primary bg-reds my-3" onClick={() => handleUseDiscount(discount)}>
-                                                Xem chi tiết
-                                          </Button>
-                                    </Card>
-                              </List.Item>
-                        )}
-                  />
-                  {/* Modal */}
-                  <Modal
-                        title={selectedDiscount ? selectedDiscount.code : ''}
-                        visible={modalVisible}
-                        onCancel={handleCloseModal}
-                        footer={null}
-                  >
-                        {/* Nội dung của Modal */}
-                        {selectedDiscount && (
-                              <>
-                                    <p>Giảm: {selectedDiscount.discount}</p>
-                                    <p>Số lượng: {selectedDiscount.count}</p>
-                                    <p>Giá trị tối đa: {selectedDiscount.maxAmount}</p>
-                                    <p>Ngày bắt đầu: {formatDate(selectedDiscount.startDate)}</p>
-                                    <p>Ngày kết thúc: {formatDate(selectedDiscount.endDate)}</p>
+  if (isUserLoading || isUserByIdLoading) {
+    return <Spin size="large" />;
+  }
 
-                                    {/* Thêm thông tin thời gian còn lại và trạng thái */}
-                              </>
-                        )}
-                  </Modal>
-            </div>
-      );
+  return (
+    <div>
+      <List
+        grid={{ gutter: 16, column: 3 }}
+        dataSource={listMyVoucher}
+        renderItem={(voucher) => (
+          <List.Item>
+            <Card
+              title={
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{`Mã giảm giá: ${voucher.code}`}</span>
+                  {isExpired(voucher.endDate) ? (
+                    <Button type="dashed"  onClick={() => handleRemoveCode(voucher._id)}>
+                      Xóa mã
+                    </Button>
+                  ) : (
+                    <Button type="primary" onClick={() => handleApplyCode(voucher)}>
+                      Áp dụng mã
+                    </Button>
+                  )}
+                </div>
+              }
+            >
+              <p>Giảm giá: {voucher.discount}%</p>
+              <p>Đơn hàng: {formartVND(voucher.maxAmount)}</p>
+              <p>Ngày bắt đầu: {formatDate(voucher.startDate)}</p>
+              <p>Ngày kết thúc : {formatDate(voucher.endDate)}</p>
+            </Card>
+          </List.Item>
+        )}
+      />
+    </div>
+  );
 };
 
 export default Discount_code;
- 
-

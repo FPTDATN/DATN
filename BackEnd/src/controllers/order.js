@@ -311,3 +311,38 @@ export const returnOrder = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+export const applyDiscountCodeOrder = async (req, res) => {
+  const { orderId, discountCode } = req.params;
+  console.log('Discount Code:', discountCode);
+  console.log('Order ID:', orderId);
+
+  try {
+    // Kiểm tra xem mã giảm giá có tồn tại không
+    const existingDiscountCode = await Discount.findById(discountCode);
+
+    if (!existingDiscountCode) {
+      return res.status(400).json({ message: 'Mã giảm giá không tồn tại hoặc không hợp lệ' });
+    }
+
+    // Lấy thông tin đơn hàng
+    const existingOrder = await Order.findById(orderId);
+    if (!existingOrder) {
+      return res.status(400).json({ message: 'Đơn hàng không tồn tại' });
+    }
+
+    // Áp dụng mã giảm giá và cập nhật đơn hàng
+    existingOrder.discountCode = discountCode;
+    existingOrder.totalAmount -= existingDiscountCode.amount; // Giả sử giảm giá trực tiếp từ tổng tiền
+
+    // Lưu đơn hàng đã cập nhật
+    const updatedOrder = await existingOrder.save();
+
+    return res.status(200).json({ updatedOrder, message: 'Mã giảm giá đã được áp dụng thành công' });
+  } catch (error) {
+    console.error('Error:', error); // Log the detailed error
+    return res.status(500).json({
+      message: 'Có lỗi xảy ra khi xử lý mã giảm giá',
+    });
+  }
+};
+

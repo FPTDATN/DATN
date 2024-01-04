@@ -122,7 +122,7 @@ const UpdateSale: React.FC<{ categoryId: string; handleUpdateComplete: () => voi
                               ]}>
                                     <Input />
                               </Form.Item>
-                              <Form.Item label="Giá tối thiểu" name="maxAmount" rules={[
+                              <Form.Item label="Số tiền " name="maxAmount" rules={[
                                     { required: true, message: 'Vui lòng nhập giá tối thiểu để sử dụng mã giảm giá  ' },
                                     ({ getFieldValue }) => ({
                                           validator(_, value) {

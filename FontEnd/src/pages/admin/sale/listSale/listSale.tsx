@@ -32,7 +32,7 @@ const ListSale = () => {
   const [selectedDiscount, setSelectedDiscountId] = useState('');
   const [mutate] = useDeleteDiscountsMutation();
   const handleSearch: SearchProps['onSearch'] = (value) => {
-    setSearchValue(value.toLowerCase()); // Chuyển đổi giá trị tìm kiếm về chữ thường
+    setSearchValue(value.toLowerCase()); 
   };
   const handleDelete = async (id: string) => {
     try {
@@ -61,7 +61,9 @@ const ListSale = () => {
     setSelectedDiscountId('');
     setOpenUpdateModal(false);
   };
-
+  const isExpired = (endDate) => {
+    return new Date(endDate) < new Date();
+  };
   const DiscountList = data?.docs.filter(category => category.code.toLowerCase().includes(searchValue)) || [];
   // Định nghĩa cấu trúc cột của bảng và cho phép sắp xếp
   const columns = [
@@ -79,9 +81,14 @@ const ListSale = () => {
       sorter: (a, b) => a.discount - b.discount,
     },
     {
-      title: 'Số lượng ',
+      title: 'Số lượng',
       dataIndex: 'count',
       key: 'count',
+      render: (text) => (
+        <span style={{ color: text === 0 ? 'red' : 'inherit' }}>
+          {text}
+        </span>
+      ),
     },
     {
       title: ' Đơn hàng >= số tiền (VND)  ',
@@ -101,25 +108,33 @@ const ListSale = () => {
       dataIndex: 'endDate',
       key: 'endDate',
       sorter: (a, b) => new Date(a.endDate) - new Date(b.endDate),
-      render: (text) => new Date(text).toLocaleDateString(),
+      render: (text) => (
+        <span style={{ color: isExpired(text) ? 'red' : '' }}>
+          {new Date(text).toLocaleDateString()}
+        </span>
+      ),
     },
     {
       title: 'Thao tác',
       key: 'action',
       render: (text, record) => (
         <Space size="small">
-          <Button  className='bg-gree' type="dashed" onClick={() => handleUpdatediscount(record._id)}>
+          <Button className='bg-gree' type="dashed" onClick={() => handleUpdatediscount(record._id)}>
             Update
           </Button>
-          <Popconfirm
-            placement="topRight"
-            title="Bạn Muốn Xóa ?"
-            okText="OK"
-            cancelText="Cancel"
-            onConfirm={() => handleDelete(record._id)}
-          >
-            <Button className='bg-reds ' type="link">Delete</Button>
-          </Popconfirm>
+          {isExpired(record.endDate) && (
+            <Popconfirm
+              placement="topRight"
+              title="Bạn Muốn Xóa ?"
+              okText="OK"
+              cancelText="Cancel"
+              onConfirm={() => handleDelete(record._id)}
+            >
+              <Button className='bg-reds ' type="link">
+                Delete
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },

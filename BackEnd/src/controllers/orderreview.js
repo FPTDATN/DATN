@@ -21,7 +21,8 @@ export const getOrderComments = async (_req, res) => {
 };
 
 export const createOrderComment = async (req, res) => {
-    const { userId, productId, orderId, text, rating, images, videos } = req.body;
+
+    const { userId, productId,orderId, text, rating,images,videos,status } = req.body;
 
     try {
         const existingUser = await Auth.findById(userId);
@@ -43,7 +44,8 @@ export const createOrderComment = async (req, res) => {
             productId,
             rating,
             images,
-            videos
+            videos,
+            status
         });
 
         await Auth.findByIdAndUpdate(userId, {
@@ -62,8 +64,17 @@ export const createOrderComment = async (req, res) => {
                 ordercomments: newComment._id,
             },
         });
-
-        return res.status(200).json(newComment);
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            { status: 5 }, 
+            { new: true }
+        );
+        return res.status(200).json({
+            message: 'Thêm bình luận thành công và cập nhật trạng thái của đơn hàng',
+            newComment,
+            updatedOrder,
+        });
+   
     } catch (error) {
         return res.status(400).json({
             message: error.message,

@@ -1,3 +1,5 @@
+import { IDiscount } from "@/services/discount";
+
 export interface PaginatedOrder {
       docs: IOrder[];
       hasNextPage: boolean;
@@ -46,6 +48,7 @@ export interface IOrder {
       LydoHoandon:string;
       Motahoandon:string,
       Emaill:string,
+      discountCode : IDiscount[];
 }  
 export interface Hoandon{
       LydoHoandon:string;
