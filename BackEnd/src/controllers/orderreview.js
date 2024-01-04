@@ -21,8 +21,7 @@ export const getOrderComments = async (_req, res) => {
 };
 
 export const createOrderComment = async (req, res) => {
-
-    const { userId, productId,orderId, text, rating,images,videos,status } = req.body;
+    const { userId, productId, orderId, text, rating, images, videos, status } = req.body;
 
     try {
         const existingUser = await Auth.findById(userId);
@@ -36,37 +35,56 @@ export const createOrderComment = async (req, res) => {
         const existingProduct = await Product.findById(productId);
 
         if (!existingProduct) return res.status(400).json({ message: 'Không tìm thấy sản phẩm' });
-
-        const newComment = await Ordercomments.create({
-            userId,
-            orderId,
-            text,
-            productId,
-            rating,
-            images,
-            videos,
-            status
+        // const newComment = await Ordercomments.create({
+        //     userId,
+        //     orderId,
+        //     text,
+        //     productId,
+        //     rating,
+        //     images,
+        //     videos,
+        //     status
+        //   });
+        const newComments = [];
+        const productIds = Array.isArray(productId) ? productId : [productId];
+        productIds.forEach(async (productIds) => {
+            const newComment = await Ordercomments.create({
+                userId,
+                orderId,
+                text,
+                productId: productIds,
+                rating,
+                images,
+                videos,
+                status
+            });
+            newComments.push(newComment._id);
         });
-
+        // await Auth.findByIdAndUpdate(userId, {
+        //     $addToSet: {
+        //       ordercomment: newComment._id,
+        //     },
+        //   });
+          
+        //   await Order.findByIdAndUpdate(orderId, {
+        //     $addToSet: {
+        //       ordercomment: newComment._id,
+        //     },
+        //   });
         await Auth.findByIdAndUpdate(userId, {
             $addToSet: {
-                ordercomments: newComment._id,
+                ordercomment: { $each: newComments },
             },
         });
 
         await Order.findByIdAndUpdate(orderId, {
             $addToSet: {
-                ordercomments: newComment._id,
-            },
-        });
-        await Product.findByIdAndUpdate(productId, {
-            $addToSet: {
-                ordercomments: newComment._id,
+                ordercomment: { $each: newComments },
             },
         });
         const updatedOrder = await Order.findByIdAndUpdate(
             orderId,
-            { status: 5 }, 
+            { status: 5 },
             { new: true }
         );
         return res.status(200).json({
@@ -74,7 +92,7 @@ export const createOrderComment = async (req, res) => {
             newComment,
             updatedOrder,
         });
-   
+
     } catch (error) {
         return res.status(400).json({
             message: error.message,
