@@ -1,6 +1,7 @@
 import { calculatePagination } from "@/components/modal/pagination";
-import { useGetAllCommentsQuery, useRemoveCommentMutation } from "@/services/comment";
-import { Button, Popconfirm, Skeleton, Space } from "antd";
+import { useMeQuery } from "@/services/auth";
+import { useGetAllOrderCommentsQuery, useRemoveOrderCommentMutation } from "@/services/ordercomments";
+import { Button, Image, Modal, Popconfirm, Rate, Skeleton, Space } from "antd";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useParams } from "react-router-dom";
@@ -8,10 +9,16 @@ import { toast } from 'react-toastify';
 
 const ListComment = () => {
   const { id: productId } = useParams();
-  const { data: commentData, isLoading } = useGetAllCommentsQuery();
-  const [mutate] = useRemoveCommentMutation();
+  const { data: commentData, isLoading } = useGetAllOrderCommentsQuery();
+  const [mutate] = useRemoveOrderCommentMutation();
+  const { data: authData } = useMeQuery();
 
-  const filteredComments = commentData?.filter((comment) => comment.productId === productId);
+
+
+  // Lọc comments với productId trùng khớp với useParams()
+  const filteredComments = commentData?.filter(comment => comment?.productId.includes(productId));
+
+  console.log(filteredComments);
 
   const handleDeleteComment = async (id: string) => {
     try {
@@ -24,7 +31,7 @@ const ListComment = () => {
 
   // limit
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 9; // Số sản phẩm hiển thị trên mỗi trang
+  const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang
   const paginationOptions = {
     currentPage,
     perPage,
@@ -37,7 +44,18 @@ const ListComment = () => {
   const handlePageChange = (selectedPage: any) => {
     setCurrentPage(selectedPage.selected);
   };
+  const [open, setOpen] = useState(false);
 
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleOk = () => {
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
   return (
     <div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -76,13 +94,13 @@ const ListComment = () => {
                 key={item._id}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
-                <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
+                <td className="py-4 font-medium text-gray-600 whitespace-nowrap dark:text-white pl-6">
                   {item.userId.username}
                 </td>
-                <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
+                <td className="py-4 font-medium text-gray-600 whitespace-nowrap dark:text-white pl-6">
                   {item.text}
                 </td>
-                <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                <td className="py-4 font-medium text-gray-600 whitespace-nowrap dark:text-white text-center">
                   {new Date(item.createdAt).toLocaleString()}
                 </td>
                 <td className="py-4 flex items-center justify-center">
@@ -95,14 +113,138 @@ const ListComment = () => {
                       okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
                       onConfirm={() => handleDeleteComment(item._id!)}
                     >
-                      <Button type="link">Delete</Button>
+                      <Button type="link" className="bg-reds text-layer mr-3">Delete</Button>
                     </Popconfirm>
                   </Space>
+
+                  <Space>
+                    <Button type="primary" className="bg-primary" onClick={showModal}>
+                      Chi tiết
+                    </Button>
+                    <Modal
+                      open={open}
+                      title="Chi tiết comment"
+                      onOk={handleOk}
+                      onCancel={handleCancel}
+                      footer={(_, { CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+
+                        </>
+                      )}
+                    >
+                      <article
+                        key={item?._id}
+                        className="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
+                      >
+                        <footer className="flex justify-between items-center mb-2">
+                          <div className="flex items-center">
+                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold p-2">
+                              <img
+                                className="mr-2 w-6 h-6 rounded-full"
+                                // src={
+                                //   authData?.avatar
+                                // }
+                                alt="Michael Gough"
+                              />
+                              {item?.userId?.username}
+
+                            </p>
+
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              <time title="February 8th, 2022">
+                                {/* {formatTimeToNow(new Date(item?.createdAt))} */}
+                              </time>
+                            </p>
+
+                          </div>
+                          {!authData || authData?._id !== item.userId?._id ? undefined : (
+
+
+                            <div
+                              id={`dropdownComment_${item?._id}`}
+                              data-dropdown-toggle={`dropdownComment_${item?._id}`}
+                              className="relative inline-block"
+                            >
+                              <button
+                                className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                type="button"
+
+                              >
+                                <svg
+                                  className={`w-4 h-4  transition-all`}
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="currentColor"
+                                  viewBox="0 0 16 3"
+                                >
+                                  <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                                </svg>
+                                <span className="sr-only">Comment settings</span>
+                              </button>
+                              {openAbsolute[item?._id || ''] && (
+                                <div className="origin-top-right absolute right-0 mt-2 w-48 text-center rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                  <div
+                                    className="py-1"
+                                    role="menu"
+                                    aria-orientation="vertical"
+                                    aria-labelledby={`dropdownComment_${item?._id}_button`}
+                                  >
+
+
+
+
+
+                                  </div>
+                                </div>
+                              )}
+
+                            </div>
+                          )}
+                        </footer>
+                        <div className="p-3">
+                          <Rate disabled allowHalf value={item.rating} character={<span style={{ fontSize: '20px' }}>★</span>} />
+                        </div>
+                        <div className='flex p-3'>
+                          <p className="text-gray-800 dark:text-white text-sm py-2" style={{ opacity: 0.6 }}>Mô tả sản phẩm:
+
+
+                          </p>
+                          <a className='px-1 py-1'> {item.text}</a>
+                        </div>
+                        <div className="flex">
+                          <div>
+
+                            {item.videos.map((video, index) => (
+                              <div key={index} className="py-1">
+                                <video width={220} height={200} controls>
+                                  <source src={video} type="video/mp4" />
+
+                                </video>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="py-1 px-2">
+                            <Image
+                              src={item.images[0]}
+                              alt="image"
+                              width={150}
+                              height={150}
+                            />
+                          </div>
+
+                        </div>
+                      </article>
+                    </Modal>
+                  </Space>
                 </td>
+
               </tr>
+
             ))
           )}
         </tbody>
+
         <div className='mt-4 d-flex justify-content-start align-items-start'>
           <ReactPaginate
             previousLabel={'Quay lại'}

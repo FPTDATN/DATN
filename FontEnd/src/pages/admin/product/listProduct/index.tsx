@@ -13,6 +13,7 @@ import ReactPaginate from 'react-paginate';
 import { formartVND } from '@/utils/formartVND';
 import { DatePicker } from 'antd';
 import { log } from 'console';
+import { Link } from 'react-router-dom';
 
 const ListProduct: React.FC = () => {
     const [dateRange, setDateRange] = useState([null, null]);
@@ -24,6 +25,8 @@ const ListProduct: React.FC = () => {
 
     }
     );
+    console.log(data);
+
     const { Search } = Input;
 
     const [openAdd, setOpenAdd] = useState(false);
@@ -206,11 +209,11 @@ const ListProduct: React.FC = () => {
                                                 </Button>
                                             </Popconfirm>
 
-                                            {/* <Button type="primary" className="bg-primary">
-                                                <Link to={`${product._id}/comments`} className="bg-primary">
+                                            <Button type="primary" className="bg-primary">
+                                                <Link to={`/admin/detail/${product._id}`} className="bg-primary">
                                                     Comment
                                                 </Link>
-                                            </Button> */}
+                                            </Button>
                                         </Space>
                                     </td>
                                 </tr>

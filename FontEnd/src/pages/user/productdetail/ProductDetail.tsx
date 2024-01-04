@@ -24,6 +24,8 @@ const ProductDetail = () => {
     const dispatch = useAppDispatch();
     const { id } = useParams();
     const { data, isLoading } = useGetProductByIdQuery(id!);
+    console.log(data);
+
     const { data: authData } = useMeQuery();
     const [mode, setMode] = useState<TabsPosition>('top');
     const [value, setValue] = useState(3);
@@ -38,7 +40,7 @@ const ProductDetail = () => {
         setSize(data?.sizeId![0]?.name);
     }, [data]);
     useEffect(() => {
-        window.scroll(0,0);
+        window.scroll(0, 0);
     }, [data]);
     const onChange3 = ({ target: { value } }: RadioChangeEvent) => {
         setColor(value);
@@ -97,7 +99,7 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
-                                                   
+
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
                                                     {formartVND(hasSale)}
@@ -201,7 +203,7 @@ const ProductDetail = () => {
                                                     <Link to="/checkout">
                                                         Mua ngay
                                                     </Link>
-                                                    
+
                                                 </button>
                                             </div>
                                         </div>

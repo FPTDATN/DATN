@@ -52,7 +52,7 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
 
                         <div>
                             <div className="list-group-item" >
-                                <div className="d-inline-block font-weight-medium text-uppercase">Đánh giá đơn hàng</div>
+                                <div className="d-inline-block font-weight-medium text-uppercase">Đánh giá sản phẩm</div>
                             </div>
                             {(orderCommentsData
                                 ?.filter((ordercomment) => ordercomment.productId?.some(id => productId.includes(id)))
@@ -171,7 +171,7 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
                                                     <div key={index} className="py-1">
                                                         <video width={220} height={200} controls>
                                                             <source src={video} type="video/mp4" />
-                                                           
+
                                                         </video>
                                                     </div>
                                                 ))}

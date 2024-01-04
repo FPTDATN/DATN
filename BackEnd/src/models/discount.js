@@ -33,7 +33,7 @@ const discountSchema = new mongoose.Schema(
             {
                 userId: {
                     type: mongoose.Types.ObjectId,
-                    ref: 'Auth', // Thay thế 'Auth' bằng tên mô hình người dùng của bạn nếu khác
+                    ref: 'Auth',
                 },
                 used: {
                     type: Boolean,
