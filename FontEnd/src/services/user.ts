@@ -35,8 +35,11 @@ const userApi = createApi({
             providesTags: ['User'],
         }),
         getUserById: builder.query<ExtendUser, string>({
-            query: (id) => `/User/${id}`,
-            providesTags: ['User']
+            query: (id) => ({
+                url: `/User/${id}`,
+                method: 'GET',
+        
+            }),
         }),
         updateUser: builder.mutation<ExtendUser, UserType>({
             query: (user) => ({
