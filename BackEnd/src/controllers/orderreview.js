@@ -21,7 +21,7 @@ export const getOrderComments = async (_req, res) => {
 };
 
 export const createOrderComment = async (req, res) => {
-    const { userId, productId,orderId, text, rating,images,videos } = req.body;
+    const { userId, productId, orderId, text, rating, images, videos } = req.body;
 
     try {
         const existingUser = await Auth.findById(userId);
@@ -48,13 +48,18 @@ export const createOrderComment = async (req, res) => {
 
         await Auth.findByIdAndUpdate(userId, {
             $addToSet: {
-                ordercomment: newComment._id,
+                ordercomments: newComment._id,
             },
         });
 
         await Order.findByIdAndUpdate(orderId, {
             $addToSet: {
-                ordercomment: newComment._id,
+                ordercomments: newComment._id,
+            },
+        });
+        await Product.findByIdAndUpdate(productId, {
+            $addToSet: {
+                ordercomments: newComment._id,
             },
         });
 
@@ -70,7 +75,7 @@ export const updateOrderComment = async (req, res) => {
 
     const { id } = req.params;
 
-    const { text, userId, productId, orderId,rating,images,videos } = req.body;
+    const { text, userId, productId, orderId, rating, images, videos } = req.body;
 
     try {
         const existingComment = await Ordercomments.findOne({ _id: id });
@@ -84,14 +89,14 @@ export const updateOrderComment = async (req, res) => {
         if (!existingOrder) return res.status(400).json({ message: "Không tìm thấy đơn hàng " });
 
         if (!existingComment) return res.status(403).json({ message: "Không tìm thấy bình luận" });
-        
+
         const existingProduct = await Product.findById(productId);
 
         if (!existingProduct) return res.status(400).json({ message: 'Không tìm thấy sản phẩm' });
 
-        const newComment = await Ordercomments.findOneAndUpdate({ _id: id }, { userId, orderId, text ,rating,images,videos}, { new: true })
+        const newComment = await Ordercomments.findOneAndUpdate({ _id: id }, { userId, orderId, text, rating, images, videos }, { new: true })
 
-        return res.status(201).json({newComment,message: "Đánh giá sản phẩm thành công",})
+        return res.status(201).json({ newComment, message: "Đánh giá sản phẩm thành công", })
 
     } catch (error) {
         return res.status(400).json({

@@ -594,7 +594,7 @@ const ListOrder: React.FC = () => {
                                             <div className="space-y-2">
                                                 <h1>
                                                     <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Tên khách hàng:
+                                                        Tên khách hàng :
                                                     </span>{' '}
                                                     <span className="text-base font-semibold">{record.fullName}</span>
                                                 </h1>

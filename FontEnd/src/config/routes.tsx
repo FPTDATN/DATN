@@ -58,7 +58,7 @@ const PrivateRoute = ({ isAuth }: any) => {
         } else if (data?.role === "member" && location.pathname.includes("/admin")) {
             toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
             navigate("/error");
-        }else if (data?.role === "editor" && location.pathname.includes("/admin")) {
+        } else if (data?.role === "editor" && location.pathname.includes("/admin")) {
             toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
             navigate("/error");
         }
@@ -195,14 +195,14 @@ const router = createBrowserRouter([
                     { path: 'test', element: <AppTest /> },
                     { path: 'order', element: <ListOrder /> },
                     { path: 'sale', element: <ListSale /> },
-                    { path: 'product/:id/comments', element: <ListComment /> },
+                    { path: 'detail/:id', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> },
-                    { path: 'view_account', element: <View_account/>},
-                    { path: 'revenue', element: <Revenue/>},
-                    { path: 'revenueMoth', element: <RevenueMoth/>},
-                    { path: 'revenueYear', element: <RevenueYear/>}
+                    { path: 'view_account', element: <View_account /> },
+                    { path: 'revenue', element: <Revenue /> },
+                    { path: 'revenueMoth', element: <RevenueMoth /> },
+                    { path: 'revenueYear', element: <RevenueYear /> }
                 ],
             },
         ],
@@ -223,7 +223,7 @@ const router = createBrowserRouter([
                     { path: 'product', element: <ListProduct /> },
                     { path: 'category', element: <ListCategory /> },
                     { path: 'test', element: <AppTest /> },
-                    { path: 'product/:id/comments', element: <ListComment /> },
+                    { path: 'detail/:id', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> }
