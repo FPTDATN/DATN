@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { waiting } from '@/utils/waiting';
 import { IDiscount } from './discount';
+import { IOrder } from '@/types/order';
 interface ApiLoginInput {
     usernameOrEmail: string;
 
@@ -37,8 +38,8 @@ export interface ApiRenponse {
     address: string;
     avatar:string;
     discountCode : IDiscount[];
+    orders : IOrder[]
 }
-
 const authApi = createApi({
     reducerPath: 'auth',
     tagTypes: ['Auth'],

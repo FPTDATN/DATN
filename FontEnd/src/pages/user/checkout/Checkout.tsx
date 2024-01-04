@@ -72,7 +72,6 @@ const LocationList: React.FC = () => {
 
       // Slice
       const { cartItems } = useAppSelector((state) => state.cart);
-      // hàm xóa mã 
       const [orders, { data: order, isSuccess: orderSuccess, isError: orderError, isLoading: orderLoading }] =
             useCreateOrderMutation();
       const { data: authData, isLoading: authLoading } = checkAuth();
@@ -204,7 +203,6 @@ const LocationList: React.FC = () => {
                               shipping,
                         });
                   }
-
                   if (payMethod === 1) {
                         axios
                               .post('http://localhost:8080/api/vnpay/create_payment_url', {
@@ -224,43 +222,43 @@ const LocationList: React.FC = () => {
                               });
                   }
             } catch (error) {
-                  return message.error('Đã có lỗi xảy ra');
+                  return toast.error('Đã có lỗi xảy ra');
             }
       };
       useEffect(() => {
-            if (orderSuccess && appliedDiscountCode) {
-                // Áp dụng mã giảm giá vào đơn hàng trước khi xóa khỏi người dùng
-                applyDiscountCodeOrder({ orderId: order!._id, discountCode: appliedDiscountCode })
-                    .unwrap()
-                    .then((result) => {
-                        // Log thông tin từ applyDiscountCodeOrder
-            
-                        console.log('applyDiscountCodeOrder result:', result);
-
-                        // Xóa mã giảm giá khỏi người dùng
-                        deleteDiscount({ userId: authData!._id, discountId: appliedDiscountCode })
-                            .unwrap()
-                            .then(() => {
-                                // Lọc mã giảm giá đã áp dụng thành công
-                                const updatedDiscounts = discounts.filter((discount) => discount._id !== appliedDiscountCode);
-                                // Cập nhật mảng discounts
-                                setDiscounts(updatedDiscounts);
-                                message.success('Thanh toán thành công');
-                                router(`/success/${order?._id}`);
-                            })
-                            .catch(() => {
-                                message.error('Đã xảy ra lỗi khi xóa mã giảm giá');
-                            });
-                    })
-                    .catch((error) => {
-                        // Log thông tin lỗi từ applyDiscountCodeOrder
-                        console.error('applyDiscountCodeOrder error:', error);
-                        message.error('Đã xảy ra lỗi khi áp dụng mã giảm giá vào đơn hàng');
-                    });
-            }
+            const handleSuccessfulOrder = async () => {
+              if (orderSuccess) {
+                try {
+                  toast.success('Thanh toán thành công');
+                  if (appliedDiscountCode) {
+                    // Áp dụng mã giảm giá vào đơn hàng trước khi xóa khỏi người dùng
+                    const result = await applyDiscountCodeOrder({ orderId: order!._id, discountCode: appliedDiscountCode });
         
-            // Reset trạng thái thanh toán thành công sau khi xử lý
-        }, [orderSuccess, appliedDiscountCode, discounts, deleteDiscount, applyDiscountCodeOrder]);
+                    // Log thông tin từ applyDiscountCodeOrder
+                    console.log('applyDiscountCodeOrder result:', result);
+        
+                    // Xóa mã giảm giá khỏi người dùng
+                    await deleteDiscount({ userId: authData!._id, discountId: appliedDiscountCode });
+        
+                    // Lọc mã giảm giá đã áp dụng thành công
+                    const updatedDiscounts = discounts.filter((discount) => discount._id !== appliedDiscountCode);
+        
+                    // Cập nhật mảng discounts
+                    setDiscounts(updatedDiscounts);
+        
+                    toast.success('Thanh toán thành công');
+                  }
+                  router(`/success/${order?._id}`);
+                } catch (error) {
+                  // Log thông tin lỗi từ applyDiscountCodeOrder
+                  console.error('applyDiscountCodeOrder error:', error);
+                  toast.error('Đã xảy ra lỗi khi áp dụng mã giảm giá vào đơn hàng');
+                }
+              }
+            };
+        
+            handleSuccessfulOrder();
+          }, [orderSuccess, appliedDiscountCode, discounts, deleteDiscount, applyDiscountCodeOrder, authData, order, router]);
         
       return (
             <div className="bg-white max-w-5xl mx-auto mb-10">
