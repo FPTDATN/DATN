@@ -106,7 +106,7 @@ const router = createBrowserRouter([
                         path: 'orders/:userId',
                         element: <OrderSumeries />
                     },
-                     {
+                    {
                         path: 'code_ma',
                         element: <List_discount />
                     },
@@ -196,7 +196,7 @@ const router = createBrowserRouter([
                     { path: 'test', element: <AppTest /> },
                     { path: 'order', element: <ListOrder /> },
                     { path: 'sale', element: <ListSale /> },
-                    { path: 'detail/:id', element: <ListComment /> },
+                    { path: 'order-review', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> },
@@ -227,7 +227,9 @@ const router = createBrowserRouter([
                     { path: 'detail/:id', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
-                    { path: 'brand', element: <Listbrand /> }
+                    { path: 'brand', element: <Listbrand /> },
+                    { path: 'order-review', element: <ListComment /> },
+
                 ],
             },
         ],

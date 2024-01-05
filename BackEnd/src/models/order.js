@@ -28,6 +28,13 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     discountAmount: { type: Number, default: 0 },
+
+    ordercomments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Ordercomments',
+      },
+    ],
   }, {
   timestamps: true
 }

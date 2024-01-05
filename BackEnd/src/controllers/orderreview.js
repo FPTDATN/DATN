@@ -4,15 +4,27 @@ import Order from '../models/order.js';
 import Product from '../models/products.js';
 
 
-export const getOrderComments = async (_req, res) => {
-    try {
-        const ordercomment = await Ordercomments.find().populate(['userId']);
+export const getOrderComments = async (req, res) => {
+    const { startDate, endDate } = req.query;
 
-        if (ordercomment.length === 0) {
-            return res.status(200).json(ordercomment);
+    const filter = {};
+    if (startDate && endDate) {
+        filter.createdAt = {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate),
+        };
+    }
+
+    try {
+        const orderComments = await Ordercomments.find(filter).populate(['userId']);
+
+        if (orderComments.length === 0) {
+            return res.status(200).json({
+                message: "Không có dữ liệu",
+            });
         }
 
-        return res.status(200).json(ordercomment);
+        return res.status(200).json(orderComments);
     } catch (error) {
         return res.status(400).json({
             message: error.message,
@@ -35,16 +47,7 @@ export const createOrderComment = async (req, res) => {
         const existingProduct = await Product.findById(productId);
 
         if (!existingProduct) return res.status(400).json({ message: 'Không tìm thấy sản phẩm' });
-        // const newComment = await Ordercomments.create({
-        //     userId,
-        //     orderId,
-        //     text,
-        //     productId,
-        //     rating,
-        //     images,
-        //     videos,
-        //     status
-        //   });
+
         const newComments = [];
         const productIds = Array.isArray(productId) ? productId : [productId];
         productIds.forEach(async (productIds) => {
@@ -60,17 +63,7 @@ export const createOrderComment = async (req, res) => {
             });
             newComments.push(newComment._id);
         });
-        // await Auth.findByIdAndUpdate(userId, {
-        //     $addToSet: {
-        //       ordercomment: newComment._id,
-        //     },
-        //   });
-          
-        //   await Order.findByIdAndUpdate(orderId, {
-        //     $addToSet: {
-        //       ordercomment: newComment._id,
-        //     },
-        //   });
+
         await Auth.findByIdAndUpdate(userId, {
             $addToSet: {
                 ordercomment: { $each: newComments },

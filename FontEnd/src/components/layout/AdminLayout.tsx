@@ -6,13 +6,13 @@ import { useLogoutMutation } from '@/services/auth';
 import { useState } from 'react';
 import { IoIosColorPalette } from "react-icons/io";
 import { GiResize } from "react-icons/gi";
-import {  FireOutlined } from '@ant-design/icons';
+import { FireOutlined } from '@ant-design/icons';
 import { AiOutlineMenu, AiOutlineUser } from 'react-icons/ai';
 import AdminMobileMenu from '../modal/AdminMobileMenu';
 import { BiSolidCategory } from "react-icons/bi";
-import { MdCategory,MdSupervisorAccount,MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { MdCategory, MdSupervisorAccount, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { MdDashboard } from "react-icons/md";
-import { RiShirtFill,RiDashboard3Fill } from "react-icons/ri";
+import { RiShirtFill, RiDashboard3Fill } from "react-icons/ri";
 import { LiaSalesforce } from "react-icons/lia";
 import Ashirt from "../../../public/Ashirt.png"
 const AdminLayout = () => {
@@ -61,7 +61,7 @@ const AdminLayout = () => {
     const onClose = () => {
         setOpen(false);
     };
- 
+
     return (
         <>
             {isLoading || (!isLoading && authData?.role !== 'admin') ? (
@@ -71,7 +71,7 @@ const AdminLayout = () => {
                     <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                         <div className="px-3 py-3 lg:px-5 lg:pl-3">
                             <div className="flex items-center justify-between">
-                            <div className="flex items-center justify-start">
+                                <div className="flex items-center justify-start">
                                     <button
                                         data-drawer-target="logo-sidebar"
                                         data-drawer-toggle="logo-sidebar"
@@ -85,19 +85,19 @@ const AdminLayout = () => {
                                         >
                                             <AiOutlineMenu />
                                         </div>
-                                        
+
                                     </button>
                                     <a href="" className="flex ml-3 md:mr-24">
-                                            <img
-                                                src={Ashirt}
-                                                className="h-[40px] w-[60px] mr-3"
-                                                alt="FlowBite Logo"
-                                            />
-                                            <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                                        <img
+                                            src={Ashirt}
+                                            className="h-[40px] w-[60px] mr-3"
+                                            alt="FlowBite Logo"
+                                        />
+                                        <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
 
-                                            </span>
-                                        </a>
-                                        <AdminMobileMenu open={open} onClose={onClose} />
+                                        </span>
+                                    </a>
+                                    <AdminMobileMenu open={open} onClose={onClose} />
                                 </div>
                                 <div className="flex items-center">
                                     <div className="flex items-center ml-3">
@@ -126,7 +126,7 @@ const AdminLayout = () => {
                                                 </button>
                                             </Dropdown>
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -145,14 +145,14 @@ const AdminLayout = () => {
                                         to="/admin"
                                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
-                                        <RiDashboard3Fill style={{ fontSize: '18px', }}/>
+                                        <RiDashboard3Fill style={{ fontSize: '18px', }} />
                                         <span className="flex-1 ml-3 whitespace-nowrap">Bảng điều khiển</span>
                                         <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
                                             Pro
                                         </span>
                                     </Link>
                                 </li>
-                                
+
                                 <li>
                                     <button
                                         type="button"
@@ -161,7 +161,7 @@ const AdminLayout = () => {
                                         data-collapse-toggle="dropdown-example"
                                         onClick={toggleMenuOne}
                                     >
-                                        <BiSolidCategory style={{ fontSize: '18px', }}/>
+                                        <BiSolidCategory style={{ fontSize: '18px', }} />
                                         <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Danh mục</span>
                                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -174,7 +174,7 @@ const AdminLayout = () => {
                                                     to="category"
                                                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                                 >
-                                                    <MdCategory  style={{ fontSize: '18px', }} />
+                                                    <MdCategory style={{ fontSize: '18px', }} />
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Danh mục</span>
                                                 </Link>
                                             </li>
@@ -185,7 +185,7 @@ const AdminLayout = () => {
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Thương hiệu</span>
                                                 </Link>
                                             </li>
-                                           
+
                                         </ul>
                                     )}
                                 </li>
@@ -195,7 +195,7 @@ const AdminLayout = () => {
                                         to="user"
                                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
-                                        <MdSupervisorAccount style={{ fontSize: '18px', }}/>
+                                        <MdSupervisorAccount style={{ fontSize: '18px', }} />
                                         <span className="flex-1 ml-3 whitespace-nowrap">Tài khoản</span>
                                     </Link>
                                 </li>
@@ -207,7 +207,7 @@ const AdminLayout = () => {
                                         data-collapse-toggle="dropdown-example"
                                         onClick={toggleMenu}
                                     >
-                                        <MdDashboard style={{ fontSize: '18px', }}/>
+                                        <MdDashboard style={{ fontSize: '18px', }} />
                                         <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Sản phẩm</span>
                                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -220,7 +220,7 @@ const AdminLayout = () => {
                                                     to="product"
                                                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                                 >
-                                                    <RiShirtFill style={{ fontSize: '18px', }}/>
+                                                    <RiShirtFill style={{ fontSize: '18px', }} />
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Quản lý sản phẩm</span>
                                                 </Link>
                                             </li>
@@ -233,7 +233,7 @@ const AdminLayout = () => {
                                             </li>
                                             <li>
                                                 <Link to="size" className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                                                    <GiResize style={{ fontSize: '18px', }}/>
+                                                    <GiResize style={{ fontSize: '18px', }} />
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Quản lý kích cỡ</span>
                                                 </Link>
                                             </li>
@@ -245,7 +245,7 @@ const AdminLayout = () => {
                                         to="order"
                                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
-                                       <MdOutlineProductionQuantityLimits style={{ fontSize: '18px', }}/>
+                                        <MdOutlineProductionQuantityLimits style={{ fontSize: '18px', }} />
                                         <span className="flex-1 ml-3 whitespace-nowrap">Đơn hàng</span>
                                     </Link>
                                 </li>
@@ -254,9 +254,19 @@ const AdminLayout = () => {
                                         to="sale"
                                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
-                                        <LiaSalesforce style={{ fontSize: '18px', }}/>
+                                        <LiaSalesforce style={{ fontSize: '18px', }} />
 
                                         <span className="flex-1 ml-3 whitespace-nowrap">Giảm giá</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="order-review"
+                                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    >
+                                        <LiaSalesforce style={{ fontSize: '18px', }} />
+
+                                        <span className="flex-1 ml-3 whitespace-nowrap">Quản lý đánh giá</span>
                                     </Link>
                                 </li>
                             </ul>
