@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/store/hook';
-import { checkAuth } from '@/utils/checkAuth';
 import Loading from '@/components/ui/Loading';
 import { Button, Divider, Form, Input, Select, message } from 'antd';
 import { formartVND } from '@/utils/formartVND';
@@ -81,10 +80,9 @@ const LocationList: React.FC = () => {
     const [_discountAmount, setDiscountAmount] = useState(0);
     const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>('');
     const [discountedTotal, setDiscountedTotal] = useState<number>(reduceTotal(cartItems));
-    const [savedAddSales, setSavedAddSales] = useState([]);
+
     const [selectedDiscount, setSelectedDiscount] = useState('');
     // Mount
-    const shouldLog = useRef(true);
 
     // áp mã giảm giá
     // Hàm xử lý thay đổi mã giảm giá từ select
@@ -166,45 +164,47 @@ const LocationList: React.FC = () => {
     }, [authData, form]);
 
     const handleSubmitCheckout = async (values: any) => {
-        try {
-            const { username, address1, address2, city, ...customer } = values;
-            const shipping = `${address1} - ${address2} - ${city}`;
-            if (payMethod === 0) {
-                orders({
-                    ...customer,
-                    total: discountedTotal,
-                    status: Status.INFORMATION,
-                    userId: authData?._id! || '',
-                    payMethod,
-                    products: cartItems,
-                    isPaid: true,
-                    shipping,
-                });
-                console.log(customer);
-            }
-
-            
-
-            if (payMethod === 1) {
-                axios
-                    .post('http://localhost:8080/api/vnpay/create_payment_url', {
-                        amount: discountedTotal,
-                        bankCode: '',
-                        orderDescription: 'vnpay',
-                        orderType: 2,
-                        language: '',
-                        orderid: Math.random(),
-                        products: cartItems,
-                        shipping,
-                        userId: authData?._id! || '',
+        if (window.confirm('Bạn vui lòng đọc kỹ điều khoản của Shop nếu không muốn xảy ra điều gì đáng tiếc.')) {
+            try {
+                const { username, address1, address2, city, ...customer } = values;
+                const shipping = `${address1} - ${address2} - ${city}`;
+                if (payMethod === 0) {
+                    orders({
                         ...customer,
-                    })
-                    .then((res) => {
-                        window.location = res.data.url;
+                        total: discountedTotal,
+                        status: Status.INFORMATION,
+                        userId: authData?._id! || '',
+                        payMethod,
+                        products: cartItems,
+                        isPaid: true,
+                        shipping,
                     });
+                    console.log(customer);
+                }
+
+                if (payMethod === 1) {
+                    axios
+                        .post('http://localhost:8080/api/vnpay/create_payment_url', {
+                            amount: discountedTotal,
+                            bankCode: '',
+                            orderDescription: 'vnpay',
+                            orderType: 2,
+                            language: '',
+                            orderid: Math.random(),
+                            products: cartItems,
+                            shipping,
+                            userId: authData?._id! || '',
+                            ...customer,
+                        })
+                        .then((res) => {
+                            window.location = res.data.url;
+                        });
+                }
+            } catch (error) {
+                return message.error('Đã có lỗi xảy ra');
             }
-        } catch (error) {
-            return message.error('Đã có lỗi xảy ra');
+        } else {
+            return
         }
     };
 
@@ -293,7 +293,10 @@ const LocationList: React.FC = () => {
                                     <div key={index}>
                                         <div className="flex justify-between px-2 py-1">
                                             <span className="break-words text-sm w-[calc(100%-100px)]">
-                                                [Đặt hàng trước] {item.name} - <b>{item?.color} - {item?.size}</b>
+                                                [Đặt hàng trước] {item.name} -{' '}
+                                                <b>
+                                                    {item?.color} - {item?.size}
+                                                </b>
                                                 <strong className="ml-2">× {item.quantity}</strong>
                                             </span>
 

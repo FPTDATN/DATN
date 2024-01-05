@@ -15,16 +15,11 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<any>) => {
-            let newProduct = action.payload;
-
-            const itemIndex = state.cartItems.findIndex((item) => item?.size === newProduct.sizeId || item?.color === newProduct.color);
-
-            // const itemId = state.cartItems.findIndex(item => item._id === newProduct._id)
+            const newProduct = action.payload;
 
             const existingProduct = state.cartItems.find((item) => item._id === newProduct._id);
 
-            if (itemIndex < 0) {
-                
+            if (!existingProduct) {
                 state.cartItems.push({
                     ...newProduct,
                     color: newProduct?.color,
@@ -33,29 +28,10 @@ const cartSlice = createSlice({
                 });
                 message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
             } else {
+                existingProduct.quantity++;
+                message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
 
-                if (existingProduct.color === newProduct?.color || existingProduct?.size !== newProduct?.size) {
-                    state.cartItems.push({
-                        ...newProduct,
-                        color: newProduct?.color,
-                        size: newProduct?.size,
-                        quantity: newProduct.quantity || 1,
-                    });
-                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
-                } else if (existingProduct?.color !== newProduct?.color || existingProduct?.size === newProduct?.size) {
-                    state.cartItems.push({
-                        ...newProduct,
-                        color: newProduct?.color,
-                        size: newProduct?.size,
-                        quantity: newProduct.quantity || 1,
-                    });
-                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
-                } else {
-                    state.cartItems[itemIndex].quantity++;
-                    message.success(`Đã thêm ${newProduct.name} vào giỏ hàng`);
-                }
             }
-
         },
         increase: (state, action: PayloadAction<number>) => {
             const currentProduct = state.cartItems.find((_item, index) => index === action.payload);
@@ -86,8 +62,8 @@ const cartSlice = createSlice({
                 position: 'bottom-right',
             });
         },
-        update: (state,action) => {
-            let exist = state.cartItems.findIndex((_item,index)  => index === action.payload.index);
+        update: (state, action) => {
+            let exist = state.cartItems.findIndex((_item, index) => index === action.payload.index);
 
             state.cartItems[exist].color = action?.payload?.color;
             state.cartItems[exist].size = action?.payload?.size;
@@ -96,6 +72,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, increase, decrease, clear, remove,update } = cartSlice.actions;
+export const { addToCart, increase, decrease, clear, remove, update } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;

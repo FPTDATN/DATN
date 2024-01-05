@@ -7,13 +7,13 @@ export const senderMail = async (to, html) => {
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-        service:'gmail',
+        service: 'gmail',
         host: 'smtp.gmail.com',
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
-            user: 'thanhntph21000@fpt.edu.vn', // generated ethereal user
-            pass: 'czpo abgm topd ugvd'
+            user: 'chushop935@gmail.com', // generated ethereal user
+            pass: 'rrut bjvc skop yovw'
         },
         tls: {
             rejectUnauthorized: false, // avoid nodejs self signed certificate error
@@ -22,11 +22,12 @@ export const senderMail = async (to, html) => {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: 'thanhntph21000@fpt.edu.vn', // sender address
+        from: 'chushop935@gmail.com', // sender address
         to, // list of receivers
         subject: 'Shop A-Shirt thông báo', // Subject line
         text: 'Hello world?', // plain text body
         html,
+        replyTo: 'chushop935@gmail.com'
     });
 
     console.log('Message sent: %s', info.messageId);

@@ -28,23 +28,9 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
     const { data: wishlistData } = useGetWishlistQuery(authData?._id || '');
     const [checkProductInWishlist] = useCheckProductInWishlistMutation();
     const [isInWishlist, setIsInWishlist] = useState(false);
-    const [haveOption, setHaveOption] = useState(false);
-    const [color, setColor] = useState<string>('');
-    const [size, setSize] = useState<string>('');
 
-    const handleSelect = () => {
-        if (product?.sizeId?.length! > 0 || product?.colorId?.length! > 0) {
-            setHaveOption(true);
-        } else {
-            setHaveOption(false);
-            dispatch(addToCart({ ...product, quantity: 1 }));
-        }
-    };
-
-    const handleClose = () => {
-        setHaveOption(false);
-        setColor('');
-        setSize('');
+    const handleAddToCart = () => {
+        dispatch(addToCart({ ...product, color: product?.colorId![0].name, size: product?.sizeId![0].name }));
     };
 
     const handleAddToWishlist = async (productId: string, _userId: any) => {
@@ -116,7 +102,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
                     <div className="relative group bg-white rounded shadow-md">
                         <div className="favourite hidden group-hover:block flex-col ">
                             <div
-                                onClick={handleSelect}
+                                onClick={handleAddToCart}
                                 className="absolute left-5 top-5 z-10 text-xl font-semibold flex items-center justify-center p-2 text-center text-primary/90 border rounded-full shadow-xl cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900 hover:text-gray-50 hover:bg-primary/95 w-11 h-11 "
                             >
                                 <AiOutlineShoppingCart />
@@ -142,66 +128,6 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
 
                         {/* Card sale off if saleoff > 0 */}
                         <SaleOffCard type="saleoff" off={product?.sale_off} />
-
-                        {haveOption && (
-                            <div>
-                                <div
-                                    className={`absolute group top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-white/90 z-50`}
-                                >
-                                    <button className="absolute top-2 right-2 hover:opacity-70" onClick={handleClose}>
-                                        <CloseOutlined />
-                                        <span className="ml-1">Đóng</span>
-                                    </button>
-                                    <div className="flex flex-col w-full gap-y-2 px-3">
-                                        {product?.sizeId && (
-                                            <select
-                                                onChange={(e) => setSize(e.target.value)}
-                                                className="w-full shadow text-center text-nav group px-2 py-2 outline-none"
-                                            >
-                                                <option value="">-- Vui lòng chọn size --</option>
-                                                {product.sizeId.map((size) => (
-                                                    <option key={size._id} value={size.name}>
-                                                        {size.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        )}
-
-                                        {product?.colorId && (
-                                            <select
-                                                onChange={(e) => setColor(e.target.value)}
-                                                className="w-full shadow text-center text-nav group px-2 py-2 outline-none"
-                                            >
-                                                <option value="">-- Vui lòng chọn màu --</option>
-
-                                                {product?.colorId?.map((color) => (
-                                                    <option key={color._id} value={color.name}>
-                                                        {color.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        )}
-                                    </div>
-
-                                    <button
-                                        onClick={() => {
-                                            if (color?.length > 0 && size?.length > 0) {
-                                                setColor('');
-                                                setSize('');
-                                                handleClose();
-
-                                                dispatch(addToCart({ ...product, quantity: 1, color, size }));
-                                            } else {
-                                                message.info('Hãy hoàn tất lựa chọn của bạn');
-                                            }
-                                        }}
-                                        className="absolute bottom-0 w-full uppercase font-semibold text-white !bg-primary py-3"
-                                    >
-                                        Thêm vào giỏ hàng
-                                    </button>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     <div className="py-6 text-left">

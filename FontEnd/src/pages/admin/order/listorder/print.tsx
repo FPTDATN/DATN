@@ -1,12 +1,12 @@
-import { Typography, Table, Button, Form } from "antd";
-import { useGetOrderByIdQuery } from "@/services/order";
-import React from "react";
+import { Typography, Table, Button } from 'antd';
+import { useGetOrderByIdQuery } from '@/services/order';
+import React from 'react';
 import { PrinterOutlined } from '@ant-design/icons';
+import { formartVND } from '@/utils/formartVND';
 
 const { Title } = Typography;
 
 const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
-
     const { data: order, isLoading: isOrdersLoading } = useGetOrderByIdQuery(orderId);
     const currentDate = new Date().toLocaleString();
 
@@ -27,8 +27,12 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                                     <React.Fragment key={order._id}>
                                         <h4 className="float-end font-size-15">
                                             Hóa Đơn: {order.orderNumber}
-                                            <span className={`badge ${order.status === 1 ? 'bg-success' : 'bg-danger'} font-size-12 ms-2`}>
-                                                {order.payMethod === 1 ? "Paid" : " Unpaid"}
+                                            <span
+                                                className={`badge ${
+                                                    order.status === 1 ? 'bg-success' : 'bg-danger'
+                                                } font-size-12 ms-2`}
+                                            >
+                                                {order.payMethod === 1 ? 'Paid' : ' Unpaid'}
                                             </span>
                                         </h4>
                                         <div className="mb-4">
@@ -39,8 +43,7 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                                         <div className="text-muted">
                                             <p className="mb-1">Cao đẳng FPT Polytechnic</p>
                                             <p className="mb-1">
-                                                <i className="uil uil-envelope-alt me-1"></i>{" "}
-                                                caodangfpt.hn@fpt.edu.vn
+                                                <i className="uil uil-envelope-alt me-1"></i> caodangfpt.hn@fpt.edu.vn
                                             </p>
                                             <p>
                                                 <i className="uil uil-phone me-1"></i> 0981 725 836
@@ -49,10 +52,9 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                                     </React.Fragment>
                                 ) : null}
                             </div>
-          <hr className="my-4" />
+                            <hr className="my-4" />
                             {order ? (
                                 <React.Fragment>
-
                                     <div className="container">
                                         <div className="flex">
                                             <div className="col-lg-6">
@@ -61,8 +63,7 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                                                         Khách Hàng:
                                                     </Title>
                                                     <Title level={5} className="font-size-15 mb-2 text-black">
-
-                                                        Name :   {order.fullName}
+                                                        Name : {order.fullName}
                                                     </Title>
                                                     <p className="mb-1">Địa chỉ : {order.shipping}</p>
                                                     <p className="mb-1">Email : {order.email}</p>
@@ -96,10 +97,7 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                                     </div>
 
                                     <div className="table-responsive mt-4">
-
-
                                         <Table
-
                                             dataSource={order.products.map((product, index) => {
                                                 let productIndex = index + 1;
                                                 const productTotal = product.price * product.quantity;
@@ -108,60 +106,60 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                                                 return {
                                                     key: productIndex,
                                                     item: product.name,
-                                                    price: `$ ${product.price}`,
+                                                    price: `${formartVND(product.price!)}`,
                                                     quantity: product.quantity,
-                                                    total: `$ ${productTotal.toFixed(2)}`
+                                                    total: `${formartVND(productTotal!)}`,
                                                 };
                                             })}
                                             columns={[
                                                 {
-                                                    title: "No.",
-                                                    dataIndex: "key",
-                                                    key: "key",
-                                                    width: 70
+                                                    title: 'No.',
+                                                    dataIndex: 'key',
+                                                    key: 'key',
+                                                    width: 70,
                                                 },
                                                 {
-                                                    title: "Item",
-                                                    dataIndex: "item",
-                                                    key: "item"
+                                                    title: 'Sản phẩm',
+                                                    dataIndex: 'item',
+                                                    key: 'item',
                                                 },
                                                 {
-                                                    title: "Price",
-                                                    dataIndex: "price",
-                                                    key: "price"
+                                                    title: 'Giá',
+                                                    dataIndex: 'price',
+                                                    key: 'price',
                                                 },
                                                 {
-                                                    title: "Quantity",
-                                                    dataIndex: "quantity",
-                                                    key: "quantity"
+                                                    title: 'SL',
+                                                    dataIndex: 'quantity',
+                                                    key: 'quantity',
                                                 },
                                                 {
-                                                    title: "Total",
-                                                    dataIndex: "total",
-                                                    key: "total"
-                                                }
+                                                    title: 'Tổng',
+                                                    dataIndex: 'total',
+                                                    key: 'total',
+                                                },
                                             ]}
                                             pagination={false}
                                             size="small"
                                         />
                                     </div>
 
-
                                     <div className="py-2">
                                         <div className="d-flex justify-content-between align-items-center border-top border-bottom py-2">
                                             <span className="font-size-15">Order Summary</span>
-                                            <span className="font-size-15">Tổng: ${totalAmount.toFixed(2)}</span>
+                                            <span className="font-size-15">Tổng: {formartVND(totalAmount!)}</span>
                                         </div>
-
                                     </div>
-
 
                                     <div className="d-print-none mt-4">
                                         <div className="float-end">
-                                            <Button type="primary" className="me-1 bg-primary" onClick={() => window.print()}>
+                                            <Button
+                                                type="primary"
+                                                className="me-1 bg-primary"
+                                                onClick={() => window.print()}
+                                            >
                                                 <PrinterOutlined /> Print
                                             </Button>
-
                                         </div>
                                     </div>
                                 </React.Fragment>
@@ -172,7 +170,7 @@ const Hoadon: React.FC<{ orderId: string }> = ({ orderId }) => {
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 
