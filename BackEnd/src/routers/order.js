@@ -1,7 +1,7 @@
 import express from 'express'
 import { checkPermission } from "../middlewares/checkPermission.js";
-import {  createOrder, getOrders, cancelOrder, getOrderById, returnOrder } from '../controllers/order.js';
-import { calculateRevenueByMonth, calculateRevenueByYear, getOrderStatistics, getRevenue, getRevenueByDay,timeLineOrder,applyDiscountCodeOrder } from '../statistics/statisticsOrder.js';
+import { createOrder, getOrders, cancelOrder, getOrderById, returnOrder, applyDiscountCodeOrder, timeLineOrder } from '../controllers/order.js';
+import { calculateRevenueByMonth, calculateRevenueByYear, getOrderStatistics, getRevenue, getRevenueByDay, } from '../statistics/statisticsOrder.js';
 import { stripePay } from '../controllers/pay.js';
 const orderroute = express.Router();
 orderroute.post('/order', createOrder)

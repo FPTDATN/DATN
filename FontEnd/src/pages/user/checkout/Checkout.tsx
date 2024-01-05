@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '@/store/hook';
 import Loading from '@/components/ui/Loading';
 import { Button, Divider, Form, Input, Menu, message, Tooltip } from 'antd';
@@ -14,17 +14,17 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useGetUserByIdQuery } from '@/services/user';
 import { useMeQuery } from '@/services/auth';
-import { useRemoveDiscountCodeFromUserMutation } from '@/services/user'; 
+import { useRemoveDiscountCodeFromUserMutation } from '@/services/user';
 import { useApplyDiscountCodeOrderMutation } from '@/services/order';
 
 interface Discount {
-      _id?: number | string;
-      code: string;
-      discount: number;
-      maxAmount: number;
-      count: number;
-      startDate: Date;
-      endDate: Date;
+    _id?: number | string;
+    code: string;
+    discount: number;
+    maxAmount: number;
+    count: number;
+    startDate: Date;
+    endDate: Date;
 }
 
 const StyleInput = styled(Input)`
@@ -66,8 +66,8 @@ const StyleButton = styled(Button)`
     }
 `;
 const LocationList: React.FC = () => {
-      // Router
-      const router = useNavigate();
+    // Router
+    const router = useNavigate();
 
     // Slice
     const { cartItems } = useAppSelector((state) => state.cart);
@@ -86,40 +86,50 @@ const LocationList: React.FC = () => {
     const [discountedTotal, setDiscountedTotal] = useState<number>(reduceTotal(cartItems));
     const [savedAddSales, setSavedAddSales] = useState([]);
     const [selectedDiscount, setSelectedDiscount] = useState('');
+    const [selectedUserDiscount, setSelectedUserDiscount] = useState('');
+
     // Mount
+    const { data: userData } = useMeQuery();
+    const user_id = userData?._id || '';
+    const { data: userById } = useGetUserByIdQuery(user_id);
+    // console.log('test',user_id)
+
+    const listMyVoucher = userById?.data?.discountCodes;
+    // console.log('test',listMyVoucher)
+
     const shouldLog = useRef(true);
 
-      // áp mã giảm giá 
-      const handleUserDiscountChange = (value: string) => {
-            setSelectedUserDiscount(value);
-      };
-      // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
-      const applyDiscount = () => {
-            if (selectedUserDiscount.trim() === '') {
-              toast.error('Vui lòng chọn mã giảm giá.');
-              return;
-            }
-          
-            if (appliedDiscountCode) {
-              toast.success('Áp mã thanh toán thành công !');
-              return;
-            }
-          
-            const foundDiscount = listMyVoucher?.find((discount) => discount.code === selectedUserDiscount);
-          
-            if (foundDiscount) {
-              if (discountedTotal < foundDiscount.maxAmount) {
+    // áp mã giảm giá
+    const handleUserDiscountChange = (value: string) => {
+        setSelectedUserDiscount(value);
+    };
+    // Hàm xử lý khi nhấn nút áp dụng mã giảm giá
+    const applyDiscount = () => {
+        if (selectedUserDiscount.trim() === '') {
+            toast.error('Vui lòng chọn mã giảm giá.');
+            return;
+        }
+
+        if (appliedDiscountCode) {
+            toast.success('Áp mã thanh toán thành công !');
+            return;
+        }
+
+        const foundDiscount = listMyVoucher?.find((discount) => discount.code === selectedUserDiscount);
+
+        if (foundDiscount) {
+            if (discountedTotal < foundDiscount.maxAmount) {
                 toast.warning(
-                  `Tổng giá trị đơn hàng (${formartVND(discountedTotal)}) đơn hàng phải lớn hơn (${formartVND(
-                    foundDiscount.maxAmount
-                  )}).`
+                    `Tổng giá trị đơn hàng (${formartVND(discountedTotal)}) đơn hàng phải lớn hơn (${formartVND(
+                        foundDiscount.maxAmount,
+                    )}).`,
                 );
                 return;
-              }
-          
-              const currentDate = new Date();
-          
-              if (currentDate >= new Date(foundDiscount.startDate) && currentDate <= new Date(foundDiscount.endDate)) {
+            }
+
+            const currentDate = new Date();
+
+            if (currentDate >= new Date(foundDiscount.startDate) && currentDate <= new Date(foundDiscount.endDate)) {
                 // Mã giảm giá hợp lệ, áp dụng giảm giá
                 // Thêm mã giảm giá vào mảng discounts
                 setDiscounts((prevDiscounts) => [...prevDiscounts, foundDiscount]);
@@ -131,54 +141,54 @@ const LocationList: React.FC = () => {
                 const discountedPrice = totalCartPrice - discountAmountInMoney;
                 setDiscountedTotal(discountedPrice);
                 toast.success('Mã giảm giá đã được áp dụng!');
-              } else {
+            } else {
                 toast.error('Mã giảm giá đã hết hạn.');
-              }
-            } else {
-              toast.error('Mã giảm giá không hợp lệ.');
             }
-          };
-          
-      // hủy áp dụng mã 
-      const cancelDiscount = () => {
-            setAppliedDiscount(false);
-            setDiscountAmount(0);
-            setAppliedDiscountCode('');
-            setDiscountedTotal(reduceTotal(cartItems));
-            setSelectedUserDiscount(''); // Reset the selected user discount
-            toast.info('Đã hủy áp dụng mã giảm giá.');
-        };        
-      // Pay method
-      const [payMethod, setPayMethod] = useState(0);
-      // const [loading, setLoading] = useState(false);
+        } else {
+            toast.error('Mã giảm giá không hợp lệ.');
+        }
+    };
 
-      let holder: any = {};
-      cartItems.forEach((d) => {
-            if (holder.hasOwnProperty(d._id)) {
-                  holder[d._id] = holder[d._id] + d.quantity;
-            } else {
-                  holder[d._id] = d.quantity;
-            }
-      });
+    // hủy áp dụng mã
+    const cancelDiscount = () => {
+        setAppliedDiscount(false);
+        setDiscountAmount(0);
+        setAppliedDiscountCode('');
+        setDiscountedTotal(reduceTotal(cartItems));
+        setSelectedUserDiscount(''); // Reset the selected user discount
+        toast.info('Đã hủy áp dụng mã giảm giá.');
+    };
+    // Pay method
+    const [payMethod, setPayMethod] = useState(0);
+    // const [loading, setLoading] = useState(false);
 
-      let obj2 = [];
+    let holder: any = {};
+    cartItems.forEach((d) => {
+        if (holder.hasOwnProperty(d._id)) {
+            holder[d._id] = holder[d._id] + d.quantity;
+        } else {
+            holder[d._id] = d.quantity;
+        }
+    });
 
-      for (const prop in holder) {
-            obj2.push({ key: prop, value: holder[prop] });
-      }
-      const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            return date.toLocaleDateString();
-      };
+    let obj2 = [];
 
-      useEffect(() => {
-            if (authData) {
-                  form.setFieldsValue({
-                        email: authData.email,
-                        username: authData.username,
-                  });
-            }
-      }, [authData, form]);
+    for (const prop in holder) {
+        obj2.push({ key: prop, value: holder[prop] });
+    }
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
+
+    useEffect(() => {
+        if (authData) {
+            form.setFieldsValue({
+                email: authData.email,
+                username: authData.username,
+            });
+        }
+    }, [authData, form]);
 
     const handleSubmitCheckout = async (values: any) => {
         try {
@@ -197,8 +207,6 @@ const LocationList: React.FC = () => {
                 });
                 console.log(customer);
             }
-
-            
 
             if (payMethod === 1) {
                 axios
@@ -257,234 +265,231 @@ const LocationList: React.FC = () => {
                             <StyleInput />
                         </Form.Item>
 
-                                    <Form.Item
-                                          name={'fullName'}
-                                          label={'Tên của bạn'}
-                                          rules={[{ required: true, message: 'Bắt buộc' }]}
-                                    >
-                                          <StyleInput />
-                                    </Form.Item>
+                        <Form.Item
+                            name={'fullName'}
+                            label={'Tên của bạn'}
+                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                        >
+                            <StyleInput />
+                        </Form.Item>
 
-                                    <Form.Item
-                                          rules={[{ required: true, message: 'Bắt buộc' }]}
-                                          label={'Địa chỉ 1'}
-                                          name={'address1'}
-                                    >
-                                          <StyleInput />
-                                    </Form.Item>
+                        <Form.Item
+                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                            label={'Địa chỉ 1'}
+                            name={'address1'}
+                        >
+                            <StyleInput />
+                        </Form.Item>
 
-                                    <Form.Item
-                                          rules={[{ required: true, message: 'Bắt buộc' }]}
-                                          label={'Địa chỉ 2'}
-                                          name={'address2'}
-                                    >
-                                          <StyleInput />
-                                    </Form.Item>
+                        <Form.Item
+                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                            label={'Địa chỉ 2'}
+                            name={'address2'}
+                        >
+                            <StyleInput />
+                        </Form.Item>
 
-                                    <Form.Item rules={[{ required: true, message: 'Bắt buộc' }]} label={'Thành phố'} name={'city'}>
-                                          <StyleInput />
-                                    </Form.Item>
+                        <Form.Item rules={[{ required: true, message: 'Bắt buộc' }]} label={'Thành phố'} name={'city'}>
+                            <StyleInput />
+                        </Form.Item>
 
-                                    <Form.Item
-                                          name={'phone'}
-                                          label={'Số điện thoại'}
-                                          rules={[{ required: true, message: 'Bắt buộc' }]}
-                                    >
-                                          <StyleInput />
-                                    </Form.Item>
-                              </div>
-                              <div className="bg-gray-100 px-4 py-4 relative lg:px-7 lg:py-7">
-                                    <div>
-                                          <StyleBill style={{ top: '-10px', backgroundPosition: '-3px -5px, 0 0' }} />
-                                          <h1 className="text-center font-medium text-xl mb-7">ĐƠN HÀNG CỦA BẠN</h1>
-                                          <div className=" bg-white px-7 py-7">
-                                                <div className="flex justify-between">
-                                                      <span>SẢN PHẨM</span>
-                                                      <span>TỔNG</span>
-                                                </div>
-                                                <Divider />
+                        <Form.Item
+                            name={'phone'}
+                            label={'Số điện thoại'}
+                            rules={[{ required: true, message: 'Bắt buộc' }]}
+                        >
+                            <StyleInput />
+                        </Form.Item>
+                    </div>
+                    <div className="bg-gray-100 px-4 py-4 relative lg:px-7 lg:py-7">
+                        <div>
+                            <StyleBill style={{ top: '-10px', backgroundPosition: '-3px -5px, 0 0' }} />
+                            <h1 className="text-center font-medium text-xl mb-7">ĐƠN HÀNG CỦA BẠN</h1>
+                            <div className=" bg-white px-7 py-7">
+                                <div className="flex justify-between">
+                                    <span>SẢN PHẨM</span>
+                                    <span>TỔNG</span>
+                                </div>
+                                <Divider />
 
                                 {cartItems.map((item, index) => (
                                     <div key={index}>
                                         <div className="flex justify-between px-2 py-1">
                                             <span className="break-words text-sm w-[calc(100%-100px)]">
-                                                [Đặt hàng trước] {item.name} - <b>{item?.color} - {item?.size}</b>
+                                                [Đặt hàng trước] {item.name} -{' '}
+                                                <b>
+                                                    {item?.color} - {item?.size}
+                                                </b>
                                                 <strong className="ml-2">× {item.quantity}</strong>
                                             </span>
 
-                                                                  <span className="text-gray-500">
-                                                                        {formartVND(item.price * item.quantity)}
-                                                                  </span>
-                                                            </div>
-                                                            <Divider />
-                                                      </div>
-                                                ))}
-
-                                                <div className="border-dashed lg:border-0 md:border-0">
-                                                      <div className="mt-3 text-xl">
-                                                            <p>
-                                                                  {appliedDiscount
-                                                                        ? `Tổng : ${formartVND(discountedTotal)}`
-                                                                        : `Tổng: ${formartVND(reduceTotal(cartItems))}`}
-                                                            </p>
-                                                      </div>
-                                                      {/* áp mã giảm giá  */}
-                                                      <div className="">
-                                                            <div className=''>
-                                                                  <Menu grid={{ gutter: 16, column: 2 }}>
-                                                                        {listMyVoucher &&
-                                                                              listMyVoucher.map((voucher) => (
-                                                                                    <Menu.Item key={voucher._id} onClick={() => handleUserDiscountChange(voucher.code)}>
-                                                                                          <div>
-                                                                                                <span>{`Giảm giá ${voucher.discount}%`}</span>
-                                                                                                <Tooltip
-                                                                                                      title={
-                                                                                                            <div>
-                                                                                                                  <p>{`Mã giảm giá: ${voucher.code}`}</p>
-                                                                                                                  <p>{`Đơn hàng tối thiểu: ${formartVND(voucher.maxAmount)}`}</p>
-                                                                                                                  <p>{`HSD: ${formatDate(voucher.startDate)} - ${formatDate(voucher.endDate)}`}</p>
-                                                                                                            </div>
-                                                                                                      }
-                                                                                                >
-                                                                                                      <span className="ml-2">ℹ️</span>
-                                                                                                </Tooltip>
-                                                                                          </div>
-                                                                                    </Menu.Item>
-                                                                              ))}
-                                                                  </Menu>
-                                                            </div>
-                                                            <button
-                                                                  type='button'
-                                                                  className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
-                                                                  onClick={applyDiscount}
-                                                            >
-                                                                  ÁP MÃ GIẢM GIÁ
-                                                            </button>
-                                                            <button
-                                                                  type='button'
-                                                                  className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
-                                                                  onClick={cancelDiscount}
-                                                            >
-                                                                  HỦY ÁP DỤNG MÃ
-                                                            </button>
-                                                      </div>
-                                                </div>
-                                          </div>
-                                          <br />
-                                          <div>
-                                                <label className="hover:cursor-pointer">
-                                                      <input
-                                                            name="pay"
-                                                            className="mt-4"
-                                                            onChange={(e) => setPayMethod(Number(e.target.value))}
-                                                            value={0}
-                                                            type="radio"
-                                                            defaultChecked
-                                                      />
-                                                      <span className="ml-2">Thanh toán khi nhận hàng</span>
-                                                </label>
-                                                <AnimatePresence>
-                                                      {payMethod === 0 && (
-                                                            <motion.div
-                                                                  animate={{ height: 50, opacity: 1, overflow: 'hidden' }}
-                                                                  initial={{ height: 0 }}
-                                                                  exit={{ height: 0 }}
-                                                            >
-                                                                  <div className="bg-white mt-2 py-2 px-4 h-[40px] flex items-center">
-                                                                        <span className="mr-2">Thanh toán khi nhận hàng</span>
-                                                                        <img src="/stripe.png" alt="" className="w-[50px]" />
-                                                                  </div>
-                                                            </motion.div>
-                                                      )}
-                                                </AnimatePresence>
-                                          </div>
-                                          <div>
-                                                <label className="hover:cursor-pointer">
-                                                      <input
-                                                            name="pay"
-                                                            className="mt-4"
-                                                            onChange={(e) => setPayMethod(Number(e.target.value))}
-                                                            value={1}
-                                                            type="radio"
-                                                      />
-                                                      <span className="ml-2">Thanh toán bằng VNPAY</span>
-                                                </label>
-
-                                                <AnimatePresence>
-                                                      {payMethod === 1 && (
-                                                            <motion.div
-                                                                  animate={{ height: 50, opacity: 1, overflow: 'hidden' }}
-                                                                  initial={{ height: 0 }}
-                                                                  exit={{ height: 0 }}
-                                                            >
-                                                                  <div className="bg-white mt-2 py-2 px-4 h-[40px] flex items-center">
-                                                                        <span className="mr-2">Thanh toán bằng</span>
-                                                                        <img
-                                                                              src="https://vnpayqr.vn/wp-content/uploads/2022/01/tong-hop-logo-xuat-PNG_VNPAY-ngang-1.png"
-                                                                              alt=""
-                                                                              className="w-[70px]"
-                                                                        />
-                                                                  </div>
-                                                            </motion.div>
-                                                      )}
-                                                </AnimatePresence>
-                                          </div>
-                                          <div>
-                                                <br />
-                                                <Divider />
-                                                <br />
-                                                <p className="text-sm text-nav">
-                                                      Thông tin thẻ tín dụng sẽ được xử lý bằng cổng thanh toán an toàn do bạn lựa chọn và
-                                                      sẽ không được lưu trữ trong hệ thống trang web của chúng tôi. Dữ liệu cá nhân của
-                                                      bạn sẽ được sử dụng để xử lý đơn đặt hàng, hỗ trợ trải nghiệm của bạn trên trang web
-                                                      này và cho các mục đích khác được mô tả trong{' '}
-                                                      <strong className="text-[#48b8e5] font-semibold">chính sách bảo mật</strong> của
-                                                      chúng tôi.
-                                                </p>
-
-                                                <br />
-
-                                                <Divider />
-
-                                                <div className="text-sm text-nav">
-                                                      <label>
-                                                            <input type="checkbox" required />
-                                                            <span className="ml-2">
-                                                                  Tôi hiểu và đồng ý rằng đơn hàng không thể bị hủy sau khi thanh toán xong.
-                                                                  Tôi cũng đã đọc và đồng ý với các điều khoản và điều kiện của trang web *
-                                                            </span>
-                                                      </label>
-                                                </div>
-
-                                                <br />
-
-                                                {payMethod === 0 && (
-                                                      <StyleButton htmlType="submit" loading={orderLoading}>
-                                                            Thanh toán khi nhận hàng
-                                                      </StyleButton>
-                                                )}
-                                                {payMethod == 1 && <StyleButton htmlType="submit">Thanh toán băng VNPAY</StyleButton>}
-                                          </div>
+                                            <span className="text-gray-500">
+                                                {formartVND(item.price * item.quantity)}
+                                            </span>
+                                        </div>
+                                        <Divider />
                                     </div>
+                                ))}
 
-                                    <StyleBill style={{ bottom: '-10px', backgroundPosition: '-3px 2px, 0 0' }} />
-                              </div>
-                        </Form>
-                  )}
-            </div>
-      );
+                                <div className="border-dashed lg:border-0 md:border-0">
+                                    <div className="mt-3 text-xl">
+                                        <p>
+                                            {appliedDiscount
+                                                ? `Tổng : ${formartVND(discountedTotal)}`
+                                                : `Tổng: ${formartVND(reduceTotal(cartItems))}`}
+                                        </p>
+                                    </div>
+                                    {/* áp mã giảm giá  */}
+                                    <div className="">
+                                        <div className="">
+                                            <Menu grid={{ gutter: 16, column: 2 }}>
+                                                {listMyVoucher &&
+                                                    listMyVoucher.map((voucher) => (
+                                                        <Menu.Item
+                                                            key={voucher._id}
+                                                            onClick={() => handleUserDiscountChange(voucher.code)}
+                                                        >
+                                                            <div>
+                                                                <span>{`Giảm giá ${voucher.discount}%`}</span>
+                                                                <Tooltip
+                                                                    title={
+                                                                        <div>
+                                                                            <p>{`Mã giảm giá: ${voucher.code}`}</p>
+                                                                            <p>{`Đơn hàng tối thiểu: ${formartVND(
+                                                                                voucher.maxAmount,
+                                                                            )}`}</p>
+                                                                            <p>{`HSD: ${formatDate(
+                                                                                voucher.startDate,
+                                                                            )} - ${formatDate(voucher.endDate)}`}</p>
+                                                                        </div>
+                                                                    }
+                                                                >
+                                                                    <span className="ml-2">ℹ️</span>
+                                                                </Tooltip>
+                                                            </div>
+                                                        </Menu.Item>
+                                                    ))}
+                                            </Menu>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
+                                            onClick={applyDiscount}
+                                        >
+                                            ÁP MÃ GIẢM GIÁ
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="ml-2 font-semibold !bg-primary w-1/3 lg:w-auto md:w-auto px-2 text-white"
+                                            onClick={cancelDiscount}
+                                        >
+                                            HỦY ÁP DỤNG MÃ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div>
+                                <label className="hover:cursor-pointer">
+                                    <input
+                                        name="pay"
+                                        className="mt-4"
+                                        onChange={(e) => setPayMethod(Number(e.target.value))}
+                                        value={0}
+                                        type="radio"
+                                        defaultChecked
+                                    />
+                                    <span className="ml-2">Thanh toán khi nhận hàng</span>
+                                </label>
+                                <AnimatePresence>
+                                    {payMethod === 0 && (
+                                        <motion.div
+                                            animate={{ height: 50, opacity: 1, overflow: 'hidden' }}
+                                            initial={{ height: 0 }}
+                                            exit={{ height: 0 }}
+                                        >
+                                            <div className="bg-white mt-2 py-2 px-4 h-[40px] flex items-center">
+                                                <span className="mr-2">Thanh toán khi nhận hàng</span>
+                                                <img src="/stripe.png" alt="" className="w-[50px]" />
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                            <div>
+                                <label className="hover:cursor-pointer">
+                                    <input
+                                        name="pay"
+                                        className="mt-4"
+                                        onChange={(e) => setPayMethod(Number(e.target.value))}
+                                        value={1}
+                                        type="radio"
+                                    />
+                                    <span className="ml-2">Thanh toán bằng VNPAY</span>
+                                </label>
+
+                                <AnimatePresence>
+                                    {payMethod === 1 && (
+                                        <motion.div
+                                            animate={{ height: 50, opacity: 1, overflow: 'hidden' }}
+                                            initial={{ height: 0 }}
+                                            exit={{ height: 0 }}
+                                        >
+                                            <div className="bg-white mt-2 py-2 px-4 h-[40px] flex items-center">
+                                                <span className="mr-2">Thanh toán bằng</span>
+                                                <img
+                                                    src="https://vnpayqr.vn/wp-content/uploads/2022/01/tong-hop-logo-xuat-PNG_VNPAY-ngang-1.png"
+                                                    alt=""
+                                                    className="w-[70px]"
+                                                />
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                            <div>
+                                <br />
+                                <Divider />
+                                <br />
+                                <p className="text-sm text-nav">
+                                    Thông tin thẻ tín dụng sẽ được xử lý bằng cổng thanh toán an toàn do bạn lựa chọn và
+                                    sẽ không được lưu trữ trong hệ thống trang web của chúng tôi. Dữ liệu cá nhân của
+                                    bạn sẽ được sử dụng để xử lý đơn đặt hàng, hỗ trợ trải nghiệm của bạn trên trang web
+                                    này và cho các mục đích khác được mô tả trong{' '}
+                                    <strong className="text-[#48b8e5] font-semibold">chính sách bảo mật</strong> của
+                                    chúng tôi.
+                                </p>
+
+                                <br />
+
+                                <Divider />
+
+                                <div className="text-sm text-nav">
+                                    <label>
+                                        <input type="checkbox" required />
+                                        <span className="ml-2">
+                                            Tôi hiểu và đồng ý rằng đơn hàng không thể bị hủy sau khi thanh toán xong.
+                                            Tôi cũng đã đọc và đồng ý với các điều khoản và điều kiện của trang web *
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <br />
+
+                                {payMethod === 0 && (
+                                    <StyleButton htmlType="submit" loading={orderLoading}>
+                                        Thanh toán khi nhận hàng
+                                    </StyleButton>
+                                )}
+                                {payMethod == 1 && <StyleButton htmlType="submit">Thanh toán băng VNPAY</StyleButton>}
+                            </div>
+                        </div>
+
+                        <StyleBill style={{ bottom: '-10px', backgroundPosition: '-3px 2px, 0 0' }} />
+                    </div>
+                </Form>
+            )}
+        </div>
+    );
 };
 export default LocationList;
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -357,6 +357,7 @@ export const applyDiscountCodeOrder = async (req, res) => {
       message: 'Có lỗi xảy ra khi xử lý mã giảm giá',
     });
   }
+}
 
 export const timeLineOrder = async (req, res) => {
 
