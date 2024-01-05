@@ -19,11 +19,11 @@ const commentSchema = new mongoose.Schema(
             required: true,
         },
         status: { type: Number, default: 1 },
-        productId: {
+        productId: [{
             type: mongoose.Types.ObjectId,
             ref: 'Product',
             required: true,
-        },
+        }],
         images: [
             {
                 type: String,

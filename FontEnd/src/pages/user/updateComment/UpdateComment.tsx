@@ -8,7 +8,7 @@ import UploadFileServer from '@/components/uploads/up';
 import UploadVideoServer from '@/components/uploads/video';
 
 
-const UpdateComment: React.FC<{ userId: string, productId: string, orderId: string, commentId: string; handleUpdateComplete: () => void }> = ({
+const UpdateComment: React.FC<{ userId: string, productId: any, orderId: string, commentId: string; handleUpdateComplete: () => void }> = ({
     commentId,
     productId,
     userId,
