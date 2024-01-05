@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 import { DatePicker } from 'antd';
+import { Link } from 'react-router-dom';
 
 const ListCategory = () => {
   const { RangePicker } = DatePicker;
@@ -35,12 +36,28 @@ const ListCategory = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await mutate(id);
-      toast.success('Xóa thành công');
+        const result = await mutate(id);
+
+        // Kiểm tra dữ liệu trả về từ server
+        if (result) {
+            // Xử lý lỗi khi xóa dữ liệu
+            toast.warning(result.error.data.message);
+        } else {
+            toast.success('Xóa không thành công');
+        }
     } catch (error) {
-      toast.error('Xóa không thành công');
+        toast.success('Xóa thành công');
     }
-  };
+};
+
+  // const handleDelete = async (id: string) => {
+  //   try {
+  //     await mutate(id);
+  //     toast.warning(result.error.data.message);
+  //   } catch (error) {
+  //     toast.error('Xóa không thành công');
+  //   }
+  // };
 
   const handleAddCategory = () => {
     setOpenAddModal(true);
@@ -132,9 +149,11 @@ const ListCategory = () => {
                     key={category._id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
-                      {category.name}
-                    </td>
+                    <Link to={`${category._id}/products`}>
+                      <td className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white pl-6">
+                        {category.name}
+                      </td>
+                    </Link>
                     <td className="text-center">
                       <Avatar.Group maxCount={3}>
                         {category.img && category.img[0] && (
