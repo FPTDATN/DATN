@@ -14,7 +14,7 @@ import { MdCategory,MdSupervisorAccount,MdOutlineProductionQuantityLimits } from
 import { MdDashboard } from "react-icons/md";
 import { RiShirtFill,RiDashboard3Fill } from "react-icons/ri";
 import { LiaSalesforce } from "react-icons/lia";
-
+import Ashirt from "../../../public/Ashirt.png"
 const AdminLayout = () => {
     const { data: authData, isLoading } = checkAdmin();
     const [logout, { }] = useLogoutMutation();
@@ -87,10 +87,10 @@ const AdminLayout = () => {
                                         </div>
                                         
                                     </button>
-                                    <a href="" className="flex ml-2 md:mr-24">
+                                    <a href="" className="flex ml-3 md:mr-24">
                                             <img
-                                                src="../logo.svg"
-                                                className="h-8 mr-3"
+                                                src={Ashirt}
+                                                className="h-[40px] w-[60px] mr-3"
                                                 alt="FlowBite Logo"
                                             />
                                             <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">

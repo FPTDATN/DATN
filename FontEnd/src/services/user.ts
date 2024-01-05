@@ -26,20 +26,20 @@ const userApi = createApi({
             }),
             providesTags: ['User'],
         }),
-        getAllUser: builder.query<PaginatedUser, { startDate?: string; endDate?: string }>({
-            query: ({ startDate, endDate }) => ({
+        getAllUser: builder.query<PaginatedUser, void>({
+            query: () => ({
                 url: '/User',
                 method: 'GET',
-                params: {
-                    startDate,
-                    endDate,
-                },
+        
             }),
             providesTags: ['User'],
         }),
         getUserById: builder.query<ExtendUser, string>({
-            query: (id) => `/User/${id}`,
-            providesTags: ['User']
+            query: (id) => ({
+                url: `/User/${id}`,
+                method: 'GET',
+        
+            }),
         }),
         updateUser: builder.mutation<ExtendUser, UserType>({
             query: (user) => ({
@@ -63,9 +63,23 @@ const userApi = createApi({
                 method: "DELETE",
             }),
             invalidatesTags: ['User']
-        })
+        }),
+        addDiscountCodeToUser: builder.mutation<void, { userId: string; discountId: string }>({
+            query: ({ userId, discountId }) => ({
+              url: `/user/${userId}/macode/${discountId}`,
+              method: 'POST',
+            }),
+            invalidatesTags: ['User']
+          }),
+          removeDiscountCodeFromUser: builder.mutation<void, { userId: string; discountId: string }>({
+            query: ({ userId, discountId }) => ({
+              url: `/user/${userId}/macode/${discountId}`,
+              method: 'DELETE',
+            }),
+            invalidatesTags: ['User']
+          }),
     }),
 });
 
-export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation, useGetAccountQuery, useAvatarMutation } = userApi;
+export const { useGetAllUserQuery, useGetUserByIdQuery, useUpdateUserMutation, useRemoveUserMutation, useGetAccountQuery, useAvatarMutation,useAddDiscountCodeToUserMutation, useRemoveDiscountCodeFromUserMutation } = userApi;
 export default userApi;

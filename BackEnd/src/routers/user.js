@@ -1,5 +1,5 @@
 import express from "express";
-import { avatar, getAll, getOne, remove, update } from "../controllers/user.js";
+import {  addDiscountCodeToUser, avatar, getAll, getOne, remove, removeDiscountCodeFromUser, update } from "../controllers/user.js";
 import { getAccountStatistics } from "../statistics/statisticsAuth.js";
 const router = express.Router();
 router.get("/User", getAll)
@@ -8,4 +8,6 @@ router.get("/User/:id", getOne);
 router.delete("/User/:id", remove);
 router.get('/statistics', getAccountStatistics)
 router.put('/user/:id', avatar)
+router.post('/user/:userId/macode/:discountId', addDiscountCodeToUser)
+router.delete('/user/:userId/macode/:discountId', removeDiscountCodeFromUser)
 export default router;

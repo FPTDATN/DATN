@@ -1,124 +1,145 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApplyDiscountMutation, useGetDiscountsQuery } from '@/services/discount';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { toast } from 'react-toastify';
+import { List, Card, Button } from 'antd';
 import { formartVND } from '@/utils/formartVND';
-import "./List_discount.css"
-import { addSaleItem, toggleAddedDiscount } from '@/slices/sale';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMeQuery } from "@/services/auth";
+import { toast } from 'react-toastify';
+import { useGetsOrderQuery } from '@/services/order';
+import { useAddDiscountCodeToUserMutation } from '@/services/user';
 const List_discount = () => {
-    const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-    const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
-    const dispatch = useDispatch();
-    const saleItems = useSelector((state) => state.sales.saleItems);
-    const [applyDiscountMutation] = useApplyDiscountMutation();
-    const [addedDiscounts, setAddedDiscounts] = useState([]);
-    const handleAddSale = async (discount) => {
-        try {
-            const existingDiscount = saleItems.find((item) => item._id === discount._id);
-            if (!existingDiscount) {
-                const confirmed = window.confirm(`Bạn có chắc muốn thêm mã giảm giá: ${discount.discount}% không?`);
-                if (confirmed) {
-                    const result = await applyDiscountMutation(discount._id);
-                    // Cập nhật danh sách các mã giảm giá đã thêm thành công
-                    setAddedDiscounts([...addedDiscounts, discount._id]);
-                    setSelectedDiscounts([...selectedDiscounts, discount]);
-                    dispatch(addSaleItem(discount));
-                    const updatedDiscounts = discountsData?.docs.filter(
-                        (item) => item._id !== discount._id
-                    );
-                    toast.success(`Đã thêm mã giảm giá: ${discount.discount}%`, {
-                        position: 'bottom-right',
-                    });
-                    const dataToEncrypt = JSON.stringify([...addedDiscounts, discount._id]);
-                    const encryptedData = btoa(dataToEncrypt);
-                    localStorage.setItem('encryptedDiscounts', encryptedData);
-                    return result;
-                }
-            } else {
-                toast.error(`Bạn đã lưu mã giảm giá này rồi !`, {
-                    position: 'bottom-right',
-                });
-            }
-        } catch (error) {
-            console.error('Lỗi khi áp dụng mã giảm giá:', error);
-            toast.error('Có lỗi xảy ra khi thêm ưu đãi!', {
-                position: 'bottom-right',
-            });
-        }
-    };
-    useEffect(() => {
-        const encryptedData = localStorage.getItem('encryptedDiscounts');
-        if (encryptedData) {
-            const decryptedData = atob(encryptedData);
-            const parsedData = JSON.parse(decryptedData);
-            // Tiếp tục xử lý với dữ liệu đã giải mã
-            setAddedDiscounts(parsedData);
-        }
-    }, []);
-    if (isLoading) {
-        return <div>Loading...</div>;
+  const { data: discountsData, isLoading, isError } = useGetDiscountsQuery();
+  const [applyDiscountMutation] = useApplyDiscountMutation();
+  const [savedDiscounts, setSavedDiscounts] = useState([]);
+  const { data: userData } = useMeQuery();
+  console.log('1', userData)
+  if (userData && userData.orders) {
+    console.log('Danh sách ID đơn hàng của người dùng:', userData);
+  }
+  const { data: orderData, } = useGetsOrderQuery(); // Fetch order data
+  const userIdsInOrder = orderData?.docs.map(order => order.userId).filter(userId => userId);
+  const [hasDiscountInOrder, setHasDiscountInOrder] = useState(false);
+  const [discountInOrder, setDiscountInOrder] = useState(false);
+  const [addDiscountCodeToUserMutation] = useAddDiscountCodeToUserMutation();
+  useEffect(() => {
+    if (orderData) {
+      const hasDiscount = orderData.docs.some(order => order.discountCode && order.discountCode.length > 0);
+      setHasDiscountInOrder(hasDiscount);
     }
-    if (isError) {
-        return <div>Error fetching discounts</div>;
+  }, [orderData]);
+  useEffect(() => {
+    if (orderData) {
+      const hasDiscount = orderData.docs.some(order => order.discountCode && order.discountCode.length > 0);
+      setDiscountInOrder(hasDiscount);
     }
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
-    };
-    return (
-        <div>
-            {discountsData ? (
-                <div className='max-w-5xl px-2 lg:px-4 w-full mx-auto '>
-                    <div className=' flex justify-between'>
-                        <h2 className='text-2xl my-3'>Các mã giảm giá có trong của hàng </h2>
-                        {/* <button className='btn__background--liner'><a href="/">Sản phẩn </a></button> */}
-                        <Link to='/'>
-                            <button className="btn__background--liner mt-5 mb-5" type="button">
+  }, [orderData]);
 
-                                <strong>Sản phẩm</strong>
-                                <div id="container-stars">
-                                    <div id="stars"></div>
-                                </div>
+  useEffect(() => {
+    if (userData) {
+      setSavedDiscounts(userData.discountCodes);
+    }
+  }, [userData]);
+  const handleApplyDiscount = async (discountId: any) => {
+    const result = await applyDiscountMutation(discountId);
+    return result;
+  };
 
-                                <div id="glow">
-                                    <div className="circle"></div>
-                                    <div className="circle"></div>
-                                </div>
-                            </button>
-                        </Link>
-                    </div>
-                    {discountsData.docs.length > 0 ? (
-                        <div className='grid grid-cols-4 gap-4 rounded-md'>
-                            {discountsData.docs.map((discount) => (
-                                <div className='back__box--test' key={discount._id}>
-                                    <p className=''>Giá trị giảm giá: {discount.discount}%</p>
-                                    <p className=''>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
-                                    <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>
-                                    <button
-                                        className='text-primary bg-layer p-2 rounded-md my-2'
-                                        onClick={() => {
-                                            dispatch(toggleAddedDiscount(discount._id));
-                                            handleAddSale(discount);
-                                        }}
-                                        disabled={addedDiscounts.includes(discount._id)}
-                                    >
-                                        {addedDiscounts.includes(discount._id) ? 'Đã lưu mã' : 'Thêm mã'}
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div>  Không có mã giảm giá </div>
-                    )}
-                </div>
-            ) : (
-                <div>404</div>
-            )}
-        </div>
-    );
+  const handleAddSale = async (discount: any) => {
+    try {
+      if (discount.count === 0) {
+        toast.error('Mã giảm giá đã hết!', { position: 'bottom-right' });
+        return;
+      }
+      if (!userData) {
+        toast.error('Đăng nhập mới thêm được mã giảm giá', { position: 'bottom-right' });
+        return;
+      }
+
+      const alreadyHasDiscount = userData?.discountCodes.includes(discount._id);
+      if (alreadyHasDiscount) {
+        toast.info('Bạn đã lưu mã giảm giá này rồi!', { position: 'bottom-right' });
+        return;
+      }
+
+      const confirmed = window.confirm(`Bạn có chắc muốn thêm mã giảm giá: ${discount.discount}% không?`);
+      if (confirmed) {
+        const result = await addDiscountCodeToUserMutation({
+          discountId: discount._id,
+          userId: userData._id,
+        });
+
+        // Apply the discount to the order after adding it to the user
+        const applyDiscountResult = await applyDiscountMutation(discount._id);
+
+        if (!result.error && !applyDiscountResult.error) {
+          setSavedDiscounts([...savedDiscounts, discount._id]);
+          toast.success(`Đã thêm và áp dụng mã giảm giá: ${discount.discount}%`, { position: 'bottom-right' });
+        } else {
+          toast.error(result.error?.message || applyDiscountResult.error?.message, { position: 'bottom-right' });
+        }
+      }
+    } catch (error) {
+      console.error('Lỗi khi lưu mã giảm giá:', error);
+      toast.error('Có lỗi xảy ra khi lưu mã giảm giá!', { position: 'bottom-right' });
+    }
+  };
+
+
+  const formatDate = (dateString: any) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error fetching discounts</div>;
+  }
+  return (
+    <div className='max-w-5xl px-2 lg:px-4 w-full mx-auto '>
+      <h2 className='text-2xl my-3'>Các mã giảm giá có trong của hàng </h2>
+      <List
+  grid={{ gutter: 16, column: 3 }}
+  dataSource={discountsData?.docs}
+  renderItem={discount => (
+    <List.Item>
+      <Card title={`Mã : ${discount.code}`} extra={
+        <Button
+          className='text-primary bg-layer p-2 rounded-md my-2'
+          onClick={() => { handleAddSale(discount); }}
+          disabled={
+            savedDiscounts.includes(discount._id) || (orderData?.docs.some(order => order.discountCode?.includes(discount._id) && order.userId === userData?._id))
+          }
+        >
+          {savedDiscounts.includes(discount._id) ? (
+            'Đã lưu mã'
+          ) : orderData?.docs.some(order => order.discountCode?.includes(discount._id) && order.userId === userData?._id) ? (
+            <span style={{ color: 'green' }}>Mã trong đơn hàng</span>
+          ) : (
+            'Thêm mã'
+          )}
+        </Button>
+      }>
+        <p>Giảm giá : {discount.discount}%</p>
+        <p>Đơn hàng tối thiểu: {formartVND(discount.maxAmount)}</p>
+        {discount.count === 0 ? (
+          <p style={{ color: 'red' }}>Hết mã</p>
+        ) : (
+          <p>Mã trong cửa hàng {(discount?.count)} cái</p>
+        )}
+        <p>HSD: {formatDate(discount.startDate)}-{formatDate(discount.endDate)}</p>
+      </Card>
+    </List.Item>
+  )}
+/>
+    </div>
+  );
+
 };
-export default List_discount;
+
+export default List_discount
+
+
+
+

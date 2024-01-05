@@ -4,14 +4,18 @@ function waiting(time: any) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-interface OrderComment {
+export interface OrderComment {
   _id?: string;
   text: string;
   userId?: any;
   orderId?: any;
-  productId?:any;
-  parentOrderId?: any
-  createdAt?: any
+  status: number;
+  productId?: string[];
+  rating?: number;
+  images: string[];
+  createdAt?: any;
+  videos: string[];
+
 }
 
 const ordercommentApi = createApi({
@@ -52,12 +56,13 @@ const ordercommentApi = createApi({
       }),
       invalidatesTags: ['Ordercomments'],
     }),
-    updateOrderComment: builder.mutation<OrderComment, { userId: string,productId:string, orderId: string, ordercommentId: string; ordercomments: Partial<OrderComment> }>({
-      query: ({ userId, orderId, ordercommentId,productId, ordercomments }) => ({
-        url: `/ordercomments/${ordercommentId}`,
-        method: 'PUT',
-        body: { userId, productId,orderId, ...ordercomments },
-      }), invalidatesTags: ['Ordercomments']
+    updateOrderComment: builder.mutation<OrderComment, { userId: string, productId: string, orderId: string, commentId: string, ordercomments: Partial<OrderComment> & { rating?: number } }>({
+      query: ({ userId, orderId, productId, commentId, ordercomments }) => ({
+        url: `/ordercomments/${commentId}`,
+        method: 'PATCH',
+        body: { userId, productId, orderId, ...ordercomments },
+      }),
+      invalidatesTags: ['Ordercomments'],
     }),
 
     removeOrderComment: builder.mutation({

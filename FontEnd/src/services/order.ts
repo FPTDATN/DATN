@@ -1,3 +1,4 @@
+import { IDiscount } from '@/types/discount';
 import { Hoandon, IProductorder, Iuser, PaginatedOrder } from '@/types/order';
 import { IOrder } from '@/types/order';
 import { waiting } from '@/utils/waiting';
@@ -22,8 +23,8 @@ export type IdType = {
   LydoHoandon: string;
   Motahoandon: string;
   Emaill: string;
-};
-
+  discountCode : IDiscount[];
+}
 const orderApi = createApi({
   reducerPath: 'order',
   tagTypes: ['Order'],
@@ -63,14 +64,11 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
-    getsOrder: builder.query<PaginatedOrder, { startDate?: string; endDate?: string }>({
-      query: ({ startDate, endDate }) => ({
+    getsOrder: builder.query<PaginatedOrder, void>({
+      query: () => ({
         url: '/order',
         method: 'GET',
-        params: {
-          startDate,
-          endDate,
-        },
+      
       }),
       providesTags: ['Order'],
     }),
@@ -109,9 +107,12 @@ const orderApi = createApi({
       query: (_id) => `/order/${_id}`,
       providesTags: ['Order'],
     }),
-
-    // Change Status and send Email when Status confirm and status cancelled
-
+    applyDiscountCodeOrder: builder.mutation<void, { orderId: string; discountCode: string }>({
+      query: ({ orderId, discountCode }) => ({
+        url: `/order/${orderId}/${discountCode}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 export const {
@@ -126,5 +127,6 @@ export const {
   useGetRevenueByDaysQuery,
   useCalculateRevenueByMonthQuery,
   useCalculateRevenueByYearQuery,
+  useApplyDiscountCodeOrderMutation
 } = orderApi;
 export default orderApi;

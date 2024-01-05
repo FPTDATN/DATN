@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/ordercomments', getOrderComments);
 router.post('/ordercomments', createOrderComment);
 router.delete('/ordercomments/:id',removeOrderComment);
-router.put('/ordercomments/:id',updateOrderComment)
+router.patch('/ordercomments/:id',updateOrderComment)
 router.get('/ordercomments/:id',getByIdOrderComment)
 
 

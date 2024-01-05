@@ -1,194 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal } from 'antd';
+import React from 'react';
+import { useMeQuery } from '@/services/auth';
+import { useGetUserByIdQuery, useRemoveDiscountCodeFromUserMutation } from '@/services/user';
+import { List, Card, Button, Spin } from 'antd';
 import { formartVND } from '@/utils/formartVND';
-import { removeSaleItem } from '@/slices/sale';
-import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+const Discount_code = () => {
+  const { data: userData, isLoading: isUserLoading } = useMeQuery();
+  const user_id = userData?._id || '';
+  const { data: userById, isLoading: isUserByIdLoading } = useGetUserByIdQuery(user_id);
 
-const  Discount_code = () => {
-      const [savedAddSales, setSavedAddSales] = useState([]);
-      const [pagination, setPagination] = useState({ pageSize: 5, current: 1 });
-      const [selectedSale, setSelectedSale] = useState(null);
-      const [modalVisible, setModalVisible] = useState(false);
-      const dispatch = useDispatch();
-      useEffect(() => {
-            const storedSales = JSON.parse(localStorage.getItem('persist:root'));
-            const salesData = JSON.parse(storedSales.sales);
-            const currentTime = new Date().getTime();
-            if (salesData && salesData.saleItems) {
-                  const updatedAddSales = salesData.saleItems.map((sale) => {
-                        const { startDate, endDate } = sale;
-                        const saleEndTime = new Date(endDate).getTime();
-                        const remainingTime = saleEndTime - currentTime;
-                        const remainingDays = remainingTime > 0 ? Math.floor(remainingTime / (1000 * 3600 * 24)) : 0;
-                        const expired = remainingTime <= 0;
-                        return {
-                              ...sale,
-                              remainingDays,
-                              expired,
-                              remainingTime,
-                        };
-                  });
-                  setSavedAddSales(updatedAddSales);
-            }
-      }, []);
-      const formatDate = (timestamp) => {
-            const date = new Date(timestamp);
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-      };
-      // hàm xóa 
-      const handleRemoveSale = (_id : any) => {
-            dispatch(removeSaleItem(_id));
-            const updatedSales = savedAddSales.filter(sale => sale._id !== _id);
-            setSavedAddSales(updatedSales);
-            toast.success('Xóa thành công');
-          };
-      const columns = [
-            {
-                  title: 'Phần trăm giảm giá (%)',
-                  dataIndex: 'discount',
-                  key: 'discount',
-            },
-            {
-                  title: 'Giới hạn tiền tối đa(VnD)',
-                  dataIndex: 'maxAmount',
-                  key: 'maxAmount',
-                  render: (maxAmount) => formartVND(maxAmount),
-            },
-            {
-                  title: 'Ngày bắt đầu',
-                  dataIndex: 'startDate',
-                  key: 'startDate',
-                  render: (startDate) => formatDate(startDate),
-            },
-            {
-                  title: 'Ngày kết thúc',
-                  dataIndex: 'endDate',
-                  key: 'endDate',
-                  render: (endDate) => formatDate(endDate),
-            },
-            {
-                  title: 'Thời gian còn lại',
-                  dataIndex: 'remainingDays',
-                  key: 'remainingDays',
-                  render: (text, record) => {
-                        const currentDate = Date.now();
-                        const endDate = new Date(record.endDate).getTime();
-                        const remainingTime = endDate - currentDate;
+  const listMyVoucher = userById?.data?.discountCodes;
+  const [removeDiscountCodeFromUser] = useRemoveDiscountCodeFromUserMutation();
 
-                        if (remainingTime <= 0) {
-                              return <span>Hết hạn</span>;
-                        } else {
-                              const remainingDays = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-                              const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                              const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-                              return (
-                                    <span>
-                                          {remainingDays} ngày ,{hours} giờ, {minutes} phút
-                                    </span>
-                              );
-                        }
-                  },
-            },
-            {
-                  title: 'Trạng thái',
-                  dataIndex: 'status',
-                  key: 'status',
-                  render: (text, record) => {
-                        const remainingTime = record.remainingTime;
-                        if (remainingTime <= 0) {
-                              return 'Hết hạn';
-                        } else {
-                              const hours = Math.floor(remainingTime / (1000 * 60 * 60));
-                              const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-                              if (hours > 0 || minutes > 0) {
-                                    return <span className='text-gree'>Còn hạn</span>;
-                              } else {
-                                    return <span className='text-red'>Hết hạn </span>;
-                              }
-                        }
-                  },
-            },
-            {
-                  title: 'Hành động',
-                  dataIndex: 'action',
-                  key: 'action',
-                  render: (_, record, index) => (
-                        <div>
-                              <Button className='mx-2'> <a href={`/checkout`}> Dùng Mã </a></Button>
-                              <Button onClick={() => handleRemoveSale(record._id)}>Xóa</Button>
-                        </div>
-                  ),
-            }
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
-      ];
-      const handleTableRowClick = (record) => {
-            setSelectedSale(record);
-            setModalVisible(true);
-      };
+  const isExpired = (endDate) => {
+    return new Date() > new Date(endDate);
+  };
 
-      const handleTableChange = (pagination) => {
-            setPagination(pagination);
-      };
-      return (
-            <div>
-                  <div className='my-4'>
-                        <h1 className='text-2xl'>Các mã giảm giá đã lưu </h1>
-                        <Table
-                              className='py-5'
-                              dataSource={savedAddSales.map((sale, index) => ({
-                                    ...sale,
-                                    key: index, // Use a unique identifier as the key, such as index or sale._id
-                                    action: index,
-                              }))}
-                              columns={columns}
-                              pagination={pagination}
-                              onChange={handleTableChange}
-                              onRow={(record) => ({
-                                    onClick: () => {
-                                          handleTableRowClick(record);
-                                    },
-                              })}
-                        />
-                        <Modal
-                              title='Thông tin chi tiết'
-                              open={modalVisible}
-                              onClose={() => setModalVisible(false)}
-                              footer={[
-                                    <Button key='close' onClick={() => setModalVisible(false)}>
-                                          Đóng
-                                    </Button>,
-                              ]}
-                        >
-                              {selectedSale && (
-                                    <div>
-                                          <p>Mã code: {selectedSale.code}</p>
-                                          <p>Discount: {selectedSale.discount}</p>
-                                          <p>Ngày bắt đầu: {formatDate(selectedSale.startDate)}</p>
-                                          <p>Ngày kết thúc: {formatDate(selectedSale.endDate)}</p>
-                                          <p>
-                                                Thời gian còn lại: {selectedSale.remainingDays >= 0 ? (
-                                                      <>
-                                                            {Math.max(Math.floor(selectedSale.remainingTime / (1000 * 60 * 60)), 0)} giờ,{' '}
-                                                            {Math.max(Math.floor((selectedSale.remainingTime % (1000 * 60 * 60)) / (1000 * 60)), 0)} phút
-                                                      </>
-                                                ) : (
-                                                      'Hết hạn'
-                                                )}
-                                          </p>
-                                          <p>Trạng thái: {selectedSale.expired ? 'Hết hạn' : 'Còn hạn'}</p>
+  const handleApplyCode = async (voucher) => {
+    // Kiểm tra nếu mã giảm giá đã hết hạn thì không áp dụng
+    if (isExpired(voucher.endDate)) {
+      toast.warning('Mã giảm giá đã hết hạn.');
+      return;
+    }
+    toast.success('Áp dụng mã giảm giá thành công.');
+  };
 
-                                    </div>
-                              )}
-                        </Modal>
-                  </div>
-            </div>
-      );
+  const handleRemoveCode = async (voucherId) => {
+    try {
+      await removeDiscountCodeFromUser({ userId: user_id, discountId: voucherId });
+      toast.success('Xóa mã giảm giá thành công.');
+    } catch (error) {
+      toast.error('Xóa mã giảm giá không thành công.');
+    }
+  };
+
+  if (isUserLoading || isUserByIdLoading) {
+    return <Spin size="large" />;
+  }
+
+  return (
+    <div>
+      <List
+        grid={{ gutter: 16, column: 3 }}
+        dataSource={listMyVoucher}
+        renderItem={(voucher) => (
+          <List.Item>
+            <Card
+              title={
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{`Mã giảm giá: ${voucher.code}`}</span>
+                  {isExpired(voucher.endDate) ? (
+                    <Button type="dashed"  onClick={() => handleRemoveCode(voucher._id)}>
+                      Xóa mã
+                    </Button>
+                  ) : (
+                    <Button type="primary" onClick={() => handleApplyCode(voucher)}>
+                      Áp dụng mã
+                    </Button>
+                  )}
+                </div>
+              }
+            >
+              <p>Giảm giá: {voucher.discount}%</p>
+              <p>Đơn hàng: {formartVND(voucher.maxAmount)}</p>
+              <p>Ngày bắt đầu: {formatDate(voucher.startDate)}</p>
+              <p>Ngày kết thúc : {formatDate(voucher.endDate)}</p>
+            </Card>
+          </List.Item>
+        )}
+      />
+    </div>
+  );
 };
 
-export default  Discount_code;
-
+export default Discount_code;

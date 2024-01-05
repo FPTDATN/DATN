@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema(
         type: Object
       }
     ],
+
     userId: { type: String },
     isPaid: { type: Boolean, default: false },
     total: { type: Number, require: true },
@@ -20,7 +21,12 @@ const orderSchema = new mongoose.Schema(
     LydoHoandon: { type: String },
     Motahoandon: { type: String },
     Emaill: { type: String },
-    discountCode: { type: String },
+    discountCode: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Discount",
+      },
+    ],
     discountAmount: { type: Number, default: 0 },
   }, {
   timestamps: true

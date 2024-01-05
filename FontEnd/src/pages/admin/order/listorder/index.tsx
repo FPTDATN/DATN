@@ -33,21 +33,10 @@ const { confirm } = Modal;
 
 const renderState = (state: number) => {
     if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
-    if (Status.INFORMATION === state)
-        return (
-            <span>
-                {' '}
-                Đang xác nhận <LoadingOutlined />
-            </span>
-        );
+    if (Status.INFORMATION === state) return <span>  Đang xác nhận <LoadingOutlined /></span>;
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
-    if (Status.COMPLETE === state)
-        return (
-            <span className="text-green-500">
-                <CheckCircleOutlined /> Hoàn thành
-            </span>
-        );
+    if (Status.COMPLETE === state) return <span className="text-green-500"><CheckCircleOutlined /> Hoàn thành</span>;
     if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
 };
 
@@ -80,7 +69,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Option disabled={record?.status >= Status.COMPLETE} value={4}>
                 {renderState(4)}
             </Option>
-            <Option disabled={record?.status >= Status.HOAN} value={5}>
+            <Option disabled={record?.status > Status.HOAN} value={5}>
                 {renderState(5)}
             </Option>
         </Select>
@@ -406,15 +395,15 @@ const ListOrder: React.FC = () => {
                             <a>Hủy</a>
                         </Popconfirm>
                     </span>
-                ) : record.status === Status.HOAN ? (
+                ) : record.status === Status.DANHGIA ? (
                     <Space className="flex flex-col">
-                        <div className="">
+                        {/* <div className="">
                             <div className="flex">
                                 <Button type="dashed" className="bg-reds px-2.5 text-layer">
                                     xác nhận
                                 </Button>
                             </div>
-                        </div>
+                        </div> */}
                         <div className=" md:ml-0 ml-20">
                             <Link to={`/hoan/${record._id}`}>
                                 <Button type="dashed" className="bg-gree text-layer" onClick={onShow}>
@@ -572,12 +561,11 @@ const ListOrder: React.FC = () => {
 
                         <Select onChange={handleFilterByStatus} placeholder="Hàng theo trạng thái">
                             {/* <Option value={Status.INFORMATION}>Xác thực thông tin</Option> */}
-                            <Option value={Status.INFORMATION}>Chưa xác nhận</Option>
                             <Option value={Status.ORDER_CONFIRM}>Xác nhận đơn hàng</Option>
                             <Option value={Status.SHIPPING}>Đang giao hàng</Option>
                             <Option value={Status.COMPLETE}>Hoàn thành</Option>
                             <Option value={Status.CANCELLED}>Đã hủy</Option>
-                            <Option value={Status.HOAN}>Hàng Hoàn</Option>
+                            <Option value={Status.DANHGIA}>DANH GIA</Option>
                         </Select>
 
                         <AdminTimelineOrder />
@@ -618,7 +606,7 @@ const ListOrder: React.FC = () => {
                                             <div className="space-y-2">
                                                 <h1>
                                                     <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Tên khách hàng:
+                                                        Tên khách hàng :
                                                     </span>{' '}
                                                     <span className="text-base font-semibold">{record.fullName}</span>
                                                 </h1>

@@ -40,6 +40,9 @@ import { useMeQuery } from '@/services/auth';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import List_discount from '@/components/ui/List_discount';
+import Revenue from '@/pages/admin/dashboard/revenue';
+import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
+import RevenueYear from '@/pages/admin/dashboard/revenueYear';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -55,7 +58,7 @@ const PrivateRoute = ({ isAuth }: any) => {
         } else if (data?.role === "member" && location.pathname.includes("/admin")) {
             toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
             navigate("/error");
-        }else if (data?.role === "editor" && location.pathname.includes("/admin")) {
+        } else if (data?.role === "editor" && location.pathname.includes("/admin")) {
             toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
             navigate("/error");
         }
@@ -102,7 +105,8 @@ const router = createBrowserRouter([
                     }, {
                         path: 'orders/:userId',
                         element: <OrderSumeries />
-                    }, {
+                    },
+                     {
                         path: 'code_ma',
                         element: <List_discount />
                     },
@@ -192,11 +196,14 @@ const router = createBrowserRouter([
                     { path: 'test', element: <AppTest /> },
                     { path: 'order', element: <ListOrder /> },
                     { path: 'sale', element: <ListSale /> },
-                    { path: 'product/:id/comments', element: <ListComment /> },
+                    { path: 'detail/:id', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> },
-                    { path: 'view_account', element: <View_account/>}
+                    { path: 'view_account', element: <View_account /> },
+                    { path: 'revenue', element: <Revenue /> },
+                    { path: 'revenueMoth', element: <RevenueMoth /> },
+                    { path: 'revenueYear', element: <RevenueYear /> }
                 ],
             },
         ],
@@ -217,7 +224,7 @@ const router = createBrowserRouter([
                     { path: 'product', element: <ListProduct /> },
                     { path: 'category', element: <ListCategory /> },
                     { path: 'test', element: <AppTest /> },
-                    { path: 'product/:id/comments', element: <ListComment /> },
+                    { path: 'detail/:id', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> }
