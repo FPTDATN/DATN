@@ -43,6 +43,7 @@ import List_discount from '@/components/ui/List_discount';
 import Revenue from '@/pages/admin/dashboard/revenue';
 import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
 import RevenueYear from '@/pages/admin/dashboard/revenueYear';
+import ProductsbyCategory from '@/pages/admin/category/productsByCategory';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -203,7 +204,8 @@ const router = createBrowserRouter([
                     { path: 'view_account', element: <View_account /> },
                     { path: 'revenue', element: <Revenue /> },
                     { path: 'revenueMoth', element: <RevenueMoth /> },
-                    { path: 'revenueYear', element: <RevenueYear /> }
+                    { path: 'revenueYear', element: <RevenueYear /> },
+                    { path: 'category/:id/products', element: <ProductsbyCategory/>},
                 ],
             },
         ],
