@@ -168,9 +168,10 @@ const ProductHot: FunctionComponent<ProductItemProps> = ({ product }) => {
                                                 className="w-full shadow text-center text-nav group px-2 py-2 outline-none"
                                             >
                                                 <option value="">-- Vui lòng chọn size --</option>
-                                                {product.sizeId.map((size) => (
+
+                                                {product?.sizeId.map((size) => (
                                                     <option key={size._id} value={size.name}>
-                                                        {size.name}
+                                                        {size?.name}
                                                     </option>
                                                 ))}
                                             </select>
@@ -185,7 +186,7 @@ const ProductHot: FunctionComponent<ProductItemProps> = ({ product }) => {
 
                                                 {product?.colorId?.map((color) => (
                                                     <option key={color._id} value={color.name}>
-                                                        {color.name}
+                                                        <p>{color.name}</p>
                                                     </option>
                                                 ))}
                                             </select>

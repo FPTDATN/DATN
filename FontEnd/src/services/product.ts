@@ -40,7 +40,7 @@ const productApi = createApi({
             }),
             providesTags: ['Product'],
         }),
-        getProductsHot: builder.query<ProductType, void>({
+        getProductsHot: builder.query<PaginatedProduct, void>({
             query: () => '/products/topProduct',
             providesTags: ['Product'],
         }),

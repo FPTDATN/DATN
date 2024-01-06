@@ -16,6 +16,8 @@ const ListProductHot: FunctionComponent<ListProductTestProps> = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const sliderRef = useRef<Slider | null>(null); // Thêm useRef để có thể truy cập Slider instance
     const { data: products } = useGetProductsHotQuery();
+    // console.log('hot', products.data[0]._id.colorId);
+
 
     const settings = {
         dots: false,
