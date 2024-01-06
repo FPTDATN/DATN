@@ -13,7 +13,11 @@ import { OrderComment, useGetAllOrderCommentsQuery, useRemoveOrderCommentMutatio
 const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
 
     const [removeId] = useRemoveOrderCommentMutation()
-    const { data: orderCommentsData } = useGetAllOrderCommentsQuery()
+    const { data: orderCommentsData } = useGetAllOrderCommentsQuery({
+        startDate: '',
+        endDate: '',
+
+    })
     const [loading] = useState(false);
     const [openAbsolute, setOpenAbsolute] = useState<{ [key: string]: boolean }>({});
     const { data: authData } = useMeQuery();
@@ -177,12 +181,16 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
                                                 ))}
                                             </div>
                                             <div className="py-1 px-2">
-                                                <Image
-                                                    src={item.images[0]}
-                                                    alt="image"
-                                                    width={80}
-                                                    height={80}
-                                                />
+                                                {item.images.map((image, index) => (
+                                                    <Image
+                                                        key={index}
+                                                        src={image}
+                                                        alt={`image_${index}`}
+                                                        width={150}
+                                                        height={170}
+                                                        className="p-1"
+                                                    />
+                                                ))}
                                             </div>
 
                                         </div>

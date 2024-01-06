@@ -15,6 +15,10 @@ const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading })
         startDate: '',
         endDate: '',
     });
+    // console.log('productitem', dataProduct);
+    console.log('hot', dataProduct?.docs);
+
+
     //limit
     const [currentPage, setCurrentPage] = useState(0);
     const perPage = 8; // Số sản phẩm hiển thị trên mỗi trang

@@ -245,12 +245,17 @@ const ListComment = () => {
                             ))}
                           </div>
                           <div className="py-1 px-2">
-                            <Image
-                              src={item.images[0]}
-                              alt="image"
-                              width={150}
-                              height={150}
-                            />
+                            {item.images.map((image, index) => (
+                              <Image
+                                key={index}
+                                src={image}
+                                alt={`image_${index}`}
+                                width={150}
+                                height={170}
+                                className="p-1"
+                              />
+                            ))}
+
                           </div>
 
                         </div>
