@@ -1,25 +1,30 @@
 import { calculatePagination } from "@/components/modal/pagination";
 import { useMeQuery } from "@/services/auth";
 import { useGetAllOrderCommentsQuery, useRemoveOrderCommentMutation } from "@/services/ordercomments";
-import { Button, Image, Modal, Popconfirm, Rate, Skeleton, Space } from "antd";
+import { Button, DatePicker, Image, Modal, Popconfirm, Rate, Skeleton, Space } from "antd";
+import { SearchProps } from "antd/es/input";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
-import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 const ListComment = () => {
-  const { id: productId } = useParams();
-  const { data: commentData, isLoading } = useGetAllOrderCommentsQuery();
+  const [dateRange, setDateRange] = useState([null, null]);
+  const { RangePicker } = DatePicker;
+
+  const { data: commentData, isLoading } = useGetAllOrderCommentsQuery(
+    {
+      startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
+      endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
+
+    }
+  );
+  const handleDateRangeChange = (dates: any, dateStrings: any) => {
+
+    setDateRange(dates);
+  };
   const [mutate] = useRemoveOrderCommentMutation();
   const { data: authData } = useMeQuery();
-
-
-
   // Lọc comments với productId trùng khớp với useParams()
-  const filteredComments = commentData?.filter(comment => comment?.productId.includes(productId));
-
-  console.log(filteredComments);
-
   const handleDeleteComment = async (id: string) => {
     try {
       await mutate(id);
@@ -35,8 +40,8 @@ const ListComment = () => {
   const paginationOptions = {
     currentPage,
     perPage,
-    totalCount: filteredComments?.length || 0,
-    data: filteredComments || [],
+    totalCount: commentData?.length || 0,
+    data: commentData || [],
   };
 
   const { pageCount, currentPageItems } = calculatePagination(paginationOptions);
@@ -56,9 +61,24 @@ const ListComment = () => {
   const handleCancel = () => {
     setOpen(false);
   };
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch: SearchProps['onSearch'] = (value) => {
+    setSearchValue(value);
+  };
+
   return (
     <div>
+      {/* <div className="pr-4 p-3">
+        <Space direction="vertical">
+          <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
+        </Space>
+      </div> */}
+      <div className="flex-grow text-right">
+        <RangePicker onChange={handleDateRangeChange} />
+      </div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="pl-6 text-xs font-medium py-3">
@@ -225,12 +245,17 @@ const ListComment = () => {
                             ))}
                           </div>
                           <div className="py-1 px-2">
-                            <Image
-                              src={item.images[0]}
-                              alt="image"
-                              width={150}
-                              height={150}
-                            />
+                            {item.images.map((image, index) => (
+                              <Image
+                                key={index}
+                                src={image}
+                                alt={`image_${index}`}
+                                width={150}
+                                height={170}
+                                className="p-1"
+                              />
+                            ))}
+
                           </div>
 
                         </div>

@@ -38,8 +38,15 @@ const ordercommentApi = createApi({
   endpoints: (builder) => ({
 
 
-    getAllOrderComments: builder.query<OrderComment[], void>({
-      query: () => '/ordercomments',
+    getAllOrderComments: builder.query<OrderComment[], { startDate?: string; endDate?: string }>({
+      query: ({ startDate, endDate }) => ({
+        url: '/ordercomments',
+        method: 'GET',
+        params: {
+          startDate,
+          endDate,
+        },
+      }),
       providesTags: ['Ordercomments']
     }),
 

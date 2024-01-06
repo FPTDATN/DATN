@@ -43,6 +43,7 @@ import List_discount from '@/components/ui/List_discount';
 import Revenue from '@/pages/admin/dashboard/revenue';
 import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
 import RevenueYear from '@/pages/admin/dashboard/revenueYear';
+import ProductsbyCategory from '@/pages/admin/category/productsByCategory';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -106,7 +107,7 @@ const router = createBrowserRouter([
                         path: 'orders/:userId',
                         element: <OrderSumeries />
                     },
-                     {
+                    {
                         path: 'code_ma',
                         element: <List_discount />
                     },
@@ -196,14 +197,15 @@ const router = createBrowserRouter([
                     { path: 'test', element: <AppTest /> },
                     { path: 'order', element: <ListOrder /> },
                     { path: 'sale', element: <ListSale /> },
-                    { path: 'detail/:id', element: <ListComment /> },
+                    { path: 'order-review', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
                     { path: 'brand', element: <Listbrand /> },
                     { path: 'view_account', element: <View_account /> },
                     { path: 'revenue', element: <Revenue /> },
                     { path: 'revenueMoth', element: <RevenueMoth /> },
-                    { path: 'revenueYear', element: <RevenueYear /> }
+                    { path: 'revenueYear', element: <RevenueYear /> },
+                    { path: 'category/:id/products', element: <ProductsbyCategory/>},
                 ],
             },
         ],
@@ -227,7 +229,9 @@ const router = createBrowserRouter([
                     { path: 'detail/:id', element: <ListComment /> },
                     { path: 'color', element: <ListColor /> },
                     { path: 'size', element: <ListSize /> },
-                    { path: 'brand', element: <Listbrand /> }
+                    { path: 'brand', element: <Listbrand /> },
+                    { path: 'order-review', element: <ListComment /> },
+
                 ],
             },
         ],

@@ -112,7 +112,7 @@ export const removeCategory = async (req, res) => {
 
     if (isCategoryEmpty) {
       return res.status(400).json({
-        message: "Không thể xóa danh mục vì nó chưa sản phẩm.",
+        message: "Không thể xóa danh mục vì nó chứa sản phẩm.",
       });
     }
 
