@@ -92,7 +92,43 @@ export const createOrderComment = async (req, res) => {
         });
     }
 };
+export const replyToOrderComment = async (req, res) => {
+    const { userId, commentId, replyText } = req.body;
 
+    try {
+        const existingUser = await Auth.findById(userId);
+
+        if (!existingUser) return res.status(401).json({ message: 'Phải đăng nhập mới được trả lời bình luận' });
+
+        const existingComment = await Ordercomments.findById(commentId);
+
+        if (!existingComment) return res.status(400).json({ message: 'Không tìm thấy bình luận' });
+
+        // Check if the user is the author of the original comment
+        // if (existingComment.userId.toString() !== userId) {
+        //     return res.status(403).json({ message: 'Bạn không có quyền trả lời cho bình luận này' });
+        // }
+
+        // Create the reply
+        const reply = {
+            text: replyText,
+            userId,
+        };
+
+        // Update the original comment to include the reply
+        existingComment.replies.push(reply);
+        await existingComment.save();
+
+        return res.status(200).json({
+            message: 'Trả lời bình luận thành công',
+            reply,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message,
+        });
+    }
+};
 export const updateOrderComment = async (req, res) => {
 
     const { id } = req.params;
