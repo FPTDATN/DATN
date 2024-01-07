@@ -3,7 +3,7 @@ import Order from "../models/order.js";
 import shortid from 'shortid';
 import Discount from "../models/discount.js";
 import { senderMail } from "../utils/senderMail.js";
-import { sendEmailWhenChangeStatus } from "../utils/sendEmailWhenChangeStatus.js";
+import TimeLine from "../models/timeline.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -90,7 +90,7 @@ export const getOrders = async (req, res) => {
     limit: parseInt(_limit),
     page: parseInt(_page),
     sort: {
-      [_sort]: _order === "desc" ? -1 : 1,
+      ['createdAt']: -1
     },
   };
   const filter = {};
@@ -156,7 +156,7 @@ export const cancelOrder = async (req, res) => {
           ${product.price * product.quantity} VND
       </td>
   </tr>`
-    ))
+    )).join('')
 
     let htmlOrders = `
       <section>
@@ -248,10 +248,22 @@ export const cancelOrder = async (req, res) => {
 
     if (status === 1) {
       await senderMail(order.email, htmlOrders)
+      await TimeLine.create({
+        orderId: order._id,
+        status: 1,
+      })
     } else if (status === 2) {
       await senderMail(order.email, confirm)
+      await TimeLine.create({
+        orderId: order._id,
+        status: 2,
+      })
     } else if (status === 0) {
       await senderMail(order.email, cancelled)
+      await TimeLine.create({
+        orderId: order._id,
+        status: 0,
+      })
     }
 
     return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: newSatus });
@@ -311,6 +323,7 @@ export const returnOrder = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
 export const applyDiscountCodeOrder = async (req, res) => {
   const { orderId, discountCode } = req.params;
   console.log('Discount Code:', discountCode);
@@ -344,5 +357,22 @@ export const applyDiscountCodeOrder = async (req, res) => {
       message: 'Có lỗi xảy ra khi xử lý mã giảm giá',
     });
   }
-};
+}
 
+export const timeLineOrder = async (req, res) => {
+
+  try {
+
+    const timelines = await TimeLine.find().populate('orderId')
+
+    if (timelines.length === 0) {
+      return res.status(201).json({ message: 'Trống' })
+    }
+
+    return res.status(200).json(timelines)
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+}

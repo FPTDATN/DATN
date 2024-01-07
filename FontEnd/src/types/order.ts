@@ -23,6 +23,7 @@ export interface IProductorder {
       sale_off: number;
       color?:string;
       size?:string;
+      inStock?:number
       
 }
 export interface Iuser {

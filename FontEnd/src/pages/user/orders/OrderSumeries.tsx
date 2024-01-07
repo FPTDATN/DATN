@@ -22,9 +22,7 @@ import OrderBinhluan from './comment';
 
 const { Panel } = Collapse;
 
-const StyleCollapse = styled(Collapse)`
-    
-`
+const StyleCollapse = styled(Collapse)``;
 
 type Props = {};
 
@@ -160,7 +158,7 @@ const OrderSumeries = ({ }: Props) => {
                                                 key={order._id}
                                             >
                                                 <div className="overflow-x-auto">
-                                                    <div >
+                                                    <div>
                                                         <h1>
                                                             <Alert
                                                                 type="warning"
@@ -172,11 +170,11 @@ const OrderSumeries = ({ }: Props) => {
                                                                 onClick={() => showModal(order._id)}
                                                                 disabled={
                                                                     order.status >= Status.ORDER_CONFIRM ||
-                                                                    order.payMethod === 2 ||
+                                                                    order.payMethod === 1 ||
                                                                     order.status === Status.CANCELLED
                                                                 }
                                                             >
-                                                                {order.payMethod === 2
+                                                                {order.payMethod === 1
                                                                     ? 'Đã thanh toán'
                                                                     : 'Hủy đơn hàng'}
                                                             </Button>

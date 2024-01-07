@@ -33,11 +33,11 @@ const { confirm } = Modal;
 
 const renderState = (state: number) => {
     if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
-    if (Status.INFORMATION === state) return <span>  Chờ xác nhận <LoadingOutlined /></span>;
-    if (Status.ORDER_CONFIRM === state) return <span>Đơn hàng đã được xác nhận</span>;
+    if (Status.INFORMATION === state) return <span>  Đang xác nhận <LoadingOutlined /></span>;
+    if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
     if (Status.COMPLETE === state) return <span className="text-green-500"><CheckCircleOutlined /> Hoàn thành</span>;
-    if (Status.DANHGIA === state) return <span className="text-yellow-400"><CheckCircleOutlined />DANH GIA</span>;
+    if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
 };
 
 const renderMethod = (method: number) => {
@@ -57,19 +57,19 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
     const inputNode = (
         <Select>
-            <Option disabled={record?.status > Status.INFORMATION} value={1}>
+            <Option disabled={record?.status >= Status.INFORMATION} value={1}>
                 {renderState(1)}
             </Option>
-            <Option disabled={record?.status > Status.ORDER_CONFIRM} value={2}>
+            <Option disabled={record?.status >= Status.ORDER_CONFIRM} value={2}>
                 {renderState(2)}
             </Option>
-            <Option disabled={record?.status > Status.SHIPPING} value={3}>
+            <Option disabled={record?.status >= Status.SHIPPING} value={3}>
                 {renderState(3)}
             </Option>
-            <Option disabled={record?.status > Status.COMPLETE} value={4}>
+            <Option disabled={record?.status >= Status.COMPLETE} value={4}>
                 {renderState(4)}
             </Option>
-            <Option disabled={record?.status > Status.DANHGIA} value={5}>
+            <Option disabled={record?.status > Status.HOAN} value={5}>
                 {renderState(5)}
             </Option>
         </Select>
@@ -97,8 +97,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
     );
 };
 import { DatePicker } from 'antd';
+import AdminTimelineOrder from '@/components/modal/AdminTimelineOrder';
+import { useGetProductsQuery } from '@/services/product';
 
 const ListOrder: React.FC = () => {
+    const { data: productData } = useGetProductsQuery({});
+
     const [dateRange, setDateRange] = useState<any>([null, null]);
 
     const { data, isLoading } = useGetsOrderQuery({
@@ -138,22 +142,23 @@ const ListOrder: React.FC = () => {
 
     // Filtering Order
 
-    const handleFilterPaidTrue = () => {
-        const filterIsPaidTrue = data?.docs?.filter((order) => order.payMethod === 1 && order.isPaid === true);
-        setOrders(filterIsPaidTrue!);
-    };
-
-    const handleFilterIsPaidFalse = () => {
-        const filterIsPaidFalse = data?.docs?.filter((order) => order.payMethod === 0 && order.isPaid === true);
-        setOrders(filterIsPaidFalse!);
-    };
-
     const [filterStatus, setFilterStatus] = useState<number | null>(null);
 
     const handleFilterByStatus = (status: number) => {
         const filteredData = data?.docs.filter((order) => order.status === status);
         setOrders(filteredData!);
         setFilterStatus(status);
+    };
+
+    const onChangeMethod = (value: string) => {
+        if (value === 'all') {
+            setOrders(data?.docs?.filter((order) => order.isPaid === true)!);
+        } else {
+            const filterIsPaidFalse = data?.docs?.filter(
+                (order) => order.payMethod === Number(value) && order.isPaid === true,
+            );
+            setOrders(filterIsPaidFalse!);
+        }
     };
 
     // Editting
@@ -203,38 +208,40 @@ const ListOrder: React.FC = () => {
     };
 
     const save = async (id: string) => {
-        try {
-            const row = (await form.validateFields()) as IOrder;
+        const row = (await form.validateFields()) as IOrder;
 
-            const newData = [...data?.docs!];
+        const inStock = productData?.docs?.find((item) => item.inStock <= 0);
 
-            await changeOrderStatus({
-                orderId: editingKey,
-                status: Number(row.status) as number,
-            }).then(() => {
-                if (Number(row.status) >= Status.ORDER_CONFIRM) {
-                    return makeRequestInStock();
-                }
-            });
-
-            message.success('Cập nhật trạng thái đơn hàng thành công');
-
-            const index = newData.findIndex((item) => id === item._id);
-
-            if (index > -1) {
-                const item = newData[index];
-
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
+        if (inStock?.inStock! <= 0) {
+            return message.warning(
+                `${inStock?.name} hiện đã hết hàng. Vui lòng nhập thêm hàng để tiếp tục đơn hàng 🥰`,
+            );
+        } else {
+            try {
+                const newData = [...data?.docs!];
+                await changeOrderStatus({
+                    orderId: editingKey,
+                    status: Number(row.status) as number,
+                }).then(() => {
+                    if (Number(row.status) >= Status.ORDER_CONFIRM) {
+                        return makeRequestInStock();
+                    }
                 });
-
-                setEditingKey('');
-            } else {
-                setEditingKey('');
+                message.success('Cập nhật trạng thái đơn hàng thành công');
+                const index = newData.findIndex((item) => id === item._id);
+                if (index > -1) {
+                    const item = newData[index];
+                    newData.splice(index, 1, {
+                        ...item,
+                        ...row,
+                    });
+                    setEditingKey('');
+                } else {
+                    setEditingKey('');
+                }
+            } catch (error: any) {
+                return message.error(error.message);
             }
-        } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
         }
     };
 
@@ -439,7 +446,7 @@ const ListOrder: React.FC = () => {
                         >
                             Hủy đơn
                         </Button>
-                        <div className="px-1 md:ml-0 ml-20">
+                        <div className="px-1 md:ml-0">
                             <div className="flex">
                                 <Button
                                     disabled={record.status === Status.CANCELLED || record.status === Status.COMPLETE}
@@ -545,23 +552,23 @@ const ListOrder: React.FC = () => {
             ) : (
                 <>
                     <div className="flex gap-x-2 mb-4 p-3">
-                        <Button
-                            type="primary"
-                            ghost
-                            onClick={() => setOrders(data?.docs?.filter((order) => order.isPaid === true)!)}
-                        >
-                            Xem tất cả
-                        </Button>
-                        <Button onClick={handleFilterPaidTrue}>Hàng đã thanh toán</Button>
-                        <Button onClick={handleFilterIsPaidFalse}>Hàng trả sau</Button>
+                        <Select onChange={onChangeMethod} defaultValue={'all'}>
+                            {/* <Option value={Status.INFORMATION}>Xác thực thông tin</Option> */}
+                            <Option value={'all'}>Tất cả đơn hàng</Option>
+                            <Option value={'0'}>Hàng trả sau</Option>
+                            <Option value={'1'}>Hàng đã thanh toán</Option>
+                        </Select>
+
                         <Select onChange={handleFilterByStatus} placeholder="Hàng theo trạng thái">
-                            <Option value={Status.INFORMATION}>Chờ xác nhận</Option>
-                            <Option value={Status.ORDER_CONFIRM}>Đơn hàng đã được xác nhận</Option>
+                            {/* <Option value={Status.INFORMATION}>Xác thực thông tin</Option> */}
+                            <Option value={Status.ORDER_CONFIRM}>Xác nhận đơn hàng</Option>
                             <Option value={Status.SHIPPING}>Đang giao hàng</Option>
                             <Option value={Status.COMPLETE}>Hoàn thành</Option>
                             <Option value={Status.CANCELLED}>Đã hủy</Option>
                             <Option value={Status.DANHGIA}>DANH GIA</Option>
                         </Select>
+
+                        <AdminTimelineOrder />
 
                         <div className="flex-grow text-right">
                             <RangePicker onChange={handleDateRangeChange} />
@@ -570,13 +577,18 @@ const ListOrder: React.FC = () => {
 
                     <Form form={form} component={false}>
                         <Table
+                            pagination={{
+                                defaultPageSize: 20,
+                                showSizeChanger: true,
+                                pageSizeOptions: ['10', '20', '30'],
+                            }}
                             bordered
                             components={{
                                 body: {
                                     cell: EditableCell,
                                 },
                             }}
-                            className="overflow-x-scroll cursor-pointer"
+                            className="overflow-x-scroll"
                             scroll={{ x: 1300 }}
                             columns={mergedColumns as any}
                             dataSource={orders}
@@ -624,6 +636,14 @@ const ListOrder: React.FC = () => {
                                                     </span>{' '}
                                                     <span className="text-base font-semibold !text-primary">
                                                         {formartVND(record.total)}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                        Ngày tạo đơn:
+                                                    </span>{' '}
+                                                    <span className="text-base font-semibold">
+                                                        {new Date(record?.createdAt!)?.toLocaleDateString()}
                                                     </span>
                                                 </p>
                                             </div>

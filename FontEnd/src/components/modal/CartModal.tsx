@@ -53,8 +53,8 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                                     </h1>
                                 ) : (
                                     cartItems.map((item, index) => (
-                                        <li key={index} className="flex py-6">
-                                            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                        <li key={index} className="flex pt-2 pb-4">
+                                            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-sm border border-gray-200">
                                                 <img
                                                     src={item?.images[0]}
                                                     alt={item?.name}
@@ -70,9 +70,6 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                                                         </h3>
                                                         <p className="ml-4">{formartVND(item?.price)}</p>
                                                     </div>
-                                                    <p className="mt-1 text-sm text-gray-500">
-                                                        {item?.categoryId?.name}
-                                                    </p>
                                                 </div>
                                                 <div className="flex flex-1 items-end justify-between text-sm">
                                                     <p className="text-gray-500">Số lượng:{item?.quantity}</p>
@@ -115,9 +112,8 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                             onClick={onClose}
                             className="flex items-center mt-2 justify-center border border-transparent !bg-primary px-6 py-2 text-base font-medium text-white shadow-sm hover:!bg-primary/90"
                         >
-                           Thanh toán
+                            Thanh toán
                         </Link>
-
                     </div>
                     <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
