@@ -11,6 +11,7 @@ import { calculatePagination } from '@/components/modal/pagination';
 import ReactPaginate from 'react-paginate';
 import { DatePicker } from 'antd';
 import { Link } from 'react-router-dom';
+import Loading from '@/components/ui/Loading';
 
 const ListCategory = () => {
   const { RangePicker } = DatePicker;
@@ -101,6 +102,9 @@ const ListCategory = () => {
   };
   return (
     <>
+      {isLoading ? (
+        <Loading/>
+      ):(
       <div className="relative overflow-x-auto">
         <div className="pb-4 bg-white dark:bg-gray-900 flex p-3">
           <div>
@@ -230,7 +234,9 @@ const ListCategory = () => {
           {selectedCategoryId && <UpdateCategory categoryId={selectedCategoryId} handleUpdateComplete={handleUpdateComplete} />}
         </Modal>
       </div>
+      )}
       <ToastContainer />
+      
     </>
   );
 };

@@ -26,9 +26,7 @@ import YourFavourite from '@/pages/user/your-favourite';
 import OrderSumeries from '@/pages/user/orders/OrderSumeries';
 import CheckoutSuccess from '@/pages/user/success/CheckoutSuccess';
 import CancelCheckout from '@/pages/user/cancelled/CancelCheckout';
-import EditorLayout from '@/components/layout/EditorLayout';
 import Hoandon from '@/pages/user/orders/Hoandon';
-// import Hoan from '@/pages/admin/order/listorder/hoan';
 import ListSale from '@/pages/admin/sale/listSale/listSale';
 import View_account from '@/pages/user/view_account';
 import Discount_code from '@/pages/user/discount';
@@ -44,6 +42,7 @@ import Revenue from '@/pages/admin/dashboard/revenue';
 import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
 import RevenueYear from '@/pages/admin/dashboard/revenueYear';
 import ProductsbyCategory from '@/pages/admin/category/productsByCategory';
+import Thongke from '@/pages/admin/statistical/Thongke';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -59,10 +58,7 @@ const PrivateRoute = ({ isAuth }: any) => {
         } else if (data?.role === "member" && location.pathname.includes("/admin")) {
             toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
             navigate("/error");
-        } else if (data?.role === "editor" && location.pathname.includes("/admin")) {
-            toast.warning('Bạn không có quyền truy cập trang admin!', { position: 'top-right' });
-            navigate("/error");
-        }
+        } 
     }, [isAuth, data, location]);
     return <Outlet />;
 };
@@ -206,32 +202,7 @@ const router = createBrowserRouter([
                     { path: 'revenueMoth', element: <RevenueMoth /> },
                     { path: 'revenueYear', element: <RevenueYear /> },
                     { path: 'category/:id/products', element: <ProductsbyCategory/>},
-                ],
-            },
-        ],
-    },
-
-    // Editer
-    {
-        path: "/editor",
-        element: <PrivateRoute isAuth={true} />,
-        children: [
-            {
-                element: <EditorLayout />,
-                children: [
-                    {
-                        index: true,
-                        element: <Navigate to="category" />,
-                    },
-                    { path: 'product', element: <ListProduct /> },
-                    { path: 'category', element: <ListCategory /> },
-                    { path: 'test', element: <AppTest /> },
-                    { path: 'detail/:id', element: <ListComment /> },
-                    { path: 'color', element: <ListColor /> },
-                    { path: 'size', element: <ListSize /> },
-                    { path: 'brand', element: <Listbrand /> },
-                    { path: 'order-review', element: <ListComment /> },
-
+                    { path: 'statistical', element: <Thongke /> },
                 ],
             },
         ],

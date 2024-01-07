@@ -9,9 +9,7 @@ import { GiResize } from "react-icons/gi";
 import { FireOutlined } from '@ant-design/icons';
 import { AiOutlineMenu, AiOutlineUser } from 'react-icons/ai';
 import AdminMobileMenu from '../modal/AdminMobileMenu';
-import { BiSolidCategory } from "react-icons/bi";
-import { MdCategory, MdSupervisorAccount, MdOutlineProductionQuantityLimits } from "react-icons/md";
-import { MdDashboard } from "react-icons/md";
+import { MdCategory, MdSupervisorAccount, MdOutlineProductionQuantityLimits,MdRateReview,MdOutlineDiscount,MdDashboard  } from "react-icons/md";
 import { RiShirtFill, RiDashboard3Fill } from "react-icons/ri";
 import { LiaSalesforce } from "react-icons/lia";
 import Ashirt from "../../../public/Ashirt.png"
@@ -47,11 +45,7 @@ const AdminLayout = () => {
         setIsOpen(!isOpen);
     };
 
-    const [isOpenOne, setIsOpenOne] = useState(false);
 
-    const toggleMenuOne = () => {
-        setIsOpenOne(!isOpenOne);
-    };
 
 
     const [open, setOpen] = useState(false);
@@ -152,43 +146,23 @@ const AdminLayout = () => {
                                         </span>
                                     </Link>
                                 </li>
-
                                 <li>
-                                    <button
-                                        type="button"
-                                        className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                        aria-controls="dropdown-example"
-                                        data-collapse-toggle="dropdown-example"
-                                        onClick={toggleMenuOne}
+                                    <Link
+                                        to="category"
+                                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
-                                        <BiSolidCategory style={{ fontSize: '18px', }} />
-                                        <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Danh mục</span>
-                                        <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                                        </svg>
-                                    </button>
-                                    {isOpenOne && (
-                                        <ul id="dropdown-example" className="py-2 space-y-2">
-                                            <li>
-                                                <Link
-                                                    to="category"
-                                                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                                >
-                                                    <MdCategory style={{ fontSize: '18px', }} />
-                                                    <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Danh mục</span>
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link to="brand" className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-
-                                                    <FireOutlined style={{ fontSize: '18px', }} />
-                                                    <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Thương hiệu</span>
-                                                </Link>
-                                            </li>
-
-                                        </ul>
-                                    )}
+                                        <MdCategory style={{ fontSize: '18px', }} />
+                                        <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Danh mục</span>
+                                    </Link>
                                 </li>
+                                <li>
+                                    <Link to="brand" className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+                                        <FireOutlined style={{ fontSize: '18px', }} />
+                                        <span className="flex-1 ml-3 whitespace-nowrap">Quản lý Thương hiệu</span>
+                                    </Link>
+                                </li>
+                                
 
                                 <li>
                                     <Link
@@ -264,9 +238,19 @@ const AdminLayout = () => {
                                         to="order-review"
                                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                                     >
-                                        <LiaSalesforce style={{ fontSize: '18px', }} />
+                                        <MdRateReview  style={{ fontSize: '18px', }} />
 
                                         <span className="flex-1 ml-3 whitespace-nowrap">Quản lý đánh giá</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="statistical"
+                                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    >
+                                        <MdOutlineDiscount   style={{ fontSize: '18px', }} />
+
+                                        <span className="flex-1 ml-3 whitespace-nowrap">Thống kê</span>
                                     </Link>
                                 </li>
                             </ul>

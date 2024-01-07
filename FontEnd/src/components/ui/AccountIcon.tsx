@@ -43,22 +43,7 @@ const AccountIcon: React.FC = () => {
             key: '0',
             icon: <AiOutlineUser style={{ fontSize: '18px' }} />,
         },
-        // Kiểm tra và hiển thị phần tử menu chỉ khi vai trò là editor
-        authData && authData.role === 'editor'
-            ? {
-                label: (
-                    <Link className="text-base" to={`/editor`}>
-                        Editor
-                    </Link>
-                ),
-                key: '1',
-                icon: <AiOutlineDropbox style={{ fontSize: '18px' }} />,
-            }
-            : null,
-
-        {
-            type: 'divider',
-        },
+        
         authData && authData.role === 'admin'
             ? {
                 label: (
