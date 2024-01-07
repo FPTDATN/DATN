@@ -15,7 +15,7 @@ export interface OrderComment {
   images: string[];
   createdAt?: any;
   videos: string[];
-
+  replies: string[];
 }
 
 const ordercommentApi = createApi({
@@ -48,6 +48,14 @@ const ordercommentApi = createApi({
         },
       }),
       providesTags: ['Ordercomments']
+    }),
+    replyToOrderComment: builder.mutation<any, { userId: string, commentId: string, replyText: string }>({
+      query: ({ userId, commentId, replyText }) => ({
+        url: `/comments/${commentId}/reply`,
+        method: 'POST',
+        body: { userId, replyText, commentId },
+      }),
+      invalidatesTags: ['Ordercomments'],
     }),
 
     getByIdOrderComments: builder.query<OrderComment, any>({
@@ -90,7 +98,8 @@ export const {
   useGetByIdOrderCommentsQuery,
   useAddOrderCommentMutation,
   useUpdateOrderCommentMutation,
-  useRemoveOrderCommentMutation
+  useRemoveOrderCommentMutation,
+  useReplyToOrderCommentMutation
 } = ordercommentApi;
 
 export default ordercommentApi;

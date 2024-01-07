@@ -3,11 +3,10 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import UpdateComment from '../updateComment/UpdateComment';
 import { useMeQuery } from '@/services/auth';
-
 import { formatTimeToNow } from '@/utils/formartDate';
-
 import { OrderComment, useGetAllOrderCommentsQuery, useRemoveOrderCommentMutation } from '@/services/ordercomments';
-
+import './comment.css';
+import Ashirt from "../../../../public/Ashirt.png"
 
 
 const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
@@ -18,6 +17,8 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
         endDate: '',
 
     })
+    console.log('comment', orderCommentsData);
+
     const [loading] = useState(false);
     const [openAbsolute, setOpenAbsolute] = useState<{ [key: string]: boolean }>({});
     const { data: authData } = useMeQuery();
@@ -194,9 +195,21 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
                                             </div>
 
                                         </div>
+
+                                        {item.replies.map((image, index) => (
+                                            <div key={index} className="flex justify-end">
+                                                <div className="container darker p-2 w-[450px]">
+                                                    <img src={Ashirt} className="w-[28px] h-[28px] right" alt="" />
+                                                    <p>{image?.text}</p>
+                                                </div>
+                                            </div>
+
+                                        ))}
+
                                     </article>
                                 ))
                             )}
+
                         </div>
                     </div>
                 </section>

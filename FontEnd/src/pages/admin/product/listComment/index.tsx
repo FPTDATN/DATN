@@ -1,8 +1,8 @@
 import { calculatePagination } from "@/components/modal/pagination";
 import { useMeQuery } from "@/services/auth";
-import { useGetAllOrderCommentsQuery, useRemoveOrderCommentMutation } from "@/services/ordercomments";
+import { useGetAllOrderCommentsQuery, useRemoveOrderCommentMutation, useReplyToOrderCommentMutation } from "@/services/ordercomments";
 import { Button, DatePicker, Image, Modal, Popconfirm, Rate, Skeleton, Space } from "antd";
-import { SearchProps } from "antd/es/input";
+import Input, { SearchProps } from "antd/es/input";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from 'react-toastify';
@@ -23,6 +23,8 @@ const ListComment = () => {
     setDateRange(dates);
   };
   const [mutate] = useRemoveOrderCommentMutation();
+  const [replyLoading, setReplyLoading] = useState(false);
+
   const { data: authData } = useMeQuery();
   // Lọc comments với productId trùng khớp với useParams()
   const handleDeleteComment = async (id: string) => {
@@ -50,7 +52,8 @@ const ListComment = () => {
     setCurrentPage(selectedPage.selected);
   };
   const [open, setOpen] = useState(false);
-
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [replyText, setReplyText] = useState('');
   const showModal = () => {
     setOpen(true);
   };
@@ -67,13 +70,29 @@ const ListComment = () => {
     setSearchValue(value);
   };
 
+  const handleReplyButtonClick = () => {
+    setShowReplyInput(true);
+  };
+  const [mutateCreateProduct] = useReplyToOrderCommentMutation();
+
+  const handleReplySubmit = async () => {
+    try {
+      const userId = currentPageItems[currentPage]?.userId?._id || '';
+      const commentId = currentPageItems[currentPage]?._id || '';
+      await mutateCreateProduct({ userId, commentId, replyText });
+      setShowReplyInput(false);
+      setReplyText('');
+      toast.success('Bạn đã trả lời đánh giá này');
+
+    } catch (error) {
+      console.error('Error replying to comment:', error);
+    }
+
+  };
+
   return (
     <div>
-      {/* <div className="pr-4 p-3">
-        <Space direction="vertical">
-          <Search placeholder="input search text" onSearch={handleSearch} style={{ width: 200 }} />
-        </Space>
-      </div> */}
+
       <div className="flex-grow text-right">
         <RangePicker onChange={handleDateRangeChange} />
       </div>
@@ -136,20 +155,36 @@ const ListComment = () => {
                       <Button type="link" className="bg-reds text-layer mr-3">Delete</Button>
                     </Popconfirm>
                   </Space>
-
                   <Space>
                     <Button type="primary" className="bg-primary" onClick={showModal}>
                       Chi tiết
                     </Button>
                     <Modal
                       open={open}
-                      title="Chi tiết comment"
+                      title="Chi tiết đánh giá"
                       onOk={handleOk}
                       onCancel={handleCancel}
                       footer={(_, { CancelBtn }) => (
                         <>
-                          <CancelBtn />
 
+                          {showReplyInput ? (
+                            <div className="p-2">
+                              <Input.TextArea
+                                rows={4}
+                                value={replyText}
+                                onChange={(e) => setReplyText(e.target.value)}
+                              />
+                              <div className="p-2 ">
+                                <Button className="bg-cyan-300 text-slate-950" onClick={handleReplySubmit}>
+                                  Gửi
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <Button type="default" onClick={handleReplyButtonClick}>
+                              Trả lời
+                            </Button>
+                          )}
                         </>
                       )}
                     >
