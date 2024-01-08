@@ -42,7 +42,7 @@ const OrderSumeries = ({ }: Props) => {
     const [openAdd, setOpenAdd] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState('');
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
-    const [updateOrderStatus] = useUpdateOrderStatusMutation(); // Mutation để cập nhật trạng thái đơn hàng
+    const [updateOrderStatus] = useUpdateOrderStatusMutation(); 
     const handleAddModalClose = () => {
         setOpenAdd(false);
         setOpenUpdateModal(false);
