@@ -20,7 +20,6 @@ const ProductsOfCategory: FunctionComponent<ListProductItemsProps> = ({ heading 
         <h2 className="pb-2 uppercase text-xl font-semibold text-left text-gray-800 md:text-3xl dark:text-gray-400">
           {heading}
         </h2>
-        <div className="w-20 mb-6 border-b border-red-700 dark:border-gray-400"></div>
 
         {allProducts && allProducts.length > 0 ? (
           <div className="grid gap-3 mb-11 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">

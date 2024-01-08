@@ -39,8 +39,8 @@ const Signin = () => {
         if (authData) {
             if (isSuccess) {
                 toast.success('Đăng nhập thành công', { position: 'top-right' });
-                if (authAdmin?.role === "admin") {
-                    setTimeout(() => router('/admin'), 2000)
+                if (authData?.role === 'admin' && !location.pathname.startsWith('/admin')) {
+                    router('/admin/dashboard');
                 } else {
                     setTimeout(() => router('/'), 2000)
                 }

@@ -43,7 +43,7 @@ import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
 import RevenueYear from '@/pages/admin/dashboard/revenueYear';
 import ProductsbyCategory from '@/pages/admin/category/productsByCategory';
 import Thongke from '@/pages/admin/statistical/Thongke';
-import ProductsOfCategory from '@/components/category/test';
+import ProductsOfCategory from '@/components/category/CategoryOfproducts';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
