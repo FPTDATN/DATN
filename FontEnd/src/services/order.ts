@@ -23,7 +23,7 @@ export type IdType = {
   LydoHoandon: string;
   Motahoandon: string;
   Emaill: string;
-  discountCode : IDiscount[];
+  discountCode: IDiscount[];
 }
 const orderApi = createApi({
   reducerPath: 'order',
@@ -68,7 +68,7 @@ const orderApi = createApi({
       query: () => ({
         url: '/order',
         method: 'GET',
-      
+
       }),
       providesTags: ['Order'],
     }),
@@ -84,11 +84,11 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
-    updateOrderStatus: builder.mutation<IOrder, { orderId: string; status: number; isPaid?: boolean }>({
-      query: ({ orderId, status, isPaid }) => ({
+    updateOrderStatus: builder.mutation<IOrder, { ids?: string[], orderId: string; status: number; isPaid?: boolean }>({
+      query: ({ orderId, status, isPaid, ids }) => ({
         url: `/order/${orderId}/status`,
         method: 'PUT',
-        body: { status, isPaid },
+        body: { status, isPaid, ids },
       }),
       invalidatesTags: ['Order'],
     }),
