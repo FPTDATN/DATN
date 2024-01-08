@@ -1,4 +1,4 @@
-import { Image, Modal, Popconfirm, Rate, Spin } from 'antd';
+import { Button, Image, Modal, Popconfirm, Rate, Spin } from 'antd';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import UpdateComment from '../updateComment/UpdateComment';
@@ -47,7 +47,11 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
             toast.error('Xóa không thành công');
         }
     };
+    const [showAllReplies, setShowAllReplies] = useState(false);
 
+    const handleToggleReplies = () => {
+        setShowAllReplies(!showAllReplies);
+    };
     return (
         <>
             <Spin spinning={loading}>
@@ -196,15 +200,29 @@ const Comment = ({ userId, productId = [], orderId }: OrderComment) => {
 
                                         </div>
 
-                                        {item.replies.map((image, index) => (
-                                            <div key={index} className="flex justify-end">
-                                                <div className="container darker p-2 w-[450px]">
-                                                    <img src={Ashirt} className="w-[28px] h-[28px] right" alt="" />
-                                                    <p>{image?.text}</p>
+                                        <div>
+                                            {item.replies.slice(0, showAllReplies ? item.replies.length : 2).map((reply, index) => (
+                                                <div key={index} className="flex justify-start ml-10">
+                                                    <div className="container darker p-2 w-[350px]">
+                                                        <img src={Ashirt} className="w-[28px] h-[30px] left" alt="" />
+                                                        <p>{reply?.text}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            ))}
 
-                                        ))}
+                                            {item.replies.length > 2 && (
+                                                <div className="flex justify-start ml-10">
+                                                    <Button
+                                                        onClick={handleToggleReplies}
+                                                        className="link-button"
+                                                        style={{ background: 'none', border: 'none', padding: 0, color: 'blue', textDecoration: 'underline', cursor: 'pointer', marginLeft: '10px' }}
+                                                    >
+                                                        {showAllReplies ? 'Thu gọn' : 'Xem thêm'}
+                                                    </Button>
+
+                                                </div>
+                                            )}
+                                        </div>
 
                                     </article>
                                 ))
