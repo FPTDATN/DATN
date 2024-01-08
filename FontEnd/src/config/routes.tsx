@@ -43,6 +43,7 @@ import RevenueMoth from '@/pages/admin/dashboard/revenueMoth';
 import RevenueYear from '@/pages/admin/dashboard/revenueYear';
 import ProductsbyCategory from '@/pages/admin/category/productsByCategory';
 import Thongke from '@/pages/admin/statistical/Thongke';
+import ProductsOfCategory from '@/components/category/test';
 
 const PrivateRoute = ({ isAuth }: any) => {
     const navigate = useNavigate();
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
                     {
                         path: 'code_ma',
                         element: <List_discount />
+                    },
+                    {
+                        path: 'category/:categoryId',
+                        element: <ProductsOfCategory />
                     },
                     {
                         path: '/details',

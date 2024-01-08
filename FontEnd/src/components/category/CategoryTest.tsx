@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGetCategoriesQuery } from "@/services/category";
 import "./CategoryTest.css"
+import { Link } from 'react-router-dom';
 
 const CategoryTest = () => {
     const { data: categories, isLoading } = useGetCategoriesQuery(
@@ -45,7 +46,7 @@ const CategoryTest = () => {
                 ) : (
                     categories?.docs.slice(0, displayedItems).map((category) => (
                         <div key={category._id} className="dm_swiper-slider">
-                            <a href="" title={`${category.name}`}></a>
+                            <Link to={`/category/${category._id}`}></Link>
                             <div className="danhmuc_img">
                                 <img src={category.img} alt="" className="" />
                                 <span className='image_shadow'></span>
