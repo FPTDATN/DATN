@@ -6,6 +6,8 @@ import Input, { SearchProps } from "antd/es/input";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from 'react-toastify';
+import Ashirt from "../../../../../public/Ashirt.png"
+import './comment.css';
 
 const ListComment = () => {
   const [dateRange, setDateRange] = useState([null, null]);
@@ -159,34 +161,38 @@ const ListComment = () => {
                     <Button type="primary" className="bg-primary" onClick={showModal}>
                       Chi tiết
                     </Button>
+                    <>
+
+                      {showReplyInput ? (
+                        <div className="p-2">
+                          <Input.TextArea
+                            rows={4}
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            style={{ width: '100%', height: '20px', marginBottom: '10px', borderRadius: '8px', borderColor: '#ced4da' }}
+
+                          />
+                          <div className="p-2 ">
+                            <Button className="bg-cyan-300 text-slate-950" onClick={handleReplySubmit}>
+                              Gửi
+                            </Button>
+                            <Button className="ml-2" onClick={() => setShowReplyInput(false)}>
+                              Đóng
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <Button type="default" onClick={handleReplyButtonClick}>
+                          Trả lời
+                        </Button>
+                      )}
+                    </>
                     <Modal
                       open={open}
                       title="Chi tiết đánh giá"
                       onOk={handleOk}
                       onCancel={handleCancel}
-                      footer={(_, { CancelBtn }) => (
-                        <>
 
-                          {showReplyInput ? (
-                            <div className="p-2">
-                              <Input.TextArea
-                                rows={4}
-                                value={replyText}
-                                onChange={(e) => setReplyText(e.target.value)}
-                              />
-                              <div className="p-2 ">
-                                <Button className="bg-cyan-300 text-slate-950" onClick={handleReplySubmit}>
-                                  Gửi
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <Button type="default" onClick={handleReplyButtonClick}>
-                              Trả lời
-                            </Button>
-                          )}
-                        </>
-                      )}
                     >
                       <article
                         key={item?._id}
@@ -294,6 +300,16 @@ const ListComment = () => {
                           </div>
 
                         </div>
+
+                        {item.replies.map((image, index) => (
+                          <div key={index} className="flex justify-end">
+                            <div className="container darker p-2 w-[300px]">
+                              <img src={Ashirt} className="w-[28px] h-[30px] right" alt="" />
+                              <p>{image?.text}</p>
+                            </div>
+                          </div>
+
+                        ))}
                       </article>
                     </Modal>
                   </Space>
