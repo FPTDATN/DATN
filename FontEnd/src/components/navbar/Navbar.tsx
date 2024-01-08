@@ -81,7 +81,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
                                             >
                                                 <Link
                                                     className="hover:text-primary/90 text-left text-base px-2 py-1 block"
-                                                    to={''}
+                                                    to={`/category/${category._id}`}
                                                 >
                                                     {category.name}
                                                 </Link>

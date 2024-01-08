@@ -13,7 +13,7 @@ const Footer: FunctionComponent<FooterProps> = () => {
                 <div className="relative z-10 justify-center flex-1 max-w-5xl px-4 py-4 mx-auto lg:py-0">
                     <div className="flex flex-wrap pb-10 -mx-3">
                         <div className="w-full px-4 mb-11 md:w-1/2 lg:w-4/12 lg:mb-0">
-                            <a href="#" className="inline-block pb-2 text-lg font-bold text-gray-800">About Company</a>
+                            <a href="#" className="inline-block pb-2 text-lg font-bold text-gray-800"> Về chúng tôi </a>
                             <div className="w-16 mb-4 border-b-2 border-gray-300 "></div>
                             <p className="text-base font-normal leading-6 text-gray-800 lg:w-64">
                                 Lorem ipsum dor amet Lorem ipsum dor amet Lorem ipsum dor amet Lorem ipsum dor ame </p>
