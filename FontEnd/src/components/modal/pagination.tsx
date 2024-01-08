@@ -13,6 +13,6 @@ export function calculatePagination(options: PaginationOptions) {
     return {
         pageCount,
         offset,
-        currentPageItems: options.data.slice(offset, offset + perPage),
+        currentPageItems: options?.data?.slice(offset, offset + perPage) || [],
     };
 }

@@ -1,5 +1,5 @@
 import { useMeQuery } from '@/services/auth';
-import { useUpdateOrderStatusMutation } from '@/services/order';
+// import { useUpdateOrderStatusMutation } from '@/services/order';
 import { clear } from '@/slices/cart';
 import { useAppDispatch } from '@/store/hook';
 import { Status } from '@/types/status';
@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { FaCheckCircle } from 'react-icons/fa';
 import { MdError } from 'react-icons/md';
+import instance from '@/services/config';
 
 const CheckoutSuccess = () => {
     const { id } = useParams();
@@ -22,7 +23,7 @@ const CheckoutSuccess = () => {
     // const { cartItems } = useAppSelector((state) => state.cart);
     const shouldLog = useRef(true);
 
-    const [update] = useUpdateOrderStatusMutation();
+    // const [update] = useUpdateOrderStatusMutation();
     const [timerCount, setTimer] = useState(5);
     const [disable, setDisable] = useState(true);
     const { data } = useMeQuery();
@@ -31,11 +32,16 @@ const CheckoutSuccess = () => {
         if (code !== successCode) {
             return;
         } else {
-            update({
-                orderId: id!,
-                status: Status.INFORMATION,
-                isPaid: true,
-            });
+            instance
+                .patch(`order/confirm/${id}`, { status: Status.INFORMATION, isPaid: true })
+                .then(() => {
+                    dispatch(clear());
+                })
+                .then(() => {
+                    setTimeout(() => {
+                        router('/');
+                    }, 5000);
+                });
         }
     };
 
@@ -44,11 +50,6 @@ const CheckoutSuccess = () => {
             shouldLog.current = false;
             makeRequest();
             // makeRequestInStock();
-            dispatch(clear());
-
-            setTimeout(() => {
-                router('/');
-            }, 5000);
         }
     }, []);
 

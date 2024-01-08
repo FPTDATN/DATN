@@ -33,10 +33,21 @@ const { confirm } = Modal;
 
 const renderState = (state: number) => {
     if (Status.CANCELLED === state) return <span className="text-red-500">Đã hủy</span>;
-    if (Status.INFORMATION === state) return <span>  Đang xác nhận <LoadingOutlined /></span>;
+    if (Status.INFORMATION === state)
+        return (
+            <span>
+                {' '}
+                Đang xác nhận <LoadingOutlined />
+            </span>
+        );
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
     if (Status.SHIPPING === state) return <span>Đang giao hàng</span>;
-    if (Status.COMPLETE === state) return <span className="text-green-500"><CheckCircleOutlined /> Hoàn thành</span>;
+    if (Status.COMPLETE === state)
+        return (
+            <span className="text-green-500">
+                <CheckCircleOutlined /> Hoàn thành
+            </span>
+        );
     if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
 };
 
@@ -99,6 +110,21 @@ const EditableCell: React.FC<EditableCellProps> = ({
 import { DatePicker } from 'antd';
 import AdminTimelineOrder from '@/components/modal/AdminTimelineOrder';
 import { useGetProductsQuery } from '@/services/product';
+import styled from 'styled-components';
+
+const StyledSelectedRow = styled(Table)`
+    .ant-table-cell {
+        .ant-checkbox-wrapper {
+            .ant-checkbox-inner {
+                border-radius: 0;
+            }
+        }
+    }
+
+    .ant-table-row-selected {
+        background-color: #ccc;
+    }
+`;
 
 const ListOrder: React.FC = () => {
     const { data: productData } = useGetProductsQuery({});
@@ -109,6 +135,7 @@ const ListOrder: React.FC = () => {
         startDate: dateRange && dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : '',
         endDate: dateRange && dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '',
     });
+
     const { RangePicker } = DatePicker;
     const handleDateRangeChange = (dates: any, dateStrings: any) => {
         setDateRange(dates);
@@ -116,10 +143,12 @@ const ListOrder: React.FC = () => {
     const [changeOrderStatus] = useUpdateOrderStatusMutation();
     const [form] = Form.useForm();
 
+    // State
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [editingKey, setEditingKey] = useState('');
     const [products, setProducts] = useState<any[]>([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
     //print
     const [showModal, setShowModal] = useState(false);
@@ -139,6 +168,17 @@ const ListOrder: React.FC = () => {
     useEffect(() => {
         setOrders(data?.docs?.filter((order) => order.isPaid === true) as any);
     }, [data]);
+
+    // selection
+
+    const onSelectChange = (newSelectedRowKeys: string[]) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+
+    const rowSelection: any = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
 
     // Filtering Order
 
@@ -221,13 +261,18 @@ const ListOrder: React.FC = () => {
                 const newData = [...data?.docs!];
                 await changeOrderStatus({
                     orderId: editingKey,
+                    ids: selectedRowKeys,
                     status: Number(row.status) as number,
-                }).then(() => {
-                    if (Number(row.status) >= Status.ORDER_CONFIRM) {
-                        return makeRequestInStock();
-                    }
-                });
-                message.success('Cập nhật trạng thái đơn hàng thành công');
+                })
+                    .then(() => {
+                        if (Number(row.status) >= Status.ORDER_CONFIRM) {
+                            return makeRequestInStock();
+                        }
+                    })
+                    .then(() => {
+                        message.success('Cập nhật trạng thái đơn hàng thành công');
+                        setSelectedRowKeys([]);
+                    });
                 const index = newData.findIndex((item) => id === item._id);
                 if (index > -1) {
                     const item = newData[index];
@@ -576,7 +621,8 @@ const ListOrder: React.FC = () => {
                     </div>
 
                     <Form form={form} component={false}>
-                        <Table
+                        <StyledSelectedRow
+                            rowSelection={rowSelection}
                             pagination={{
                                 defaultPageSize: 20,
                                 showSizeChanger: true,
@@ -602,114 +648,141 @@ const ListOrder: React.FC = () => {
                                 ),
                                 expandedRowRender: (record) => {
                                     return (
-                                        <div>
-                                            <div className="space-y-2">
-                                                <h1>
-                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Tên khách hàng :
-                                                    </span>{' '}
-                                                    <span className="text-base font-semibold">{record.fullName}</span>
-                                                </h1>
-                                                <p>
-                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Số điện thoại:
-                                                    </span>{' '}
-                                                    <span className="text-base font-semibold">0{record.phone}</span>
-                                                </p>
-                                                <p>
-                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Địa chỉ:
-                                                    </span>{' '}
-                                                    <span className="text-base font-semibold">{record.shipping}</span>
-                                                </p>
-                                                <p>
-                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Trạng thái đơn hàng:
-                                                    </span>{' '}
-                                                    <span className="text-base font-semibold">
-                                                        {renderState(record.status)}
-                                                    </span>
-                                                </p>
-                                                <p>
-                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Tổng số tiền:
-                                                    </span>{' '}
-                                                    <span className="text-base font-semibold !text-primary">
-                                                        {formartVND(record.total)}
-                                                    </span>
-                                                </p>
-                                                <p>
-                                                    <span className="min-w-[150px] max-w-[150px] inline-block">
-                                                        Ngày tạo đơn:
-                                                    </span>{' '}
-                                                    <span className="text-base font-semibold">
-                                                        {new Date(record?.createdAt!)?.toLocaleDateString()}
-                                                    </span>
-                                                </p>
-                                            </div>
+                                        <>
+                                            {record && (
+                                                <div>
+                                                    <div className="space-y-2">
+                                                        <h1>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Tên khách hàng :
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold">
+                                                                {record?.fullName}
+                                                            </span>
+                                                        </h1>
+                                                        <p>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Địa chỉ Email:
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold">
+                                                                {record?.email}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Số điện thoại:
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold">
+                                                                0{record?.phone}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Địa chỉ:
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold">
+                                                                {record?.shipping}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Trạng thái đơn hàng:
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold">
+                                                                {renderState(record?.status)}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Tổng số tiền:
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold !text-primary">
+                                                                {formartVND(record?.total)}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            <span className="min-w-[150px] max-w-[150px] inline-block">
+                                                                Ngày tạo đơn:
+                                                            </span>{' '}
+                                                            <span className="text-base font-semibold">
+                                                                {new Date(record?.createdAt!)?.toLocaleDateString()}
+                                                            </span>
+                                                        </p>
+                                                    </div>
 
-                                            <h1 className="mt-4 text-base font-semibold">Đơn hàng: </h1>
+                                                    <h1 className="mt-4 text-base font-semibold">Đơn hàng: </h1>
 
-                                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                    <tr>
-                                                        <th></th>
-                                                        <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                            Tên đơn hàng
-                                                        </th>
-                                                        <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                            Màu
-                                                        </th>
-                                                        <th scope="col" className="px-6 text-xs font-medium py-3">
-                                                            Size
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="text-left px-6 text-xs font-medium py-3"
-                                                        >
-                                                            Số lượng
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-
-                                                {isLoading ? (
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colSpan={7}>
-                                                                <Skeleton count={3} className="h-[98px]" />
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                ) : (
-                                                    <tbody>
-                                                        {record?.products.map((product: any, index) => (
-                                                            <tr key={index}>
-                                                                <td className="text-center bg-gray-100 shadow-sm">
-                                                                    <Image
-                                                                        width={55}
-                                                                        height={55}
-                                                                        src={product.images![index]}
-                                                                        preview
-                                                                    />
-                                                                </td>
-                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                                    {product?.name}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                                    {product?.color}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                                    {product?.size}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
-                                                                    {product?.quantity}
-                                                                </td>
+                                                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                            <tr>
+                                                                <th></th>
+                                                                <th
+                                                                    scope="col"
+                                                                    className="px-6 text-xs font-medium py-3"
+                                                                >
+                                                                    Tên đơn hàng
+                                                                </th>
+                                                                <th
+                                                                    scope="col"
+                                                                    className="px-6 text-xs font-medium py-3"
+                                                                >
+                                                                    Màu
+                                                                </th>
+                                                                <th
+                                                                    scope="col"
+                                                                    className="px-6 text-xs font-medium py-3"
+                                                                >
+                                                                    Size
+                                                                </th>
+                                                                <th
+                                                                    scope="col"
+                                                                    className="text-left px-6 text-xs font-medium py-3"
+                                                                >
+                                                                    Số lượng
+                                                                </th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                )}
-                                            </table>
-                                        </div>
+                                                        </thead>
+
+                                                        {isLoading ? (
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td colSpan={7}>
+                                                                        <Skeleton count={3} className="h-[98px]" />
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        ) : (
+                                                            <tbody>
+                                                                {record?.products.map((product: any, index) => (
+                                                                    <tr key={index}>
+                                                                        <td className="text-center bg-gray-100 shadow-sm">
+                                                                            <Image
+                                                                                width={55}
+                                                                                height={55}
+                                                                                src={product.images![index]}
+                                                                                preview
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                            {product?.name}
+                                                                        </td>
+                                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                            {product?.color}
+                                                                        </td>
+                                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                            {product?.size}
+                                                                        </td>
+                                                                        <td className="px-6 py-4 text-left bg-gray-100 shadow-sm">
+                                                                            {product?.quantity}
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        )}
+                                                    </table>
+                                                </div>
+                                            )}
+                                        </>
                                     );
                                 },
                             }}

@@ -4,6 +4,7 @@ import shortid from 'shortid';
 import Discount from "../models/discount.js";
 import { senderMail } from "../utils/senderMail.js";
 import TimeLine from "../models/timeline.js";
+import { cancelledOrder, confirmOrder, htmlOrder } from "../actions/sendEmail.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -116,157 +117,97 @@ export const getOrders = async (req, res) => {
   }
 };
 
-
-export const cancelOrder = async (req, res) => {
+export const orderConfirmed = async (req, res) => {
   try {
-    const { orderId } = req.params;
+    const { id } = req.params;
     const { status, isPaid } = req.body;
 
-    // Tìm đơn hàng dựa trên orderId
-    const order = await Order.findById(orderId);
+    const order = await Order.findOne({ _id: id })
 
     if (!order) {
       return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
     }
 
-    // Kiểm tra xem trạng thái mới cung cấp hợp lệ hay không
-    // if (!['Đang xử lý', 'Chờ xác nhận', 'Đã giao hàng', 'Đã hủy'].includes(status)) {
-    //   return res.status(400).json({ message: 'Trạng thái mới không hợp lệ' });
-    // }
+    await Order.findByIdAndUpdate({ _id: id }, { status, isPaid }, { new: true })
 
-    // Cập nhật trạng thái của đơn hàng thành trạng thái mới
-    const newSatus = await Order.updateOne({ _id: orderId }, { status, isPaid }, { new: true })
+    await senderMail(order.email, htmlOrder(order))
+    await TimeLine.create({
+      orderId: order._id,
+      status,
+    })
 
-    // html
-    let items = order.products.map((product, index) => (
-      `<tr key="${index}">
-      <td style="border:1px solid #ccc; padding:6px 12px;">
-          <img width="60" height="60" src="${product.images[0]}" alt="${product.name}"/>
-      </td>
-      <td style="border:1px solid #ccc; padding:6px 12px;">
-          ${product.name} x <b>${product.quantity}</b>
-      </td>
-      <td style="border:1px solid #ccc; padding:6px 12px;">
-          ${product.color}
-      </td>
-      <td style="border:1px solid #ccc; padding:6px 12px;">
-          ${product.size}
-      </td>
-      <td style="border:1px solid #ccc; padding:6px 12px;">
-          ${product.price * product.quantity} VND
-      </td>
-  </tr>`
-    )).join('')
+    return res.status(200).json({ message: 'Cập nhập thành công' })
 
-    let htmlOrders = `
-      <section>
-          <div>
-              <div>
-                  <p>
-                      <b>Hóa đơn</b> : #${order.orderNumber}
-                  </p>
-                  <p>
-                      <b>Ngày tạo </b>: ${order?.createdAt?.toLocaleDateString()}
-                  </p>
-                  <p>
-                      <b>Tên khách hàng </b>: ${order.fullName}
-                  </p>
-                  <p>
-                      <b>Địa chỉ </b>: ${order.shipping}
-                  </p>
-                  <p>
-                      <b>Số điện thoại </b>: 0${order.phone}
-                  </p>
-              </div>
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
 
-              <br />
 
-              <div>
-                  <table>
-                      <thead>
-                          <tr>
-                              <th style="border:1px solid #ccc; padding: 6px 12px;"></th>
-                              <th style="border:1px solid #ccc; padding: 6px 12px;">
-                                  Sản phẩm
-                              </th>
-                              <th style="border:1px solid #ccc; padding: 6px 12px;">Màu</th>
-                              <th style="border:1px solid #ccc; padding: 6px 12px;">Size</th>
-                              <th style="border:1px solid #ccc; padding: 6px 12px;">Giá</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          ${items}
-                      </tbody>
-                  </table>
+export const cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status, isPaid, ids } = req.body;
 
-                  <br />
+    // Tìm đơn hàng dựa trên orderId
+    const order = await Order.find({ '_id': { $in: ids } })
 
-                  <div>
-                      <div>
-                          <table>
-                              <tbody>
-                                  <tr>
-                                      <td>Tổng giá:</td>
-                                      <b>${order.total} VND</b>
-                                  </tr>
-                              </tbody>
-                          </table>
-                      </div>
-                  </div>
-              </div>
-
-              <br />
-
-              <div>
-                  <b>
-                      <h2>Thank you, happy shopping again</h2>
-                  </b>
-              </div>
-          </div>
-      </section>`
-
-    // Lưu thay đổi vào cơ sở dữ liệu
-
-    let confirm = `
-      <div>
-        <h3>Shop A-Shirt thông báo:</h3>
-        
-        <h1 style="font-weight:500;">Đơn hàng của bạn đã được xác nhận.</h1>
-        
-        <b>Cảm ơn quý khách đã ủng hộ</b>
-      </div>
-    `
-    let cancelled = `
-      <div>
-        <h3>Shop A-Shirt thông báo:</h3>
-       
-        <h1 style="font-weight:500;">Đơn hàng của bạn đã được hủy theo yêu cầu.</h1>
-        
-        <b>Cảm ơn quý khách đã ủng hộ</b>
-      </div>
-    `
-
-    if (status === 1) {
-      await senderMail(order.email, htmlOrders)
-      await TimeLine.create({
-        orderId: order._id,
-        status: 1,
-      })
-    } else if (status === 2) {
-      await senderMail(order.email, confirm)
-      await TimeLine.create({
-        orderId: order._id,
-        status: 2,
-      })
-    } else if (status === 0) {
-      await senderMail(order.email, cancelled)
-      await TimeLine.create({
-        orderId: order._id,
-        status: 0,
-      })
+    if (!order) {
+      return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
     }
 
-    return res.status(200).json({ message: 'Cập nhật trạng thái thành công', order: newSatus });
+    // Cập nhật trạng thái của đơn hàng thành trạng thái mới
+    if (ids?.length > 0) {
+      await Order.updateMany({ '_id': { $in: ids } }, { status, isPaid }, { new: true, multi: true, upsert: true })
+
+      for (const item of order) {
+        if (status === 1) {
+          await senderMail(item.email, htmlOrder(item))
+          await TimeLine.create({
+            orderId: item._id,
+            status: 1,
+          })
+        } else if (status === 2) {
+          await senderMail(item.email, confirmOrder(item))
+          await TimeLine.create({
+            orderId: item._id,
+            status: 2,
+          })
+        } else if (status === 0) {
+          await senderMail(item.email, cancelledOrder(item))
+          await TimeLine.create({
+            orderId: item._id,
+            status: 0,
+          })
+        }
+      }
+
+      return res.status(200).json({ message: 'Cập nhật trạng thái thành công' });
+    } else {
+      const orderOne = await Order.findByIdAndUpdate({ _id: orderId }, { status, isPaid }, { new: true })
+
+      if (status === 1) {
+        await senderMail(orderOne.email, htmlOrder(orderOne))
+        await TimeLine.create({
+          orderId: orderOne._id,
+          status: 1,
+        })
+      } else if (status === 2) {
+        await senderMail(orderOne.email, confirmOrder(orderOne))
+        await TimeLine.create({
+          orderId: orderOne._id,
+          status: 2,
+        })
+      } else if (status === 0) {
+        await senderMail(orderOne.email, cancelledOrder(orderOne))
+        await TimeLine.create({
+          orderId: orderOne._id,
+          status: 0,
+        })
+      }
+
+      return res.status(200).json({ message: 'Cập nhật trạng thái thành công' });
+    }
   } catch (error) {
     console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
     return res.status(500).json({ error: error.message });
@@ -362,14 +303,18 @@ export const applyDiscountCodeOrder = async (req, res) => {
 export const timeLineOrder = async (req, res) => {
 
   try {
+    const { page } = req.query
 
-    const timelines = await TimeLine.find().populate('orderId')
+    const perPage = 1;
+
+    const timelines = await TimeLine.find().populate('orderId').limit(perPage).skip(perPage * page)
+    const count = await TimeLine.find().count()
 
     if (timelines.length === 0) {
       return res.status(201).json({ message: 'Trống' })
     }
 
-    return res.status(200).json(timelines)
+    return res.status(200).json({ timelines: timelines, count })
 
   } catch (error) {
     return res.status(500).json({ error: error.message });

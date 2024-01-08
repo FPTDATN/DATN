@@ -42,7 +42,7 @@ const ListProductItems: FunctionComponent<ListProductItemsProps> = ({ heading })
                     </div>
                 ) : (
                     <div className="grid gap-3 mb-11 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-                        {currentPageItems.map((product) => (
+                        {currentPageItems?.map((product) => (
                             <ProductItem key={product._id} product={product} />
                         ))}
                     </div>

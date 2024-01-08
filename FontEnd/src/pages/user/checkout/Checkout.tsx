@@ -191,6 +191,7 @@ const LocationList: React.FC = () => {
     }, [authData, form]);
 
     const handleSubmitCheckout = async (values: any) => {
+        if(window.confirm('Bạn vui lòng đọc kỹ điều khoản của chúng tôi trước khi xảy ra điều đáng tiếc.'))
         try {
             const { username, address1, address2, city, ...customer } = values;
             const shipping = `${address1} - ${address2} - ${city}`;
@@ -205,7 +206,6 @@ const LocationList: React.FC = () => {
                     isPaid: true,
                     shipping,
                 });
-                console.log(customer);
             }
 
             if (payMethod === 1) {
