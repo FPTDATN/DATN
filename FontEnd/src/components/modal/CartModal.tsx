@@ -47,7 +47,7 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                     <div className="mt-0">
                         <div className="flow-root">
                             <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                {cartItems.length === 0 ? (
+                                {cartItems?.length === 0 ? (
                                     <h1 className="text-center text-base">
                                         Bạn chưa thêm sản phẩm nào vài giỏ hàng 😥
                                     </h1>
@@ -66,9 +66,9 @@ const CartModal: FunctionComponent<CartModalProps> = () => {
                                                 <div>
                                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                                         <h3 className="line-clamp-3">
-                                                            <Link to={`/detail/${item._id}`}>{item?.name}</Link>
+                                                            <Link to={`/detail/${item?._id}`}>{item?.name}</Link>
                                                         </h3>
-                                                        <p className="ml-4">{formartVND(item?.price)}</p>
+                                                        {/* <p className="ml-4">{formartVND(item?.price!)}</p> */}
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-1 items-end justify-between text-sm">

@@ -99,13 +99,19 @@ const ProductDetail = () => {
                                                             ''
                                                         )}
                                                     </span>
-
                                                 </div>
                                                 <p className="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
-                                                    {formartVND(hasSale)}
-                                                    <span className="ml-3 text-base font-normal text-gray-500 line-through dark:text-gray-400">
+                                                    {data?.sale_off! > 0 ? (
+                                                        <div>
+                                                            {formartVND(hasSale)}
+
+                                                            <span className="ml-3 text-base font-normal text-gray-500 line-through dark:text-gray-400">
+                                                                <span>{formartVND(data?.price)}</span>
+                                                            </span>
+                                                        </div>
+                                                    ) : (
                                                         <span>{formartVND(data?.price)}</span>
-                                                    </span>
+                                                    )}
                                                 </p>
                                             </div>
                                             <div className="flex items-center mb-8">
@@ -173,7 +179,7 @@ const ProductDetail = () => {
                                                         dispatch(
                                                             addToCart({
                                                                 ...(data! as any),
-                                                                price: hasSale,
+
                                                                 quantity: quantity,
                                                                 color: color,
                                                                 size: size,
@@ -191,7 +197,7 @@ const ProductDetail = () => {
                                                         dispatch(
                                                             addToCart({
                                                                 ...(data! as any),
-                                                                price: hasSale,
+
                                                                 quantity: quantity,
                                                                 color: color,
                                                                 size: size,
@@ -200,10 +206,7 @@ const ProductDetail = () => {
                                                     }
                                                     className="w-full px-4 py-3 text-center text-gray-100 bg-primary/95 hover:opacity-80 rounded-sm"
                                                 >
-                                                    <Link to="/checkout">
-                                                        Mua ngay
-                                                    </Link>
-
+                                                    <Link to="/checkout">Mua ngay</Link>
                                                 </button>
                                             </div>
                                         </div>

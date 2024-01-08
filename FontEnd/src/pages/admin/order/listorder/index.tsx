@@ -37,7 +37,7 @@ const renderState = (state: number) => {
         return (
             <span>
                 {' '}
-                Đang xác nhận <LoadingOutlined />
+                Chờ xác nhận <LoadingOutlined />
             </span>
         );
     if (Status.ORDER_CONFIRM === state) return <span>Xác nhận đơn hàng</span>;
@@ -48,7 +48,6 @@ const renderState = (state: number) => {
                 <CheckCircleOutlined /> Hoàn thành
             </span>
         );
-    if (Status.HOAN === state) return <span className="text-yellow-400">Hàng hoàn</span>;
 };
 
 const renderMethod = (method: number) => {
@@ -79,9 +78,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             </Option>
             <Option disabled={record?.status >= Status.COMPLETE} value={4}>
                 {renderState(4)}
-            </Option>
-            <Option disabled={record?.status > Status.HOAN} value={5}>
-                {renderState(5)}
             </Option>
         </Select>
     );
